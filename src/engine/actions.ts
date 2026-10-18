@@ -1,4 +1,4 @@
-import { getAction, getTool, SKILL_MAP } from '../data';
+import { ACTIONS, getAction, getTool, SKILL_MAP } from '../data';
 import { BALANCE } from '../data/balance';
 import type { ActionDef, LootEntry } from '../data/types';
 import type { Emit, GameEvent, StopReason } from './events';
@@ -91,9 +91,13 @@ function rollQty(rng: Rng, entry: LootEntry): number {
 }
 
 /** Rolls a loot table: each entry is checked independently. */
-export function rollDrops(rng: Rng, table: readonly LootEntry[]): { entry: LootEntry; qty: number }[] {
+export function rollDrops(
+  rng: Rng,
+  table: readonly LootEntry[],
+): { entry: LootEntry; qty: number }[] {
   const out: { entry: LootEntry; qty: number }[] = [];
-  for (const entry of table) if (rng() < entry.chance) out.push({ entry, qty: rollQty(rng, entry) });
+  for (const entry of table)
+    if (rng() < entry.chance) out.push({ entry, qty: rollQty(rng, entry) });
   return out;
 }
 
@@ -178,7 +182,12 @@ export function advance(s: GameState, dt: number, rng: Rng, emit: Emit): void {
     const check = canPerform(s, def);
     if (!check.ok) {
       s.active = null;
-      emit({ type: 'actionStopped', actionId: def.id, reason: check.reason, missingItem: check.missingItem });
+      emit({
+        type: 'actionStopped',
+        actionId: def.id,
+        reason: check.reason,
+        missingItem: check.missingItem,
+      });
       continue;
     }
     const duration = actionDuration(s, def);
@@ -213,4 +222,14 @@ export function simulate(s: GameState, dt: number, rng: Rng): GameEvent[] {
   const events: GameEvent[] = [];
   advance(s, dt, rng, (e) => events.push(e));
   return events;
+}
+
+/** Highest-level action of a skill the player can perform right now (used by world taps). */
+export function bestAvailableAction(s: GameState, skill: string): ActionDef | undefined {
+  let best: ActionDef | undefined;
+  for (const def of ACTIONS) {
+    if (def.skill !== skill || !canPerform(s, def).ok) continue;
+    if (!best || def.levelReq > best.levelReq) best = def;
+  }
+  return best;
 }

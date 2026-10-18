@@ -2,7 +2,20 @@ import Decimal, { type DecimalSource } from 'break_eternity.js';
 import type { NumberFormat } from './state';
 
 // German short scale. Index = power of 1000.
-const SHORT_UNITS = ['', ' Tsd.', ' Mio.', ' Mrd.', ' Bio.', ' Brd.', ' Trio.', ' Trd.', ' Quad.', ' Qard.', ' Quin.', ' Quind.'];
+const SHORT_UNITS = [
+  '',
+  ' Tsd.',
+  ' Mio.',
+  ' Mrd.',
+  ' Bio.',
+  ' Brd.',
+  ' Trio.',
+  ' Trd.',
+  ' Quad.',
+  ' Qard.',
+  ' Quin.',
+  ' Quind.',
+];
 
 const deFixed = (n: number, digits: number): string =>
   n.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: digits });
@@ -19,20 +32,27 @@ function mantissaExp(value: Decimal): { m: number; e: number } {
  * - scientific: 1,23e6
  * - engineering: 1,23e6 with exponent multiple of 3
  */
-export function formatNumber(value: DecimalSource, format: NumberFormat = 'short', digits = 2): string {
+export function formatNumber(
+  value: DecimalSource,
+  format: NumberFormat = 'short',
+  digits = 2,
+): string {
   const d = new Decimal(value);
   if (d.isNan()) return 'NaN';
   const abs = d.abs();
   const sign = d.lt(0) ? '-' : '';
   if (abs.lt(1000)) {
     const n = abs.toNumber();
-    return sign + deFixed(n, n < 10 && !Number.isInteger(n) ? Math.min(digits, 2) : n < 100 ? 1 : 0);
+    return (
+      sign + deFixed(n, n < 10 && !Number.isInteger(n) ? Math.min(digits, 2) : n < 100 ? 1 : 0)
+    );
   }
   if (format === 'short') {
     const e3 = Math.floor(abs.log10().toNumber() / 3);
     if (e3 === 1 && abs.lt(10_000)) return sign + deFixed(Math.floor(abs.toNumber()), 0);
     const unit = SHORT_UNITS[e3];
-    if (unit !== undefined) return sign + deFixed(abs.div(Decimal.pow(1000, e3)).toNumber(), digits) + unit;
+    if (unit !== undefined)
+      return sign + deFixed(abs.div(Decimal.pow(1000, e3)).toNumber(), digits) + unit;
   }
   const { m, e } = mantissaExp(abs);
   if (format === 'engineering') {

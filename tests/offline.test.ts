@@ -44,7 +44,10 @@ describe('Offline-Fortschritt', () => {
   });
 
   it('24 Stunden schnellste Aktion laufen flott durch', () => {
-    const s = gameWith({ lastUpdate: 0, equippedTools: { woodcutting: 'axe_quantum', mining: 'pick_stone' } });
+    const s = gameWith({
+      lastUpdate: 0,
+      equippedTools: { woodcutting: 'axe_quantum', mining: 'pick_stone' },
+    });
     s.skills.woodcutting = { xp: 13_034_431 };
     startAction(s, 'wc_oak', () => {});
     const t0 = performance.now();

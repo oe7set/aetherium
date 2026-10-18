@@ -67,7 +67,11 @@ describe('Speichern & Laden', () => {
 
 describe('Migrationen', () => {
   it('migriert Version-0-Spielstände', () => {
-    const loaded = deserialize({ v: 0, savedAt: 0, data: { gold: 250, skills: { mining: { xp: 100 } } } });
+    const loaded = deserialize({
+      v: 0,
+      savedAt: 0,
+      data: { gold: 250, skills: { mining: { xp: 100 } } },
+    });
     expect(loaded.gold.eq(250)).toBe(true);
     expect(loaded.inventorySlots).toBe(20);
     expect(loaded.skills.mining?.xp).toBe(100);

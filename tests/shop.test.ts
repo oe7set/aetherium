@@ -8,7 +8,7 @@ import {
   equipTool,
   slotPrice,
   sellItem,
-  useItem,
+  consumeItem,
 } from '../src/engine';
 import { gameWith, setLevel } from './helpers';
 
@@ -54,7 +54,7 @@ describe('Krämer', () => {
 describe('Benutzbare Items', () => {
   it('Newton-Apfel gibt Intelligenz', () => {
     const s = gameWith({ inventory: { newton_apple: 1 } });
-    expect(useItem(s, 'newton_apple', createRng(1), () => {}).ok).toBe(true);
+    expect(consumeItem(s, 'newton_apple', createRng(1), () => {}).ok).toBe(true);
     expect(s.intelligence).toBe(1);
     expect(s.inventory.newton_apple).toBeUndefined();
   });
@@ -62,7 +62,7 @@ describe('Benutzbare Items', () => {
   it('Vogelnester enthalten immer etwas', () => {
     const s = gameWith({ inventory: { bird_nest: 50 } });
     const rng = createRng(5);
-    for (let i = 0; i < 50; i++) useItem(s, 'bird_nest', rng, () => {});
+    for (let i = 0; i < 50; i++) consumeItem(s, 'bird_nest', rng, () => {});
     expect(s.inventory.bird_nest).toBeUndefined();
     const total = Object.values(s.inventory).reduce((a, b) => a + b, 0);
     expect(total).toBeGreaterThanOrEqual(50);
@@ -70,6 +70,6 @@ describe('Benutzbare Items', () => {
 
   it('nicht benutzbare Items werden abgelehnt', () => {
     const s = gameWith({ inventory: { log_oak: 1 } });
-    expect(useItem(s, 'log_oak', createRng(1), () => {}).ok).toBe(false);
+    expect(consumeItem(s, 'log_oak', createRng(1), () => {}).ok).toBe(false);
   });
 });

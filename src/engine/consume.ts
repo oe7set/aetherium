@@ -8,7 +8,7 @@ import { addStat, type GameState } from './state';
 export type UseResult = { ok: true } | { ok: false; reason: 'notUsable' | 'notEnough' };
 
 /** Uses/opens one item from the inventory (nests, Newton apples …). */
-export function useItem(s: GameState, itemId: string, rng: Rng, emit: Emit): UseResult {
+export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit): UseResult {
   const def = getItem(itemId);
   const effect = def.consume;
   if (!effect) return { ok: false, reason: 'notUsable' };

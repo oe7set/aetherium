@@ -38,18 +38,38 @@ export const SKILLS: SkillDef[] = [
 ];
 
 export const COMING_SOON_SKILLS: ComingSoonSkill[] = [
-  { name: 'Schmelzen & Schmieden', icon: '🔨', phase: 3, teaser: 'Erz rein, Barren raus, Werkzeug drauf.' },
+  {
+    name: 'Schmelzen & Schmieden',
+    icon: '🔨',
+    phase: 3,
+    teaser: 'Erz rein, Barren raus, Werkzeug drauf.',
+  },
   { name: 'Angeln', icon: '🎣', phase: 3, teaser: 'Schrödingers Fisch wartet. Oder auch nicht.' },
   { name: 'Nahkampf', icon: '⚔️', phase: 4, teaser: 'Problemlösung durch stumpfe Gewalt.' },
   { name: 'Fernkampf', icon: '🏹', phase: 4, teaser: 'Ballistik, aber mit Federn.' },
   { name: 'Magie', icon: '🪄', phase: 4, teaser: 'Hinreichend fortschrittliche Technologie.' },
   { name: 'Verteidigung', icon: '🛡️', phase: 4, teaser: 'Die beste Attacke ist ein gutes Schild.' },
   { name: 'Lebenspunkte', icon: '❤️', phase: 4, teaser: 'Wichtiger als man denkt.' },
-  { name: 'Forschung', icon: '🔬', phase: 5, teaser: 'Vom Rad zum Warp-Antrieb. Peer-Review inklusive.' },
+  {
+    name: 'Forschung',
+    icon: '🔬',
+    phase: 5,
+    teaser: 'Vom Rad zum Warp-Antrieb. Peer-Review inklusive.',
+  },
   { name: 'Alchemie', icon: '🧪', phase: 5, teaser: 'Chemie, bevor sie seriös wurde.' },
   { name: 'Verzauberung', icon: '✨', phase: 5, teaser: 'Runen, Glanz und ein bisschen Glitzer.' },
-  { name: 'Landwirtschaft', icon: '🌾', phase: 5, teaser: 'Mendel hätte seine Freude an diesen Erbsen.' },
+  {
+    name: 'Landwirtschaft',
+    icon: '🌾',
+    phase: 5,
+    teaser: 'Mendel hätte seine Freude an diesen Erbsen.',
+  },
   { name: 'Handwerk', icon: '🪚', phase: 5, teaser: 'IKEA, aber mit Zaubersprüchen.' },
   { name: 'Jagen', icon: '🦌', phase: 5, teaser: 'Fallen stellen, Geduld haben, Felle zählen.' },
-  { name: 'Arkanes Schürfen', icon: '🔮', phase: 5, teaser: 'Mana-Kristalle: wie Erz, nur schimmernder.' },
+  {
+    name: 'Arkanes Schürfen',
+    icon: '🔮',
+    phase: 5,
+    teaser: 'Mana-Kristalle: wie Erz, nur schimmernder.',
+  },
 ];

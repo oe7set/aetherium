@@ -15,8 +15,10 @@ describe('Datenintegrität', () => {
   it('alle Aktionen referenzieren existierende Skills und Items', () => {
     for (const a of ACTIONS) {
       expect(SKILL_MAP.has(a.skill), `${a.id}: skill ${a.skill}`).toBe(true);
-      for (const st of [...a.inputs, ...a.outputs]) expect(ITEM_MAP.has(st.item), `${a.id}: ${st.item}`).toBe(true);
-      for (const d of a.drops ?? []) expect(ITEM_MAP.has(d.item), `${a.id}: drop ${d.item}`).toBe(true);
+      for (const st of [...a.inputs, ...a.outputs])
+        expect(ITEM_MAP.has(st.item), `${a.id}: ${st.item}`).toBe(true);
+      for (const d of a.drops ?? [])
+        expect(ITEM_MAP.has(d.item), `${a.id}: drop ${d.item}`).toBe(true);
       if (a.burn) expect(ITEM_MAP.has(a.burn.burntItem)).toBe(true);
       expect(a.levelReq).toBeGreaterThanOrEqual(1);
       expect(a.levelReq).toBeLessThanOrEqual(99);
@@ -27,7 +29,8 @@ describe('Datenintegrität', () => {
   it('Items in Loot-Tabellen und Shop existieren', () => {
     for (const item of ITEMS) {
       if (item.consume?.type === 'loot') {
-        for (const e of item.consume.table) expect(ITEM_MAP.has(e.item), `${item.id}: ${e.item}`).toBe(true);
+        for (const e of item.consume.table)
+          expect(ITEM_MAP.has(e.item), `${item.id}: ${e.item}`).toBe(true);
       }
     }
     for (const o of SHOP_OFFERS) expect(ITEM_MAP.has(o.item)).toBe(true);
@@ -40,7 +43,10 @@ describe('Datenintegrität', () => {
 
   it('jeder Skill hat eine Aktion auf Level 1', () => {
     for (const id of SKILL_MAP.keys()) {
-      expect(ACTIONS.some((a) => a.skill === id && a.levelReq === 1), id).toBe(true);
+      expect(
+        ACTIONS.some((a) => a.skill === id && a.levelReq === 1),
+        id,
+      ).toBe(true);
     }
   });
 

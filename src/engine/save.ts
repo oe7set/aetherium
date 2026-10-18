@@ -62,7 +62,8 @@ export function migrate(
 function numberRecord(v: unknown): Record<string, number> {
   const out: Record<string, number> = {};
   if (!isRecord(v)) return out;
-  for (const [k, n] of Object.entries(v)) if (typeof n === 'number' && Number.isFinite(n)) out[k] = n;
+  for (const [k, n] of Object.entries(v))
+    if (typeof n === 'number' && Number.isFinite(n)) out[k] = n;
   return out;
 }
 
@@ -95,7 +96,10 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     typeof data.active.actionId === 'string' &&
     ACTION_MAP.has(data.active.actionId)
   ) {
-    active = { actionId: data.active.actionId, progress: Math.max(0, num(data.active.progress, 0)) };
+    active = {
+      actionId: data.active.actionId,
+      progress: Math.max(0, num(data.active.progress, 0)),
+    };
   }
 
   const ownedTools = Array.isArray(data.ownedTools)
@@ -116,7 +120,9 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     ...base,
     createdAt: num(data.createdAt, base.createdAt),
     lastUpdate: num(data.lastUpdate, base.lastUpdate),
-    gold: new Decimal(typeof data.gold === 'string' || typeof data.gold === 'number' ? data.gold : 0),
+    gold: new Decimal(
+      typeof data.gold === 'string' || typeof data.gold === 'number' ? data.gold : 0,
+    ),
     skills,
     inventory,
     inventorySlots: num(data.inventorySlots, base.inventorySlots),

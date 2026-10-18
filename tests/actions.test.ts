@@ -3,6 +3,7 @@ import { getAction } from '../src/data';
 import { BALANCE } from '../src/data/balance';
 import {
   actionDuration,
+  bestAvailableAction,
   advance,
   burnChance,
   clickAction,
@@ -88,7 +89,9 @@ describe('Inventar', () => {
     s.inventory.ore_tin = 1; // the last free slot gets taken mid-run
     const events = simulate(s, 10, never);
     expect(s.active).toBeNull();
-    expect(events.some((e) => e.type === 'actionStopped' && e.reason === 'inventoryFull')).toBe(true);
+    expect(events.some((e) => e.type === 'actionStopped' && e.reason === 'inventoryFull')).toBe(
+      true,
+    );
   });
 
   it('stapelt bekannte Items auch bei vollem Inventar', () => {
@@ -182,5 +185,16 @@ describe('Simulation', () => {
     const s = gameWith({ fire: 10 });
     simulate(s, 4, never);
     expect(s.fire).toBeCloseTo(6);
+  });
+});
+
+describe('Welt-Stationen', () => {
+  it('wählt die beste machbare Aktion eines Skills', () => {
+    const s = gameWith({ inventory: { log_oak: 1, log_birch: 1 } });
+    expect(bestAvailableAction(s, 'woodcutting')?.id).toBe('wc_oak');
+    expect(bestAvailableAction(s, 'firemaking')?.id).toBe('fm_oak');
+    setLevel(s, 'firemaking', 10);
+    expect(bestAvailableAction(s, 'firemaking')?.id).toBe('fm_birch');
+    expect(bestAvailableAction(s, 'cooking')).toBeUndefined();
   });
 });

@@ -10,14 +10,7 @@ export type ToolId = string;
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'peer_reviewed';
 
 export type ItemCategory =
-  | 'log'
-  | 'ore'
-  | 'gem'
-  | 'raw_food'
-  | 'food'
-  | 'consumable'
-  | 'resource'
-  | 'junk';
+  'log' | 'ore' | 'gem' | 'raw_food' | 'food' | 'consumable' | 'resource' | 'junk';
 
 export interface SkillDef {
   id: SkillId;

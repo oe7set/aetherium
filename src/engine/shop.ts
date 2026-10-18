@@ -6,7 +6,8 @@ import { addItem, itemCount, removeItem } from './inventory';
 import { skillLevel } from './skills';
 import { addStat, type GameState } from './state';
 
-export type ShopFailure = 'gold' | 'level' | 'owned' | 'space' | 'maxSlots' | 'notEnough' | 'unknown';
+export type ShopFailure =
+  'gold' | 'level' | 'owned' | 'space' | 'maxSlots' | 'notEnough' | 'unknown';
 export type ShopResult = { ok: true } | { ok: false; reason: ShopFailure };
 
 const fail = (reason: ShopFailure): ShopResult => ({ ok: false, reason });

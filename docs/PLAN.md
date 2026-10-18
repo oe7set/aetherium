@@ -17,18 +17,18 @@ UI / Szene ──dispatch(action)──▶ store ──▶ engine (pure) ──�
 
 ### Kernentscheidungen
 
-| Thema | Entscheidung | Begründung |
-| --- | --- | --- |
-| Simulation | **Ereignisgesteuertes `advance(state, dt, rng)`**: springt von Aktions-Abschluss zu Aktions-Abschluss statt fester Mini-Schritte | Live-Tick (10/s), Offline-Fortschritt (bis 24 h) und Debug-Zeitvorspulen nutzen exakt denselben Code → keine Abweichungen zwischen online und offline |
-| Tick | `setInterval` 100 ms im Store-Loop, Delta-Zeit über `performance.now()` | Spec: 10 Ticks/s. Fortschrittsbalken werden per `requestAnimationFrame` interpoliert, ohne React-Re-Render |
-| Zufall | Seedbarer PRNG (mulberry32) als Parameter | Tests sind deterministisch |
-| Große Zahlen | `break_eternity.js` (`Decimal`) für **Gold** (und später Prestige-Währungen) | Gold wird exponentiell wachsen. XP bleibt `number` (OSRS-Kurve endet bei ~200 Mio., weit unter 2^53), Item-Mengen ebenfalls `number` |
-| State-Updates | Engine mutiert eine Kopie (`cloneState`) und gibt Events zurück | Einfach, schnell genug (State ist klein), Store bleibt immutabel |
-| Speichern | `localStorage`, Autosave 30 s + `visibilitychange`/`pagehide`; Envelope `{ v, savedAt, data }`, Migrationskette `migrations[v] : (old) => new` | Spec 2 |
-| Export | Base64 von UTF-8-JSON mit Präfix `AETH1:` | Copy/Paste-fähig, robust gegen Umlaute |
-| Offline | Beim Laden `advance(state, min(Δt, offlineCap))`, Zusammenfassung (XP, Items, Level-Ups) als Modal ab 60 s | Spec 2 |
-| i18n | UI-Texte via `t('key', params)` aus `src/i18n/de.ts`; Inhaltsnamen stehen als deutsche Defaults in den Daten und können später per ID-Overlay übersetzt werden (`tContent(id, field, fallback)`) | Deutsch zuerst, Englisch später ohne Datenumbau |
-| Icons | Emoji (Phase 1), ab Phase 2/3 eigene SVG/Low-Poly | Keine Copyright-Assets, null Bytes |
+| Thema         | Entscheidung                                                                                                                                                                                     | Begründung                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Simulation    | **Ereignisgesteuertes `advance(state, dt, rng)`**: springt von Aktions-Abschluss zu Aktions-Abschluss statt fester Mini-Schritte                                                                 | Live-Tick (10/s), Offline-Fortschritt (bis 24 h) und Debug-Zeitvorspulen nutzen exakt denselben Code → keine Abweichungen zwischen online und offline |
+| Tick          | `setInterval` 100 ms im Store-Loop, Delta-Zeit über `performance.now()`                                                                                                                          | Spec: 10 Ticks/s. Fortschrittsbalken werden per `requestAnimationFrame` interpoliert, ohne React-Re-Render                                            |
+| Zufall        | Seedbarer PRNG (mulberry32) als Parameter                                                                                                                                                        | Tests sind deterministisch                                                                                                                            |
+| Große Zahlen  | `break_eternity.js` (`Decimal`) für **Gold** (und später Prestige-Währungen)                                                                                                                     | Gold wird exponentiell wachsen. XP bleibt `number` (OSRS-Kurve endet bei ~200 Mio., weit unter 2^53), Item-Mengen ebenfalls `number`                  |
+| State-Updates | Engine mutiert eine Kopie (`cloneState`) und gibt Events zurück                                                                                                                                  | Einfach, schnell genug (State ist klein), Store bleibt immutabel                                                                                      |
+| Speichern     | `localStorage`, Autosave 30 s + `visibilitychange`/`pagehide`; Envelope `{ v, savedAt, data }`, Migrationskette `migrations[v] : (old) => new`                                                   | Spec 2                                                                                                                                                |
+| Export        | Base64 von UTF-8-JSON mit Präfix `AETH1:`                                                                                                                                                        | Copy/Paste-fähig, robust gegen Umlaute                                                                                                                |
+| Offline       | Beim Laden `advance(state, min(Δt, offlineCap))`, Zusammenfassung (XP, Items, Level-Ups) als Modal ab 60 s                                                                                       | Spec 2                                                                                                                                                |
+| i18n          | UI-Texte via `t('key', params)` aus `src/i18n/de.ts`; Inhaltsnamen stehen als deutsche Defaults in den Daten und können später per ID-Overlay übersetzt werden (`tContent(id, field, fallback)`) | Deutsch zuerst, Englisch später ohne Datenumbau                                                                                                       |
+| Icons         | Emoji (Phase 1), ab Phase 2/3 eigene SVG/Low-Poly                                                                                                                                                | Keine Copyright-Assets, null Bytes                                                                                                                    |
 
 ## Annahmen (dokumentiert, weil die Spec sie offen lässt)
 
@@ -53,6 +53,7 @@ UI / Szene ──dispatch(action)──▶ store ──▶ engine (pure) ──�
 ## Phasen
 
 ### Phase 1 – Fundament ✅ (diese Session)
+
 - [x] Vite + React + TS strict, ESLint + Prettier, Vitest
 - [x] GitHub Actions: CI (Lint, Typecheck, Test, Build) + Pages-Deploy
 - [x] Engine: XP-Kurve (OSRS), `advance`, Aktionen mit Inputs/Outputs/Zufallsdrops/Anbrennen, Buffs, Klicks
@@ -64,22 +65,28 @@ UI / Szene ──dispatch(action)──▶ store ──▶ engine (pure) ──�
 - [x] Erste Flavor-Texte (Ladetipps, Level-Up-Sprüche, Item-Beschreibungen)
 
 ### Phase 2 – 3D-Welt
+
 R3F + drei lazy geladen, Low-Poly-Insel mit Instancing, Spielfigur mit Lauf-/Arbeitsanimation,
 klickbare Bäume/Felsen/Feuer, Touch-Kamera (Drehen/Pinch), Qualitätsstufen mit Auto-Erkennung,
 Akku-Modus (3D aus), Render-Pause bei verstecktem Tab, Tag/Nacht.
 
 ### Phase 3 – Handwerk
+
 Schmelzen, Schmieden (Werkzeuge ersetzen Krämer-Käufe), Angeln (Schrödingers Fisch), Markt mit
 Angebot/Nachfrage, Achievements, `flavor.ts` auf ≥150 Einträge.
 
 ### Phase 4 – Kampf
+
 Gebiete, Monster, Ausrüstungsslots + Seltenheiten, Food heilt, Loot-Tabellen, erster Boss in 3D.
 
 ### Phase 5 – Wissenschaft & Magie
+
 Forschungspunkte + Tech-Tree, Alchemie (Periodensystem-Codex), Verzauberung, Helfer/Automatisierung.
 
 ### Phase 6 – Prestige
+
 Wiedergeburt (Weisheit), Paradigmenwechsel (Naturgesetze), Balancing-Pass.
 
 ### Phase 7 – Feinschliff
+
 Juice, Sounds (WebAudio), Quests, Pets, Statistiken, PWA, wachsende Welt, Performance-Pass.

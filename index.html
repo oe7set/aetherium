@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#14171f" />
+    <meta
+      name="description"
+      content="AETHERIUM – Von der Steinaxt zum Teilchenbeschleuniger. Ein Incremental-RPG im Browser."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Aetherium</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #14171f;
+        color: #e8e4d8;
+      }
+      #splash {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        gap: 12px;
+        text-align: center;
+        font-family: system-ui, sans-serif;
+      }
+      #splash b {
+        font-size: 48px;
+        letter-spacing: 2px;
+        color: #f2c94c;
+      }
+      #splash small {
+        opacity: 0.7;
+        padding: 0 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <b>Æ</b>
+      <div>Aetherium wird geladen …</div>
+      <small>Korrelation ist keine Kausalität. Außer bei Kohle und Schmieden.</small>
+    </div>
+    <div id="root"></div>
+    <noscript>Aetherium braucht JavaScript. Selbst Magie hat Systemanforderungen.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
