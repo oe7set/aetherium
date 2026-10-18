@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.21.0] – Kessel, Runen, Äther
+
+### Hinzugefügt
+
+- **Drei neue Inselstationen** statt des geteilten Forschungsturms: **Alchemistenküche** (brodelnder Kessel und
+  Tränkeregal), **Runenkreis** für Verzauberung (Menhire und schwebender Kristall) und **Ätherquelle** für
+  Arkanes (leuchtende Kristalle). Alle pulsieren bei jedem Abschluss; die Figur läuft zur richtigen Station,
+  auch im 2D-Akku-Modus.
+
 ## [1.20.0] – Gesetze für alle Welten
 
 ### Geändert

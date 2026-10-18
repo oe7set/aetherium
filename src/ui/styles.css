@@ -2069,3 +2069,27 @@ button.chip {
   left: 14%;
   top: 44%;
 }
+.st-alch {
+  left: 30%;
+  top: 12%;
+}
+.st-ench {
+  left: 92%;
+  top: 30%;
+}
+.st-arc {
+  left: 50%;
+  top: 92%;
+}
+.character.st-alch {
+  left: 34%;
+  top: 18%;
+}
+.character.st-ench {
+  left: 86%;
+  top: 34%;
+}
+.character.st-arc {
+  left: 50%;
+  top: 86%;
+}

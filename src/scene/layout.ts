@@ -25,14 +25,13 @@ export const STATIONS: StationDef[] = [
   { skill: 'hunting', label: 'Jagdgrund', pos: [-8.6, -0.6], workPos: [-7.4, -0.4] },
   { skill: 'research', label: 'Forschungsturm', pos: [4.2, -8], workPos: [3.4, -6.4] },
   { skill: 'archaeology', label: 'Grabung', pos: [7.6, 0.6], workPos: [6.4, 0.9] },
+  { skill: 'alchemy', label: 'Alchemie', pos: [-7, -6], workPos: [-5.9, -5.2] },
+  { skill: 'enchanting', label: 'Runenkreis', pos: [5.4, -6.2], workPos: [4.6, -5.2] },
+  { skill: 'arcane', label: 'Ätherquelle', pos: [-0.8, 9.6], workPos: [-0.4, 8.4] },
 ];
 
 /** Skills that share a station. */
-const STATION_ALIASES: Record<string, string> = {
-  alchemy: 'research',
-  enchanting: 'research',
-  arcane: 'research',
-};
+const STATION_ALIASES: Record<string, string> = {};
 
 export const IDLE_POS: Vec2 = [0, 0.5];
 

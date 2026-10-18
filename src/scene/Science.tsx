@@ -253,6 +253,142 @@ export function DigSite({ onTap }: { onTap: TapHandler }) {
   );
 }
 
+/** Shared pulse on every completion of a skill (read from its XP). */
+function useSkillPulse(skill: string): React.MutableRefObject<number> {
+  const at = useRef(-10);
+  useCounterPulse(
+    (s) => s.skills[skill]?.xp ?? 0,
+    () => {
+      at.current = performance.now() / 1000;
+    },
+  );
+  return at;
+}
+
+const POTION_COLORS = ['#e05a5a', '#5ad17a', '#5a8de0', '#e0c25a', '#b05ae0'];
+
+/** Alchemistenküche: bubbling cauldron and a shelf of potions. */
+export function AlchemyLab({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('alchemy')!;
+  const brew = useRef<THREE.MeshStandardMaterial>(null);
+  const pulse = useSkillPulse('alchemy');
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const k = Math.max(0, 1 - (t - pulse.current) / 1.2);
+    if (brew.current) brew.current.emissiveIntensity = 0.5 + Math.sin(t * 3) * 0.15 + k * 1.5;
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.3, 0]} castShadow>
+        <cylinderGeometry args={[0.45, 0.35, 0.55, 10]} />
+        <meshStandardMaterial color="#2b2b33" flatShading />
+      </mesh>
+      <mesh position={[0, 0.56, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.4, 10]} />
+        <meshStandardMaterial
+          ref={brew}
+          color="#3fd16a"
+          emissive="#3fd16a"
+          emissiveIntensity={0.5}
+        />
+      </mesh>
+      <mesh position={[0.9, 0.45, -0.4]} castShadow>
+        <boxGeometry args={[0.9, 0.9, 0.25]} />
+        <meshStandardMaterial color="#7a5536" flatShading />
+      </mesh>
+      {POTION_COLORS.map((c, i) => (
+        <mesh key={c} position={[0.6 + (i % 3) * 0.28, 0.55 + Math.floor(i / 3) * 0.32, -0.22]}>
+          <cylinderGeometry args={[0.06, 0.08, 0.2, 6]} />
+          <meshStandardMaterial color={c} emissive={c} emissiveIntensity={0.4} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/** Runenkreis: standing stones around a floating, slowly turning crystal. */
+export function RuneCircle({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('enchanting')!;
+  const crystal = useRef<THREE.Mesh>(null);
+  const glow = useRef<THREE.MeshStandardMaterial>(null);
+  const pulse = useSkillPulse('enchanting');
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const k = Math.max(0, 1 - (t - pulse.current) / 1.2);
+    if (crystal.current) {
+      crystal.current.rotation.y = t * 0.8;
+      crystal.current.position.y = 0.9 + Math.sin(t * 1.6) * 0.08 + k * 0.25;
+    }
+    if (glow.current) glow.current.emissiveIntensity = 0.8 + k * 2;
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.7, 0.85, 24]} />
+        <meshStandardMaterial color="#8a6cff" emissive="#8a6cff" emissiveIntensity={0.5} />
+      </mesh>
+      {Array.from({ length: 6 }, (_, i) => {
+        const a = (i / 6) * Math.PI * 2;
+        return (
+          <mesh key={i} position={[Math.cos(a) * 0.95, 0.3, Math.sin(a) * 0.95]} castShadow>
+            <boxGeometry args={[0.18, 0.6, 0.14]} />
+            <meshStandardMaterial color="#8d8a99" flatShading />
+          </mesh>
+        );
+      })}
+      <mesh ref={crystal} position={[0, 0.9, 0]}>
+        <octahedronGeometry args={[0.28, 0]} />
+        <meshStandardMaterial
+          ref={glow}
+          color="#c7b5ff"
+          emissive="#8a6cff"
+          emissiveIntensity={0.8}
+          flatShading
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/** Ätherquelle: a cluster of glowing crystals breaking through the grass. */
+export function AetherSpring({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('arcane')!;
+  const glow = useRef<THREE.MeshStandardMaterial>(null);
+  const pulse = useSkillPulse('arcane');
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const k = Math.max(0, 1 - (t - pulse.current) / 1.2);
+    if (glow.current) glow.current.emissiveIntensity = 0.9 + Math.sin(t * 2.2) * 0.3 + k * 2;
+  });
+  const shards: [number, number, number, number][] = [
+    [0, 0, 1.1, 0],
+    [0.35, 0.15, 0.7, 0.4],
+    [-0.3, 0.2, 0.8, -0.35],
+    [0.1, -0.35, 0.6, 0.2],
+    [-0.15, -0.25, 0.5, -0.2],
+  ];
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.75, 12]} />
+        <meshStandardMaterial color="#2a4a5a" />
+      </mesh>
+      {shards.map(([x, z, h, tilt], i) => (
+        <mesh key={i} position={[x, h / 2, z]} rotation={[tilt, 0, tilt * 0.6]}>
+          <coneGeometry args={[0.13 + h * 0.06, h, 5]} />
+          <meshStandardMaterial
+            ref={i === 0 ? glow : undefined}
+            color="#9ff6ff"
+            emissive="#3fd8ff"
+            emissiveIntensity={0.9}
+            flatShading
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 const HELPER_COLORS: Record<string, string> = {
   intern: '#f0c8a0',
   gnome: '#d9534f',

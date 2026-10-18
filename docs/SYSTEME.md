@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.20.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.21.0**.
 
 ## 1. Der große Kreislauf
 
@@ -171,6 +171,4 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Bekannte Schwächen**
 
-- Die 3D-Insel hat noch keine eigenen Stationen für Alchemie, Verzauberung und Arkanes: Sie teilen sich den
-  Forschungsturm.
 - `progress.found` ist eine Liste: Die Suche ist linear, bei ~300 Items unkritisch.

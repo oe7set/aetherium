@@ -25,6 +25,9 @@ const STATIONS: Station[] = [
   { skill: 'research', label: 'Turm', icon: '🗼', className: 'st-tower' },
   { skill: 'archaeology', label: 'Grabung', icon: '🏺', className: 'st-dig' },
   { skill: 'hunting', label: 'Jagd', icon: '🦌', className: 'st-hunt' },
+  { skill: 'alchemy', label: 'Alchemie', icon: '⚗️', className: 'st-alch' },
+  { skill: 'enchanting', label: 'Runen', icon: '🔯', className: 'st-ench' },
+  { skill: 'arcane', label: 'Äther', icon: '💠', className: 'st-arc' },
 ];
 
 function skyFor(phase: number): { sky: string; night: number } {
@@ -64,10 +67,7 @@ export function WorldView() {
   }, []);
 
   const { sky, night } = skyFor(phase);
-  const stationSkill =
-    activeSkill && ['alchemy', 'enchanting', 'arcane'].includes(activeSkill)
-      ? 'research'
-      : activeSkill;
+  const stationSkill = activeSkill;
   const characterAt = STATIONS.find((s) => s.skill === stationSkill)?.className ?? 'st-idle';
 
   return (

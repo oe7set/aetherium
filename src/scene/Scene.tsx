@@ -22,6 +22,9 @@ import {
   Helpers,
   HuntingGround,
   DigSite,
+  AlchemyLab,
+  RuneCircle,
+  AetherSpring,
   Obelisk,
   ResearchTower,
   Workbench,
@@ -138,6 +141,9 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Workbench onTap={tap('crafting')} />
       <HuntingGround onTap={tap('hunting')} />
       <DigSite onTap={tap('archaeology')} />
+      <AlchemyLab onTap={tap('alchemy')} />
+      <RuneCircle onTap={tap('enchanting')} />
+      <AetherSpring onTap={tap('arcane')} />
       <Helpers />
       <Character skill={activeSkill} />
       <LabelProjector />
