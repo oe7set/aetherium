@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { PASS_TIERS, passReward, passThreshold, type RewardDef } from '../../data/progress';
 import { passBreakdown, passPoints, passTier } from '../../engine';
 import { useGame } from '../../store/gameStore';
@@ -26,6 +27,18 @@ export function PassPanel() {
   const from = tier > 0 ? passThreshold(tier) : 0;
   const to = passThreshold(next);
   const claimed = new Set(game.progress.passClaimed);
+  // Where the player stands: the first reward waiting, otherwise the next tier to reach.
+  const focus = Array.from({ length: tier }, (_, i) => i + 1).find((t) => !claimed.has(t)) ?? next;
+  const track = useRef<HTMLDivElement>(null);
+  const first = useRef(true);
+  useEffect(() => {
+    const row = track.current;
+    const node = row?.querySelector<HTMLElement>(`[data-tier="${focus}"]`);
+    if (!row || !node) return;
+    const left = node.offsetLeft - row.offsetLeft - (row.clientWidth - node.offsetWidth) / 2;
+    row.scrollTo({ left, behavior: first.current ? 'auto' : 'smooth' });
+    first.current = false;
+  }, [focus]);
   return (
     <div className="pass">
       <div className="pass-head glass">
@@ -45,7 +58,7 @@ export function PassPanel() {
           </small>
         </div>
       </div>
-      <div className="pass-track" role="list">
+      <div className="pass-track" role="list" ref={track}>
         {Array.from({ length: PASS_TIERS }, (_, i) => {
           const t = i + 1;
           const r = rewardText(passReward(t));
@@ -55,7 +68,8 @@ export function PassPanel() {
             <div
               key={t}
               role="listitem"
-              className={`pass-node ${reached ? 'reached' : ''} ${done ? 'claimed' : ''} ${t % 10 === 0 ? 'milestone' : ''}`}
+              data-tier={t}
+              className={`pass-node ${reached ? 'reached' : ''} ${done ? 'claimed' : ''} ${t % 10 === 0 ? 'milestone' : ''} ${t === focus ? 'current' : ''}`}
             >
               <small>{t}</small>
               <span className="pass-node-icon">{r.icon}</span>

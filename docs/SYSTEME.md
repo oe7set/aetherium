@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.34.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.35.0**.
 
 ## 1. Der große Kreislauf
 
@@ -158,6 +158,9 @@ Haustiere ↔ Held, Expansion)
   Verkaufen). Antippbare Ziele tragen `data-touch-keep`, damit ein Tipp die Karte wechselt statt schließt.
 - Insel-Stationen antippen öffnet die **Stationskarte** (`ui/StationCard.tsx`, `ui.stationCard`): die besten machbaren
   Aktionen zum Starten/Stoppen, die nächste Freischaltung und der Weg in den Skill (Kampf/Forschung/Beete wie bisher).
+  **Doppeltipp** auf eine Station öffnet direkt den Skill mit allen Aktionen (`tapStation`; die Karte erscheint erst
+  nach ~0,26 s, damit sie die Station für den zweiten Tipp nicht verdeckt).
+- Ruhmesleiter scrollt beim Öffnen zur aktuellen Stufe (erste offene Belohnung, sonst die nächste Stufe; `.current`).
 - Komfort: „Bestes Feld ausbauen" (`bestFieldToUpgrade`: niedrigste Stufe, bei Gleichstand der schwächste
   Rohstoff, Getreide netto), „Plunder verkaufen" im Inventar (`sellStacks`, eine Meldung).
 - „Was jetzt?" hat ab 2 wartenden Belohnungen „Alle abholen" (`claimAllRewards`: Ruhmesleiter, Sammelbuch-Sets,

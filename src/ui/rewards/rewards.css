@@ -399,3 +399,8 @@
   bottom: 8px;
   z-index: 5;
 }
+/* The tier the player stands at (first unclaimed reward or next tier) – the track scrolls to it. */
+.pass-node.current {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}

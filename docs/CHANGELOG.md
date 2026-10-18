@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.35.0] – Doppeltipp & Ruhmesleiter
+
+- Insel: Doppeltipp auf eine Station (Wald, Mine, Angelplatz …) öffnet direkt den Skill mit allen Aktionen zur Auswahl (welches Holz, welches Erz …). Einfacher Tipp zeigt weiter die Schnellkarte.
+- Ruhmesleiter springt beim Öffnen zur aktuellen Stufe (erste offene Belohnung, sonst die nächste Stufe) und markiert sie; nach dem Abholen rutscht sie mit.
+
 ## [1.34.0] – Alles abholen & kompakte Skills
 
 - „Was jetzt?": „Alle Belohnungen abholen" – Ruhmesleiter-Stufen, Sammelbuch-Sets und fertige Aufträge mit einem Tipp, in einer gemeinsamen Enthüllung.

@@ -237,6 +237,8 @@ export interface GameStore {
 }
 
 let nextId = 1;
+/** Island double tap detection (see tapStation). */
+const lastStationTap = { skill: '', at: 0, timer: 0 };
 
 function initialGame(): { game: GameState; summary: ProgressSummary | null } {
   const now = Date.now();
@@ -572,7 +574,19 @@ export const useGame = create<GameStore>()((set, get) => {
         get().openSkill('farming');
         return;
       }
-      get().setUi({ stationCard: skill });
+      // Double tap on the same station: straight into the skill with all its actions. The card
+      // waits a moment so it cannot cover the station before the second tap lands.
+      const now = Date.now();
+      window.clearTimeout(lastStationTap.timer);
+      if (lastStationTap.skill === skill && now - lastStationTap.at < 400) {
+        lastStationTap.at = 0;
+        get().setUi({ stationCard: null });
+        get().openSkill(skill);
+        return;
+      }
+      lastStationTap.skill = skill;
+      lastStationTap.at = now;
+      lastStationTap.timer = window.setTimeout(() => get().setUi({ stationCard: skill }), 260);
     },
     riftPrepare: (hero, biome, endless = false) => {
       let cfg: RunConfig | null = null;
