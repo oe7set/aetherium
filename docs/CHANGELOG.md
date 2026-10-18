@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.24.0] – Faire Abenteuer
+
+### Geändert (Balancing, per Langzeit-Bot gefunden)
+
+- **Abenteuer fair gemacht**: Bisher scheiterten frische Helden fast immer (Stufe 3 ≈ 18 % Erfolg). Die Gefahr
+  bemisst sich jetzt an der üblichen Heldenstärke der Stufe – gleiche Stufe ≈ 62 %, schwer ≈ 51 %, leichtere
+  mehr –, und Abenteuer erscheinen rund um die eigene Heldenstufe statt willkürlich darüber.
+
+### Technik
+
+- Neuer **Langzeit-Bot** (`tests/longterm.test.ts`): spielt Insel, Dorf und Held drei Tage gemeinsam und
+  prüft, dass jede Schleife täglich vorankommt und eine kleine Garnison die meisten Invasionen hält.
+
 ## [1.23.0] – Kein Ende in Sicht
 
 ### Hinzugefügt

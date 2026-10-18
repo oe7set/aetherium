@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.23.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.24.0**.
 
 ## 1. Der große Kreislauf
 
@@ -168,7 +168,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
 - [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
-- [ ] Balancing über alle Schleifen mit Langzeit-Bot (Insel + Dorf + Held zusammen, 7 Tage).
+- [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente), Prestige, 7+ Tage; Spieler ohne Truppen werden oft
+      geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
 
 **Bekannte Schwächen**
 

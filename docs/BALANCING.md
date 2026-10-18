@@ -88,3 +88,14 @@ Der Test schlägt fehl, wenn ein Skill unter 20 h oder über 400 h bis 99 rutsch
 Simulation (`stepRun`, 60 Schritte/s) mit voller Horde am Desktop-CPU: 339 Gegner ≈ 0,2 ms, 675 Gegner
 ≈ 0,5 ms pro Schritt – linear dank Spatial Hash (`EnemyGrid`). Selbst bei 5–8× langsameren Handys bleibt
 die Simulation unter 4 ms; das Gegnerlimit von 360 lässt Reserven für das Zeichnen.
+
+## Langzeit-Bot über alle Schleifen (1.24)
+
+`tests/longterm.test.ts` spielt drei Tage: Insel (wechselt alle 6 h zwischen Holz, Erz, Fisch, verkauft,
+kauft Werkzeuge), Dorf (Felder + Gebäude, kleine Miliz-Garnison), Held (Punkte in Kampfkraft, Abenteuer
+automatisch). Ergebnis nach Tag 1 / 2 / 3: Gesamtlevel 260 / 296 / 317, Einwohner ~310 / 545 / 655,
+Heldenstufe 11 / 19 / 27, Abenteuer 13 / 23 / 35, Invasionen 17 abgewehrt zu 6 verloren.
+
+Gefundener Fehler: Abenteuer waren für frische Helden fast unschaffbar (Stufe 3 ≈ 18 % Erfolg, 16 von 20
+gescheitert). Jetzt bemisst sich die Gefahr an der üblichen Stärke auf der Stufe (100 + 60 × Stufe):
+gleiche Stufe ≈ 62 %, schwer ≈ 51 %; Abenteuer erscheinen rund um die Heldenstufe.

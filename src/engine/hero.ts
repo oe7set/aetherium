@@ -258,7 +258,8 @@ export function spawnAdventure(s: GameState, rng: Rng): Adventure | null {
   const dist = 2 + rng() * 9;
   const x = Math.round(v.x + Math.cos(angle) * dist);
   const y = Math.round(v.y + Math.sin(angle) * dist);
-  const level = Math.max(1, Math.round(h.level / 2 + dist / 2 + rng() * 2));
+  // Around the hero's own level: close ones a little easier, far ones a little harder.
+  const level = Math.max(1, Math.round(h.level + (dist - 6) / 3 + rng() * 2 - 1));
   const biome = BIOMES[Math.min(BIOMES.length - 1, Math.floor((level - 1) / 3))]!;
   const names = ADVENTURE_NAMES[biome.id] ?? ['Abenteuer'];
   const adv: Adventure = {
@@ -294,9 +295,12 @@ export function startAdventure(s: GameState, id: number): HeroResult {
   return OK;
 }
 
-/** Danger rating of an adventure for auto-resolve. */
+/**
+ * Danger rating of an adventure for auto-resolve, relative to the strength a hero of that level
+ * usually has (100 + 60/level): an even match succeeds ~62 %, a hard one ~51 %, easier ones more.
+ */
 export function adventureDanger(a: Adventure): number {
-  return 120 * Math.pow(a.level, 1.35) * (a.hard ? 1.8 : 1);
+  return (100 + 60 * a.level) * 0.6 * (a.hard ? 1.6 : 1);
 }
 
 /** Chance that an automatic exploration succeeds. */
