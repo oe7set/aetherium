@@ -14,6 +14,7 @@ import {
   canStartRun,
   biomeUnlocked,
   echoEssence,
+  endlessUnlocked,
   heroUnlocked,
   heroUnlockText,
   riftHeal,
@@ -163,8 +164,10 @@ function StartView() {
   const provisions = autoProvisions(game);
   const check = canStartRun(game, hero, biome);
   const canStart = check.ok;
+  const [endless, setEndless] = useState(false);
+  const endlessOpen = endlessUnlocked(game);
   const start = () => {
-    const cfg = prepare(hero, biome);
+    const cfg = prepare(hero, biome, endless && endlessOpen);
     if (cfg) useRiftRun.getState().setRun(createRun(cfg));
   };
   return (
@@ -278,9 +281,30 @@ function StartView() {
         )}
       </div>
 
+      <label className={`toggle endless-toggle ${endlessOpen ? '' : 'locked'}`}>
+        <input
+          type="checkbox"
+          checked={endless && endlessOpen}
+          disabled={!endlessOpen}
+          onChange={(e) => setEndless(e.target.checked)}
+        />
+        <span>
+          ♾️ <b>Endlos-Riss</b>{' '}
+          {endlessOpen ? (
+            <small className="muted">
+              kein Prüfer, alle 5 Minuten ein Boss, immer härter · Bestzeit{' '}
+              {fmt(game.stats.riftEndlessBest ?? 0)}
+            </small>
+          ) : (
+            <small className="muted">– schalte ihn frei, indem du den Prüfer einmal besiegst</small>
+          )}
+        </span>
+      </label>
       <button className="btn btn-primary btn-big rift-go" disabled={!canStart} onClick={start}>
         {canStart
-          ? '🌀 Riss betreten'
+          ? endless && endlessOpen
+            ? '♾️ Endlos-Riss betreten'
+            : '🌀 Riss betreten'
           : check.reason === 'dead'
             ? '💀 Dein Held ist gefallen'
             : check.reason === 'busy'

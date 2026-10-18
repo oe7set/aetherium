@@ -194,3 +194,28 @@ describe('Ätherriss: Meta', () => {
     expect(s.rift.essence).toBe(50);
   });
 });
+
+describe('Endlos-Riss', () => {
+  it('erst nach dem ersten Sieg, kein Prüfer, Boss alle 5 Minuten, Bestzeit wird gemerkt', () => {
+    const s = gameWith();
+    expect(prepareRun(s, 'farmer', 'meadow', createRng(1), true)).toBeNull();
+    s.rift.wins = 1;
+    const cfg = prepareRun(s, 'farmer', 'meadow', createRng(1), true)!;
+    expect(cfg.endless).toBe(true);
+    cfg.stats.maxHp = 1e12;
+    const run = createRun(cfg);
+    for (let t = 0; t < 11 * 60 * 5; t++) {
+      if (run.phase === 'levelup') chooseUpgrade(run, 0);
+      if (run.phase === 'chest') closeChest(run);
+      stepRun(run, 0.2, { x: 0, y: 0 });
+    }
+    expect(run.phase).toBe('playing');
+    expect(run.examinerSpawned).toBe(false);
+    expect(run.endlessWave).toBe(2);
+    const result = runResult(run);
+    expect(result.endless).toBe(true);
+    finishRun(s, result, createRng(2), () => {});
+    expect(s.stats.riftEndlessMinutes).toBe(Math.floor(run.time / 60));
+    expect(run.time).toBeGreaterThan(10 * 60);
+  }, 20000);
+});

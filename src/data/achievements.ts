@@ -67,6 +67,18 @@ const STAT_SERIES: StatSeries[] = [
     reward: (i) => ({ xp: 0.01 * (i + 1) }),
   },
   {
+    key: 'riftEndlessMinutes',
+    icon: '♾️',
+    desc: (n) => `Überlebe ${n} Minuten im Endlos-Riss.`,
+    steps: [
+      [20, 'Kein Ende in Sicht'],
+      [30, 'Unkaputtbar'],
+      [45, 'Der Riss hat aufgegeben'],
+      [60, 'Eine Stunde Chaos'],
+    ],
+    reward: (i) => ({ 'rift.might': 0.02 * (i + 1) }),
+  },
+  {
     key: 'masteryLevels',
     icon: '🏅',
     desc: (n) => `Steige insgesamt ${n} Meisterschaftsstufen auf.`,

@@ -183,7 +183,7 @@ export interface GameStore {
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
   /** Packs provisions and returns the config for a new rift run (null if locked). */
-  riftPrepare: (hero: string, biome: string) => RunConfig | null;
+  riftPrepare: (hero: string, biome: string, endless?: boolean) => RunConfig | null;
   /** Books the rewards of a finished rift run. */
   riftFinish: (result: RunResult) => RiftReward | null;
   riftTalent: (id: string) => void;
@@ -546,10 +546,10 @@ export const useGame = create<GameStore>()((set, get) => {
       if (best) get().start(best.id);
       else get().openSkill(skill);
     },
-    riftPrepare: (hero, biome) => {
+    riftPrepare: (hero, biome, endless = false) => {
       let cfg: RunConfig | null = null;
       mutate((s) => {
-        cfg = prepareRun(s, hero, biome, defaultRng);
+        cfg = prepareRun(s, hero, biome, defaultRng, endless);
       });
       return cfg;
     },

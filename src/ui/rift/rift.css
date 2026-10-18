@@ -1001,3 +1001,13 @@
   color: var(--text);
   font-size: 0.75rem;
 }
+.rift-trial.endless {
+  background: linear-gradient(90deg, rgba(94, 242, 255, 0.45), rgba(124, 92, 255, 0.45));
+  border-color: rgba(160, 240, 255, 0.6);
+}
+.endless-toggle {
+  margin: 8px 0 4px;
+}
+.endless-toggle.locked {
+  opacity: 0.6;
+}

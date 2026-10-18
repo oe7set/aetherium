@@ -218,6 +218,8 @@ export interface RunConfig {
   trial?: boolean;
   /** HUD label of the week's rule, e.g. "🌕 Blutmond". */
   trialLabel?: string;
+  /** Endless rift: no examiner, a boss every 5 minutes, ends only on death. */
+  endless?: boolean;
 }
 
 /** Minutes until the final boss of a run. */
@@ -279,6 +281,8 @@ export interface RunState {
   eliteTimer: number;
   bossesSpawned: string[];
   examinerSpawned: boolean;
+  /** Endless mode: last boss wave spawned. */
+  endlessWave: number;
   nextId: number;
   /** Shake intensity for the renderer. */
   shake: number;
@@ -346,6 +350,7 @@ export function createRun(config: RunConfig): RunState {
     eliteTimer: 90,
     bossesSpawned: [],
     examinerSpawned: false,
+    endlessWave: 0,
     nextId: 1,
     shake: 0,
   };
@@ -723,6 +728,18 @@ function updateSpawns(run: RunState, dt: number): void {
       const [x, y] = ringPoint(run);
       spawnEnemy(run, pickWeighted(run, pool), x, y, 'elite');
     }
+  }
+  if (run.config.endless) {
+    // Endless: a biome boss every 5 minutes, cycling – they grow with time like everything else.
+    const wave = Math.floor(minute / 5);
+    if (wave > run.endlessWave && run.biome.bosses.length) {
+      run.endlessWave = wave;
+      const b = run.biome.bosses[(wave - 1) % run.biome.bosses.length]!;
+      const [x, y] = ringPoint(run);
+      spawnEnemy(run, b, x, y, 'boss');
+      announce(run, `♾️ Welle ${wave}: ${b.icon} ${b.name}!`);
+    }
+    return;
   }
   const total = runMinutes(run.config);
   const dungeon = run.config.mode === 'dungeon';
@@ -1617,6 +1634,7 @@ export interface RunResult {
   foodEaten: number;
   bonusEssence: number;
   mode: 'rift' | 'dungeon';
+  endless?: boolean;
 }
 
 export function runResult(run: RunState): RunResult {
@@ -1633,5 +1651,6 @@ export function runResult(run: RunState): RunResult {
     foodEaten: run.foodEaten,
     bonusEssence: run.bonusEssence,
     mode: run.config.mode ?? 'rift',
+    endless: run.config.endless === true,
   };
 }

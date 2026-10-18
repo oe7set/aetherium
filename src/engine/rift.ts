@@ -185,15 +185,28 @@ function packProvisions(s: GameState): number[] {
   return provisions;
 }
 
-export function prepareRun(s: GameState, hero: string, biome: string, rng: Rng): RunConfig | null {
+/** Endless rift opens after beating the examiner once. */
+export function endlessUnlocked(s: GameState): boolean {
+  return s.rift.wins > 0;
+}
+
+export function prepareRun(
+  s: GameState,
+  hero: string,
+  biome: string,
+  rng: Rng,
+  endless = false,
+): RunConfig | null {
   if (!canStartRun(s, hero, biome).ok) return null;
+  if (endless && !endlessUnlocked(s)) return null;
   const provisions = packProvisions(s);
   s.rift.hero = hero;
   s.hero.style = hero;
   s.rift.biome = biome;
   s.rift.runs++;
   addStat(s, 'riftRuns');
-  return baseConfig(s, hero, biome, rng, provisions);
+  const cfg = baseConfig(s, hero, biome, rng, provisions);
+  return endless ? { ...cfg, endless: true } : cfg;
 }
 
 function baseConfig(
@@ -310,6 +323,11 @@ export function finishRun(s: GameState, r: RunResult, rng: Rng, emit: Emit): Rif
   addStat(s, 'riftBossKills', r.bossKills);
   addStat(s, 'riftEssence', essence);
   s.stats.riftBestMinutes = Math.max(s.stats.riftBestMinutes ?? 0, Math.floor(r.time / 60));
+  if (r.endless) {
+    addStat(s, 'riftEndlessRuns');
+    s.stats.riftEndlessBest = Math.max(s.stats.riftEndlessBest ?? 0, Math.floor(r.time));
+    s.stats.riftEndlessMinutes = Math.max(s.stats.riftEndlessMinutes ?? 0, Math.floor(r.time / 60));
+  }
 
   // Loot for the island: aether cores, rare artefacts, a chest for a victory.
   const items: { item: string; qty: number }[] = [];

@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.22.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.23.0**.
 
 ## 1. Der große Kreislauf
 
@@ -156,7 +156,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 - [ ] Wochenboss: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses.
 - [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
-- [ ] Endgame (Phase 13): Endlos-Riss, weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill.
+- [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
+      über Export-Codes.
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
 - [ ] Musik: Nachtthema auf der Insel, Bossmusik auch bei normalen Riss-Bossen.
 

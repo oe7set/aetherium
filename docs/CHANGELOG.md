@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.23.0] – Kein Ende in Sicht
+
+### Hinzugefügt
+
+- **Endlos-Riss** ♾️ (Endgame, frei nach dem ersten Sieg über den Prüfer): kein Zeitlimit und kein Prüfer –
+  alle 5 Minuten kommt ein Biom-Boss, und alles wird immer härter. Der Lauf endet nur mit dem Tod; Essenz und
+  Beute wachsen mit der Zeit. HUD zeigt Welle und Countdown zum nächsten Boss, das Riss-Menü die Bestzeit.
+- Erfolge für 20, 30, 45 und 60 Minuten im Endlos-Riss – sie geben dauerhaft Riss-Schaden.
+
 ## [1.22.0] – Mit Titel
 
 ### Hinzugefügt

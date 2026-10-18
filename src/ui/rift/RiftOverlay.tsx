@@ -286,7 +286,9 @@ function Hud({ run, onPause }: { run: RunState; onPause: () => void }) {
             </span>
           ))}
         </div>
-        <div className={`rift-timer ${left < 60 && left > 0 ? 'urgent' : ''}`}>
+        <div
+          className={`rift-timer ${!run.config.endless && left < 60 && left > 0 ? 'urgent' : ''}`}
+        >
           {formatTime(run.time)}
           <small>💀 {run.kills}</small>
         </div>
@@ -294,6 +296,12 @@ function Hud({ run, onPause }: { run: RunState; onPause: () => void }) {
           ⏸
         </button>
       </div>
+      {run.config.endless && (
+        <div className="rift-trial endless">
+          ♾️ Endlos-Riss · Welle {run.endlessWave} · nächster Boss in{' '}
+          {formatTime(300 - (run.time % 300))}
+        </div>
+      )}
       {run.config.trial && (
         <div className="rift-trial">
           🦹 Wochenboss · {run.config.trialLabel} · Boss bei {runMinutes(run.config) / 2}:00 und{' '}
@@ -520,32 +528,36 @@ function Results({
       <div className={`rift-card ${won ? 'won' : ''}`}>
         <div className="chest-icon">{won ? '🏆' : '💀'}</div>
         <h2 className="rift-title">
-          {trial
-            ? won
-              ? 'Wochenboss besiegt!'
-              : 'Der Boss lacht noch'
-            : dungeon
+          {run.config.endless
+            ? `Endlos-Lauf: ${formatTime(run.time)}`
+            : trial
               ? won
-                ? 'Dungeon gemeistert!'
-                : 'Rückzug!'
-              : won
-                ? 'Prüfung bestanden!'
-                : 'Durchgefallen'}
+                ? 'Wochenboss besiegt!'
+                : 'Der Boss lacht noch'
+              : dungeon
+                ? won
+                  ? 'Dungeon gemeistert!'
+                  : 'Rückzug!'
+                : won
+                  ? 'Prüfung bestanden!'
+                  : 'Durchgefallen'}
         </h2>
         <p className="rift-sub">
-          {trial
-            ? won
-              ? weekly?.firstWin
-                ? 'Die Belohnung der Woche gehört dir. Nächste Woche wartet ein neuer Boss – etwas stärker.'
-                : 'Schon wieder? Der Boss beantragt Urlaub. Die Wochenbelohnung gab es bereits.'
-              : 'Diesmal nicht. Versuche sind unbegrenzt – die Wochenbelohnung wartet.'
-            : dungeon
+          {run.config.endless
+            ? 'Der Riss hat dich am Ende doch erwischt. Er brauchte allerdings ziemlich lange dafür.'
+            : trial
               ? won
-                ? 'Der Wächter liegt am Boden, die Schatzkammer steht offen.'
-                : 'Dein Held schleppt sich verwundet zurück. Ein Teil der Beute bleibt trotzdem.'
-              : won
-                ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
-                : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
+                ? weekly?.firstWin
+                  ? 'Die Belohnung der Woche gehört dir. Nächste Woche wartet ein neuer Boss – etwas stärker.'
+                  : 'Schon wieder? Der Boss beantragt Urlaub. Die Wochenbelohnung gab es bereits.'
+                : 'Diesmal nicht. Versuche sind unbegrenzt – die Wochenbelohnung wartet.'
+              : dungeon
+                ? won
+                  ? 'Der Wächter liegt am Boden, die Schatzkammer steht offen.'
+                  : 'Dein Held schleppt sich verwundet zurück. Ein Teil der Beute bleibt trotzdem.'
+                : won
+                  ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
+                  : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
         </p>
         <div className="result-grid">
           <div>
