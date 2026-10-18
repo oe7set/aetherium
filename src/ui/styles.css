@@ -2061,3 +2061,11 @@ button.chip {
   max-width: 220px;
   accent-color: var(--aether, #5ef2ff);
 }
+.st-hunt {
+  left: 8%;
+  top: 40%;
+}
+.character.st-hunt {
+  left: 14%;
+  top: 44%;
+}

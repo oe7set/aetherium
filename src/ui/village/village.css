@@ -781,3 +781,126 @@
   border-radius: 16px 16px 0 0;
   margin: 0;
 }
+
+/* --- Village square: plaza, lots with name plates, tiers, growing cottages ------------------- */
+.v-center-plaza {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 30%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 55%, rgba(0, 0, 0, 0.12) 56% 58%, transparent 59%),
+    repeating-conic-gradient(from 0deg, #cdb488 0deg 10deg, #bfa476 10deg 20deg);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+}
+.v-decor {
+  position: absolute;
+  transform: translate(-50%, -60%);
+  font-size: clamp(0.8rem, 3.4vw, 1.25rem);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.45));
+}
+.v-decor.cottage {
+  animation: v-pop 0.4s ease-out;
+}
+.v-decor.tree {
+  opacity: 0.9;
+}
+.v-bld.built {
+  border-radius: 12px;
+  border: 2px solid rgba(90, 64, 36, 0.8);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.25), transparent 60%),
+    repeating-linear-gradient(45deg, #a8916a 0 6px, #9a8460 6px 12px);
+  box-shadow:
+    0 5px 0 rgba(60, 40, 20, 0.55),
+    0 8px 14px rgba(0, 0, 0, 0.45);
+}
+.v-bld.built,
+.v-bld.site {
+  width: 11.5%;
+}
+.v-bld.built.main {
+  width: 15%;
+}
+.v-bld.site {
+  border: 2px dashed #e8c98a;
+  background: repeating-linear-gradient(90deg, rgba(120, 80, 40, 0.35) 0 4px, transparent 4px 10px);
+}
+.v-bld.locked {
+  opacity: 1;
+  width: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(40, 70, 30, 0.55), rgba(40, 70, 30, 0.1) 70%);
+}
+.v-bld.locked .v-bld-icon {
+  font-size: 0.6rem;
+  opacity: 0.45;
+  filter: none;
+}
+.v-bld.ready.built,
+.v-bld.ready.site {
+  border-color: #5be38a;
+  box-shadow:
+    0 0 0 2px rgba(91, 227, 138, 0.5),
+    0 0 18px rgba(91, 227, 138, 0.45),
+    0 5px 0 rgba(60, 40, 20, 0.55);
+}
+.v-bld-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 4px);
+  max-width: 160%;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: rgba(20, 14, 8, 0.72);
+  color: #f6ead0;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+.v-bld.tier-silver .v-bld-level {
+  background: linear-gradient(135deg, #f2f4f8, #aeb6c4);
+}
+.v-bld.tier-gold .v-bld-level {
+  background: linear-gradient(135deg, #ffe08a, #d4a017);
+  border-color: #7a5a10;
+}
+.v-bld.tier-aether .v-bld-level {
+  background: linear-gradient(135deg, #b9a8ff, #5ef2ff);
+  border-color: #3a2a8a;
+}
+.v-bld.tier-gold,
+.v-bld.tier-aether {
+  border-color: #d4a017;
+}
+
+/* Phones: smaller resource icons so the hourly rate fits next to the amount. */
+@media (max-width: 520px) {
+  .v-resbar {
+    gap: 4px;
+  }
+  .v-res {
+    padding: 4px 4px 5px;
+    gap: 2px 3px;
+  }
+  .v-res-icon {
+    font-size: 0.95rem;
+  }
+  .v-res-num strong {
+    font-size: 0.8rem;
+  }
+  .v-res-num small {
+    font-size: 0.58rem;
+    letter-spacing: -0.02em;
+  }
+}

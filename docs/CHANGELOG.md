@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.13.0] – Ein Dorf zum Anschauen
+
+### Geändert
+
+- **Dorfplatz neu gestaltet**: Gebäude stehen auf Steinplatten mit Namensschild, das Stufen-Abzeichen färbt sich
+  mit dem Ausbau (Bronze → Silber ab 5 → Gold ab 10 → Äther ab 15), Bauplätze haben einen Bauzaun, gesperrte
+  Plätze sind dezente Grasflecken statt Schlösser. Ein gepflasterter Marktplatz in der Mitte, Bäume und Blumen –
+  und **Wohnhäuser, die mit der Einwohnerzahl wachsen**.
+- Rohstoffleiste am Handy: die Stundenrate ist wieder vollständig lesbar.
+- Insel: Ackerbeete mit Furchen und Holzrahmen; der 2D-Akku-Modus hat jetzt auch die Jagdstation.
+
 ## [1.12.0] – Klarer Kopf: „Was jetzt?"
 
 ### Hinzugefügt

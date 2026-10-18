@@ -15,6 +15,7 @@ import {
   buildingTime,
   canUpgradeBuilding,
   plannedLevel,
+  population,
   requirementsMet,
   startCelebration,
   upgradeBuilding,
@@ -27,6 +28,33 @@ import { ResearchPanel, TrainPanel } from './MilitaryView';
 import type { VillageSegment } from './VillagePanel';
 import { CostView } from './CostView';
 import { duration } from './vui';
+
+/**
+ * Free spots on the village square (away from building lots and the two roads), in a fixed
+ * pseudo-random order. The first ones get cottages as the population grows, some get trees.
+ */
+const FREE_SPOTS: [number, number][] = (() => {
+  const out: [number, number][] = [];
+  for (let x = 8; x <= 92; x += 7)
+    for (let y = 8; y <= 92; y += 7) {
+      if (Math.hypot(x - 50, y - 50) > 42) continue;
+      if (Math.abs(x - 50) < 5 || Math.abs(y - 49) < 5) continue;
+      if (V_BUILDINGS.some((b) => Math.hypot(b.pos[0] - x, b.pos[1] - y) < 11)) continue;
+      out.push([x, y]);
+    }
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j]!, out[i]!];
+  }
+  return out;
+})();
+const TREES = ['🌳', '🌲', '🌷', '🌳', '🌼', '🌲'];
+
+function tierClass(level: number): string {
+  return level >= 15 ? 'tier-aether' : level >= 10 ? 'tier-gold' : level >= 5 ? 'tier-silver' : '';
+}
 
 export function CenterView({
   village: v,
@@ -45,6 +73,25 @@ export function CenterView({
         style={{ '--wall': Math.min(1, wall / 20) } as React.CSSProperties}
       >
         <div className="v-center-ground" aria-hidden />
+        <div className="v-center-plaza" aria-hidden />
+        {FREE_SPOTS.map(([x, y], i) => {
+          const cottages = Math.min(
+            Math.floor(population(v) / 12),
+            Math.floor(FREE_SPOTS.length * 0.6),
+          );
+          const tree = i >= FREE_SPOTS.length - 6;
+          if (i >= cottages && !tree) return null;
+          return (
+            <span
+              key={`d${i}`}
+              className={`v-decor ${tree ? 'tree' : 'cottage'}`}
+              style={{ left: `${x}%`, top: `${y}%` }}
+              aria-hidden
+            >
+              {tree ? TREES[i % TREES.length] : i % 3 === 0 ? '🏡' : '🏠'}
+            </span>
+          );
+        })}
         {V_BUILDINGS.map((b) => {
           const lvl = buildingLevel(v, b.id);
           const available = requirementsMet(v, b);
@@ -54,7 +101,7 @@ export function CenterView({
           return (
             <button
               key={b.id}
-              className={`v-bld ${lvl ? 'built' : available ? 'site' : 'locked'} ${ready ? 'ready' : ''} ${selected === b.id ? 'selected' : ''} ${building ? 'building' : ''}`}
+              className={`v-bld ${lvl ? `built ${tierClass(lvl)}` : available ? 'site' : 'locked'} ${ready ? 'ready' : ''} ${selected === b.id ? 'selected' : ''} ${building ? 'building' : ''} ${b.id === 'main' ? 'main' : ''}`}
               style={{ left: `${b.pos[0]}%`, top: `${b.pos[1]}%` }}
               onClick={() => setSelected(selected === b.id ? null : b.id)}
               title={b.name}
@@ -63,6 +110,7 @@ export function CenterView({
                 {lvl || building ? b.icon : available ? '🏗️' : '🔒'}
               </span>
               {lvl > 0 && <span className="v-bld-level">{lvl}</span>}
+              {lvl > 0 && <span className="v-bld-name">{b.name}</span>}
               {building && <span className="v-field-crane">⚒️</span>}
             </button>
           );
@@ -83,8 +131,8 @@ export function CenterView({
         />
       ) : (
         <p className="muted small center">
-          Tippe auf ein Gebäude. 🏗️ = Bauplatz bereit, 🔒 = Voraussetzungen fehlen. Das Hauptgebäude
-          beschleunigt alles.
+          Tippe auf ein Gebäude. 🏗️ = Bauplatz bereit, grün = jetzt ausbaubar, gedämpft =
+          Voraussetzungen fehlen. Mit den Einwohnern wachsen auch die Wohnhäuser.
         </p>
       )}
     </div>

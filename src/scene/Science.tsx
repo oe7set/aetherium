@@ -106,10 +106,28 @@ export function Fields({ onTap }: { onTap: TapHandler }) {
         const z = Math.floor(i / 3) * 1.1 - 0.5;
         return (
           <group key={i} position={[x, 0, z]}>
+            {/* Tilled soil with furrows inside a low wooden frame. */}
             <mesh position={[0, 0.05, 0]} receiveShadow>
               <boxGeometry args={[0.95, 0.1, 0.95]} />
-              <meshStandardMaterial color="#5a3d26" flatShading />
+              <meshStandardMaterial color="#8a5e3b" flatShading />
             </mesh>
+            {[-0.28, 0, 0.28].map((fz) => (
+              <mesh key={fz} position={[0, 0.12, fz]}>
+                <boxGeometry args={[0.8, 0.06, 0.12]} />
+                <meshStandardMaterial color="#6e4729" flatShading />
+              </mesh>
+            ))}
+            {[
+              [0, 0.47, 1, 0.06],
+              [0, -0.47, 1, 0.06],
+              [0.47, 0, 0.06, 1],
+              [-0.47, 0, 0.06, 1],
+            ].map(([fx, fz, w, d], k) => (
+              <mesh key={`f${k}`} position={[fx!, 0.1, fz!]}>
+                <boxGeometry args={[w!, 0.16, d!]} />
+                <meshStandardMaterial color="#b08454" flatShading />
+              </mesh>
+            ))}
             <mesh
               ref={(el) => {
                 crops.current[i] = el;
