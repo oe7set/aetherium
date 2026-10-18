@@ -118,6 +118,12 @@ export const de = {
   'menu.nerdMode': 'Nerd-Modus (Formeln anzeigen)',
   'menu.sound': 'Sound (folgt in Phase 7)',
   'menu.chatter': 'Zufällige Ereignistexte',
+  'menu.graphics': 'Grafikqualität',
+  'menu.graphics.auto': 'Automatisch',
+  'menu.graphics.low': 'Niedrig',
+  'menu.graphics.medium': 'Mittel',
+  'menu.graphics.high': 'Hoch',
+  'menu.batteryMode': 'Akku-Modus (3D aus, reine 2D-Ansicht)',
   'menu.saveNow': 'Jetzt speichern',
   'menu.saved': 'Gespeichert!',
   'menu.export': 'Exportieren',
@@ -131,7 +137,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 1 „Fundament“',
+  'menu.version': 'Version {version} · Phase 2 „3D-Welt“',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 

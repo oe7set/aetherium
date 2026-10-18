@@ -4,8 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-**Phase 1 „Fundament" fertig** (v0.1.0). Nächstes: **Phase 2 – 3D-Welt** (R3F + drei, lazy geladen;
-`src/ui/WorldView.tsx` bleibt als Akku-Modus-Fallback). Siehe `docs/CHANGELOG.md`.
+**Phase 2 „3D-Welt" fertig** (v0.2.0). Nächstes: **Phase 3 – Handwerk**. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
 
@@ -24,7 +23,9 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   visibilitychange/pagehide), `persistence.ts` (localStorage-Key `aetherium.save`).
 - `src/ui/` – React-Overlay. Mobile: Tab-Leiste + `BottomSheet`; Desktop (≥1024 px): 3 Spalten.
   Fortschrittsbalken der aktiven Aktion laufen per rAF (`LiveProgressBar`), nicht über React-Renders.
-- `src/scene/` – ab Phase 2 (liest nur State, sendet Store-Aktionen).
+- `src/scene/` – R3F-Insel, lazy über `src/ui/World.tsx` (fällt auf 2D-`WorldView` zurück: Akku-Modus,
+  kein WebGL, Fehler). Liest State nur in `useFrame` via `useGame.getState()`; Animationen reagieren auf
+  Zähler-Änderungen (`useCounterPulse`). Positionen in `layout.ts`; Labels sind DOM-Overlay (`labels.ts`).
 - `src/i18n/` – UI-Texte via `t('key')` aus `de.ts`; Inhaltsnamen als deutsche Defaults in den Daten.
 
 ## Konventionen

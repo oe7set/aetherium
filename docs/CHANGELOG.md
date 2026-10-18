@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0] – Phase 2 „3D-Welt"
+
+### Hinzugefügt
+
+- Low-Poly-Insel mit React Three Fiber (lazy geladen, eigener Chunk): Fluss, Ozean, instanzierter Wald
+  (2 Draw-Calls), Felsen, Mine mit Erzkristallen in der Farbe des aktuellen Erzes, Lagerfeuer mit
+  Flammen, Licht-Flackern, Rauch und Funken, Kochstelle mit Dampf, eingerüsteter Forschungsturm.
+- Spielfigur aus Low-Poly-Blöcken läuft zur aktiven Station, Lauf- und Arbeitsanimationen, Werkzeug in der Hand.
+- Feedback: Baum fällt und wächst nach, Fels wackelt und Brocken fliegen bei jedem Abbau.
+- Tag/Nacht-Zyklus (20 min) mit Sonne, Mondlicht, Sternen und Himmelsfarbe.
+- Antippbare Stationen in 3D, Touch-Kamera (Ein-Finger-Drehen, Pinch-Zoom), Abstand passt sich dem Hochformat an.
+- Grafik-Qualitätsstufen (Auto/Niedrig/Mittel/Hoch) mit Geräteerkennung, Pixel-Ratio ≤ 2, Schatten nur auf Hoch.
+- Akku-Modus (3D aus), Render-Pause bei verstecktem Tab, 2D-Fallback ohne WebGL oder bei Fehlern.
+
 ## [0.1.0] – Phase 1 „Fundament"
 
 ### Hinzugefügt

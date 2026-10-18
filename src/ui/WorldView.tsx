@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getAction } from '../data';
 import { LOADING_TIPS } from '../data/flavor';
-import { bestAvailableAction, pick, defaultRng } from '../engine';
+import { pick, defaultRng } from '../engine';
+import { DAY_SECONDS } from '../scene/time';
 import { useGame } from '../store/gameStore';
-
-/** Length of one in-game day in real seconds. */
-const DAY_SECONDS = 20 * 60;
 
 interface Station {
   skill: string;
@@ -39,8 +37,7 @@ export function WorldView() {
     s.game.active ? getAction(s.game.active.actionId).skill : null,
   );
   const fire = useGame((s) => s.game.fire > 0);
-  const start = useGame((s) => s.start);
-  const openSkill = useGame((s) => s.openSkill);
+  const tapStation = useGame((s) => s.tapStation);
   const [tip, setTip] = useState(() => pick(defaultRng, LOADING_TIPS));
   const [phase, setPhase] = useState(() => ((Date.now() / 1000) % DAY_SECONDS) / DAY_SECONDS);
 
@@ -57,12 +54,6 @@ export function WorldView() {
       window.clearInterval(sky);
     };
   }, []);
-
-  const onStation = (skill: string) => {
-    const best = bestAvailableAction(useGame.getState().game, skill);
-    if (best) start(best.id);
-    else openSkill(skill);
-  };
 
   const { sky, night } = skyFor(phase);
   const characterAt = STATIONS.find((s) => s.skill === activeSkill)?.className ?? 'st-idle';
@@ -91,7 +82,7 @@ export function WorldView() {
             className={`station ${st.className} ${activeSkill === st.skill ? 'active' : ''} ${
               st.skill === 'firemaking' && fire ? 'lit' : ''
             }`}
-            onClick={() => onStation(st.skill)}
+            onClick={() => tapStation(st.skill)}
             aria-label={st.label}
           >
             <span className="station-icon">

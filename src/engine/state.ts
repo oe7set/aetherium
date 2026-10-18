@@ -4,6 +4,7 @@ import { SKILLS } from '../data/skills';
 import { STARTER_TOOLS } from '../data/tools';
 
 export type NumberFormat = 'short' | 'scientific' | 'engineering';
+export type GraphicsSetting = 'auto' | 'low' | 'medium' | 'high';
 
 export interface Settings {
   numberFormat: NumberFormat;
@@ -12,6 +13,10 @@ export interface Settings {
   sound: boolean;
   /** Show random chatter lines in the event feed. */
   chatter: boolean;
+  /** 3D quality preset. */
+  graphics: GraphicsSetting;
+  /** Battery saver: no 3D at all, 2D world only. */
+  batteryMode: boolean;
 }
 
 export interface ActiveAction {
@@ -51,7 +56,14 @@ export interface GameState {
 export const SAVE_VERSION = 1;
 
 export function defaultSettings(): Settings {
-  return { numberFormat: 'short', nerdMode: false, sound: true, chatter: true };
+  return {
+    numberFormat: 'short',
+    nerdMode: false,
+    sound: true,
+    chatter: true,
+    graphics: 'auto',
+    batteryMode: false,
+  };
 }
 
 export function newGame(now: number = Date.now()): GameState {

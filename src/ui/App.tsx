@@ -15,7 +15,7 @@ import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
 import { TABS } from './tabs';
-import { WorldView } from './WorldView';
+import { World } from './World';
 
 function useKeyboardShortcuts() {
   useEffect(() => {
@@ -62,7 +62,7 @@ function MobileLayout() {
     <div className="layout-mobile">
       <Header />
       <div className="stage">
-        <WorldView />
+        <World />
         <Feed limit={2} compact />
       </div>
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
@@ -92,7 +92,7 @@ function DesktopLayout() {
       </aside>
       <main className="col-center">
         <div className="stage">
-          <WorldView />
+          <World />
         </div>
         <ActiveActionBar />
         <TabBar tabs={DESKTOP_CENTER_TABS} />

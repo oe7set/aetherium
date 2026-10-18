@@ -1,8 +1,9 @@
-import type { NumberFormat } from '../../engine';
+import type { GraphicsSetting, NumberFormat } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 
 const FORMATS: NumberFormat[] = ['short', 'scientific', 'engineering'];
+const GRAPHICS: GraphicsSetting[] = ['auto', 'low', 'medium', 'high'];
 
 export function SettingsPanel() {
   const settings = useGame((s) => s.game.settings);
@@ -22,6 +23,28 @@ export function SettingsPanel() {
             </option>
           ))}
         </select>
+      </label>
+      <label className="field">
+        <span>{t('menu.graphics')}</span>
+        <select
+          className="input"
+          value={settings.graphics}
+          onChange={(e) => setSetting('graphics', e.target.value as GraphicsSetting)}
+        >
+          {GRAPHICS.map((g) => (
+            <option key={g} value={g}>
+              {t(`menu.graphics.${g}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.batteryMode}
+          onChange={(e) => setSetting('batteryMode', e.target.checked)}
+        />
+        <span>🔋 {t('menu.batteryMode')}</span>
       </label>
       <label className="toggle">
         <input

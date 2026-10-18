@@ -12,6 +12,7 @@ import {
 } from '../data/flavor';
 import {
   advance,
+  bestAvailableAction,
   applyOfflineProgress,
   buyItem,
   buySlot,
@@ -83,6 +84,8 @@ export interface GameStore {
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
+  /** World tap on a station: start the best doable action of that skill, else open the skill. */
+  tapStation: (skill: string) => void;
   dismissOffline: () => void;
   dismissLevelUp: () => void;
   save: () => void;
@@ -256,6 +259,11 @@ export const useGame = create<GameStore>()((set, get) => {
         s.settings = { ...s.settings, [key]: value };
       }),
     setUi: (patch) => set({ ui: { ...get().ui, ...patch } }),
+    tapStation: (skill) => {
+      const best = bestAvailableAction(get().game, skill);
+      if (best) get().start(best.id);
+      else get().openSkill(skill);
+    },
     openSkill: (skill) =>
       set({ ui: { ...get().ui, tab: 'skills', selectedSkill: skill, skillDetail: true } }),
     dismissOffline: () => set({ offlineSummary: null }),

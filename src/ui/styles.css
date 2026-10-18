@@ -1350,3 +1350,47 @@ textarea.input {
     border-color: var(--line);
   }
 }
+
+/* --- 3D world --------------------------------------------------------------------------------- */
+
+.world-3d {
+  background: #0d1424;
+}
+.world-3d .world {
+  /* 2D fallback rendered inside the 3D container while loading */
+  position: absolute;
+  inset: 0;
+}
+.scene-canvas {
+  position: absolute !important;
+  inset: 0;
+  touch-action: none;
+}
+.scene-label {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+.scene-label.active {
+  background: var(--gold);
+  color: #222;
+  font-weight: 700;
+}
+.scene-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.scene-labels .scene-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  will-change: transform;
+}
