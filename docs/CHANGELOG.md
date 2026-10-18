@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.20.0] – Gesetze für alle Welten
+
+### Geändert
+
+- **Naturgesetze wirken im ganzen Reich**: Jedes Gesetz des Paradigmenwechsels hat jetzt zusätzlich eine
+  Dorf- oder Riss-Wirkung – z. B. _Quanten-Tunneleffekt_ +15 % Dorfproduktion, _Mana-Überfluss_ +20 %
+  Riss-Schaden, _Schwache Gravitation_ +15 % Laufgeschwindigkeit im Riss, _Exotherme Welt_ +20 % Wirkungsfläche,
+  _Planck ist großzügig_ +50 % Riss-Glück; _Akademischer Kosmos_ kostet Dorfverteidigung und Riss-Leben.
+
+### Technik
+
+- Neue Bonus-Schlüssel `village.prod`, `village.defense`, `rift.might`, `rift.hp`, `rift.speed`, `rift.area`,
+  `rift.luck` – jede Bonusquelle kann damit Dorf und Riss beeinflussen.
+
 ## [1.19.0] – Meisterschaft
 
 ### Hinzugefügt

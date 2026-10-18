@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.19.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.20.0**.
 
 ## 1. Der große Kreislauf
 
@@ -122,6 +122,8 @@
 
 **Prestige**
 
+- Naturgesetze (Paradigma) wirken über die Bonus-Schlüssel `village.*`/`rift.*` auch auf Dorf und Riss.
+
 - `resetRun` setzt Skills, Gold und Inventar zurück.
 - Erhalten bleiben: Dorf, Held, Riss, Belohnungs-Schicht samt Sammelbuch, Erfolge.
 - Neue State-Felder dort bewusst einordnen!
@@ -155,7 +157,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Wochenboss: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses.
 - [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
 - [ ] Endgame (Phase 13): Endlos-Riss, Titel und Kosmetik; Meisterschafts-Pool je Skill (Melvor-Stil).
-- [ ] Prestige-Naturgesetze, die auch im Dorf und im Riss wirken (Phase 11).
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
 - [ ] Musik: Nachtthema auf der Insel, Bossmusik auch bei normalen Riss-Bossen.
 

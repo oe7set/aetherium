@@ -15,6 +15,10 @@ import {
   skillLevel,
   totalLevel,
   wisdomGain,
+  activeVillage,
+  invalidateMods,
+  production,
+  runStats,
 } from '../src/engine';
 import { gameWith, setLevel } from './helpers';
 
@@ -136,5 +140,18 @@ describe('Spielstand v4 → v5', () => {
     });
     expect(s.prestige.rebirths).toBe(0);
     expect(wisdomGain(s)).toBeGreaterThan(5);
+  });
+});
+
+describe('Naturgesetze wirken im ganzen Reich', () => {
+  it('Dorfproduktion und Riss-Werte folgen den Gesetzen', () => {
+    const s = gameWith();
+    const v = activeVillage(s);
+    const prod = production(s, v).wood;
+    const might = runStats(s, 'farmer').might;
+    s.prestige.laws = ['tunneling', 'mana_flood'];
+    invalidateMods(s);
+    expect(production(s, v).wood).toBeCloseTo(prod * 1.15);
+    expect(runStats(s, 'farmer').might).toBeCloseTo(might + 0.2);
   });
 });

@@ -39,7 +39,9 @@ export interface ComingSoonSkill {
  * Flat, data-driven modifier map. Values are additive fractions (0.05 = +5 %).
  * Keys: 'xp', 'xp.<skill>', 'speed', 'speed.<skill>', 'double', 'double.<skill>', 'rare', 'gold',
  * 'burn', 'fireDuration', 'offlineHours', 'research', 'helperSpeed', 'combat.accuracy',
- * 'combat.damage', 'combat.defence', 'combat.hp', 'combat.loot', 'wisdom'.
+ * 'combat.damage', 'combat.defence', 'combat.hp', 'combat.loot', 'wisdom',
+ * village: 'village.prod', 'village.defense'; rift run stats: 'rift.might', 'rift.hp', 'rift.speed',
+ * 'rift.area', 'rift.luck'.
  */
 export type ModifierSet = Partial<Record<string, number>>;
 

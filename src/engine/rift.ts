@@ -17,7 +17,7 @@ import { gainItem, registerTimeEffect } from './actions';
 import { combatLevel } from './combat';
 import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
-import { invalidateMods, registerModifierSource } from './modifiers';
+import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import type { Rng } from './rng';
 import { hasTech } from './science';
 import { skillLevel } from './skills';
@@ -137,6 +137,12 @@ export function runStats(s: GameState, hero: string): RiftStats {
   out.luck += h.luck;
   out.magnet *= 1 + h.magnet;
   out.growth += h.growth;
+  // Global rift boni (laws of nature, …).
+  out.might += mod(s, 'rift.might');
+  out.maxHp *= Math.max(0.5, 1 + mod(s, 'rift.hp'));
+  out.speed *= Math.max(0.5, 1 + mod(s, 'rift.speed'));
+  out.area += mod(s, 'rift.area');
+  out.luck += mod(s, 'rift.luck');
   return out;
 }
 

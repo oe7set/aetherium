@@ -36,7 +36,7 @@ import {
 import { gainItem, registerTimeEffect } from './actions';
 import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
-import { invalidateMods, registerModifierSource } from './modifiers';
+import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import type { Rng } from './rng';
 import { earnGold } from './shop';
 import {
@@ -175,7 +175,9 @@ export function production(s: GameState, v: Village): VCostState {
     if (t?.bonus) bonus[t.bonus] += OASIS_BONUS;
   }
   const hero = heroResourceBonus(s, v.id);
-  for (const r of V_RESOURCES) out[r] = out[r] * PROD_SPEED * (1 + bonus[r] + hero);
+  // Global village boni (laws of nature, …) – never below −50 %.
+  const global = Math.max(-0.5, mod(s, 'village.prod'));
+  for (const r of V_RESOURCES) out[r] = out[r] * PROD_SPEED * (1 + bonus[r] + hero + global);
   return out;
 }
 
@@ -930,7 +932,8 @@ export function invasionDefense(s: GameState, v: Village): InvasionDefense {
   const talentLevels = Object.values(s.rift.talents).reduce((a, b) => a + b, 0);
   const riftWard = (troops + hero) * Math.min(0.5, talentLevels * 0.02);
   const militia = combatLevel(s) * 4;
-  return { troops, hero, riftWard, militia, total: troops + hero + riftWard + militia };
+  const total = (troops + hero + riftWard + militia) * Math.max(0.5, 1 + mod(s, 'village.defense'));
+  return { troops, hero, riftWard, militia, total };
 }
 
 function invade(s: GameState, rng: Rng, emit: Emit): void {
