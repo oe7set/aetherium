@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.25.0] – Neue Questreihen
+
+### Hinzugefügt
+
+- **Questreihe „Wissen ist Macht"** (Professorin Quantina, 5 Quests): Forschung, Alchemie und Verzauberung im
+  Dienst des Riss – Technologien, Riss-Talente, Eiltränke, Riss-Bosse und schließlich die Abschlussprüfung
+  beim Prüfer (Avatar 🧪).
+- **Questreihe „Spuren der Vorläufer"** (Grabungsleiterin Dr. Kelle, 5 Quests): Archäologie trifft Abenteuer,
+  Live-Dungeons, Oasen und Dorfgründung – bis zur goldenen Maske (Avatar 🗿).
+- **Vorwarnung zum Anfängerschutz**: Endet er in weniger als 6 Stunden und reicht die Verteidigung noch nicht,
+  rät „Was jetzt?" zu Kaserne und Mauer bzw. zur Ausbildung von Truppen.
+
 ## [1.24.0] – Faire Abenteuer
 
 ### Geändert (Balancing, per Langzeit-Bot gefunden)

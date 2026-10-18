@@ -12,6 +12,7 @@ import type { GameState } from './state';
 import { formatDuration } from './format';
 import {
   activeVillage,
+  buildingLevel,
   canUpgradeBuilding,
   canUpgradeField,
   invasionDefense,
@@ -194,6 +195,21 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       kind: 'todo',
       target: { area: 'village', section: 'center' },
     });
+  // The beginner protection is about to end and the village could not hold a horde yet.
+  if (s.village.protection > 0 && s.village.protection < 6 * 3600) {
+    const target = invasionTarget(s);
+    if (invasionDefense(s, target).total < invasionStrength(s)) {
+      const hasBarracks = buildingLevel(target, 'barracks') > 0;
+      add({
+        id: 'protection-ending',
+        icon: '🕊️',
+        title: 'Anfängerschutz endet bald',
+        detail: `in ${formatDuration(s.village.protection)} – ${hasBarracks ? 'bilde Truppen aus' : 'baue Kaserne und Mauer'}, sonst plündert der Riss`,
+        kind: 'todo',
+        target: { area: 'village', section: hasBarracks ? 'military' : 'center' },
+      });
+    }
+  }
   if (s.village.protection <= 0 && s.village.invasionIn < 1800) {
     const target = invasionTarget(s);
     const ratio = invasionDefense(s, target).total / invasionStrength(s);

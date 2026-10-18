@@ -29,3 +29,17 @@ describe('Was jetzt?', () => {
     expect(ids(s)).toContain('bag-full');
   });
 });
+
+describe('Was jetzt? – Anfängerschutz', () => {
+  it('warnt sechs Stunden vor Schutzende, wenn die Verteidigung nicht reicht', () => {
+    const s = gameWith();
+    const v = s.village.villages[0]!;
+    v.fields = v.fields.map(() => 6);
+    v.buildings.main = 10;
+    s.hero.status = 'moving';
+    s.village.protection = 3 * 3600;
+    expect(agenda(s, now).some((i) => i.id === 'protection-ending')).toBe(true);
+    s.village.protection = 20 * 3600;
+    expect(agenda(s, now).some((i) => i.id === 'protection-ending')).toBe(false);
+  });
+});

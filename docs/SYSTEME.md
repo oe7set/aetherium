@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.24.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.25.0**.
 
 ## 1. Der große Kreislauf
 
@@ -110,7 +110,8 @@
 - 14 Sets reichen von Insel und Riss-Beute bis zu Relikten.
 - Ein volles Set bringt eine einmalige Belohnung plus einen Dauer-Bonus (Modifikator-Quelle `'collections'`).
 
-**Questreihe „Das Band der Welten"** (`data/meta.ts`, `chain`)
+**Questreihen** (`data/meta.ts`, `chain`): „Das Band der Welten" (alle Systeme), „Wissen ist Macht"
+(Forschung/Alchemie/Verzauberung ↔ Riss), „Spuren der Vorläufer" (Archäologie ↔ Abenteuer/Oasen/Dörfer)
 
 - Quest-Ziele: Statistik-Zuwachs, Abgabe, Skill-Level, Dorfgebäude-Stufe (`building`), Heldenstufe
   (`heroLevel`); Belohnung `rewards.extra` läuft über `applyReward` (Essenz, Rohstoffe, Held).
@@ -155,7 +156,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Gameplay & Inhalt**
 
 - [ ] Wochenboss: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses.
-- [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
+- [ ] Weitere Questreihen (Dorf-Expansion ↔ Handel, Haustiere ↔ Held).
 - [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
       über Export-Codes.
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
