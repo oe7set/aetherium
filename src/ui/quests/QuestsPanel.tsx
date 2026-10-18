@@ -9,12 +9,12 @@ import {
   taskProgress,
   taskReward,
 } from '../../engine';
-import { useGame } from '../../store/gameStore';
+import { useGame, type QuestSegment } from '../../store/gameStore';
 import { useFmt, useNow } from '../hooks';
 import { describeMods } from '../modText';
 import { ProgressBar } from '../ProgressBar';
 
-type Segment = 'tasks' | 'quests' | 'pets';
+type Segment = QuestSegment;
 
 function msUntilMidnight(now: number): number {
   const d = new Date(now);
@@ -77,7 +77,7 @@ function Quests() {
   const order = { active: 0, available: 1, locked: 2, done: 3 } as const;
   const list = QUESTS.map((q) => ({ q, status: questStatus(game, q.id) }))
     .filter((x) => showDone || x.status !== 'done')
-    .sort((a, b) => order[a.status] - order[b.status]);
+    .sort((a, b) => order[a.status] - order[b.status] || (b.q.chain ? 1 : 0) - (a.q.chain ? 1 : 0));
 
   return (
     <div className="quests">
@@ -92,12 +92,14 @@ function Quests() {
         const progress = status === 'active' ? questProgress(game, q) : [];
         const ready = progress.length > 0 && progress.every((p) => p.done);
         return (
-          <div key={q.id} className={`quest ${status}`}>
+          <div key={q.id} className={`quest ${status} ${q.chain ? 'chain' : ''}`}>
             <div className="combat-row">
               <strong>
                 {status === 'locked' ? '🔒' : q.icon} {q.name}
               </strong>
-              <small className="muted">{q.giver}</small>
+              <small className="muted">
+                {q.chain && <span className="quest-chain">🔗 {q.chain}</span>} {q.giver}
+              </small>
             </div>
             {status !== 'locked' && (
               <p className="quest-story">{status === 'done' ? q.outro : q.story}</p>
@@ -175,7 +177,9 @@ function Pets() {
 }
 
 export function QuestsPanel() {
-  const [seg, setSeg] = useState<Segment>('tasks');
+  const seg = useGame((s) => s.ui.questSegment);
+  const setUi = useGame((s) => s.setUi);
+  const setSeg = (questSegment: Segment) => setUi({ questSegment });
   const claimable = useGame(
     (s) =>
       s.game.tasks.list.filter((t) => !t.claimed && taskProgress(s.game, t) >= t.target).length,

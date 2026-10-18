@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.14.0] – Das Band der Welten
+
+### Hinzugefügt
+
+- **Questreihe „Das Band der Welten"** (Archivarin Æla, 8 Quests): verbindet Insel, Dorf, Held und Riss –
+  Holz fällen _und_ Felder bauen, Held auf Abenteuer schicken, Riss-Läufe, Inselhafen samt Import, Dorfschmiede +
+  Schmieden + Heldenstufe, Sammelbuch, Mauer + abgewehrte Invasion, bis zum Wochenboss. Belohnungen kommen aus
+  allen Systemen: Gold, Forschung, Riss-Essenz, Dorf-Rohstoffe, Helden-XP, Heldenausrüstung bis legendär und
+  der Avatar 🌌. Ketten-Quests stehen oben und sind markiert.
+- Quests können jetzt auch Dorfgebäude-Stufen und die Heldenstufe als Ziel haben.
+
+### Geändert
+
+- „Was jetzt?" zeigt die nächste Quest der Reihe und trennt „Quests abgeben" von „Aufträge erledigt"; die
+  Sprünge landen direkt im richtigen Unterreiter.
+
 ## [1.13.0] – Ein Dorf zum Anschauen
 
 ### Geändert

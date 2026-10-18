@@ -1,3 +1,4 @@
+import type { RewardDef } from './progress';
 import type { ItemStack, ModifierSet } from './types';
 
 // Phase 7: pets, quests and daily/weekly tasks.
@@ -175,7 +176,10 @@ export const CAT_STATES = {
 export type QuestObjective =
   | { type: 'stat'; key: string; amount: number; label: string }
   | { type: 'deliver'; item: string; qty: number; label: string }
-  | { type: 'level'; skill: string; level: number; label: string };
+  | { type: 'level'; skill: string; level: number; label: string }
+  /** Best level of a village building across all villages. */
+  | { type: 'building'; id: string; level: number; label: string }
+  | { type: 'heroLevel'; level: number; label: string };
 
 export interface QuestDef {
   id: string;
@@ -189,8 +193,12 @@ export interface QuestDef {
     research?: number;
     items?: ItemStack[];
     xp?: { skill: string; amount: number }[];
+    /** Rewards from the other systems (essence, village resources, hero XP/items, avatar). */
+    extra?: RewardDef;
   };
   requires?: string[];
+  /** Quest line the quest belongs to (shown as a badge). */
+  chain?: string;
   outro: string;
 }
 
@@ -392,6 +400,146 @@ export const QUESTS: QuestDef[] = [
     rewards: { gold: 5e6, research: 1e6 },
     outro:
       '„Neue Physik! Endlich! Ich schreibe sofort einen Antrag. Er wird abgelehnt werden. Aber trotzdem!“',
+  },
+  // --- Questreihe „Das Band der Welten": verbindet Insel, Dorf, Held und Riss ------------------------
+  {
+    id: 'qx_two_worlds',
+    chain: 'Das Band der Welten',
+    name: 'Zwei Welten',
+    icon: '🌉',
+    giver: 'Archivarin Æla',
+    story:
+      '„Insel und Dorf – zwei Hälften desselben Reichs. Zeig mir, dass du beide pflegen kannst: Fälle Holz und baue Felder aus.“',
+    objectives: [
+      { type: 'level', skill: 'woodcutting', level: 10, label: 'Holzfällen Level 10' },
+      { type: 'stat', key: 'villageFieldLevels', amount: 8, label: 'Baue 8 Feldstufen im Dorf' },
+    ],
+    rewards: { gold: 250, extra: { resources: 400 } },
+    outro: '„Holz für die Insel, Getreide fürs Dorf. Ein Anfang. Ein guter.“',
+  },
+  {
+    id: 'qx_hero_wakes',
+    chain: 'Das Band der Welten',
+    requires: ['qx_two_worlds'],
+    name: 'Der Held erwacht',
+    icon: '🦸',
+    giver: 'Archivarin Æla',
+    story:
+      '„Jedes Reich braucht jemanden, der mutig genug ist, vor die Tür zu gehen. Schick deinen Helden auf Abenteuer.“',
+    objectives: [
+      { type: 'heroLevel', level: 3, label: 'Held Stufe 3' },
+      { type: 'stat', key: 'heroAdventures', amount: 2, label: 'Bestehe 2 Abenteuer' },
+    ],
+    rewards: { gold: 300, extra: { heroItem: 1, essence: 30 } },
+    outro: '„Er kam zurück. Mit Beute. Und Schlamm an den Stiefeln. Perfekt.“',
+  },
+  {
+    id: 'qx_first_rift',
+    chain: 'Das Band der Welten',
+    requires: ['qx_hero_wakes'],
+    name: 'Ein Blick in den Riss',
+    icon: '🌀',
+    giver: 'Archivarin Æla',
+    story:
+      '„Der Ätherriss flackert. Was dort drin kämpft, kämpft auch für die Insel – jede Essenz macht dein Reich stärker.“',
+    objectives: [
+      { type: 'stat', key: 'riftRuns', amount: 2, label: 'Wage 2 Riss-Läufe' },
+      { type: 'stat', key: 'riftKills', amount: 300, label: 'Besiege 300 Riss-Gegner' },
+    ],
+    rewards: { research: 120, extra: { essence: 80, heroXp: 150 } },
+    outro: '„Du hast hineingeschaut – und der Riss hat zurückgeschaut. Er wirkte beeindruckt.“',
+  },
+  {
+    id: 'qx_harbor',
+    chain: 'Das Band der Welten',
+    requires: ['qx_first_rift'],
+    name: 'Ein Hafen für die Insel',
+    icon: '⚓',
+    giver: 'Archivarin Æla',
+    story:
+      '„Baue den Inselhafen und schicke Holz von der Insel ins Dorf. Dann fließt der Wohlstand in beide Richtungen.“',
+    objectives: [
+      { type: 'building', id: 'harbor', level: 1, label: 'Inselhafen Stufe 1' },
+      {
+        type: 'stat',
+        key: 'villageImports',
+        amount: 1,
+        label: 'Importiere einmal Waren über den Hafen',
+      },
+    ],
+    rewards: { gold: 800, extra: { resources: 1200 } },
+    outro:
+      '„Die erste Fähre legt ab. Ein Fischer winkt. Eine Möwe stiehlt sein Brot. Alles wie immer.“',
+  },
+  {
+    id: 'qx_forged',
+    chain: 'Das Band der Welten',
+    requires: ['qx_harbor'],
+    name: 'Geschmiedet für alles',
+    icon: '⚒️',
+    giver: 'Archivarin Æla',
+    story:
+      '„Die Schmiede im Dorf stärkt die Truppen, die Schmiede auf der Insel die Ausrüstung – und beide den Helden im Riss.“',
+    objectives: [
+      { type: 'building', id: 'smithy', level: 3, label: 'Dorfschmiede Stufe 3' },
+      { type: 'level', skill: 'smithing', level: 25, label: 'Schmieden Level 25' },
+      { type: 'heroLevel', level: 8, label: 'Held Stufe 8' },
+    ],
+    rewards: { gold: 1500, extra: { heroItem: 2, essence: 120 } },
+    outro: '„Hammer, Amboss, Held. In dieser Reihenfolge. Meistens.“',
+  },
+  {
+    id: 'qx_collector',
+    chain: 'Das Band der Welten',
+    requires: ['qx_forged'],
+    name: 'Das Gedächtnis des Reichs',
+    icon: '📗',
+    giver: 'Archivarin Æla',
+    story:
+      '„Alles, was du findest – auf der Insel, im Riss, bei Abenteuern – gehört ins Sammelbuch. Fülle es!“',
+    objectives: [
+      { type: 'stat', key: 'albumItems', amount: 30, label: 'Finde 30 neue Gegenstände' },
+      { type: 'stat', key: 'collectionsDone', amount: 1, label: 'Schließe ein Sammelbuch-Set ab' },
+    ],
+    rewards: { research: 400, extra: { essence: 150, heroXp: 400 } },
+    outro: '„Ein Museum! Mit Eintritt! Gut, der Eintritt ist kostenlos. Aber trotzdem!“',
+  },
+  {
+    id: 'qx_bulwark',
+    chain: 'Das Band der Welten',
+    requires: ['qx_collector'],
+    name: 'Bollwerk gegen den Riss',
+    icon: '🛡️',
+    giver: 'Archivarin Æla',
+    story: '„Der Riss greift das Dorf an. Mauer, Truppen und Held müssen zusammenstehen.“',
+    objectives: [
+      { type: 'building', id: 'wall', level: 5, label: 'Mauer Stufe 5' },
+      {
+        type: 'stat',
+        key: 'villageInvasionsRepelled',
+        amount: 1,
+        label: 'Wehre eine Riss-Invasion ab',
+      },
+    ],
+    rewards: { gold: 3000, extra: { resources: 2500, heroItem: 2 } },
+    outro: '„Die Riss-Kreaturen ziehen ab. Eine hat ihre Mütze vergessen. Die behalten wir.“',
+  },
+  {
+    id: 'qx_weekly_legend',
+    chain: 'Das Band der Welten',
+    requires: ['qx_bulwark'],
+    name: 'Legende der Woche',
+    icon: '🌌',
+    giver: 'Archivarin Æla',
+    story:
+      '„Nur wer Insel, Dorf, Held und Riss vereint, bezwingt den Wochenboss. Bist du so weit?“',
+    objectives: [
+      { type: 'stat', key: 'weeklyWins', amount: 1, label: 'Besiege einen Wochenboss' },
+      { type: 'stat', key: 'riftBossKills', amount: 3, label: 'Besiege 3 Riss-Bosse' },
+    ],
+    rewards: { gold: 5000, research: 1000, extra: { heroItem: 3, essence: 300, avatar: '🌌' } },
+    outro:
+      '„Das Band der Welten ist geknüpft. Ich schreibe deinen Namen in die Chronik. In Großbuchstaben.“',
   },
 ];
 

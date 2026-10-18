@@ -1288,3 +1288,17 @@ h4.rift-h4::before,
   font-weight: 700;
   cursor: pointer;
 }
+.quest-chain {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: rgba(124, 92, 255, 0.3);
+  color: #d9ccff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.quest.chain:not(.locked) {
+  border-color: rgba(160, 128, 255, 0.6);
+  background: linear-gradient(150deg, rgba(124, 92, 255, 0.22), rgba(14, 12, 30, 0.6));
+}

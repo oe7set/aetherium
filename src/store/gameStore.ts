@@ -105,6 +105,7 @@ export type MenuSection =
   | 'save'
   | 'log'
   | 'debug';
+export type QuestSegment = 'tasks' | 'quests' | 'pets';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools' | 'album';
 
 const FEED_LIMIT = 60;
@@ -125,6 +126,7 @@ export interface UiState {
   heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
+  questSegment: QuestSegment;
   /** "Was jetzt?" overlay. */
   agenda: boolean;
 }
@@ -325,6 +327,7 @@ export const useGame = create<GameStore>()((set, get) => {
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,
+      questSegment: 'tasks',
       agenda: false,
     },
 
@@ -492,7 +495,7 @@ export const useGame = create<GameStore>()((set, get) => {
       }),
     turnInQuest: (id) =>
       mutate((s, emit) => {
-        completeQuest(s, id, emit);
+        completeQuest(s, id, emit, defaultRng);
       }),
     claim: (taskId) =>
       mutate((s, emit) => {

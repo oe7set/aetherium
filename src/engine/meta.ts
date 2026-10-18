@@ -6,6 +6,7 @@ import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
 import { invalidateMods, registerModifierSource } from './modifiers';
 import { createRng, type Rng } from './rng';
+import { applyReward } from './progress';
 import { addResearch } from './science';
 import { earnGold } from './shop';
 import { addXp, skillLevel, totalLevel } from './skills';
@@ -92,6 +93,12 @@ export function questProgress(s: GameState, q: QuestDef): ObjectiveProgress[] {
     } else if (o.type === 'deliver') {
       current = itemCount(s, o.item);
       target = o.qty;
+    } else if (o.type === 'building') {
+      current = Math.max(0, ...s.village.villages.map((v) => v.buildings[o.id] ?? 0));
+      target = o.level;
+    } else if (o.type === 'heroLevel') {
+      current = s.hero.level;
+      target = o.level;
     } else {
       current = skillLevel(s, o.skill);
       target = o.level;
@@ -100,7 +107,12 @@ export function questProgress(s: GameState, q: QuestDef): ObjectiveProgress[] {
   });
 }
 
-export function completeQuest(s: GameState, id: string, emit: Emit): boolean {
+export function completeQuest(
+  s: GameState,
+  id: string,
+  emit: Emit,
+  rng: Rng = createRng(Date.now()),
+): boolean {
   const q = QUEST_MAP.get(id);
   if (!q || questStatus(s, id) !== 'active') return false;
   if (!questProgress(s, q).every((p) => p.done)) return false;
@@ -112,6 +124,7 @@ export function completeQuest(s: GameState, id: string, emit: Emit): boolean {
   if (r.research) addResearch(s, r.research, emit);
   for (const it of r.items ?? []) gainItem(s, it.item, it.qty, emit);
   for (const x of r.xp ?? []) addXp(s, x.skill, x.amount, emit);
+  if (r.extra) applyReward(s, r.extra, rng, emit);
   addStat(s, 'questsCompleted');
   emit({ type: 'questCompleted', quest: id });
   return true;
@@ -230,5 +243,14 @@ export function questRewardText(q: QuestDef): string {
   if (q.rewards.research) parts.push(`${q.rewards.research.toLocaleString('de-DE')} Forschung`);
   for (const it of q.rewards.items ?? []) parts.push(`${it.qty}× ${getItem(it.item).name}`);
   for (const x of q.rewards.xp ?? []) parts.push(`${x.amount} XP`);
+  const x = q.rewards.extra;
+  if (x?.essence) parts.push(`${x.essence} Riss-Essenz`);
+  if (x?.resources) parts.push(`je ${x.resources} Dorf-Rohstoffe`);
+  if (x?.heroXp) parts.push(`${x.heroXp} Helden-XP`);
+  if (x?.heroItem)
+    parts.push(
+      ['', 'Heldenausrüstung', 'edle Heldenausrüstung', 'legendäre Heldenausrüstung'][x.heroItem]!,
+    );
+  if (x?.avatar) parts.push(`Avatar ${x.avatar}`);
   return parts.join(', ');
 }

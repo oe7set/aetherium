@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.13.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.14.0**.
 
 ## 1. Der große Kreislauf
 
@@ -104,6 +104,11 @@
 - 14 Sets reichen von Insel und Riss-Beute bis zu Relikten.
 - Ein volles Set bringt eine einmalige Belohnung plus einen Dauer-Bonus (Modifikator-Quelle `'collections'`).
 
+**Questreihe „Das Band der Welten"** (`data/meta.ts`, `chain`)
+
+- Quest-Ziele: Statistik-Zuwachs, Abgabe, Skill-Level, Dorfgebäude-Stufe (`building`), Heldenstufe
+  (`heroLevel`); Belohnung `rewards.extra` läuft über `applyReward` (Essenz, Rohstoffe, Held).
+
 **Prestige**
 
 - `resetRun` setzt Skills, Gold und Inventar zurück.
@@ -135,7 +140,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Gameplay & Inhalt**
 
 - [ ] Wochenboss ausbauen: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses, HUD-Hinweis im Lauf.
-- [ ] Querschnitts-Quests: Ketten, die Insel, Dorf, Held und Riss verbinden (PLAN-2 Phase 11).
+- [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
 - [ ] Invasionen stärker verzahnen: Verteidigung mit Held und Riss-Talenten, Belohnung für gewonnene Abwehr.
 - [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.
 - [ ] Endgame (Phase 13): Meisterschaft pro Aktion, Endlos-Riss, Titel und Kosmetik.

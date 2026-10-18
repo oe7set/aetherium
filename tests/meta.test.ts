@@ -2,6 +2,7 @@ import Decimal from 'break_eternity.js';
 import { describe, expect, it } from 'vitest';
 import {
   acceptQuest,
+  activeVillage,
   advance,
   claimTask,
   collector,
@@ -11,6 +12,8 @@ import {
   ensureTasks,
   mod,
   observeCat,
+  QUEST_MAP,
+  questProgress,
   questStatus,
   rebirth,
   startAction,
@@ -67,6 +70,40 @@ describe('Quests', () => {
     expect(completeQuest(s, 'q_fisher', () => {})).toBe(false);
     s.stats.fishCaught = 550;
     expect(completeQuest(s, 'q_fisher', () => {})).toBe(true);
+  });
+});
+
+describe('Questreihe „Das Band der Welten"', () => {
+  it('verbindet Insel, Dorf und Held und belohnt aus allen Systemen', () => {
+    const s = gameWith();
+    setLevel(s, 'woodcutting', 12);
+    expect(questStatus(s, 'qx_hero_wakes')).toBe('locked');
+    expect(acceptQuest(s, 'qx_two_worlds')).toBe(true);
+    expect(completeQuest(s, 'qx_two_worlds', () => {})).toBe(false);
+    s.stats.villageFieldLevels = (s.stats.villageFieldLevels ?? 0) + 8;
+    const v = activeVillage(s);
+    const wood = v.res.wood;
+    expect(completeQuest(s, 'qx_two_worlds', () => {}, createRng(1))).toBe(true);
+    expect(v.res.wood).toBeGreaterThan(wood);
+    // Hero objectives and rewards (essence + hero item).
+    acceptQuest(s, 'qx_hero_wakes');
+    s.hero.level = 3;
+    s.stats.heroAdventures = (s.stats.heroAdventures ?? 0) + 2;
+    const essence = s.rift.essence;
+    const bag = s.hero.bag.length;
+    expect(completeQuest(s, 'qx_hero_wakes', () => {}, createRng(2))).toBe(true);
+    expect(s.rift.essence).toBeGreaterThan(essence);
+    expect(s.hero.bag.length).toBe(bag + 1);
+  });
+
+  it('Gebäude-Ziele zählen die beste Stufe aller Dörfer', () => {
+    const s = gameWith();
+    s.quests.done.push('qx_two_worlds', 'qx_hero_wakes', 'qx_first_rift');
+    acceptQuest(s, 'qx_harbor');
+    const q = QUEST_MAP.get('qx_harbor')!;
+    expect(questProgress(s, q)[0]!.done).toBe(false);
+    activeVillage(s).buildings.harbor = 1;
+    expect(questProgress(s, q)[0]!.done).toBe(true);
   });
 });
 

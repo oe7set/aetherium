@@ -1,7 +1,8 @@
 import { collectionsClaimable } from './collections';
 import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
-import { QUEST_MAP, questProgress, taskProgress, weekKey } from './meta';
+import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey } from './meta';
+import { QUESTS } from '../data/meta';
 import { currentChronicle, dailyAvailable, passClaimable } from './progress';
 import { canStartRun } from './rift';
 import { affordableTechs } from './science';
@@ -20,7 +21,7 @@ export type AgendaTarget =
   | { area: 'inventory'; section: 'items' | 'album' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
-  | { area: 'menu'; section: 'pass' | 'research' | 'quests' };
+  | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'quests' };
 
 export interface AgendaItem {
   id: string;
@@ -76,20 +77,41 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       kind: 'reward',
       target: { area: 'inventory', section: 'album' },
     });
-  const quests =
-    s.tasks.list.filter((tk) => !tk.claimed && taskProgress(s, tk) >= tk.target).length +
-    Object.keys(s.quests.active).filter((id) => {
-      const q = QUEST_MAP.get(id);
-      return q && questProgress(s, q).every((p) => p.done);
-    }).length;
-  if (quests > 0)
+  const tasksDone = s.tasks.list.filter(
+    (tk) => !tk.claimed && taskProgress(s, tk) >= tk.target,
+  ).length;
+  const questsDone = Object.keys(s.quests.active).filter((id) => {
+    const q = QUEST_MAP.get(id);
+    return q && questProgress(s, q).every((p) => p.done);
+  }).length;
+  if (questsDone > 0)
     add({
       id: 'quests',
+      icon: '📜',
+      title: `${questsDone} ${questsDone === 1 ? 'Quest' : 'Quests'} abgeben`,
+      detail: 'Alle Ziele erfüllt',
+      kind: 'reward',
+      target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  if (tasksDone > 0)
+    add({
+      id: 'tasks',
       icon: '📋',
-      title: `${quests} ${quests === 1 ? 'Auftrag' : 'Aufträge'} erledigt`,
+      title: `${tasksDone} ${tasksDone === 1 ? 'Auftrag' : 'Aufträge'} erledigt`,
       detail: 'Belohnung abholen',
       kind: 'reward',
-      target: { area: 'menu', section: 'quests' },
+      target: { area: 'menu', section: 'quests', sub: 'tasks' },
+    });
+
+  const chainQuest = QUESTS.find((q) => q.chain && questStatus(s, q.id) === 'available');
+  if (chainQuest)
+    add({
+      id: 'chain-quest',
+      icon: chainQuest.icon,
+      title: `Neue Quest: ${chainQuest.name}`,
+      detail: `${chainQuest.chain} – ${chainQuest.giver} wartet`,
+      kind: 'todo',
+      target: { area: 'menu', section: 'quests', sub: 'quests' },
     });
 
   // --- Hero -------------------------------------------------------------------------------------

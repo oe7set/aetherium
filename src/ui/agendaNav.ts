@@ -45,7 +45,11 @@ export function goToAgenda(target: AgendaTarget): void {
       store.setUi({ tab: 'rift', heroSegment: target.section });
       break;
     case 'menu':
-      store.setUi({ tab: 'menu', menuSection: target.section });
+      store.setUi({
+        tab: 'menu',
+        menuSection: target.section,
+        ...(target.sub ? { questSegment: target.sub } : {}),
+      });
       break;
   }
 }
