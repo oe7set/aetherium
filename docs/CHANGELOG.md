@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.26.0] – Der Montagsfürst
+
+### Hinzugefügt
+
+- **Der Montagsfürst** 🦹 – der Wochenboss ist jetzt ein eigener Gegner statt des Biom-Bosses: Sturmangriff alle
+  5 Sekunden, ein Ring aus 12 Geschossen alle 4 Sekunden und alle 12 Sekunden Verstärkung. Er bewacht das Ende
+  jeder Wochenprüfung und betritt die Arena mit eigener Ansage.
+
 ## [1.25.0] – Neue Questreihen
 
 ### Hinzugefügt

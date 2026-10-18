@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { WEEKLY_MUTATORS } from '../src/data/weekly';
+import { WEEKLY_MINUTES, WEEKLY_MUTATORS } from '../src/data/weekly';
+import { chooseUpgrade, closeChest, createRun, stepRun } from '../src/rift/sim';
 import {
   createRng,
   deserialize,
@@ -80,4 +81,23 @@ describe('Wochenboss', () => {
     expect(back.rift.weekly.attempts).toBe(2);
     expect(back.rift.weekly.bestKills).toBe(300);
   });
+});
+
+describe('Montagsfürst', () => {
+  it('bewacht das Ende der Wochenprüfung und feuert Geschossringe', () => {
+    const s = gameWith();
+    const cfg = prepareWeekly(s, 'farmer', monday, createRng(1))!;
+    cfg.stats.maxHp = 1e12;
+    const run = createRun(cfg);
+    let shots = 0;
+    for (let t = 0; t < (WEEKLY_MINUTES * 60 + 30) * 5; t++) {
+      if (run.phase === 'levelup') chooseUpgrade(run, 0);
+      if (run.phase === 'chest') closeChest(run);
+      stepRun(run, 0.2, { x: 0, y: 0 });
+      shots = Math.max(shots, run.shots.length);
+    }
+    const boss = run.enemies.find((e) => e.final);
+    expect(boss?.def.id).toBe('rb_warlord');
+    expect(shots).toBeGreaterThanOrEqual(12);
+  }, 20000);
 });

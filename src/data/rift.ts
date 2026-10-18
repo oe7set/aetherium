@@ -739,7 +739,15 @@ export const MULTIPLICATIVE_STATS: StatKey[] = ['speed', 'magnet', 'maxHp'];
 
 // --- Enemies ------------------------------------------------------------------------------------
 
-export type EnemyBehavior = 'chase' | 'swarm' | 'shooter' | 'splitter' | 'tank' | 'teleporter';
+export type EnemyBehavior =
+  | 'chase'
+  | 'swarm'
+  | 'shooter'
+  | 'splitter'
+  | 'tank'
+  | 'teleporter'
+  /** Weekly boss: charges, fires rings of shots, calls reinforcements. */
+  | 'warlord';
 
 export interface EnemyDef {
   id: string;
@@ -945,6 +953,12 @@ export const BIOMES: BiomeDef[] = [
 export const EXAMINER: BossDef = {
   ...e('rb_examiner', 'Der Prüfer (Gutachter Nr. 2)', '🧑‍⚖️', 'tank', 16000, 85, 42, 40, 500, 15),
   at: 15,
+};
+
+/** Wochenboss: guards the end of every weekly trial. */
+export const WEEKLY_BOSS: BossDef = {
+  ...e('rb_warlord', 'Der Montagsfürst', '🦹', 'warlord', 20000, 80, 38, 44, 800, 99),
+  at: 99,
 };
 
 export const RUN_MINUTES = 15;

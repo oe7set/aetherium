@@ -4,6 +4,7 @@ import {
   BASE_STATS,
   BIOMES,
   EXAMINER,
+  WEEKLY_BOSS,
   HEROES,
   MAX_PASSIVES,
   MAX_WEAPONS,
@@ -23,7 +24,10 @@ import { createRng, type Rng } from '../engine/rng';
 export const WEAPON_MAP = new Map(RIFT_WEAPONS.map((w) => [w.id, w]));
 export const PASSIVE_MAP = new Map(RIFT_PASSIVES.map((p) => [p.id, p]));
 const ENEMY_MAP = new Map<string, EnemyDef>(
-  [...BIOMES.flatMap((b) => [...b.enemies, ...b.bosses]), EXAMINER].map((d) => [d.id, d]),
+  [...BIOMES.flatMap((b) => [...b.enemies, ...b.bosses]), EXAMINER, WEEKLY_BOSS].map((d) => [
+    d.id,
+    d,
+  ]),
 );
 
 export const HERO_RADIUS = 14;
@@ -57,6 +61,8 @@ export interface Enemy {
   dx: number;
   dy: number;
   timer: number;
+  /** Second timer for bosses with two attacks (warlord: volley, then summons). */
+  alt: number;
   flash: number;
   /** Per-source hit times for continuous damage (auras, orbits, zones). */
   hits: Record<string, number>;
@@ -660,6 +666,7 @@ function spawnEnemy(
     dx: dx / len,
     dy: dy / len,
     timer: 1 + run.rng() * 2,
+    alt: 3,
     flash: 0,
     hits: {},
     dead: false,
@@ -758,11 +765,19 @@ function updateSpawns(run: RunState, dt: number): void {
   if (minute >= total && !run.examinerSpawned) {
     run.examinerSpawned = true;
     const [x, y] = ringPoint(run);
-    const guardian = dungeon ? (run.biome.bosses[1] ?? EXAMINER) : EXAMINER;
+    const guardian = run.config.trial
+      ? WEEKLY_BOSS
+      : dungeon
+        ? (run.biome.bosses[1] ?? EXAMINER)
+        : EXAMINER;
     spawnEnemy(run, guardian, x, y, 'final');
     announce(
       run,
-      dungeon ? `${guardian.icon} Der Wächter: ${guardian.name}!` : '🧑‍⚖️ Der Prüfer erscheint!',
+      run.config.trial
+        ? `${guardian.icon} ${guardian.name} betritt die Arena!`
+        : dungeon
+          ? `${guardian.icon} Der Wächter: ${guardian.name}!`
+          : '🧑‍⚖️ Der Prüfer erscheint!',
     );
   }
 }
@@ -860,6 +875,41 @@ function updateEnemies(run: RunState, dt: number): void {
           if (e.timer < 0.8) speed *= 2.6;
         }
         break;
+      case 'warlord': {
+        // Charge every 5 s, a ring of 12 shots every 4 s, reinforcements every 12 s.
+        e.timer -= dt;
+        if (e.timer <= 0) e.timer = 5;
+        if (e.timer < 0.9) speed *= 2.4;
+        e.alt -= dt;
+        if (e.alt <= 0) {
+          e.alt = 4;
+          for (let i = 0; i < 12; i++) {
+            const a = (i / 12) * Math.PI * 2 + run.time;
+            run.shots.push({
+              x: e.x,
+              y: e.y,
+              vx: Math.cos(a) * 190,
+              vy: Math.sin(a) * 190,
+              damage: e.damage * 0.6,
+              life: 3.5,
+            });
+          }
+          if (Math.floor(run.time / 12) !== Math.floor((run.time - 4) / 12)) {
+            const pool = spawnPool(run).filter((d) => d.behavior !== 'swarm');
+            for (let i = 0; i < 5 && pool.length; i++) {
+              const a = (i / 5) * Math.PI * 2;
+              spawnEnemy(
+                run,
+                pickWeighted(run, pool),
+                e.x + Math.cos(a) * 60,
+                e.y + Math.sin(a) * 60,
+              );
+            }
+            announce(run, '🦹 Verstärkung!');
+          }
+        }
+        break;
+      }
       default:
         break;
     }

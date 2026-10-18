@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.25.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.26.0**.
 
 ## 1. Der große Kreislauf
 
@@ -155,7 +155,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Wochenboss: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses.
 - [ ] Weitere Questreihen (Dorf-Expansion ↔ Handel, Haustiere ↔ Held).
 - [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
       über Export-Codes.

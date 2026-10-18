@@ -121,8 +121,8 @@ function WeeklyCard({ hero }: { hero: string }) {
         {c.mutator.desc}
       </p>
       <p className="small muted">
-        {WEEKLY_MINUTES} Minuten, Zwischenboss zur Halbzeit, am Ende der große Boss. Gegnerstärke ×
-        {c.difficulty.toFixed(2)}.{' '}
+        {WEEKLY_MINUTES} Minuten, Zwischenboss zur Halbzeit, am Ende der Montagsfürst 🦹
+        (Sturmangriffe, Geschossringe, Verstärkung). Gegnerstärke ×{c.difficulty.toFixed(2)}.{' '}
         {w?.won
           ? 'Diese Woche bezwungen – Wiederholen bringt normale Riss-Beute.'
           : 'Erster Sieg der Woche: legendäre Heldenausrüstung, Essenz, Gold & ein besonderer Avatar.'}
