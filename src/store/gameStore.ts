@@ -125,6 +125,8 @@ export interface UiState {
   heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
+  /** "Was jetzt?" overlay. */
+  agenda: boolean;
 }
 
 export interface GameStore {
@@ -323,6 +325,7 @@ export const useGame = create<GameStore>()((set, get) => {
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,
+      agenda: false,
     },
 
     tick: (dt) => {

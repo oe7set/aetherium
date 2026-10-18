@@ -1,4 +1,5 @@
 import { TROOPS, V_RES_INFO, V_RESOURCES } from '../../data/village';
+import { EmptyState } from '../EmptyState';
 import { useGame } from '../../store/gameStore';
 import { duration } from './vui';
 
@@ -6,9 +7,18 @@ export function ReportsView() {
   const vs = useGame.getState().game.village;
   if (!vs.reports.length)
     return (
-      <p className="muted small center">
-        Noch keine Berichte. Raubzüge, Invasionen und Gründungen landen hier.
-      </p>
+      <EmptyState
+        icon="📜"
+        title="Noch keine Berichte"
+        actions={[
+          {
+            label: '⚔️ Raubzug planen',
+            onClick: () => useGame.getState().setUi({ villageSegment: 'military' }),
+          },
+        ]}
+      >
+        Raubzüge, Invasionen, Handel und Gründungen landen hier.
+      </EmptyState>
     );
   return (
     <div className="v-reports">

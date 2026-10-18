@@ -21,6 +21,7 @@ import {
   sendResources,
   type Village,
 } from '../../engine';
+import { EmptyState } from '../EmptyState';
 import { useGame } from '../../store/gameStore';
 import { short } from './vui';
 
@@ -37,17 +38,29 @@ export function MarketView({ village: v }: { village: Village }) {
       {market > 0 ? (
         <NpcTrade village={v} />
       ) : (
-        <p className="small muted center">
-          Baue einen Marktplatz (Hauptgebäude 3, Lager 1, Kornspeicher 1).
-        </p>
+        <EmptyState
+          icon="⚖️"
+          title="Noch kein Marktplatz"
+          actions={[
+            {
+              label: '🏘️ Zum Dorfzentrum',
+              primary: true,
+              onClick: () => useGame.getState().setUi({ villageSegment: 'center' }),
+            },
+          ]}
+        >
+          Voraussetzung: Hauptgebäude 3, Lager 1, Kornspeicher 1. Tausche Rohstoffe und öffne den
+          Hafen zur Insel.
+        </EmptyState>
       )}
       {market > 0 && game.village.villages.length > 1 && <SendResources village={v} />}
       {harbor > 0 ? (
         <Harbor village={v} />
       ) : (
-        <p className="small muted center">
-          ⚓ Der Inselhafen (ab Marktplatz 1) verbindet dein Dorf mit der Heimatinsel.
-        </p>
+        <EmptyState icon="⚓" title="Inselhafen (ab Marktplatz 1)">
+          Verbindet Dorf und Insel: Holz, Erz und Getreide von der Insel werden zu Dorf-Rohstoffen –
+          und Rohstoffe zu Gold.
+        </EmptyState>
       )}
     </div>
   );

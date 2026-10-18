@@ -1,5 +1,6 @@
 // Public engine API. Pure TypeScript – no React, no DOM rendering, no WebGL.
 export * from './actions';
+export * from './agenda';
 export * from './achievements';
 export * from './buffs';
 export * from './collections';

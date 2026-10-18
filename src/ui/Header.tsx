@@ -1,15 +1,8 @@
 import { BALANCE } from '../data/balance';
-import {
-  affordableTechs,
-  dailyAvailable,
-  formatDuration,
-  formatNumber,
-  maxHp,
-  passClaimable,
-  totalLevel,
-} from '../engine';
+import { affordableTechs, formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
+import { useAgendaSummary } from './agendaNav';
 
 export function Header() {
   const gold = useGame((s) => formatNumber(s.game.gold, s.game.settings.numberFormat));
@@ -25,11 +18,7 @@ export function Header() {
   const setUi = useGame((s) => s.setUi);
   const openSkill = useGame((s) => s.openSkill);
   const wisdom = useGame((s) => s.game.prestige.wisdomTotal);
-  const daily = useGame((s) => dailyAvailable(s.game, Date.now()));
-  const gifts = useGame(
-    (s) => (dailyAvailable(s.game, Date.now()) ? 1 : 0) + passClaimable(s.game).length,
-  );
-  const setDailyOpen = useGame((s) => s.setDailyOpen);
+  const todo = useAgendaSummary();
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
@@ -86,23 +75,21 @@ export function Header() {
             ❤️ <b>{hp}</b>
           </span>
         )}
-        {gifts > 0 && (
-          <button
-            className="chip chip-glow chip-gift"
-            title="Belohnungen warten"
-            onClick={() =>
-              daily ? setDailyOpen(true) : setUi({ tab: 'menu', menuSection: 'pass' })
-            }
-          >
-            🎁 <b>{gifts}</b>
-          </button>
-        )}
         {intelligence > 0 && (
           <span className="chip" title={t('header.intelligence')}>
             🧠 <b>{intelligence}</b>
           </span>
         )}
       </div>
+      <button
+        className={`agenda-btn ${todo.rewards > 0 ? 'has-reward' : ''} ${todo.count ? '' : 'empty'}`}
+        onClick={() => setUi({ agenda: true })}
+        aria-label={`Was jetzt? ${todo.count} offen`}
+        title="Was jetzt?"
+      >
+        <span>{todo.rewards > 0 ? '🎁' : '📌'}</span>
+        {todo.count > 0 && <b>{todo.count}</b>}
+      </button>
     </header>
   );
 }

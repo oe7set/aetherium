@@ -24,6 +24,7 @@ import {
   type Village,
 } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
+import { EmptyState } from '../EmptyState';
 import { useGame } from '../../store/gameStore';
 import { CostView } from './CostView';
 import { duration, short } from './vui';
@@ -87,9 +88,20 @@ export function MilitaryView({ village: v }: { village: Village }) {
         </section>
       )}
       {buildingLevel(v, 'barracks') === 0 && (
-        <p className="small muted center">
-          Baue eine Kaserne (Hauptgebäude 3 + Versammlungsplatz 1), um Truppen auszubilden.
-        </p>
+        <EmptyState
+          icon="🛡️"
+          title="Noch keine Kaserne"
+          actions={[
+            {
+              label: '🏘️ Zum Dorfzentrum',
+              primary: true,
+              onClick: () => useGame.getState().setUi({ villageSegment: 'center' }),
+            },
+          ]}
+        >
+          Voraussetzung: Hauptgebäude 3 und Versammlungsplatz 1. Dann bildest du Truppen aus, die
+          plündern, Oasen erobern und gegen Riss-Invasionen verteidigen.
+        </EmptyState>
       )}
 
       {moves.length > 0 && (
@@ -121,7 +133,15 @@ export function MilitaryView({ village: v }: { village: Village }) {
       <section className="glass v-box">
         <h4>🗺️ Umgebung</h4>
         {buildingLevel(v, 'rally') < 1 && (
-          <p className="small v-req">Für Raubzüge brauchst du einen Versammlungsplatz.</p>
+          <p className="small v-req">
+            Für Raubzüge brauchst du einen Versammlungsplatz.{' '}
+            <button
+              className="link-btn"
+              onClick={() => useGame.getState().setUi({ villageSegment: 'center' })}
+            >
+              Jetzt bauen ›
+            </button>
+          </p>
         )}
         <TargetList village={v} />
       </section>

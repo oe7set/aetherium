@@ -7,7 +7,7 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.11)
+## Was dich erwartet (v1.12)
 
 **🏝️ Die Insel**
 
@@ -57,7 +57,8 @@ greift ineinander.
 
 - Offline-Fortschritt (24 h und mehr), Autosave, Export/Import.
 - Akku-Modus mit Eco-Leistungsprofil (das Handy bleibt kühl) und 2D-Ansicht ohne 3D.
-- Schnellzugriff 🧭 zu jedem Bereich.
+- **„Was jetzt?" 📌**: alles, was gerade auf dich wartet – über alle Systeme, mit Direktsprung.
+- Schnellzugriff 🧭 zu jedem Bereich, Zurück-Taste schließt Fenster.
 
 ## Steuerung
 

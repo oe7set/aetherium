@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.11.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.12.0**.
 
 ## 1. Der große Kreislauf
 
@@ -115,6 +115,12 @@
 - Tab-Leiste (6 Bereiche) → Fenster in voller Höhe mit Titel und ✕ → Unterreiter (umbrechend, alle sichtbar).
 - Weitere Wege: Schnellzugriff 🧭 (Header, Taste K), antippbare Header-Chips, Chronik-„Los", Meldungs-Hinweis →
   Ereignis-Log, Untätig-Leiste → Skills.
+- **„Was jetzt?" 📌** (rechts im Header, auch oben im Reichsbuch): `engine/agenda.ts` sammelt alles Fällige aus
+  allen Systemen (Belohnungen, Held, Wochenboss, Baumeister, Berichte, Forschung, volle Taschen, Untätigkeit);
+  `ui/agendaNav.ts` springt hin. **Neue Systeme mit Handlungsbedarf dort eintragen.**
+- Leere Zustände nie als Sackgasse: `ui/EmptyState.tsx` erklärt, was fehlt, und bietet den Weg dorthin.
+- Zurück-Taste/-Geste schließt Overlays, Tagesbonus und Fenster (`useBackButton` in `App.tsx`).
+- Skill-Liste: je Skill eine Zeile „läuft gerade / Freischalt-Grund / nächste Freischaltung".
 
 **Atmosphäre**
 

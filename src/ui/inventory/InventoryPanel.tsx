@@ -5,6 +5,7 @@ import { slotPrice, usedSlots } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame, type InventorySegment } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { EmptyState } from '../EmptyState';
 import { CollectionPanel } from './CollectionPanel';
 import { GearPanel } from './GearPanel';
 import { ItemDetail } from './ItemDetail';
@@ -140,7 +141,20 @@ function ItemsGrid() {
           ))}
         </div>
       )}
-      {entries.length === 0 && used === 0 && <p className="muted center">{t('inv.empty')}</p>}
+      {entries.length === 0 && used === 0 && (
+        <EmptyState
+          icon="🎒"
+          title={t('inv.empty')}
+          actions={[
+            {
+              label: '🎯 Zu den Skills',
+              onClick: () => useGame.getState().setUi({ tab: 'skills', skillDetail: false }),
+            },
+          ]}
+        >
+          Sammle Holz, Erz oder Fisch – alles landet hier und zählt fürs Sammelbuch.
+        </EmptyState>
+      )}
       {selected && inventory[selected] !== undefined && <ItemDetail itemId={selected} />}
       <div className="item-grid">
         {entries.map(({ def, qty }) => (

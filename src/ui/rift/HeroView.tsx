@@ -41,6 +41,7 @@ import {
 } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { createRun } from '../../rift/sim';
+import { EmptyState } from '../EmptyState';
 import { useGame } from '../../store/gameStore';
 import { duration } from '../village/vui';
 import { useRiftRun } from './runStore';
@@ -349,7 +350,26 @@ export function AdventuresView() {
         Dorf siehst du sie als ❗.
       </p>
       {h.adventures.length === 0 && (
-        <p className="small center muted">Gerade keine Abenteuer. Bald!</p>
+        <EmptyState
+          icon="⏳"
+          title={`Nächstes Abenteuer in ${duration(h.adventureIn)}`}
+          actions={[
+            {
+              label: '🌀 Riss-Lauf',
+              onClick: () => useGame.getState().setUi({ heroSegment: 'start' }),
+            },
+            {
+              label: '🦸 Held ausrüsten',
+              onClick: () => useGame.getState().setUi({ heroSegment: 'hero' }),
+            },
+            {
+              label: '🗺️ Weltkarte',
+              onClick: () => useGame.getState().setUi({ tab: 'village', villageSegment: 'map' }),
+            },
+          ]}
+        >
+          Bis dahin wartet genug Arbeit auf deinen Helden:
+        </EmptyState>
       )}
       {h.adventures
         .slice()

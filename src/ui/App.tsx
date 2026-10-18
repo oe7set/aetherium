@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
 import { AchievementToast } from './AchievementToast';
@@ -23,6 +23,7 @@ import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
 import { TitleScreen } from './TitleScreen';
 import { QuickNav } from './QuickNav';
+import { AgendaPanel } from './Agenda';
 import { ChronicleBanner } from './rewards/ChronicleBanner';
 import { DailyModal } from './rewards/DailyModal';
 import { RewardReveal } from './rewards/RewardReveal';
@@ -47,7 +48,8 @@ function useKeyboardShortcuts() {
       } else if (e.key === 's' || e.key === 'S') {
         store.stop();
       } else if (e.key === 'Escape') {
-        if (store.offlineSummary) store.dismissOffline();
+        if (store.ui.agenda) store.setUi({ agenda: false });
+        else if (store.offlineSummary) store.dismissOffline();
         else store.setUi({ tab: 'world', skillDetail: false });
       }
     };
@@ -72,6 +74,45 @@ function useBackgroundMusic() {
   useEffect(() => {
     setMusic({ enabled, volume, theme });
   }, [enabled, volume, theme]);
+}
+
+/**
+ * Phone back button / gesture: closes the open overlay or panel instead of leaving the game.
+ * One history entry stands for "something is open"; closing in the UI consumes it again.
+ */
+function useBackButton(enabled: boolean) {
+  const open = useGame((s) => s.ui.tab !== 'world' || s.ui.agenda || s.ui.quickNav || s.dailyOpen);
+  const pushed = useRef(false);
+  useEffect(() => {
+    if (!enabled) return;
+    if (open && !pushed.current) {
+      window.history.pushState({ aetherium: true }, '');
+      pushed.current = true;
+    } else if (!open && pushed.current) {
+      pushed.current = false;
+      window.history.back();
+    }
+  }, [open, enabled]);
+  useEffect(() => {
+    if (!enabled) return;
+    const onPop = () => {
+      if (!pushed.current || useRiftRun.getState().run) return;
+      pushed.current = false;
+      const { ui, setUi, dailyOpen, setDailyOpen } = useGame.getState();
+      if (dailyOpen) setDailyOpen(false);
+      else if (ui.agenda || ui.quickNav) setUi({ agenda: false, quickNav: false });
+      else if (ui.tab === 'skills' && ui.skillDetail) setUi({ skillDetail: false });
+      else setUi({ tab: 'world' });
+      // Still something open (e.g. skill detail → list)? Keep one entry for the next back.
+      const after = useGame.getState();
+      if (after.ui.tab !== 'world' || after.ui.agenda || after.ui.quickNav || after.dailyOpen) {
+        window.history.pushState({ aetherium: true }, '');
+        pushed.current = true;
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [enabled]);
 }
 
 function MobileSkills() {
@@ -161,6 +202,7 @@ export function App() {
   useKeyboardShortcuts();
   usePerfClass();
   useBackgroundMusic();
+  useBackButton(!desktop);
   return (
     <>
       {desktop ? <DesktopLayout /> : <MobileLayout />}
@@ -171,6 +213,7 @@ export function App() {
       <TitleScreen />
       <DailyModal />
       <QuickNav />
+      <AgendaPanel />
       <RewardReveal />
       {inRift && (
         <Suspense

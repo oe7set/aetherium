@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.12.0] – Klarer Kopf: „Was jetzt?"
+
+### Hinzugefügt
+
+- **„Was jetzt?" 📌** rechts in der Kopfzeile: eine Liste von allem, was in deinem Reich gerade wartet –
+  Tagesbelohnung, Chronik, Ruhmesleiter, Sammelbuch, Aufträge, Held (Punkte, Abenteuer, Wiederbelebung),
+  Wochenboss, freie Baumeister für Felder und Gebäude, Berichte, bezahlbare Forschung, volle Taschen, untätige
+  Figur. Jeder Eintrag springt mit einem Tipp an die richtige Stelle. Der Knopf leuchtet golden, wenn Belohnungen
+  warten. Die ersten vier Einträge stehen auch oben im Reichsbuch.
+- **Zurück-Taste/-Geste** am Handy schließt Fenster, Listen und den Tagesbonus, statt das Spiel zu verlassen.
+
+### Geändert
+
+- **Skill-Liste**: unter jedem Skill steht, was gerade läuft, warum er gesperrt ist (mit der nötigen Forschung –
+  Antippen führt direkt hin) oder was als Nächstes freigeschaltet wird.
+- **Keine Sackgassen mehr**: leere Abenteuer-Liste (mit Countdown und Alternativen), fehlende Kaserne, fehlender
+  Marktplatz/Hafen, leere Berichte und leere Taschen erklären jetzt, was fehlt, und bieten den Weg dorthin.
+
 ## [1.11.0] – Musik & schönere Insel
 
 ### Hinzugefügt
