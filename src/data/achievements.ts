@@ -544,7 +544,7 @@ function statAchievements(): AchievementDef[] {
   );
 }
 
-const TOTAL_LEVELS = [50, 100, 150, 250, 400, 600, 800, 1000, 1200, 1500];
+export const TOTAL_LEVELS = [50, 100, 150, 250, 400, 600, 800, 1000, 1200, 1500];
 const totalLevelAchievements: AchievementDef[] = TOTAL_LEVELS.map((n) => ({
   id: `total_${n}`,
   name: `Gesamtlevel ${n}`,

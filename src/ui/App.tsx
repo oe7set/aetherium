@@ -1,3 +1,4 @@
+import { UpdateBanner } from './UpdateBanner';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
@@ -243,6 +244,7 @@ export function App() {
       <QuickNav />
       <AgendaPanel />
       <RewardReveal />
+      <UpdateBanner />
       {inRift && (
         <Suspense
           fallback={<div className="rift-overlay rift-loading">🌀 Der Riss öffnet sich …</div>}

@@ -1424,3 +1424,208 @@ h4.rift-h4::before,
 .colorblind .btn-primary {
   background: linear-gradient(180deg, #4fb4ff, #2a7fd0);
 }
+
+/* --- Kontext-Kopfzeile ------------------------------------------------------- */
+.res-chip {
+  position: relative;
+  overflow: hidden;
+}
+.res-chip::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: calc(var(--fill, 0) * 100%);
+  background: var(--rc, var(--gold));
+  opacity: 0.85;
+}
+.res-chip.full {
+  border-color: #e05a5a;
+}
+.res-chip.neg b {
+  color: #ff7a7a;
+}
+.ctx-stats .chip {
+  padding: 4px 7px;
+}
+.stat-pop {
+  position: fixed;
+  top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(340px, calc(100vw - 24px));
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #1a1f33;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  font-size: 0.875rem;
+  animation: pop-in 0.15s ease-out;
+}
+.stat-pop-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.stat-pop-row b.good {
+  color: #7ee08a;
+}
+.stat-pop-row b.bad {
+  color: #ff7a7a;
+}
+.stat-pop small {
+  font-size: 0.75rem;
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+}
+.ctx-stats {
+  gap: 4px;
+  flex: 1 1 auto;
+  justify-content: safe center;
+  min-width: 0;
+}
+.ctx-stats .chip {
+  flex: 0 0 auto;
+  gap: 3px;
+}
+@media (max-width: 480px) {
+  .header-ctx .brand-mark {
+    display: none;
+  }
+  .ctx-stats .chip {
+    padding: 4px 6px;
+    font-size: 0.75rem;
+  }
+}
+/* Mobile: die Kopfzeile zeigt die Rohstoffe schon (mit Details per Antippen). */
+@media (max-width: 1023px) {
+  .v-resbar {
+    display: none;
+  }
+}
+
+/* --- Skills: Gesamtfortschritt und Skill-Kopf bleiben oben --------------------------------- */
+.skill-summary,
+.skill-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #141831;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.7);
+}
+.skill-summary {
+  display: grid;
+  gap: 5px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+.skill-summary-top {
+  display: flex;
+  justify-content: space-between;
+}
+.skill-summary-top b {
+  color: var(--gold);
+}
+.skill-summary small {
+  font-size: 0.75rem;
+}
+.skill-sticky {
+  display: grid;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+.sheet .skill-summary::before,
+.sheet .skill-sticky::before {
+  content: '';
+  position: absolute;
+  inset: -10px -14px 0;
+  background: #151a33;
+  z-index: -1;
+}
+
+/* --- Tab-Leiste: Schnellmenü per langem Druck --------------------------------------------- */
+.tabbar .tab {
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+.tab-menu-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(5, 7, 15, 0.35);
+}
+.tab-menu {
+  position: fixed;
+  width: 180px;
+  display: grid;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #1a1f33;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  animation: tab-menu-in 0.14s ease-out;
+}
+.tab-menu button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+.tab-menu button:active,
+.tab-menu button:hover {
+  background: var(--panel-2);
+}
+@keyframes tab-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* --- App: Vollbild, Neu laden, Update-Hinweis --------------------------------------------- */
+.app-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app-actions .btn {
+  flex: 1 1 auto;
+}
+.update-banner {
+  position: fixed;
+  top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 14px;
+  background: #1f2545;
+  border: 1px solid rgba(160, 128, 255, 0.6);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  font-size: 0.875rem;
+  animation: tab-menu-in 0.2s ease-out;
+}

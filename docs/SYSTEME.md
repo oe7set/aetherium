@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.27.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.28.0**.
 
 ## 1. Der große Kreislauf
 
@@ -141,7 +141,17 @@
 - Zurück-Taste/-Geste schließt Overlays, Tagesbonus und Fenster (`useBackButton` in `App.tsx`).
 - Barrierefreiheit: `ui/a11y.ts` (Textgröße über `html { font-size }` – Schriftgrößen immer in `rem`!,
   `reduce-motion`, `high-contrast`).
-- Skill-Liste: je Skill eine Zeile „läuft gerade / Freischalt-Grund / nächste Freischaltung".
+- Skill-Liste: je Skill eine Zeile „läuft gerade / Freischalt-Grund / nächste Freischaltung"; Gesamtlevel,
+  gemeisterte Skills und nächstes Gesamtlevel-Ziel bleiben oben stehen (`SkillSummary`), im Skill bleibt der Kopf
+  mit Level/XP oben (`.skill-sticky`).
+- **Kontext-Kopfzeile** (`ui/HeaderStats.tsx`): im Dorf Holz/Lehm/Eisen/Getreide/Einwohner (Füllbalken = Lager),
+  beim Held Stufe/Gesundheit/Essenz, sonst Gold/Forschung/Gesamtlevel/Feuer. Antippen öffnet ein Detail
+  (Produktion/h, Verbrauch, Netto, Zeit bis voll/leer). Am Handy ersetzt sie die Rohstoffleiste im Dorf.
+- **Tab-Leiste**: aktiven Tab nochmal tippen → zurück zum Kern des Bereichs (`TAB_HOME` in `ui/tabShortcuts.ts`,
+  z. B. Inventar → Taschen, Welt → „Was jetzt?") und nach oben; lange drücken → Schnellmenü aller Unterbereiche.
+- **App** (Einstellungen): Vollbild, Seite neu laden, nach Update suchen (`ui/appUpdate.ts`). Der Service Worker
+  läuft im Modus `prompt`: eine neue Version wartet, `UpdateBanner` bietet „Neu laden" an (speichert vorher);
+  alle 30 min wird nach einem neuen Deploy gesucht.
 
 **Atmosphäre**
 

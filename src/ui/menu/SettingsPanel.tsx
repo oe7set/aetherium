@@ -1,6 +1,15 @@
 import type { GraphicsSetting, NumberFormat } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
+import { useState } from 'react';
+import {
+  checkForUpdate,
+  fullscreenSupported,
+  reloadApp,
+  toggleFullscreen,
+  useFullscreen,
+  useUpdateReady,
+} from '../appUpdate';
 import { requestNotifications } from '../notify';
 
 const FORMATS: NumberFormat[] = ['short', 'scientific', 'engineering'];
@@ -11,6 +20,7 @@ export function SettingsPanel() {
   const setSetting = useGame((s) => s.setSetting);
   return (
     <div className="settings">
+      <AppSection />
       <h4 className="group-title">🔊 Klang</h4>
       <label className="toggle">
         <input
@@ -167,5 +177,47 @@ export function SettingsPanel() {
         {t('menu.version', { version: __APP_VERSION__ })} · {t('app.subtitle')}
       </p>
     </div>
+  );
+}
+
+/** Fullscreen, reload and update check – handy on phones and as an installed app. */
+function AppSection() {
+  const fullscreen = useFullscreen();
+  const ready = useUpdateReady();
+  const [checking, setChecking] = useState<'idle' | 'busy' | 'none'>('idle');
+  return (
+    <>
+      <h4 className="group-title">📱 App · v{__APP_VERSION__}</h4>
+      <div className="app-actions">
+        {fullscreenSupported() && (
+          <button className="btn" onClick={toggleFullscreen}>
+            {fullscreen ? '🗗 Vollbild beenden' : '⛶ Vollbild'}
+          </button>
+        )}
+        <button className={`btn ${ready ? 'btn-primary' : ''}`} onClick={reloadApp}>
+          🔄 {ready ? 'Update laden' : 'Seite neu laden'}
+        </button>
+        {!ready && (
+          <button
+            className="btn"
+            disabled={checking === 'busy'}
+            onClick={() => {
+              setChecking('busy');
+              void checkForUpdate().then((found) => setChecking(found ? 'idle' : 'none'));
+            }}
+          >
+            {checking === 'busy' ? '⏳ Suche …' : '🔍 Nach Update suchen'}
+          </button>
+        )}
+      </div>
+      {checking === 'none' && !ready && (
+        <small className="muted">✔ Du spielst die neueste Version.</small>
+      )}
+      {ready && (
+        <small className="muted">
+          ✨ Eine neue Version ist bereit – der Spielstand wird vorher gesichert.
+        </small>
+      )}
+    </>
   );
 }

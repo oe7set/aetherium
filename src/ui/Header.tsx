@@ -3,6 +3,7 @@ import { affordableTechs, formatDuration, formatNumber, maxHp, totalLevel } from
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 import { useAgendaSummary } from './agendaNav';
+import { HeroStats, VillageStats } from './HeaderStats';
 
 export function Header() {
   const gold = useGame((s) => formatNumber(s.game.gold, s.game.settings.numberFormat));
@@ -19,10 +20,11 @@ export function Header() {
   const openSkill = useGame((s) => s.openSkill);
   const wisdom = useGame((s) => s.game.prestige.wisdomTotal);
   const todo = useAgendaSummary();
+  const tab = useGame((s) => s.ui.tab);
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
-    <header className="header">
+    <header className={`header ${tab === 'village' || tab === 'rift' ? 'header-ctx' : ''}`}>
       <button
         className="brand qnav-btn"
         aria-label="Schnellzugriff öffnen"
@@ -33,54 +35,64 @@ export function Header() {
         <span className="brand-mark">Æ</span>
         <span className="brand-name">{t('app.title')}</span>
       </button>
-      <div className="header-stats">
-        <button
-          className="chip"
-          title="Gold – zum Krämer"
-          onClick={() => setUi({ tab: 'inventory', inventorySegment: 'shop' })}
-        >
-          🪙 <b>{gold}</b>
-        </button>
-        {hasResearch && (
+      {tab === 'village' ? (
+        <div className="header-stats ctx-stats">
+          <VillageStats />
+        </div>
+      ) : tab === 'rift' ? (
+        <div className="header-stats ctx-stats">
+          <HeroStats />
+        </div>
+      ) : (
+        <div className="header-stats">
           <button
-            className={`chip ${canResearch ? 'chip-glow' : ''}`}
-            title="Forschungspunkte"
-            onClick={() => setUi({ tab: 'menu', menuSection: 'research' })}
+            className="chip"
+            title="Gold – zum Krämer"
+            onClick={() => setUi({ tab: 'inventory', inventorySegment: 'shop' })}
           >
-            🔬 <b>{research}</b>
+            🪙 <b>{gold}</b>
           </button>
-        )}
-        {wisdom > 0 && (
-          <span className="chip" title="Weisheit (gesamt)">
-            🦉 <b>{wisdom}</b>
-          </span>
-        )}
-        <button
-          className="chip"
-          title={`${t('header.totalLevel')} – zu den Skills`}
-          onClick={() => setUi({ tab: 'skills', skillDetail: false })}
-        >
-          📊 <b>{total}</b>
-        </button>
-        <button
-          onClick={() => openSkill('firemaking')}
-          className={`chip ${fire > 0 ? 'chip-fire' : 'chip-dim'}`}
-          title={fire > 0 ? `${t('header.fire')}: ${formatDuration(fire)}` : t('header.fireOut')}
-          style={{ ['--fire' as string]: fireFraction }}
-        >
-          {fire > 0 ? '🔥' : '🪵'} <b>{fire > 0 ? formatDuration(fire) : '–'}</b>
-        </button>
-        {(inCombat || hp < max) && (
-          <span className={`chip ${hp < max * 0.35 ? 'chip-danger' : ''}`} title="Lebenspunkte">
-            ❤️ <b>{hp}</b>
-          </span>
-        )}
-        {intelligence > 0 && (
-          <span className="chip" title={t('header.intelligence')}>
-            🧠 <b>{intelligence}</b>
-          </span>
-        )}
-      </div>
+          {hasResearch && (
+            <button
+              className={`chip ${canResearch ? 'chip-glow' : ''}`}
+              title="Forschungspunkte"
+              onClick={() => setUi({ tab: 'menu', menuSection: 'research' })}
+            >
+              🔬 <b>{research}</b>
+            </button>
+          )}
+          {wisdom > 0 && (
+            <span className="chip" title="Weisheit (gesamt)">
+              🦉 <b>{wisdom}</b>
+            </span>
+          )}
+          <button
+            className="chip"
+            title={`${t('header.totalLevel')} – zu den Skills`}
+            onClick={() => setUi({ tab: 'skills', skillDetail: false })}
+          >
+            📊 <b>{total}</b>
+          </button>
+          <button
+            onClick={() => openSkill('firemaking')}
+            className={`chip ${fire > 0 ? 'chip-fire' : 'chip-dim'}`}
+            title={fire > 0 ? `${t('header.fire')}: ${formatDuration(fire)}` : t('header.fireOut')}
+            style={{ ['--fire' as string]: fireFraction }}
+          >
+            {fire > 0 ? '🔥' : '🪵'} <b>{fire > 0 ? formatDuration(fire) : '–'}</b>
+          </button>
+          {(inCombat || hp < max) && (
+            <span className={`chip ${hp < max * 0.35 ? 'chip-danger' : ''}`} title="Lebenspunkte">
+              ❤️ <b>{hp}</b>
+            </span>
+          )}
+          {intelligence > 0 && (
+            <span className="chip" title={t('header.intelligence')}>
+              🧠 <b>{intelligence}</b>
+            </span>
+          )}
+        </div>
+      )}
       <button
         className={`agenda-btn ${todo.rewards > 0 ? 'has-reward' : ''} ${todo.count ? '' : 'empty'}`}
         onClick={() => setUi({ agenda: true })}

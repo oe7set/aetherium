@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { startGameLoop } from './store/loop';
 import { App } from './ui/App';
+import { initAppUpdate } from './ui/appUpdate';
 import { unlockAudio } from './ui/audio';
 import '@fontsource/cinzel/600.css';
 import '@fontsource/cinzel/800.css';
@@ -23,7 +24,5 @@ createRoot(root).render(
 );
 document.getElementById('splash')?.remove();
 
-// Offline start & home-screen install (PWA). Only in production builds.
-if (import.meta.env.PROD) {
-  void import('virtual:pwa-register').then(({ registerSW }) => registerSW({ immediate: true }));
-}
+// Offline start & home-screen install (PWA); new versions wait for the player's reload.
+initAppUpdate();

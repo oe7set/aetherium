@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.0] – Kopfzeile, Tab-Gesten & App-Knöpfe
+
+- Kopfzeile passt sich an: im Dorf Holz, Lehm, Eisen, Getreide und Einwohner (mit Lager-Füllbalken), beim Helden Stufe, Gesundheit und Essenz. Antippen zeigt Produktion pro Stunde, Verbrauch, Netto und Zeit bis voll.
+- Skills: Gesamtlevel, gemeisterte Skills und das nächste Ziel bleiben beim Scrollen oben; im Skill bleibt Level/XP sichtbar.
+- Tab-Leiste: aktiven Tab nochmal tippen springt zum Kern des Bereichs (z. B. Inventar → Taschen) und nach oben; lange drücken öffnet ein Schnellmenü aller Unterbereiche.
+- Einstellungen → App: Vollbild, Seite neu laden, nach Update suchen. Neue Versionen melden sich mit einem „Neu laden"-Hinweis statt still nachzuladen.
+
 ## [1.27.0] – Für alle Farben
 
 ### Hinzugefügt

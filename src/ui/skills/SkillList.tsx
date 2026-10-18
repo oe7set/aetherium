@@ -1,5 +1,6 @@
 import { ACTIONS, COMING_SOON_SKILLS, getAction, SKILLS, TECH_MAP } from '../../data';
-import { levelCap, levelProgress, skillUnlocked } from '../../engine';
+import { TOTAL_LEVELS } from '../../data/achievements';
+import { levelCap, levelProgress, skillLevel, skillUnlocked, totalLevel } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
@@ -68,9 +69,42 @@ function SkillRow({ id }: { id: string }) {
   );
 }
 
+/** Always-visible overall progress at the top of the list. */
+function SkillSummary() {
+  const total = useGame((s) => totalLevel(s.game));
+  const cap = useGame((s) => levelCap(s.game));
+  const mastered = useGame(
+    (s) => SKILLS.filter((k) => skillLevel(s.game, k.id) >= BALANCE_MASTER).length,
+  );
+  const max = SKILLS.length * cap;
+  const goal = TOTAL_LEVELS.find((n) => n > total);
+  return (
+    <div className="skill-summary">
+      <div className="skill-summary-top">
+        <span>
+          📊 Gesamtlevel <b>{total}</b>
+          <small> / {max}</small>
+        </span>
+        <span title="Skills auf Stufe 99">
+          ⭐ <b>{mastered}</b>/{SKILLS.length}
+        </span>
+      </div>
+      <ProgressBar fraction={total / max} color="var(--gold)" height={6} />
+      <small className="muted">
+        {goal
+          ? `Nächstes Ziel: Gesamtlevel ${goal} – noch ${goal - total} Stufen`
+          : 'Alle Gesamtlevel-Ziele erreicht!'}
+      </small>
+    </div>
+  );
+}
+
+const BALANCE_MASTER = 99;
+
 export function SkillList() {
   return (
     <div className="skill-list">
+      <SkillSummary />
       {GROUPS.map((g) => (
         <div key={g}>
           <h4 className="group-title">{t(`skills.group.${g}` as MessageKey)}</h4>

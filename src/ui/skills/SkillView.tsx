@@ -73,23 +73,25 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
 
   return (
     <div className="skill-view">
-      {onBack && (
-        <button className="btn btn-ghost back" onClick={onBack}>
-          {t('skills.back')}
-        </button>
-      )}
-      <div className="skill-head" style={{ ['--accent' as string]: skill.color }}>
-        <span className="skill-head-icon">{skill.icon}</span>
-        <div className="skill-head-info">
-          <h2>
-            {skill.name} <span className="lvl">{t('skills.level', { level: p.level })}</span>
-          </h2>
-          <ProgressBar fraction={p.fraction} color={skill.color} height={10} />
-          <small>
-            {p.needed > 0
-              ? `${int(Math.floor(xp))} XP · ${t('skills.xpToNext', { xp: int(Math.ceil(p.remaining)), level: p.level + 1 })}`
-              : t('skills.maxed')}
-          </small>
+      <div className="skill-sticky">
+        {onBack && (
+          <button className="btn btn-ghost back" onClick={onBack}>
+            {t('skills.back')}
+          </button>
+        )}
+        <div className="skill-head" style={{ ['--accent' as string]: skill.color }}>
+          <span className="skill-head-icon">{skill.icon}</span>
+          <div className="skill-head-info">
+            <h2>
+              {skill.name} <span className="lvl">{t('skills.level', { level: p.level })}</span>
+            </h2>
+            <ProgressBar fraction={p.fraction} color={skill.color} height={10} />
+            <small>
+              {p.needed > 0
+                ? `${int(Math.floor(xp))} XP · ${t('skills.xpToNext', { xp: int(Math.ceil(p.remaining)), level: p.level + 1 })}`
+                : t('skills.maxed')}
+            </small>
+          </div>
         </div>
       </div>
       <p className="skill-desc">{skill.desc}</p>
