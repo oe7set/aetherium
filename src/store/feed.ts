@@ -1,10 +1,12 @@
 import {
+  ELEMENT_MAP,
   getAchievement,
   getAction,
   getBuff,
   getItem,
   getMonster,
   getSkill,
+  getTech,
   getTool,
 } from '../data';
 import {
@@ -22,6 +24,9 @@ import {
   ACHIEVEMENT_LINES,
   BOSS_KILL_LINES,
   DEATH_LINES,
+  ELEMENT_LINES,
+  MUTATION_LINES,
+  TECH_LINES,
   FIGHT_LINES,
   KILL_LINES,
   LUCKY_LINES,
@@ -223,6 +228,37 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         break;
       case 'ate':
         out.popups.push({ kind: 'item', text: `🍖 +${e.heal} LP` });
+        break;
+      case 'techResearched': {
+        const tech = getTech(e.tech);
+        out.feed.push({
+          kind: 'rare',
+          text: `${tech.icon} ${flavor(rng, TECH_LINES, { item: tech.name })}`,
+        });
+        out.popups.push({ kind: 'rare', text: `🔬 ${tech.name}` });
+        break;
+      }
+      case 'elementDiscovered': {
+        const el = ELEMENT_MAP.get(e.symbol);
+        out.feed.push({
+          kind: 'rare',
+          text: `⚗️ ${flavor(rng, ELEMENT_LINES, { item: el ? `${el.name} (${el.symbol})` : e.symbol })}`,
+        });
+        out.popups.push({ kind: 'rare', text: `⚛️ ${e.symbol}` });
+        break;
+      }
+      case 'harvested':
+        if (e.mutated)
+          out.feed.push({
+            kind: 'rare',
+            text: `🧬 ${flavor(rng, MUTATION_LINES, { item: getItem(e.mutated).name })}`,
+          });
+        break;
+      case 'helperStopped':
+        out.feed.push({
+          kind: 'warn',
+          text: `🧑‍🎓 Ein Helfer hat aufgehört: ${getAction(e.actionId).name} – ${e.reason === 'noInputs' ? 'Material fehlt' : e.reason === 'inventoryFull' ? 'Inventar voll' : e.reason === 'noFire' ? 'kein Feuer' : 'geht nicht'}.`,
+        });
         break;
       case 'intelligence':
         out.feed.push({

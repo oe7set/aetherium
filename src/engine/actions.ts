@@ -68,6 +68,8 @@ export function doubleChance(s: GameState, def: ActionDef): number {
 export type CheckResult = { ok: true } | { ok: false; reason: StopReason; missingItem?: string };
 
 export function canPerform(s: GameState, def: ActionDef): CheckResult {
+  for (const check of availabilityChecks)
+    if (!check(s, def)) return { ok: false, reason: 'locked' };
   if (skillLevel(s, def.skill) < def.levelReq) return { ok: false, reason: 'levelTooLow' };
   const missing = firstMissing(s, def.inputs);
   if (missing) return { ok: false, reason: 'noInputs', missingItem: missing };
@@ -80,6 +82,26 @@ export function canPerform(s: GameState, def: ActionDef): CheckResult {
     if (newTypes > freeSlots(s) + freed) return { ok: false, reason: 'inventoryFull' };
   }
   return { ok: true };
+}
+
+/** Hooks run on every completed action (research points, element discovery …). */
+type CompletionHook = (
+  s: GameState,
+  def: ActionDef,
+  rng: Rng,
+  emit: Emit,
+  xpFactor: number,
+) => void;
+const completionHooks: { name: string; fn: CompletionHook }[] = [];
+export function registerCompletionHook(name: string, fn: CompletionHook): void {
+  if (!completionHooks.some((h) => h.name === name)) completionHooks.push({ name, fn });
+}
+
+/** Extra availability checks registered by other modules (tech locks). */
+type AvailabilityCheck = (s: GameState, def: ActionDef) => boolean;
+const availabilityChecks: AvailabilityCheck[] = [];
+export function registerAvailabilityCheck(fn: AvailabilityCheck): void {
+  availabilityChecks.push(fn);
 }
 
 /** Hook for other modules (combat) to stop when the player starts skilling and vice versa. */
@@ -208,6 +230,7 @@ export function completeAction(
     }
   }
 
+  for (const h of completionHooks) h.fn(s, def, rng, emit, xpFactor);
   addStat(s, `action.${def.id}`);
   addStat(s, `skillActions.${def.skill}`);
   const stat = SKILL_STATS[def.skill];
@@ -324,6 +347,9 @@ registerTimeEffect('fire', {
 export function advance(s: GameState, dt: number, rng: Rng, emit: Emit): void {
   let remaining = Math.max(0, dt);
   let steps = 0;
+  // Boundary hooks also run at the start so state changes made outside advance (selling,
+  // equipping …) take effect before the first step – keeps live and offline identical.
+  for (const h of afterAdvanceHooks) h.fn(s, emit);
   outer: while (steps++ < MAX_STEPS) {
     const runners: Runner[] = [];
     for (const f of runnerFactories) runners.push(...f.fn(s, rng, emit));

@@ -692,9 +692,10 @@ export const COMBAT_ITEMS: ItemDef[] = [
     id: 'research_notes',
     name: 'Forschungsnotizen',
     icon: '📝',
-    category: 'resource',
+    category: 'consumable',
     sellPrice: 20,
-    desc: 'Unleserlich, aber voller Ideen. Bringt Forschungspunkte (Phase 5).',
+    desc: 'Unleserlich, aber voller Ideen. Lesen: +40 Forschungspunkte.',
+    consume: { type: 'research', amount: 40 },
   },
   {
     id: 'reviewer_comments',

@@ -198,6 +198,22 @@ export const ACTION_START_LINES: Record<string, string[]> = {
     'Schmieden gestartet. Es wird heiß. Und laut.',
     'Du entfachst die Esse. Hephaistos schaut neidisch.',
   ],
+  hunting: [
+    'Du legst dich auf die Lauer. Tarnung: Busch. Erfolgsquote: Busch-abhängig.',
+    'Fallen gestellt. Jetzt heißt es warten.',
+  ],
+  arcane: [
+    'Du lauschst dem Summen der Magie. Oder ist es der Kühlschrank?',
+    'Arkanes Schürfen gestartet. Die Luft knistert.',
+  ],
+  alchemy: [
+    'Blubber, blubber. Die Phiole raucht verheißungsvoll.',
+    'Alchemie! Schutzbrille auf, Logik aus.',
+  ],
+  enchanting: [
+    'Du flüsterst der Rune Komplimente zu. Sie glüht.',
+    'Verzauberung läuft. Glitzer-Level: kritisch.',
+  ],
   crafting: [
     'Du schnitzt und nähst. Eine ruhige Hand ist alles.',
     'Handwerk hat goldenen Boden. Und Holzspäne auf dem Boden.',
@@ -267,6 +283,25 @@ export const DEATH_LINES: string[] = [
   'Gestorben. Tipp: Essen hilft. Und Rüstung. Und vielleicht ein leichterer Gegner als {item}.',
 ];
 
+export const TECH_LINES: string[] = [
+  'Erforscht: {item}! Die Menschheit macht einen kleinen Schritt. Du einen großen.',
+  'Durchbruch! {item} ist jetzt Stand der Technik.',
+  '{item} erforscht. Das Paper ist eingereicht. Reviewer #2 ist benachrichtigt.',
+  'Heureka! {item}. Bitte nicht nackt durch die Stadt laufen.',
+];
+
+export const ELEMENT_LINES: string[] = [
+  'Neues Element entdeckt: {item}! Mendelejew wäre stolz.',
+  'Das Periodensystem wächst: {item}. Noch ein Kästchen ausgefüllt.',
+  '{item} isoliert! Bitte nicht ablecken.',
+];
+
+export const MUTATION_LINES: string[] = [
+  'Mendel-Moment! Deine Pflanzen haben gekreuzt: {item}!',
+  'Mutation! Die Saat hat sich zu {item} weiterentwickelt. Darwin nickt anerkennend.',
+  'Genetischer Glückstreffer: {item}. Die Erbsen sind neidisch.',
+];
+
 export const RANDOM_CHATTER: string[] = [
   'Ein Eichhörnchen beobachtet dich vorwurfsvoll.',
   'Ein Wanderer ruft: „Kaufe Bronzeaxt, zahle gut!“ Er hat kein Gold.',
@@ -334,6 +369,9 @@ export const FLAVOR_POOLS: Record<string, string[]> = {
   KILL_LINES,
   BOSS_KILL_LINES,
   DEATH_LINES,
+  TECH_LINES,
+  ELEMENT_LINES,
+  MUTATION_LINES,
   ...Object.fromEntries(
     Object.entries(ACTION_START_LINES).map(([k, v]) => [`ACTION_START_${k}`, v]),
   ),

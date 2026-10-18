@@ -223,4 +223,8 @@ export const SHOP_OFFERS: ShopOffer[] = [
   { item: 'feather', price: 4 },
   { item: 'arrow_bronze', price: 3 },
   { item: 'rune_basic', price: 6 },
+  { item: 'seed_potato', price: 3 },
+  { item: 'seed_wheat', price: 8 },
+  { item: 'seed_apple', price: 40 },
+  { item: 'seed_mushroom', price: 80 },
 ];

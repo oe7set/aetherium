@@ -1,3 +1,4 @@
+import { POTION_BUFF_DEFS } from './science';
 import type { BuffDef } from './types';
 
 /** Lucky events fire randomly while playing (see engine/events-luck.ts). Potions add more buffs in Phase 5. */
@@ -52,4 +53,4 @@ export const LUCKY_EVENTS: BuffDef[] = [
   },
 ];
 
-export const POTION_BUFFS: BuffDef[] = [];
+export const POTION_BUFFS: BuffDef[] = POTION_BUFF_DEFS;

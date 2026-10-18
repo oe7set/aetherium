@@ -60,6 +60,51 @@ export const SKILLS: SkillDef[] = [
     desc: 'Bögen, Pfeile, Stäbe und Leder. IKEA, aber mit Zaubersprüchen.',
   },
   {
+    id: 'farming',
+    name: 'Landwirtschaft',
+    icon: '🌾',
+    color: '#9ccc4a',
+    group: 'gathering',
+    unlockTech: 'agriculture',
+    desc: 'Pflanzen wachsen in Echtzeit – auch offline. Mendel lässt grüßen: manchmal mutiert die Saat.',
+  },
+  {
+    id: 'hunting',
+    name: 'Jagen',
+    icon: '🦌',
+    color: '#a0784a',
+    group: 'gathering',
+    unlockTech: 'traps',
+    desc: 'Fallen stellen, Geduld haben, Felle zählen.',
+  },
+  {
+    id: 'arcane',
+    name: 'Arkanes Schürfen',
+    icon: '🔮',
+    color: '#9b7be0',
+    group: 'gathering',
+    unlockTech: 'runes',
+    desc: 'Runenessenz, Mana-Kristalle und der Stoff, aus dem diese Welt gemacht ist: Äther.',
+  },
+  {
+    id: 'alchemy',
+    name: 'Alchemie',
+    icon: '🧪',
+    color: '#4ad9b0',
+    group: 'science',
+    unlockTech: 'proto_alchemy',
+    desc: 'Tränke brauen und Stoffe analysieren. Jede Analyse kann ein Element für das Periodensystem entdecken.',
+  },
+  {
+    id: 'enchanting',
+    name: 'Verzauberung',
+    icon: '✨',
+    color: '#e08bd9',
+    group: 'science',
+    unlockTech: 'runes',
+    desc: 'Runen binden und Schmuck mit Magie aufladen. Glitzer ist Pflicht.',
+  },
+  {
     id: 'melee',
     name: 'Nahkampf',
     icon: '⚔️',
@@ -101,26 +146,4 @@ export const SKILLS: SkillDef[] = [
   },
 ];
 
-export const COMING_SOON_SKILLS: ComingSoonSkill[] = [
-  {
-    name: 'Forschung',
-    icon: '🔬',
-    phase: 5,
-    teaser: 'Vom Rad zum Warp-Antrieb. Peer-Review inklusive.',
-  },
-  { name: 'Alchemie', icon: '🧪', phase: 5, teaser: 'Chemie, bevor sie seriös wurde.' },
-  { name: 'Verzauberung', icon: '✨', phase: 5, teaser: 'Runen, Glanz und ein bisschen Glitzer.' },
-  {
-    name: 'Landwirtschaft',
-    icon: '🌾',
-    phase: 5,
-    teaser: 'Mendel hätte seine Freude an diesen Erbsen.',
-  },
-  { name: 'Jagen', icon: '🦌', phase: 5, teaser: 'Fallen stellen, Geduld haben, Felle zählen.' },
-  {
-    name: 'Arkanes Schürfen',
-    icon: '🔮',
-    phase: 5,
-    teaser: 'Mana-Kristalle: wie Erz, nur schimmernder.',
-  },
-];
+export const COMING_SOON_SKILLS: ComingSoonSkill[] = [];

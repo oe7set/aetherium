@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-**Phase 4 „Kampf" fertig** (v0.4.0). Nächstes: **Phase 5 – Wissenschaft & Magie**. Siehe `docs/CHANGELOG.md`.
+**Phase 5 „Wissenschaft & Magie" fertig** (v0.5.0). Nächstes: **Phase 6 – Prestige**. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
 
@@ -21,6 +21,8 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Helfer), `registerTimeEffect` (Feuer, Buffs, Markt – `next()` liefert Zeit bis zum nächsten Ereignis),
   `registerAfterComplete`/`registerAfterAdvance` (Erfolge). Module registrieren sich beim Import über
   `engine/index.ts` – Tests daher aus `../src/engine` importieren.
+- Weitere Hooks: `registerCompletionHook` (pro abgeschlossener Aktion, z. B. Forschung/Codex) und
+  `registerAvailabilityCheck` (Tech-Sperren). Kampf = `engine/combat.ts`, Forschung/Beete/Helfer = `engine/science.ts`.
 - Boni: `registerModifierSource` + `mod(s, key)`/`modFor(s, key, skill)` (Keys siehe `data/types.ts`
   `ModifierSet`). Nach Änderung einer Quelle `invalidateMods(s)` aufrufen.
 - `src/data/` – alle Inhalte typisiert (`types.ts`), IDs sind Strings; `tests/data.test.ts` prüft Referenzen.

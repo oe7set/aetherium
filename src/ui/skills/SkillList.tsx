@@ -1,10 +1,10 @@
 import { COMING_SOON_SKILLS, getAction, SKILLS } from '../../data';
-import { levelProgress } from '../../engine';
+import { levelProgress, skillUnlocked } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
 
-const GROUPS = ['gathering', 'processing', 'combat'] as const;
+const GROUPS = ['gathering', 'processing', 'science', 'combat'] as const;
 
 function SkillRow({ id }: { id: string }) {
   const xp = useGame((s) => s.game.skills[id]?.xp ?? 0);
@@ -14,15 +14,16 @@ function SkillRow({ id }: { id: string }) {
       : !!s.game.combat && SKILLS.find((k) => k.id === id)?.group === 'combat',
   );
   const selected = useGame((s) => s.ui.selectedSkill === id);
+  const unlocked = useGame((s) => skillUnlocked(s.game, id));
   const openSkill = useGame((s) => s.openSkill);
   const skill = SKILLS.find((s) => s.id === id)!;
   const p = levelProgress(xp);
   return (
     <button
-      className={`skill-row ${selected ? 'selected' : ''} ${isActive ? 'running' : ''}`}
+      className={`skill-row ${selected ? 'selected' : ''} ${isActive ? 'running' : ''} ${unlocked ? '' : 'locked'}`}
       onClick={() => openSkill(id)}
     >
-      <span className="skill-icon">{skill.icon}</span>
+      <span className="skill-icon">{unlocked ? skill.icon : '🔒'}</span>
       <span className="skill-meta">
         <span className="skill-name">
           {skill.name}
@@ -46,7 +47,7 @@ export function SkillList() {
           ))}
         </div>
       ))}
-      <h4 className="group-title">{t('skills.comingSoon')}</h4>
+      {COMING_SOON_SKILLS.length > 0 && <h4 className="group-title">{t('skills.comingSoon')}</h4>}
       <div className="coming-soon">
         {COMING_SOON_SKILLS.map((s) => (
           <div key={s.name} className="coming-row" title={s.teaser}>

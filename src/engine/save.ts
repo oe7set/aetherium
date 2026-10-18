@@ -3,9 +3,13 @@ import {
   ACHIEVEMENT_MAP,
   ACTION_MAP,
   BUFF_MAP,
+  CROP_MAP,
   DUNGEON_MAP,
+  ELEMENT_MAP,
+  HELPER_MAP,
   ITEM_MAP,
   MONSTER_MAP,
+  TECH_MAP,
   TOOL_MAP,
 } from '../data';
 import {
@@ -57,6 +61,8 @@ export const MIGRATIONS: Record<number, Migration> = {
       combat: null,
     };
   },
+  // 3 → 4 (Phase 5): research, tech tree, codex, farming plots, helpers.
+  3: (data) => ({ ...data, research: 0, techs: [], codex: [], plots: [], helpers: [] }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -175,6 +181,24 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
       Object.entries(stringRecord(data.equipment)).filter(([, id]) => ITEM_MAP.get(id)?.equip),
     ),
     combat: hydrateCombat(data.combat),
+    research: Math.max(0, num(data.research, 0)),
+    techs: stringArray(data.techs).filter((id) => TECH_MAP.has(id)),
+    codex: stringArray(data.codex).filter((sym) => ELEMENT_MAP.has(sym)),
+    plots: hydratePlots(data.plots, base.plots),
+    helpers: Array.isArray(data.helpers)
+      ? data.helpers
+          .filter(
+            (h): h is Record<string, unknown> =>
+              isRecord(h) && typeof h.type === 'string' && HELPER_MAP.has(h.type),
+          )
+          .map((h) => ({
+            type: h.type as string,
+            actionId:
+              typeof h.actionId === 'string' && ACTION_MAP.has(h.actionId) ? h.actionId : null,
+            progress: num(h.progress, 0),
+            done: num(h.done, 0),
+          }))
+      : [],
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -190,6 +214,15 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
         )
       : [],
   };
+}
+
+function hydratePlots(v: unknown, fallback: GameState['plots']): GameState['plots'] {
+  if (!Array.isArray(v) || v.length === 0) return fallback;
+  return v.map((p) =>
+    isRecord(p) && typeof p.seed === 'string' && CROP_MAP.has(p.seed)
+      ? { seed: p.seed, elapsed: typeof p.elapsed === 'number' ? p.elapsed : 0 }
+      : { seed: null, elapsed: 0 },
+  );
 }
 
 function hydrateCombat(v: unknown): CombatState | null {

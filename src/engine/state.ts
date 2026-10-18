@@ -61,6 +61,21 @@ export interface CombatSettings {
   food: string | null;
 }
 
+export interface PlotState {
+  seed: string | null;
+  /** Growth seconds accumulated (already scaled by growth speed). */
+  elapsed: number;
+}
+
+export interface HelperState {
+  /** Helper type id (data/science.ts HELPERS). */
+  type: string;
+  actionId: string | null;
+  progress: number;
+  /** Completed tasks (interns learn from them). */
+  done: number;
+}
+
 export interface BuffState {
   id: string;
   remaining: number;
@@ -103,9 +118,16 @@ export interface GameState {
   equipment: Partial<Record<EquipSlot, string>>;
   combat: CombatState | null;
   combatSettings: CombatSettings;
+  /** Research points (currency for the tech tree). */
+  research: number;
+  techs: string[];
+  /** Discovered element symbols (periodic table codex). */
+  codex: string[];
+  plots: PlotState[];
+  helpers: HelperState[];
 }
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 export function defaultSettings(): Settings {
   return {
@@ -150,6 +172,15 @@ export function newGame(now: number = Date.now()): GameState {
     equipment: {},
     combat: null,
     combatSettings: defaultCombatSettings(),
+    research: 0,
+    techs: [],
+    codex: [],
+    plots: [
+      { seed: null, elapsed: 0 },
+      { seed: null, elapsed: 0 },
+      { seed: null, elapsed: 0 },
+    ],
+    helpers: [],
   };
 }
 
@@ -175,6 +206,10 @@ export function cloneState(s: GameState): GameState {
     equipment: { ...s.equipment },
     combat: s.combat ? { ...s.combat } : null,
     combatSettings: { ...s.combatSettings },
+    techs: [...s.techs],
+    codex: [...s.codex],
+    plots: s.plots.map((p) => ({ ...p })),
+    helpers: s.helpers.map((h) => ({ ...h })),
   };
 }
 

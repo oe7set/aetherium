@@ -13,6 +13,7 @@ export * from './inventory';
 export * from './offline';
 export * from './rng';
 export * from './save';
+export * from './science';
 export * from './shop';
 export * from './skills';
 export * from './state';

@@ -1,6 +1,7 @@
 import { COMBAT_ITEMS } from './combat';
 import { CRAFTING_ITEMS } from './crafting';
 import { FISHING_ITEMS } from './fishing';
+import { SCIENCE_ITEMS } from './science';
 import { SMITHING_ITEMS } from './smithing';
 import type { ItemDef } from './types';
 
@@ -451,4 +452,5 @@ export const ITEMS: ItemDef[] = [
   ...SMITHING_ITEMS,
   ...CRAFTING_ITEMS,
   ...COMBAT_ITEMS,
+  ...SCIENCE_ITEMS,
 ];

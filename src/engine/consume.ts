@@ -1,5 +1,6 @@
 import { getItem, getTool } from '../data';
 import { addBuff } from './buffs';
+import { addResearch } from './science';
 import { invalidateMods } from './modifiers';
 import { skillLevel } from './skills';
 import type { Emit } from './events';
@@ -40,6 +41,9 @@ export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit):
       emit({ type: 'toolUnlocked', tool: effect.tool });
       break;
     }
+    case 'research':
+      addResearch(s, effect.amount, emit);
+      break;
     case 'buff':
       addBuff(s, effect.buff, emit);
       break;

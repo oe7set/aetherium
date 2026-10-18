@@ -1,6 +1,7 @@
 import type { SkillId } from '../data/types';
 
-export type StopReason = 'noInputs' | 'inventoryFull' | 'noFire' | 'levelTooLow' | 'manual';
+export type StopReason =
+  'noInputs' | 'inventoryFull' | 'noFire' | 'levelTooLow' | 'locked' | 'manual';
 export type CombatStopReason = 'manual' | 'noAmmo' | 'noRunes' | 'died';
 
 /** Everything the engine wants the UI (feed, popups, sounds) to know about. */
@@ -32,7 +33,12 @@ export type GameEvent =
   | { type: 'bossPhase'; monster: string; phase: number }
   | { type: 'dungeonCompleted'; dungeon: string }
   | { type: 'playerDied'; monster: string }
-  | { type: 'ate'; item: string; heal: number };
+  | { type: 'ate'; item: string; heal: number }
+  | { type: 'techResearched'; tech: string }
+  | { type: 'elementDiscovered'; symbol: string }
+  | { type: 'harvested'; plot: number; item: string; qty: number; mutated?: string }
+  | { type: 'helperStopped'; helper: number; actionId: string; reason: StopReason }
+  | { type: 'research'; amount: number };
 
 export type Emit = (event: GameEvent) => void;
 

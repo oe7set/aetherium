@@ -15,6 +15,7 @@ import type { CombatStopReason, Emit } from './events';
 import { itemCount, removeItem, addItem, freeSlots } from './inventory';
 import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import { randInt, type Rng } from './rng';
+import { addResearch } from './science';
 import { earnGold } from './shop';
 import { addXp, skillLevel } from './skills';
 import { addStat, type CombatState, type GameState } from './state';
@@ -281,6 +282,7 @@ function grantCombatXp(s: GameState, damage: number, emit: Emit): void {
 }
 
 function killMonster(s: GameState, c: CombatState, m: MonsterDef, rng: Rng, emit: Emit): void {
+  addResearch(s, m.level * 0.4);
   addStat(s, 'monstersKilled');
   addStat(s, `kills.${m.id}`);
   if (m.boss) addStat(s, 'bossKills');

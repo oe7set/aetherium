@@ -1,6 +1,8 @@
 import Decimal from 'break_eternity.js';
 import { create } from 'zustand';
-import { getAction, getItem, getTool, type EquipSlot } from '../data';
+import { getAction, getItem, getTool, HELPER_MAP, type EquipSlot } from '../data';
+
+const getHelperName = (type: string) => HELPER_MAP.get(type)?.name ?? type;
 import { BALANCE } from '../data/balance';
 import {
   RANDOM_CHATTER,
@@ -13,6 +15,14 @@ import {
 import {
   advance,
   bestAvailableAction,
+  assignHelper,
+  dismissHelper,
+  harvest,
+  hireHelper,
+  plantSeed,
+  researchTech,
+  type FarmResult,
+  type HelperResult,
   eat,
   equipItem,
   startCombat,
@@ -95,6 +105,12 @@ export interface GameStore {
   equip: (item: string) => void;
   unequip: (slot: EquipSlot) => void;
   eatNow: () => void;
+  research: (tech: string) => void;
+  plant: (plot: number, seed: string) => void;
+  harvestPlot: (plot: number) => void;
+  hire: (type: string) => void;
+  assign: (helper: number, actionId: string | null) => void;
+  dismissHelperAt: (helper: number) => void;
   setCombatSetting: <K extends keyof CombatSettings>(key: K, value: CombatSettings[K]) => void;
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
@@ -299,6 +315,37 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s, emit) => {
         eat(s, emit);
       }),
+    research: (tech) =>
+      mutate((s, emit) => {
+        researchTech(s, tech, emit);
+      }),
+    plant: (plot, seed) => {
+      let res = { ok: true } as FarmResult;
+      mutate((s, emit) => {
+        res = plantSeed(s, plot, seed, emit);
+      });
+      if (!res.ok) get().pushFeed(`❌ ${t(`farmFail.${res.reason}` as MessageKey)}`, 'warn');
+    },
+    harvestPlot: (plot) =>
+      mutate((s, emit) => {
+        harvest(s, plot, defaultRng, emit);
+      }),
+    hire: (type) => {
+      let res = { ok: true } as HelperResult;
+      mutate((s) => {
+        res = hireHelper(s, type);
+      });
+      if (!res.ok) get().pushFeed(`❌ ${t(`helperFail.${res.reason}` as MessageKey)}`, 'warn');
+      else get().pushFeed(`🤝 ${getHelperName(type)} eingestellt! Weise eine Aufgabe zu.`, 'gold');
+    },
+    assign: (helper, actionId) =>
+      mutate((s) => {
+        assignHelper(s, helper, actionId);
+      }),
+    dismissHelperAt: (helper) =>
+      mutate((s) => {
+        dismissHelper(s, helper);
+      }),
     setCombatSetting: (key, value) =>
       mutate((s) => {
         s.combatSettings = { ...s.combatSettings, [key]: value };
@@ -311,6 +358,14 @@ export const useGame = create<GameStore>()((set, get) => {
     tapStation: (skill) => {
       if (skill === 'combat') {
         get().openSkill('melee');
+        return;
+      }
+      if (skill === 'research') {
+        get().setUi({ tab: 'research' });
+        return;
+      }
+      if (skill === 'farming') {
+        get().openSkill('farming');
         return;
       }
       const best = bestAvailableAction(get().game, skill);

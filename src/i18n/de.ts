@@ -46,7 +46,7 @@ export const de = {
   'skills.group.gathering': 'Sammeln',
   'skills.group.processing': 'Verarbeiten',
   'skills.group.combat': 'Kampf',
-  'skills.group.science': 'Wissenschaft',
+  'skills.group.science': 'Wissenschaft & Magie',
 
   'inv.title': 'Inventar',
   'inv.slots': '{used}/{max} Plätze',
@@ -140,7 +140,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 4 „Kampf“',
+  'menu.version': 'Version {version} · Phase 5 „Wissenschaft & Magie“',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 
@@ -162,6 +162,7 @@ export const de = {
   'stop.inventoryFull': 'Inventar voll',
   'stop.noFire': 'Kein Lagerfeuer',
   'stop.levelTooLow': 'Level zu niedrig',
+  'stop.locked': 'Noch nicht erforscht',
   'stop.manual': 'Manuell gestoppt',
 
   'shopFail.gold': 'Nicht genug Gold. Kapitalismus ist hart.',
@@ -173,6 +174,15 @@ export const de = {
   'shopFail.unknown': 'Das geht so nicht.',
 
   'levelUp.title': 'Level Up!',
+  'farmFail.locked': 'Erforsche zuerst „Ackerbau“.',
+  'farmFail.level': 'Dein Landwirtschaftslevel reicht dafür nicht.',
+  'farmFail.noSeed': 'Keine Saat dafür im Inventar.',
+  'farmFail.occupied': 'Da wächst schon etwas.',
+  'farmFail.notReady': 'Noch nicht reif. Geduld!',
+  'helperFail.locked': 'Dafür fehlt dir noch die passende Forschung.',
+  'helperFail.slots': 'Keine freien Helferplätze. Erforsche mehr!',
+  'helperFail.gold': 'Nicht genug Gold. Auch Praktikanten wollen Kaffee.',
+  'helperFail.unknown': 'Unbekannter Helfer.',
   'equipFail.notEquippable': 'Das kann man nicht anziehen. Glaub mir, ich hab’s versucht.',
   'equipFail.level': 'Dein Level reicht dafür noch nicht.',
   'equipFail.space': 'Kein Platz im Inventar zum Ablegen.',

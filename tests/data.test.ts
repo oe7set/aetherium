@@ -43,7 +43,7 @@ describe('Datenintegrität', () => {
 
   it('jeder Skill hat eine Aktion auf Level 1', () => {
     for (const [id, skill] of SKILL_MAP) {
-      if (skill.group === 'combat') continue;
+      if (skill.group === 'combat' || id === 'farming') continue;
       expect(
         ACTIONS.some((a) => a.skill === id && a.levelReq === 1),
         id,

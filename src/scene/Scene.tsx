@@ -11,7 +11,15 @@ import { Island } from './Island';
 import { STATIONS } from './layout';
 import type { QualityProfile } from './quality';
 import { DayNight } from './Sky';
-import { Campfire, Decorations, FishingSpot, Forge, Kitchen, Mine, Tower } from './Stations';
+import { Campfire, Decorations, FishingSpot, Forge, Kitchen, Mine } from './Stations';
+import {
+  AcceleratorRing,
+  Fields,
+  Helpers,
+  HuntingGround,
+  ResearchTower,
+  Workbench,
+} from './Science';
 import { Forest, WorkTree } from './Trees';
 
 function usePageVisible(): boolean {
@@ -94,7 +102,12 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Forge onTap={tap('smithing')} particles={quality.particles} />
       <FishingSpot onTap={tap('fishing')} particles={quality.particles} />
       <Arena onTap={tap('combat')} particles={quality.particles} />
-      <Tower />
+      <ResearchTower onTap={tap('research')} />
+      <AcceleratorRing />
+      <Fields onTap={tap('farming')} />
+      <Workbench onTap={tap('crafting')} />
+      <HuntingGround onTap={tap('hunting')} />
+      <Helpers />
       <Character skill={activeSkill} />
       <LabelProjector />
       <OrbitControls

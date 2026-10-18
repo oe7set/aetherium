@@ -1,5 +1,5 @@
 import { BALANCE } from '../data/balance';
-import { formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
+import { affordableTechs, formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 
@@ -11,6 +11,10 @@ export function Header() {
   const hp = useGame((s) => Math.ceil(s.game.hp));
   const max = useGame((s) => maxHp(s.game));
   const inCombat = useGame((s) => !!s.game.combat);
+  const research = useGame((s) => formatNumber(s.game.research, s.game.settings.numberFormat));
+  const hasResearch = useGame((s) => s.game.research > 0 || s.game.techs.length > 0);
+  const canResearch = useGame((s) => affordableTechs(s.game).length > 0);
+  const setUi = useGame((s) => s.setUi);
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
@@ -23,6 +27,15 @@ export function Header() {
         <span className="chip" title={t('header.gold')}>
           🪙 <b>{gold}</b>
         </span>
+        {hasResearch && (
+          <button
+            className={`chip ${canResearch ? 'chip-glow' : ''}`}
+            title="Forschungspunkte"
+            onClick={() => setUi({ tab: 'research' })}
+          >
+            🔬 <b>{research}</b>
+          </button>
+        )}
         <span className="chip" title={t('header.totalLevel')}>
           📊 <b>{total}</b>
         </span>

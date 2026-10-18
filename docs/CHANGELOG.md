@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] – Phase 5 „Wissenschaft & Magie"
+
+### Hinzugefügt
+
+- **Forschung**: Forschungspunkte aus jeder Aktion, jedem Kill, aus Ernten und Forschungsnotizen.
+  **Tech-Baum** mit 39 Technologien in 9 Epochen (Feuer beherrschen … Multiversums-Theorie), Boni und Freischaltungen.
+- **Periodensystem-Codex**: alle 118 Elemente, entdeckt durch Alchemie-Analysen (bis zur Teilchenbeschleuniger-Synthese);
+  jedes Element gibt dauerhaft Forschung/XP.
+- **Alchemie**: 10 Tränke als Buffs (Eile, Weisheit, Glück, Goldrausch, Superposition …), Heiltrank heilt im Kampf.
+- **Verzauberung**: Runen binden, verzauberte Ringe/Amulette, Ätherstab.
+- **Landwirtschaft**: Echtzeit-Beete (wachsen auch offline), 9 Pflanzen, Saatrückgabe, Mendel-Mutationen,
+  Auto-Ernte per Forschung, zusätzliche Beete.
+- **Jagen** und **Arkanes Schürfen** als neue Sammel-Skills; Wild-Rezepte, Mühle.
+- **Helfer** (Praktikant, Gnom, Golem, Roboter, KI-Assistent) arbeiten parallel an eigenen Aufgaben, teilen das Inventar;
+  Praktikanten lernen dazu. Helferplätze über Forschung.
+- Offline-Grenze per Forschung erweiterbar (Telegraf, Relativitätstheorie, Wurmlöcher).
+- 3D: Forschungsturm (Gerüst verschwindet, Fenster leuchtet), Felder mit wachsenden Pflanzen, Werkbank, Jagdgrund,
+  Helfer-Figuren an ihren Stationen, Teilchenbeschleuniger-Ring um die Insel.
+- Spielstand v4.
+
 ## [0.4.0] – Phase 4 „Kampf"
 
 ### Hinzugefügt

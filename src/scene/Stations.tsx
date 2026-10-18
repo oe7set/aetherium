@@ -254,28 +254,6 @@ export function Kitchen({ onTap, particles }: { onTap: TapHandler; particles: nu
   );
 }
 
-/** Research tower: scaffolded until research unlocks (Phase 5). */
-export function Tower() {
-  return (
-    <group position={[4.2, 0, -8]}>
-      <mesh position={[0, 1.8, 0]} castShadow>
-        <cylinderGeometry args={[0.9, 1.1, 3.6, 8]} />
-        <meshStandardMaterial color="#b8b0a0" flatShading />
-      </mesh>
-      <mesh position={[0, 4.1, 0]} castShadow>
-        <coneGeometry args={[1.2, 1.4, 8]} />
-        <meshStandardMaterial color="#5b4a8a" flatShading />
-      </mesh>
-      {[-1, 1].map((x) => (
-        <mesh key={x} position={[x * 1.2, 1.6, 0]}>
-          <boxGeometry args={[0.08, 3.2, 0.08]} />
-          <meshStandardMaterial color="#8a6440" />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
 /** Some scattered rocks and bushes for life. Instanced. */
 export function Decorations({ count }: { count: number }) {
   const rocks = useRef<THREE.InstancedMesh>(null);

@@ -20,7 +20,18 @@ export const STATIONS: StationDef[] = [
   { skill: 'fishing', label: 'Angelplatz', pos: [-2.6, -5.6], workPos: [-2.6, -5.6] },
   { skill: 'smithing', label: 'Schmiede', pos: [-6.4, 2], workPos: [-5, 1.6] },
   { skill: 'combat', label: 'Arena', pos: [6.8, 5.6], workPos: [5, 4.4] },
+  { skill: 'farming', label: 'Felder', pos: [-3.4, 7.2], workPos: [-2.2, 6] },
+  { skill: 'crafting', label: 'Werkbank', pos: [-4.6, 4.6], workPos: [-3.8, 3.9] },
+  { skill: 'hunting', label: 'Jagdgrund', pos: [-8.6, -0.6], workPos: [-7.4, -0.4] },
+  { skill: 'research', label: 'Forschungsturm', pos: [4.2, -8], workPos: [3.4, -6.4] },
 ];
+
+/** Skills that share a station. */
+const STATION_ALIASES: Record<string, string> = {
+  alchemy: 'research',
+  enchanting: 'research',
+  arcane: 'research',
+};
 
 export const IDLE_POS: Vec2 = [0, 0.5];
 
@@ -37,7 +48,8 @@ export const RIVER_POINTS: Vec2[] = [
 ];
 
 export function stationFor(skill: string | null): StationDef | undefined {
-  return STATIONS.find((s) => s.skill === skill);
+  const key = skill ? (STATION_ALIASES[skill] ?? skill) : null;
+  return STATIONS.find((s) => s.skill === key);
 }
 
 /** Deterministic pseudo-random for scatter placement (keeps the world identical across reloads). */

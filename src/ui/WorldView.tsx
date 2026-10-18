@@ -20,6 +20,9 @@ const STATIONS: Station[] = [
   { skill: 'fishing', label: 'Angelplatz', icon: '🎣', className: 'st-fish' },
   { skill: 'smithing', label: 'Schmiede', icon: '⚒️', className: 'st-forge' },
   { skill: 'combat', label: 'Arena', icon: '⚔️', className: 'st-arena' },
+  { skill: 'farming', label: 'Felder', icon: '🌾', className: 'st-farm' },
+  { skill: 'crafting', label: 'Werkbank', icon: '🪚', className: 'st-craft' },
+  { skill: 'research', label: 'Turm', icon: '🗼', className: 'st-tower' },
 ];
 
 function skyFor(phase: number): { sky: string; night: number } {
@@ -59,7 +62,11 @@ export function WorldView() {
   }, []);
 
   const { sky, night } = skyFor(phase);
-  const characterAt = STATIONS.find((s) => s.skill === activeSkill)?.className ?? 'st-idle';
+  const stationSkill =
+    activeSkill && ['alchemy', 'enchanting', 'arcane'].includes(activeSkill)
+      ? 'research'
+      : activeSkill;
+  const characterAt = STATIONS.find((s) => s.skill === stationSkill)?.className ?? 'st-idle';
 
   return (
     <div className="world" style={{ ['--sky' as string]: sky, ['--night' as string]: night }}>
@@ -76,9 +83,6 @@ export function WorldView() {
       </div>
       <div className="world-island">
         <span className="deco deco-river" aria-hidden />
-        <span className="deco deco-tower" aria-hidden title="Forschungsturm (Phase 5)">
-          🗼
-        </span>
         {STATIONS.map((st) => (
           <button
             key={st.skill}

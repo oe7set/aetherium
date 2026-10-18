@@ -23,6 +23,8 @@ export interface SkillDef {
   group: 'gathering' | 'processing' | 'combat' | 'science';
   /** Skills that use tools (axe, pickaxe …) get faster with better tools. */
   usesTools?: boolean;
+  /** Tech that unlocks this skill (Phase 5). */
+  unlockTech?: string;
 }
 
 /** Skills that are announced in the UI but not playable yet (motivation teaser). */
@@ -45,6 +47,7 @@ export type ConsumeEffect =
   | { type: 'intelligence'; amount: number }
   | { type: 'tool'; tool: ToolId }
   | { type: 'buff'; buff: string }
+  | { type: 'research'; amount: number }
   | { type: 'loot'; table: LootEntry[]; rolls: number }
   | { type: 'gold'; min: number; max: number };
 
@@ -154,6 +157,10 @@ export interface ActionDef {
   desc?: string;
   /** Sub-group shown in the skill view (e.g. „Barren", „Waffen"). */
   category?: string;
+  /** Alchemy analyses: element symbols this action can discover for the codex. */
+  elements?: string[];
+  /** Tech that must be researched before the action is available. */
+  requiresTech?: string;
 }
 
 export interface ToolDef {

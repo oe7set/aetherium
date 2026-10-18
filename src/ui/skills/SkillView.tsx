@@ -1,10 +1,11 @@
-import { actionsForSkill, getSkill, getTool, type ActionDef } from '../../data';
-import { levelProgress } from '../../engine';
+import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
+import { levelProgress, skillUnlocked } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
+import { FarmingView } from '../science/FarmingView';
 import { ActionCard } from './ActionCard';
 
 function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
@@ -18,10 +19,45 @@ function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
 
 export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
   if (getSkill(skillId).group === 'combat') return <CombatView onBack={onBack} />;
-  return <SkillDetail skillId={skillId} onBack={onBack} />;
+  return <SkillGate skillId={skillId} onBack={onBack} />;
 }
 
-function SkillDetail({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
+function LockedSkill({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
+  const skill = getSkill(skillId);
+  const tech = skill.unlockTech ? getTech(skill.unlockTech) : null;
+  const setUi = useGame((s) => s.setUi);
+  return (
+    <div className="skill-view">
+      {onBack && (
+        <button className="btn btn-ghost back" onClick={onBack}>
+          {t('skills.back')}
+        </button>
+      )}
+      <div className="skill-head" style={{ ['--accent' as string]: skill.color }}>
+        <span className="skill-head-icon">🔒</span>
+        <div className="skill-head-info">
+          <h2>{skill.name}</h2>
+          <small>{skill.desc}</small>
+        </div>
+      </div>
+      <p>
+        Schalte diesen Skill mit der Forschung <b>{tech ? `${tech.icon} ${tech.name}` : '???'}</b>{' '}
+        frei.
+      </p>
+      <button className="btn btn-primary" onClick={() => setUi({ tab: 'research' })}>
+        🔬 Zum Tech-Baum
+      </button>
+    </div>
+  );
+}
+
+function SkillGate({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
+  const unlocked = useGame((s) => skillUnlocked(s.game, skillId));
+  if (!unlocked) return <LockedSkill skillId={skillId} onBack={onBack} />;
+  return <SkillDetailInner skillId={skillId} onBack={onBack} />;
+}
+
+function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
   const skill = getSkill(skillId);
   const xp = useGame((s) => s.game.skills[skillId]?.xp ?? 0);
   const toolId = useGame((s) => s.game.equippedTools[skillId]);
@@ -53,7 +89,8 @@ function SkillDetail({ skillId, onBack }: { skillId: string; onBack?: () => void
         </div>
       </div>
       <p className="skill-desc">{skill.desc}</p>
-      <div className="skill-facts">
+      {skillId === 'farming' && <FarmingView />}
+      <div className="skill-facts" hidden={skillId === 'farming'}>
         {tool && (
           <span className="fact">
             {t('skills.tool', { name: `${tool.icon} ${tool.name}`, speed: tool.speed })}

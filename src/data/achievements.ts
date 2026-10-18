@@ -277,6 +277,57 @@ const STAT_SERIES: StatSeries[] = [
     ],
     reward: () => ({ 'xp.melee': 0.01 }),
   },
+  {
+    key: 'techsResearched',
+    icon: '🔬',
+    desc: (n) => `Erforsche ${n} Technologien.`,
+    steps: [
+      [1, 'Erste Erkenntnis'],
+      [10, 'Wissenschaftlerin'],
+      [25, 'Universalgelehrter'],
+      [40, 'Ende der Geschichte'],
+    ],
+    reward: (i) => ({ research: 0.05 * (i + 1) }),
+  },
+  {
+    key: 'harvests',
+    icon: '🌾',
+    desc: (n) => `Ernte ${n}-mal.`,
+    steps: [
+      [1, 'Grüner Daumen'],
+      [100, 'Bauer sucht Ernte'],
+      [1000, 'Agrarindustrie'],
+    ],
+    reward: (i) => ({ 'speed.farming': 0.05 * (i + 1) }),
+  },
+  {
+    key: 'mutations',
+    icon: '🧬',
+    desc: (n) => `Erziele ${n} Mutationen.`,
+    steps: [
+      [1, 'Mendels Erbe'],
+      [25, 'Gentechnik-Gegner besorgt'],
+    ],
+    reward: () => ({ rare: 0.03 }),
+  },
+  {
+    key: 'helperTasks',
+    icon: '🧑‍🎓',
+    desc: (n) => `Lass Helfer ${n} Aufgaben erledigen.`,
+    steps: [
+      [10, 'Delegieren gelernt'],
+      [1000, 'Middle Management'],
+      [100000, 'CEO-Modus'],
+    ],
+    reward: () => ({ helperSpeed: 0.05 }),
+  },
+  {
+    key: 'action.brew_healing',
+    icon: '🩺',
+    desc: (n) => `Braue ${n} Heiltränke.`,
+    steps: [[100, 'Ich bin kein Arzt, aber …']],
+    reward: () => ({ 'combat.hp': 0.05 }),
+  },
 ];
 
 function statAchievements(): AchievementDef[] {
@@ -292,7 +343,7 @@ function statAchievements(): AchievementDef[] {
   );
 }
 
-const TOTAL_LEVELS = [25, 50, 100, 150, 250, 400, 600, 800, 1000, 1200, 1500];
+const TOTAL_LEVELS = [50, 100, 150, 250, 400, 600, 800, 1000, 1200, 1500];
 const totalLevelAchievements: AchievementDef[] = TOTAL_LEVELS.map((n) => ({
   id: `total_${n}`,
   name: `Gesamtlevel ${n}`,
@@ -300,6 +351,23 @@ const totalLevelAchievements: AchievementDef[] = TOTAL_LEVELS.map((n) => ({
   icon: '📊',
   condition: { type: 'totalLevel', gte: n },
   reward: { xp: 0.01 },
+}));
+
+const CODEX = [5, 20, 50, 90, 118];
+const codexAchievements: AchievementDef[] = CODEX.map((n, i) => ({
+  id: `codex_${n}`,
+  name:
+    [
+      'Wasserstoff-Bombe (harmlos)',
+      'Chemie-Leistungskurs',
+      'Mendelejews Erbe',
+      'Fast alles erklärt',
+      'Periodensystem komplett',
+    ][i] ?? `Codex ${n}`,
+  desc: `Entdecke ${n} Elemente für das Periodensystem.`,
+  icon: '⚛️',
+  condition: { type: 'stat', key: 'codexSize', gte: n },
+  reward: { research: 0.05 * (i + 1), xp: 0.01 * (i + 1) },
 }));
 
 const GOLD = [1000, 100000, 10000000, 1e12, 1e30, 1e100];
@@ -460,5 +528,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   ...statAchievements(),
   ...totalLevelAchievements,
   ...goldAchievements,
+  ...codexAchievements,
   ...SPECIAL,
 ];

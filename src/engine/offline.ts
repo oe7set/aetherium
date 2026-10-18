@@ -2,6 +2,7 @@ import { BALANCE } from '../data/balance';
 import { advance } from './actions';
 import type { CombatStopReason, Emit, StopReason } from './events';
 import type { Rng } from './rng';
+import { mod } from './modifiers';
 import { skillLevel } from './skills';
 import type { GameState } from './state';
 
@@ -26,6 +27,9 @@ export interface ProgressSummary {
   died: boolean;
   combatStopped?: CombatStopReason;
   foodEaten: number;
+  research: number;
+  elements: string[];
+  harvests: number;
 }
 
 function bump(map: Record<string, number>, key: string, amount: number): void {
@@ -55,6 +59,9 @@ export function summaryCollector(
     dungeons: 0,
     died: false,
     foodEaten: 0,
+    research: 0,
+    elements: [],
+    harvests: 0,
   };
   const before: Record<string, number> = {};
   for (const id of Object.keys(s.skills)) before[id] = skillLevel(s, id);
@@ -102,6 +109,12 @@ export function summaryCollector(
       case 'playerDied':
         summary.died = true;
         break;
+      case 'elementDiscovered':
+        summary.elements.push(e.symbol);
+        break;
+      case 'harvested':
+        summary.harvests++;
+        break;
       case 'ate':
         summary.foodEaten++;
         break;
@@ -113,7 +126,9 @@ export function summaryCollector(
     }
   };
 
+  const researchBefore = s.research;
   const finish = (): ProgressSummary => {
+    summary.research = Math.max(0, s.research - researchBefore);
     for (const id of Object.keys(s.skills)) {
       const to = skillLevel(s, id);
       const from = before[id] ?? 1;
@@ -125,6 +140,11 @@ export function summaryCollector(
   return { emit, summary, finish };
 }
 
+/** Offline cap in seconds including tech bonuses (Telegraf, Relativitätstheorie …). */
+export function offlineCap(s: GameState): number {
+  return BALANCE.OFFLINE_CAP_SECONDS + mod(s, 'offlineHours') * 3600;
+}
+
 /**
  * Simulates the time since `s.lastUpdate`, capped at the offline limit.
  * Mutates `s` and returns what happened.
@@ -133,7 +153,7 @@ export function applyOfflineProgress(
   s: GameState,
   now: number,
   rng: Rng,
-  capSeconds: number = BALANCE.OFFLINE_CAP_SECONDS,
+  capSeconds: number = offlineCap(s),
 ): ProgressSummary {
   const elapsedSeconds = Math.max(0, (now - s.lastUpdate) / 1000);
   const simulatedSeconds = Math.min(elapsedSeconds, capSeconds);

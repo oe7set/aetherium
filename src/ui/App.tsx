@@ -12,7 +12,7 @@ import { InventoryPanel } from './inventory/InventoryPanel';
 import { LevelUpBanner } from './LevelUpBanner';
 import { MenuPanel } from './menu/MenuPanel';
 import { OfflineModal } from './OfflineModal';
-import { ResearchPanel } from './ResearchPanel';
+import { ResearchPanel } from './science/ResearchPanel';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
