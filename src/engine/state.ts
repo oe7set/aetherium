@@ -107,6 +107,71 @@ export interface TaskState {
   claimed: boolean;
 }
 
+export type ColonyRes = Record<'wood' | 'brick' | 'wool' | 'grain' | 'ore', number>;
+
+export interface ColonyPlayer {
+  /** 'you' or an AI persona id. */
+  persona: string;
+  res: ColonyRes;
+  settlements: number[];
+  cities: number[];
+  roads: number[];
+  devHand: string[];
+  knights: number;
+  victoryCards: number;
+}
+
+export interface ColonyOffer {
+  id: number;
+  from: number;
+  give: keyof ColonyRes;
+  giveQty: number;
+  want: keyof ColonyRes;
+  wantQty: number;
+  /** Rolls until the offer expires. */
+  expires: number;
+}
+
+export interface ColonyMatch {
+  seed: number;
+  terrain: string[];
+  numbers: (number | null)[];
+  harbors: { edge: number; kind: string }[];
+  robber: number;
+  players: ColonyPlayer[];
+  deck: string[];
+  phase: 'setup' | 'running' | 'finished';
+  /** Player indices still to place in the setup (snake order). */
+  setupQueue: number[];
+  /** Vertex of the settlement just placed in setup, awaiting its road. */
+  setupVertex: number | null;
+  rolls: number;
+  lastRoll: [number, number] | null;
+  turn: number;
+  longestRoad: number | null;
+  largestArmy: number | null;
+  offers: ColonyOffer[];
+  winner: number | null;
+  /** Siedler buildings on own settlements/cities: vertex → building ids. */
+  buildings: Record<string, string[]>;
+  /** Free roads from a road-building card. */
+  freeRoads: number;
+  /** Waiting for the player to pick a hex for the robber (after a knight). */
+  robberMode: boolean;
+}
+
+export interface ColonyState {
+  match: ColonyMatch | null;
+  fame: number;
+  fameTotal: number;
+  talents: Record<string, number>;
+  wins: number;
+  matches: number;
+  /** Seconds until the next dice roll. */
+  nextRoll: number;
+  nextOfferId: number;
+}
+
 export interface BuffState {
   id: string;
   remaining: number;
@@ -161,9 +226,10 @@ export interface GameState {
   catState: 'unknown' | 'alive' | 'ghost';
   quests: { active: Record<string, Record<string, number>>; done: string[] };
   tasks: { day: string; week: string; list: TaskState[] };
+  colony: ColonyState;
 }
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 
 export function defaultSettings(): Settings {
   return {
@@ -223,6 +289,20 @@ export function newGame(now: number = Date.now()): GameState {
     catState: 'unknown',
     quests: { active: {}, done: [] },
     tasks: { day: '', week: '', list: [] },
+    colony: defaultColony(),
+  };
+}
+
+export function defaultColony(): ColonyState {
+  return {
+    match: null,
+    fame: 0,
+    fameTotal: 0,
+    talents: {},
+    wins: 0,
+    matches: 0,
+    nextRoll: 30,
+    nextOfferId: 1,
   };
 }
 
@@ -280,6 +360,7 @@ export function cloneState(s: GameState): GameState {
       done: [...s.quests.done],
     },
     tasks: { ...s.tasks, list: s.tasks.list.map((t) => ({ ...t })) },
+    colony: cloneColony(s.colony),
   };
 }
 
@@ -289,4 +370,35 @@ export function addStat(s: GameState, key: string, amount = 1): void {
 
 export function getStat(s: GameState, key: string): number {
   return s.stats[key] ?? 0;
+}
+
+/** Colony state is nested; matches are cloned deeply (they are small: 4 players, 19 hexes). */
+export function cloneColony(c: ColonyState): ColonyState {
+  return {
+    ...c,
+    talents: { ...c.talents },
+    match: c.match
+      ? {
+          ...c.match,
+          terrain: [...c.match.terrain],
+          numbers: [...c.match.numbers],
+          harbors: c.match.harbors.map((h) => ({ ...h })),
+          players: c.match.players.map((p) => ({
+            ...p,
+            res: { ...p.res },
+            settlements: [...p.settlements],
+            cities: [...p.cities],
+            roads: [...p.roads],
+            devHand: [...p.devHand],
+          })),
+          deck: [...c.match.deck],
+          setupQueue: [...c.match.setupQueue],
+          lastRoll: c.match.lastRoll ? [...c.match.lastRoll] : null,
+          offers: c.match.offers.map((o) => ({ ...o })),
+          buildings: Object.fromEntries(
+            Object.entries(c.match.buildings).map(([k, v]) => [k, [...v]]),
+          ),
+        }
+      : null,
+  };
 }

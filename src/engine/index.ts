@@ -2,6 +2,7 @@
 export * from './actions';
 export * from './achievements';
 export * from './buffs';
+export * from './colony';
 export * from './combat';
 export * from './market';
 export * from './meta';

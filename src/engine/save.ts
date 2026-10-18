@@ -14,12 +14,16 @@ import {
 } from '../data';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
+import { COLONY_BUILDINGS, FAME_TALENTS } from '../data/colony';
+import { BOARD } from './colony/board';
 import {
   defaultCombatSettings,
   defaultSettings,
   newGame,
   SAVE_VERSION,
   type CombatSettings,
+  type ColonyMatch,
+  type ColonyState,
   type CombatState,
   type GameState,
   type PrestigeState,
@@ -70,6 +74,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   4: (data) => ({ ...data, prestige: null }),
   // 5 → 6 (Phase 7): pets, quests, daily/weekly tasks.
   5: (data) => ({ ...data, pets: [], quests: null, tasks: null }),
+  // 6 → 7 (Phase 9): the colony (Catan-like board game with Siedler chains).
+  6: (data) => ({ ...data, colony: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -211,6 +217,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     catState: data.catState === 'alive' || data.catState === 'ghost' ? data.catState : 'unknown',
     quests: hydrateQuests(data.quests),
     tasks: hydrateTasks(data.tasks, base.tasks),
+    colony: hydrateColony(data.colony, base.colony),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -225,6 +232,93 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateColony(v: unknown, fallback: ColonyState): ColonyState {
+  if (!isRecord(v)) return fallback;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const talents = Object.fromEntries(
+    Object.entries(numberRecord(v.talents)).filter(([id]) => FAME_TALENTS.some((t) => t.id === id)),
+  );
+  return {
+    match: hydrateMatch(v.match),
+    fame: Math.max(0, num(v.fame, 0)),
+    fameTotal: Math.max(0, num(v.fameTotal, 0)),
+    talents,
+    wins: num(v.wins, 0),
+    matches: num(v.matches, 0),
+    nextRoll: Math.max(0, num(v.nextRoll, fallback.nextRoll)),
+    nextOfferId: num(v.nextOfferId, 1),
+  };
+}
+
+/** A saved match is only kept if its shape is intact; otherwise it is discarded (fresh board). */
+function hydrateMatch(v: unknown): ColonyMatch | null {
+  const strings = (x: unknown) =>
+    Array.isArray(x) ? x.filter((y): y is string => typeof y === 'string') : [];
+  if (!isRecord(v) || !Array.isArray(v.players) || !Array.isArray(v.terrain)) return null;
+  if (v.terrain.length !== BOARD.hexes.length || v.players.length < 2) return null;
+  if (!['setup', 'running', 'finished'].includes(v.phase as string)) return null;
+  const nums = (x: unknown) =>
+    Array.isArray(x) ? x.filter((n): n is number => typeof n === 'number') : [];
+  const players = v.players.filter(isRecord).map((p) => ({
+    persona: typeof p.persona === 'string' ? p.persona : 'you',
+    res: {
+      wood: 0,
+      brick: 0,
+      wool: 0,
+      grain: 0,
+      ore: 0,
+      ...numberRecord(p.res),
+    } as ColonyMatch['players'][number]['res'],
+    settlements: nums(p.settlements),
+    cities: nums(p.cities),
+    roads: nums(p.roads),
+    devHand: strings(p.devHand),
+    knights: typeof p.knights === 'number' ? p.knights : 0,
+    victoryCards: typeof p.victoryCards === 'number' ? p.victoryCards : 0,
+  }));
+  if (players.length !== v.players.length) return null;
+  const buildings: Record<string, string[]> = {};
+  if (isRecord(v.buildings))
+    for (const [k, list] of Object.entries(v.buildings))
+      buildings[k] = strings(list).filter((id) => COLONY_BUILDINGS.some((b) => b.id === id));
+  const optIndex = (x: unknown) => (typeof x === 'number' ? x : null);
+  const roll = nums(v.lastRoll);
+  return {
+    seed: typeof v.seed === 'number' ? v.seed : 0,
+    terrain: strings(v.terrain),
+    numbers: Array.isArray(v.numbers)
+      ? v.numbers.map((n) => (typeof n === 'number' ? n : null))
+      : [],
+    harbors: Array.isArray(v.harbors)
+      ? v.harbors.filter(isRecord).map((h) => ({
+          edge: typeof h.edge === 'number' ? h.edge : 0,
+          kind: typeof h.kind === 'string' ? h.kind : 'any',
+        }))
+      : [],
+    robber: typeof v.robber === 'number' ? v.robber : 0,
+    players,
+    deck: strings(v.deck),
+    phase: v.phase as ColonyMatch['phase'],
+    setupQueue: nums(v.setupQueue),
+    setupVertex: optIndex(v.setupVertex),
+    rolls: typeof v.rolls === 'number' ? v.rolls : 0,
+    lastRoll: roll.length === 2 ? [roll[0]!, roll[1]!] : null,
+    turn: typeof v.turn === 'number' ? v.turn : 0,
+    longestRoad: optIndex(v.longestRoad),
+    largestArmy: optIndex(v.largestArmy),
+    offers: Array.isArray(v.offers)
+      ? v.offers
+          .filter(isRecord)
+          .filter((o) => typeof o.id === 'number')
+          .map((o) => o as unknown as ColonyMatch['offers'][number])
+      : [],
+    winner: optIndex(v.winner),
+    buildings,
+    freeRoads: typeof v.freeRoads === 'number' ? v.freeRoads : 0,
+    robberMode: v.robberMode === true,
   };
 }
 

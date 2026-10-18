@@ -42,7 +42,23 @@ export type GameEvent =
   | { type: 'prestige'; layer: 'rebirth' | 'paradigm' | 'bigbang'; gain: number }
   | { type: 'petFound'; pet: string }
   | { type: 'questCompleted'; quest: string }
-  | { type: 'taskCompleted'; task: string };
+  | { type: 'taskCompleted'; task: string }
+  | { type: 'colonyStarted' }
+  | { type: 'colonySetupDone' }
+  | { type: 'colonyRoll'; roll: number; gained: number }
+  | { type: 'colonyRobber'; by: number; victim: number | null; res: string | null; lost: number }
+  | {
+      type: 'colonyBuilt';
+      player: number;
+      kind: 'road' | 'settlement' | 'city' | 'building';
+      id?: string;
+    }
+  | { type: 'colonyDevCard'; card: string }
+  | { type: 'colonyDevPlayed'; card: string }
+  | { type: 'colonyOffer'; from: number }
+  | { type: 'colonyQuip'; player: number }
+  | { type: 'colonyFinished'; winner: number; place: number }
+  | { type: 'colonyClaimed'; fame: number; place: number };
 
 export type Emit = (event: GameEvent) => void;
 

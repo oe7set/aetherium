@@ -132,6 +132,8 @@ function resetRun(s: GameState): void {
     catState: s.catState,
     quests: s.quests,
     tasks: s.tasks,
+    // The colony is its own world: matches, Ruhm and talents survive every reset.
+    colony: s.colony,
   };
   Object.assign(s, fresh, kept);
 
