@@ -12,6 +12,7 @@ import {
   TIER_NAMES,
   DISMANTLE_ESSENCE,
 } from '../../data/hero';
+import { FRAMES } from '../../data/progress';
 import { BIOMES } from '../../data/rift';
 import { ACHIEVEMENTS } from '../../data';
 import {
@@ -25,7 +26,10 @@ import {
   equipHeroItem,
   HERO_ITEM_MAP,
   HERO_STATUS_TEXT,
+  currentFrame,
   currentTitle,
+  frameUnlocked,
+  setFrame,
   setTitle,
   heroDefense,
   heroStrength,
@@ -94,7 +98,16 @@ export function HeroView() {
   return (
     <div className="hero-view">
       <div className={`hero-card-big glass status-${h.status}`}>
-        <div className="hero-portrait" aria-hidden>
+        <div
+          className="hero-portrait"
+          aria-hidden
+          style={
+            {
+              '--frame-ring': currentFrame(game).ring,
+              '--frame-glow': currentFrame(game).glow,
+            } as React.CSSProperties
+          }
+        >
           <span>{h.status === 'dead' ? '🪦' : h.avatar}</span>
           <i className="hero-level">{h.level}</i>
         </div>
@@ -118,6 +131,7 @@ export function HeroView() {
                   </button>
                 ))}
               </div>
+              <FramePicker />
               <button
                 className="btn small"
                 onClick={() => {
@@ -458,6 +472,36 @@ export function AdventuresView() {
             </div>
           );
         })}
+    </div>
+  );
+}
+
+/** Portrait frames: cosmetic rewards from every part of the game. */
+function FramePicker() {
+  const chosen = useGame((s) => currentFrame(s.game).id);
+  const act = useGame((s) => s.hero);
+  const game = useGame.getState().game;
+  return (
+    <div className="frame-picker">
+      <small className="muted">Rahmen</small>
+      <div className="frame-list">
+        {FRAMES.map((f) => {
+          const open = frameUnlocked(game, f);
+          return (
+            <button
+              key={f.id}
+              className={`frame-opt ${f.id === chosen ? 'active' : ''} ${open ? '' : 'locked'}`}
+              style={{ '--frame-ring': f.ring, '--frame-glow': f.glow } as React.CSSProperties}
+              disabled={!open}
+              title={open ? f.name : `🔒 ${f.hint}`}
+              onClick={() => act((s) => void setFrame(s, f.id === 'gold' ? '' : f.id))}
+            >
+              <span>{open ? f.icon : '🔒'}</span>
+              <small>{open ? f.name : f.hint}</small>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

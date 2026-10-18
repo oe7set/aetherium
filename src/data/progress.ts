@@ -317,3 +317,108 @@ export const CHRONICLE: ChronicleStep[] = [
     go: { tab: 'skills' },
   },
 ];
+
+// --- Porträt-Rahmen (Kosmetik) -----------------------------------------------------------------
+
+export type FrameCondition =
+  | { stat: string; gte: number }
+  | { totalLevel: number }
+  | { achievements: number }
+  /** Highest Meisterschafts-Pool of any skill (0–1). */
+  | { masteryPool: number };
+
+export interface FrameDef {
+  id: string;
+  name: string;
+  icon: string;
+  /** Ring colour and glow of the hero portrait. */
+  ring: string;
+  glow: string;
+  hint: string;
+  unlock?: FrameCondition;
+}
+
+export const FRAMES: FrameDef[] = [
+  {
+    id: 'gold',
+    name: 'Goldrand',
+    icon: '🟡',
+    ring: '#ffd166',
+    glow: 'rgba(124, 92, 255, 0.6)',
+    hint: 'Für alle – Held sein reicht.',
+  },
+  {
+    id: 'leaf',
+    name: 'Waldkranz',
+    icon: '🌿',
+    ring: '#5fbf6a',
+    glow: 'rgba(95, 191, 106, 0.6)',
+    hint: 'Gesamtlevel 250',
+    unlock: { totalLevel: 250 },
+  },
+  {
+    id: 'royal',
+    name: 'Königsrahmen',
+    icon: '👑',
+    ring: '#c58bff',
+    glow: 'rgba(197, 139, 255, 0.6)',
+    hint: 'Ein zweites Dorf gründen',
+    unlock: { stat: 'villagesFounded', gte: 1 },
+  },
+  {
+    id: 'ember',
+    name: 'Glutring',
+    icon: '🔥',
+    ring: '#ff7a3d',
+    glow: 'rgba(255, 122, 61, 0.65)',
+    hint: 'Einen Riss-Lauf gewinnen',
+    unlock: { stat: 'riftWins', gte: 1 },
+  },
+  {
+    id: 'frost',
+    name: 'Montagsfrost',
+    icon: '❄️',
+    ring: '#9be7ff',
+    glow: 'rgba(155, 231, 255, 0.6)',
+    hint: 'Den Wochenboss besiegen',
+    unlock: { stat: 'weeklyWins', gte: 1 },
+  },
+  {
+    id: 'collector',
+    name: 'Sammlerrahmen',
+    icon: '📗',
+    ring: '#e6c34a',
+    glow: 'rgba(230, 195, 74, 0.6)',
+    hint: '5 Sammelbuch-Sets abschließen',
+    unlock: { stat: 'collectionsDone', gte: 5 },
+  },
+  {
+    id: 'master',
+    name: 'Meisterring',
+    icon: '🏅',
+    ring: '#ffe066',
+    glow: 'rgba(255, 224, 102, 0.75)',
+    hint: 'Ein Meisterschafts-Pool auf 50 %',
+    unlock: { masteryPool: 0.5 },
+  },
+  {
+    id: 'cosmic',
+    name: 'Kosmischer Rahmen',
+    icon: '🌌',
+    ring: '#5ef2ff',
+    glow: 'rgba(94, 242, 255, 0.7)',
+    hint: 'Einmal wiedergeboren',
+    unlock: { stat: 'rebirths', gte: 1 },
+  },
+  {
+    id: 'legend',
+    name: 'Legendenrahmen',
+    icon: '💖',
+    ring: '#ff5ec4',
+    glow: 'rgba(255, 94, 196, 0.7)',
+    hint: '150 Erfolge',
+    unlock: { achievements: 150 },
+  },
+];
+
+export const FRAME_MAP = new Map(FRAMES.map((f) => [f.id, f]));

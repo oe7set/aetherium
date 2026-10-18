@@ -700,6 +700,90 @@ export const QUESTS: QuestDef[] = [
     outro:
       '„Hinter dem Tor: ein Spiegel. Die Vorläufer – das waren wir. Oder zumindest sehr ähnliche Leute.“',
   },
+  // --- Questreihe „Die Karawane des Glücks": Handel im Dorf ↔ Insel-Markt, Haustiere ↔ Held, Expansion -------
+  {
+    id: 'qk_first_trade',
+    chain: 'Die Karawane des Glücks',
+    name: 'Ein Händler klopft an',
+    icon: '🐫',
+    giver: 'Karawanenführerin Zahra',
+    story:
+      '„Meine Kamele sind müde, meine Taschen leer. Baut ihr einen Marktplatz, bringe ich die Welt in euer Dorf.“',
+    objectives: [
+      { type: 'building', id: 'market', level: 1, label: 'Marktplatz Stufe 1' },
+      { type: 'stat', key: 'villageTrades', amount: 3, label: 'Handle 3-mal auf dem Dorfmarkt' },
+    ],
+    rewards: { gold: 800, extra: { resources: 600 } },
+    outro: '„Ein fairer Tausch! Na gut, für mich etwas fairer. Willkommen im Geschäft.“',
+  },
+  {
+    id: 'qk_island_goods',
+    chain: 'Die Karawane des Glücks',
+    requires: ['qk_first_trade'],
+    name: 'Inselware für die Karawane',
+    icon: '📦',
+    giver: 'Karawanenführerin Zahra',
+    story:
+      '„In der Wüste zahlt man für Inselware ein Vermögen. Verkauf mir deine Überschüsse – und schick Waren ins Dorf.“',
+    objectives: [
+      { type: 'stat', key: 'itemsSold', amount: 500, label: 'Verkaufe 500 Gegenstände' },
+      { type: 'stat', key: 'villageImports', amount: 50, label: 'Schicke 50 Inselwaren ins Dorf' },
+    ],
+    rewards: { gold: 2000, research: 400, extra: { resources: 1200 } },
+    outro: '„Getrockneter Fisch! In der Wüste! Ich werde reich. Reicher. Am reichsten.“',
+  },
+  {
+    id: 'qk_companion',
+    chain: 'Die Karawane des Glücks',
+    requires: ['qk_island_goods'],
+    name: 'Ein treuer Begleiter',
+    icon: '🐾',
+    giver: 'Karawanenführerin Zahra',
+    story:
+      '„Kein Held reist allein. Ein Haustier warnt vor Banditen – und frisst sie manchmal auch.“',
+    objectives: [
+      { type: 'stat', key: 'petsFound', amount: 1, label: 'Finde ein Haustier' },
+      { type: 'heroLevel', level: 10, label: 'Held Stufe 10' },
+      { type: 'stat', key: 'heroAdventures', amount: 10, label: 'Bestehe 10 Abenteuer' },
+    ],
+    rewards: { gold: 3000, extra: { heroItem: 2, heroXp: 800 } },
+    outro: '„Das Tier mag dich. Oder deinen Proviant. Bei Haustieren ist das dasselbe.“',
+  },
+  {
+    id: 'qk_trade_route',
+    chain: 'Die Karawane des Glücks',
+    requires: ['qk_companion'],
+    name: 'Die große Handelsroute',
+    icon: '🛤️',
+    giver: 'Karawanenführerin Zahra',
+    story:
+      '„Eine Handelsroute braucht zwei Enden. Gründe ein zweites Dorf, und ich verbinde sie mit Gold.“',
+    objectives: [
+      { type: 'building', id: 'market', level: 10, label: 'Marktplatz Stufe 10' },
+      { type: 'stat', key: 'villagesFounded', amount: 1, label: 'Gründe ein neues Dorf' },
+      { type: 'stat', key: 'villageTrades', amount: 25, label: 'Handle 25-mal auf dem Dorfmarkt' },
+    ],
+    rewards: { gold: 6000, extra: { resources: 3000, essence: 200 } },
+    outro: '„Hörst du das? Das ist das Geräusch von Zinsen. Wunderschön.“',
+  },
+  {
+    id: 'qk_fortune',
+    chain: 'Die Karawane des Glücks',
+    requires: ['qk_trade_route'],
+    name: 'Das Glück der Karawane',
+    icon: '🪔',
+    giver: 'Karawanenführerin Zahra',
+    story:
+      '„In meiner ältesten Truhe liegt eine Wunderlampe. Ich tausche sie – gegen Gold, Edelsteine und ein Heldenstück.“',
+    objectives: [
+      { type: 'deliver', item: 'gem_ruby', qty: 5, label: 'Bringe 5 Rubine' },
+      { type: 'stat', key: 'goldEarned', amount: 250000, label: 'Verdiene insgesamt 250 000 Gold' },
+      { type: 'heroLevel', level: 25, label: 'Held Stufe 25' },
+    ],
+    rewards: { gold: 15000, extra: { heroItem: 3, essence: 500, avatar: '🐫' } },
+    outro:
+      '„Der Geist hat drei Wünsche frei. Zwei davon hat er schon für Urlaub verbraucht. Viel Glück!“',
+  },
 ];
 
 // --- Daily / weekly tasks ----------------------------------------------------------------------------

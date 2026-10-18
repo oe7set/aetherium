@@ -251,6 +251,7 @@ export function completeAction(
   const masteryAfter = masteryLevel(s, def.id);
   if (masteryAfter > masteryBefore) {
     addStat(s, 'masteryLevels');
+    invalidateMods(s); // the skill's mastery pool may cross a tier
     emit({ type: 'mastery', actionId: def.id, level: masteryAfter });
   }
   addStat(s, `skillActions.${def.skill}`);

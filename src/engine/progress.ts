@@ -1,5 +1,5 @@
 import Decimal from 'break_eternity.js';
-import { ACHIEVEMENT_MAP, getItem, ITEM_MAP } from '../data';
+import { ACHIEVEMENT_MAP, getItem, ITEM_MAP, SKILLS } from '../data';
 import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
 import {
   CHRONICLE,
@@ -8,13 +8,17 @@ import {
   PASS_TIERS,
   passReward,
   passThreshold,
+  FRAME_MAP,
+  FRAMES,
   type ChronicleCondition,
+  type FrameDef,
   type RewardDef,
 } from '../data/progress';
 import { V_RESOURCES } from '../data/village';
 import { gainItem } from './actions';
 import type { Emit } from './events';
 import { gainHeroXp, rollHeroItem } from './hero';
+import { masteryPool } from './mastery';
 import { dayKey } from './meta';
 import { invalidateMods } from './modifiers';
 import type { Rng } from './rng';
@@ -237,4 +241,28 @@ export function setTitle(s: GameState, achievementId: string): boolean {
 export function currentTitle(s: GameState): string {
   const id = s.progress.title;
   return id && s.achievements.includes(id) ? (ACHIEVEMENT_MAP.get(id)?.name ?? '') : '';
+}
+
+// --- Porträt-Rahmen ---------------------------------------------------------------------------------
+
+export function frameUnlocked(s: GameState, f: FrameDef): boolean {
+  const u = f.unlock;
+  if (!u) return true;
+  if ('stat' in u) return (s.stats[u.stat] ?? 0) >= u.gte;
+  if ('totalLevel' in u) return totalLevel(s) >= u.totalLevel;
+  if ('achievements' in u) return s.achievements.length >= u.achievements;
+  return SKILLS.some((k) => masteryPool(s, k.id) >= u.masteryPool);
+}
+
+export function setFrame(s: GameState, id: string): boolean {
+  const f = FRAME_MAP.get(id);
+  if (id && (!f || !frameUnlocked(s, f))) return false;
+  s.progress.frame = id;
+  return true;
+}
+
+/** The frame the portrait wears (falls back to the default if it got locked again). */
+export function currentFrame(s: GameState): FrameDef {
+  const f = FRAME_MAP.get(s.progress.frame);
+  return f && frameUnlocked(s, f) ? f : FRAMES[0]!;
 }

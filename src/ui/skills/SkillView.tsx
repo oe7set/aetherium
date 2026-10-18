@@ -1,5 +1,12 @@
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
-import { levelCap, levelProgress, skillUnlocked } from '../../engine';
+import {
+  hasMasteryPool,
+  levelCap,
+  levelProgress,
+  masteryPool,
+  POOL_TIERS,
+  skillUnlocked,
+} from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
@@ -7,6 +14,46 @@ import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
 import { FarmingView } from '../science/FarmingView';
 import { ActionCard } from './ActionCard';
+
+/** Meisterschafts-Pool: average mastery of the skill's actions unlocks skill-wide bonuses. */
+function MasteryPool({ skillId }: { skillId: string }) {
+  const fill = useGame((s) => Math.floor(masteryPool(s.game, skillId) * 1000) / 1000);
+  if (!hasMasteryPool(skillId)) return null;
+  const next = POOL_TIERS.find((tier) => fill < tier.at);
+  return (
+    <details className="mastery-pool">
+      <summary>
+        <span>
+          🏅 Meisterschafts-Pool <b>{(fill * 100).toFixed(1)} %</b>
+        </span>
+        <small className="muted">
+          {next ? `bei ${next.at * 100} %: ${next.label}` : 'alle Boni aktiv'}
+        </small>
+      </summary>
+      <div className="pool-bar">
+        <ProgressBar fraction={fill} color="var(--gold)" height={6} />
+        {POOL_TIERS.map((tier) => (
+          <i
+            key={tier.at}
+            style={{ left: `${tier.at * 100}%` }}
+            className={fill >= tier.at ? 'on' : ''}
+          />
+        ))}
+      </div>
+      <ul>
+        {POOL_TIERS.map((tier) => (
+          <li key={tier.at} className={fill >= tier.at ? 'on' : ''}>
+            {fill >= tier.at ? '✔' : '○'} {tier.at * 100} % – {tier.label}
+          </li>
+        ))}
+      </ul>
+      <small className="muted">
+        Jede Aktion sammelt eigene Meisterschaft (🏅 auf der Karte). Der Pool ist ihr Durchschnitt –
+        bleibt auch nach der Wiedergeburt.
+      </small>
+    </details>
+  );
+}
 
 function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
   const groups = new Map<string, ActionDef[]>();
@@ -108,6 +155,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
             : t('action.allUnlocked')}
         </span>
       </div>
+      <MasteryPool skillId={skillId} />
       {groupByCategory(actions).map(([category, list]) => (
         <section key={category || 'all'}>
           {category && <h4 className="group-title">{category}</h4>}

@@ -306,6 +306,8 @@ export interface ProgressState {
   sets: string[];
   /** Chosen title: id of an unlocked achievement ('' = none). */
   title: string;
+  /** Chosen portrait frame (`FRAMES` id, '' = default). */
+  frame: string;
 }
 
 export interface RiftBest {
@@ -481,6 +483,7 @@ export function newGame(now: number = Date.now()): GameState {
       found: [],
       sets: [],
       title: '',
+      frame: '',
     },
     rift: defaultRift(),
   };

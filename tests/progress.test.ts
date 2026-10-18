@@ -9,7 +9,9 @@ import {
   claimPassTier,
   createRng,
   currentChronicle,
+  currentFrame,
   currentTitle,
+  setFrame,
   setTitle,
   dailyAvailable,
   deserialize,
@@ -134,5 +136,25 @@ describe('Titel', () => {
     expect(deserialize(serialize(s)).progress.title).toBe(id);
     expect(setTitle(s, '')).toBe(true);
     expect(currentTitle(s)).toBe('');
+  });
+});
+
+describe('Porträt-Rahmen', () => {
+  it('nur freigeschaltete Rahmen, Standard als Rückfall, übersteht Speichern', () => {
+    const s = gameWith();
+    expect(currentFrame(s).id).toBe('gold');
+    expect(setFrame(s, 'ember')).toBe(false);
+    expect(setFrame(s, 'nope')).toBe(false);
+    s.stats.riftWins = 1;
+    expect(setFrame(s, 'ember')).toBe(true);
+    expect(currentFrame(s).id).toBe('ember');
+    expect(deserialize(serialize(s)).progress.frame).toBe('ember');
+    s.stats.riftWins = 0;
+    expect(currentFrame(s).id).toBe('gold');
+    const old = structuredClone(serialize(s)) as unknown as {
+      data: { progress: Record<string, unknown> };
+    };
+    delete old.data.progress.frame;
+    expect(deserialize(old).progress.frame).toBe('');
   });
 });

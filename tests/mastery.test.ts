@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAction } from '../src/data';
+import { ACTIONS, getAction } from '../src/data';
 import {
   actionDuration,
   completeAction,
@@ -9,7 +9,10 @@ import {
   masteryCompletionsFor,
   masteryLevel,
   masteryLevelFromCount,
+  masteryPool,
   masteryProgress,
+  modFor,
+  invalidateMods,
 } from '../src/engine';
 import { gameWith } from './helpers';
 
@@ -46,5 +49,25 @@ describe('Meisterschaft', () => {
       { type: 'mastery', actionId: 'wc_oak', level: 2 },
     ]);
     expect(s.stats.masteryLevels).toBe(1);
+  });
+});
+
+describe('Meisterschafts-Pool', () => {
+  it('füllt sich mit der Meisterschaft aller Aktionen eines Skills und gibt Stufen-Boni', () => {
+    const s = gameWith();
+    expect(masteryPool(s, 'woodcutting')).toBe(0);
+    const base = modFor(s, 'speed', 'woodcutting');
+    const ids = ACTIONS.filter((a) => a.skill === 'woodcutting').map((a) => a.id);
+    for (const id of ids) s.stats[`action.${id}`] = masteryCompletionsFor(50);
+    invalidateMods(s);
+    const fill = masteryPool(s, 'woodcutting');
+    expect(fill).toBeCloseTo(49 / 98, 5);
+    // 25 % tier: +5 % speed for woodcutting only
+    expect(modFor(s, 'speed', 'woodcutting')).toBeCloseTo(base + 0.05, 5);
+    expect(modFor(s, 'speed', 'mining')).toBeCloseTo(modFor(gameWith(), 'speed', 'mining'), 5);
+    for (const id of ids) s.stats[`action.${id}`] = masteryCompletionsFor(99);
+    invalidateMods(s);
+    expect(masteryPool(s, 'woodcutting')).toBe(1);
+    expect(modFor(s, 'double', 'woodcutting')).toBeGreaterThanOrEqual(0.05);
   });
 });

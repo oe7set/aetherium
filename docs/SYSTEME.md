@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.29.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.30.0**.
 
 ## 1. Der große Kreislauf
 
@@ -111,7 +111,8 @@
 - Ein volles Set bringt eine einmalige Belohnung plus einen Dauer-Bonus (Modifikator-Quelle `'collections'`).
 
 **Questreihen** (`data/meta.ts`, `chain`): „Das Band der Welten" (alle Systeme), „Wissen ist Macht"
-(Forschung/Alchemie/Verzauberung ↔ Riss), „Spuren der Vorläufer" (Archäologie ↔ Abenteuer/Oasen/Dörfer)
+(Forschung/Alchemie/Verzauberung ↔ Riss), „Spuren der Vorläufer" (Archäologie ↔ Abenteuer/Oasen/Dörfer), „Die Karawane des Glücks" (Dorfmarkt ↔ Insel-Handel,
+Haustiere ↔ Held, Expansion)
 
 - Quest-Ziele: Statistik-Zuwachs, Abgabe, Skill-Level, Dorfgebäude-Stufe (`building`), Heldenstufe
   (`heroLevel`); Belohnung `rewards.extra` läuft über `applyReward` (Essenz, Rohstoffe, Held).
@@ -141,6 +142,10 @@
 - Zurück-Taste/-Geste schließt Overlays, Tagesbonus und Fenster (`useBackButton` in `App.tsx`).
 - Barrierefreiheit: `ui/a11y.ts` (Textgröße über `html { font-size }` – Schriftgrößen immer in `rem`!,
   `reduce-motion`, `high-contrast`).
+- **Meisterschafts-Pool** (`engine/mastery.ts`): Durchschnitt der Meisterschaft aller Aktionen eines Skills; bei
+  10/25/50/95 % gibt es skillweite Boni (Modifier-Quelle `masteryPool`, `POOL_TIERS`). Anzeige im Skill (`MasteryPool`).
+- **Porträt-Rahmen** (`FRAMES` in `data/progress.ts`, `frameUnlocked`/`setFrame` in `engine/progress.ts`, Wahl in
+  `progress.frame`): Kosmetik aus allen Systemen (Dorf, Riss, Wochenboss, Sammelbuch, Meisterschaft, Prestige).
 - Skill-Liste: je Skill eine Zeile „läuft gerade / Freischalt-Grund / nächste Freischaltung"; Gesamtlevel,
   gemeisterte Skills und nächstes Gesamtlevel-Ziel bleiben oben stehen (`SkillSummary`), im Skill bleibt der Kopf
   mit Level/XP oben (`.skill-sticky`).
@@ -165,15 +170,14 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Weitere Questreihen (Dorf-Expansion ↔ Handel, Haustiere ↔ Held).
-- [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
-      über Export-Codes.
+- [ ] Endgame: Inselschmuck als Kosmetik (3D-Deko auf der Insel); Endlos-Riss-Rangliste über Export-Codes.
 - [ ] Riss: eigener 7. Biom (braucht ein neues Kampfgebiet in `data/combat.ts`), neue Gegner-Verhalten
       (z. B. Schild, Heiler).
 
 **Qualität**
 
-- [ ] Englisch (`tContent`-Overlays).
+- [ ] Englisch (`tContent`-Overlays). Großer Brocken: ~50 TSX-Dateien mit deutschem Klartext statt `t()`, dazu
+      500+ Inhaltsnamen und die Sprüche in `flavor.ts` – erst UI-Texte nach `i18n/de.ts` ziehen, dann `en.ts`.
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.30.0] – Meisterschaft, Rahmen & Karawane
+
+- Meisterschafts-Pool je Skill: der Durchschnitt der Aktions-Meisterschaften schaltet bei 10/25/50/95 % skillweite Boni frei (XP, Tempo, doppelte Ausbeute). Anzeige im Skill.
+- Porträt-Rahmen als Kosmetik: 9 Rahmen für den Helden (Gesamtlevel, zweites Dorf, Riss-Sieg, Wochenboss, Sammelbuch, Meisterschaft, Wiedergeburt, 150 Erfolge). Wahl beim Bearbeiten des Helden.
+- Neue Questreihe „Die Karawane des Glücks" (5 Quests): Dorfmarkt und Insel-Handel, Haustier und Held, zweites Dorf – Belohnung u. a. der Kamel-Avatar 🐫.
+
 ## [1.29.0] – Riss-Arsenal
 
 - Ätherriss: 6 neue Waffen (Erntesichel, Eintopf-Katapult, Angelhaken, Münzschleuder, Glockenschlag, Quantenwürfel), freigeschaltet über Forschung – jede mit eigener Evolution (Erntemond heilt, Festbankett, Krakenhaken, Midas-Regen, Domglocke, Schrödingers Würfel). Jetzt 32 Waffen.

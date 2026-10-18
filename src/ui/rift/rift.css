@@ -686,8 +686,8 @@
   font-size: 3.4rem;
   background: radial-gradient(circle at 40% 35%, #2a2160, #0b0920);
   box-shadow:
-    0 0 0 3px rgba(255, 209, 102, 0.7),
-    0 0 30px rgba(124, 92, 255, 0.6);
+    0 0 0 3px var(--frame-ring, rgba(255, 209, 102, 0.7)),
+    0 0 30px var(--frame-glow, rgba(124, 92, 255, 0.6));
 }
 .hero-portrait::after {
   content: '';
@@ -1010,4 +1010,51 @@
 }
 .endless-toggle.locked {
   opacity: 0.6;
+}
+
+/* Portrait frames */
+.frame-picker {
+  display: grid;
+  gap: 4px;
+}
+.frame-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 6px;
+}
+.frame-opt {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1.1rem;
+}
+.frame-opt span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--frame-ring),
+    0 0 10px var(--frame-glow);
+}
+.frame-opt small {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  text-align: center;
+}
+.frame-opt.active {
+  border-color: var(--frame-ring);
+  background: color-mix(in srgb, var(--frame-ring) 14%, var(--panel));
+}
+.frame-opt.locked {
+  opacity: 0.5;
+}
+.frame-opt.locked span {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }

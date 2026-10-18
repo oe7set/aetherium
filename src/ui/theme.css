@@ -1629,3 +1629,54 @@ h4.rift-h4::before,
   font-size: 0.875rem;
   animation: tab-menu-in 0.2s ease-out;
 }
+
+/* --- Meisterschafts-Pool ------------------------------------------------------------------- */
+.mastery-pool {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 211, 77, 0.35);
+  background: linear-gradient(135deg, rgba(255, 211, 77, 0.08), transparent);
+  font-size: 0.875rem;
+}
+.mastery-pool summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+.mastery-pool summary b {
+  color: var(--gold);
+}
+.mastery-pool .pool-bar {
+  position: relative;
+  margin: 8px 0 4px;
+}
+.mastery-pool .pool-bar i {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.mastery-pool .pool-bar i.on {
+  background: var(--gold);
+}
+.mastery-pool ul {
+  margin: 6px 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+.mastery-pool li {
+  color: var(--muted);
+}
+.mastery-pool li.on {
+  color: var(--text);
+}
+.mastery-pool small {
+  font-size: 0.75rem;
+}
