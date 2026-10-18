@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.17.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.18.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
@@ -78,6 +78,8 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `hydrate()` füllt fehlende Felder und entfernt unbekannte IDs.
 - Zufall immer als `Rng`-Parameter (Tests nutzen `createRng(seed)`).
 - Zustand-Selektoren geben Primitive oder stabile Referenzen zurück (keine neuen Objekte pro Render).
+- Schriftgrößen im CSS immer in `rem` (Textgrößen-Einstellung skaliert über `html`), Dauer-Animationen müssen
+  `reduce-motion` respektieren (global in `theme.css`).
 - Spieltexte deutsch, humorvoll; neue Sprüche in `src/data/flavor.ts` (Test verlangt ≥150).
 - Engine-Funktionen nicht `use…` nennen (ESLint hält sie sonst für Hooks).
 - Debug-Panel nur hinter `import.meta.env.DEV`.

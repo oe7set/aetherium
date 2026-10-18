@@ -17,6 +17,7 @@ import { VillagePanel } from './village/VillagePanel';
 import { RiftPanel } from './rift/RiftPanel';
 import { useRiftRun } from './rift/runStore';
 import { usePerfClass } from './perf';
+import { useAccessibility } from './a11y';
 import { setMusic, type MusicTheme } from './music';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
@@ -204,6 +205,7 @@ export function App() {
   const inRift = useRiftRun((s) => s.run !== null);
   useKeyboardShortcuts();
   usePerfClass();
+  useAccessibility();
   useBackgroundMusic();
   useBackButton(!desktop);
   return (

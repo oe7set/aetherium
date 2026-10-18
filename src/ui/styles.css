@@ -35,7 +35,7 @@ body,
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-size: 15px;
+  font-size: 0.9375rem;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
 }
@@ -150,7 +150,7 @@ textarea.input {
 }
 .input.code {
   font-family: ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
   word-break: break-all;
 }
 
@@ -216,7 +216,7 @@ textarea.input {
 }
 .brand-mark {
   color: var(--gold);
-  font-size: 22px;
+  font-size: 1.375rem;
 }
 .brand-name {
   display: none;
@@ -237,7 +237,7 @@ textarea.input {
   background: var(--panel);
   border: 1px solid var(--line);
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .chip-fire {
   border-color: var(--orange);
@@ -287,7 +287,7 @@ textarea.input {
 .celestial > span {
   position: absolute;
   transform: translate(-50%, -50%) translateY(-38vh);
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 @media (min-width: 1024px) {
   .celestial > span {
@@ -331,7 +331,7 @@ textarea.input {
   position: absolute;
   right: 6%;
   top: 4%;
-  font-size: 28px;
+  font-size: 1.75rem;
   opacity: 0.55;
   filter: grayscale(0.6);
 }
@@ -353,12 +353,12 @@ textarea.input {
   transform: translate(-50%, -50%) scale(0.92);
 }
 .station-icon {
-  font-size: 42px;
+  font-size: 2.625rem;
   line-height: 1;
   filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.4));
 }
 .station-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 1px 6px;
   border-radius: 99px;
   background: rgba(0, 0, 0, 0.45);
@@ -397,7 +397,7 @@ textarea.input {
 }
 .character {
   position: absolute;
-  font-size: 30px;
+  font-size: 1.875rem;
   transform: translate(-50%, -50%);
   transition:
     left 1.2s ease-in-out,
@@ -437,7 +437,7 @@ textarea.input {
   margin: 0 0 4px;
   padding: 6px 10px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #dfe6f3;
   background: rgba(10, 14, 22, 0.55);
   text-align: center;
@@ -482,7 +482,7 @@ textarea.input {
   gap: 4px;
 }
 .feed li {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.35;
   padding: 6px 9px;
   border-radius: 8px;
@@ -545,7 +545,7 @@ textarea.input {
 }
 .active-bar.idle {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .active-main {
   flex: 1;
@@ -566,7 +566,7 @@ textarea.input {
   background: var(--panel-2);
 }
 .active-icon {
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 .active-icon.pulse {
   animation: work 0.8s ease-in-out infinite;
@@ -585,12 +585,12 @@ textarea.input {
 }
 .active-hint {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .active-bar .btn-stop {
   min-width: 52px;
   min-height: 56px;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 /* --- Popups --------------------------------------------------------------------- */
@@ -609,7 +609,7 @@ textarea.input {
   transform: translateX(-50%);
   white-space: nowrap;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8);
   animation: popup-rise 1.4s ease-out forwards;
 }
@@ -624,7 +624,7 @@ textarea.input {
 }
 .popup-rare {
   color: var(--purple);
-  font-size: 17px;
+  font-size: 1.0625rem;
 }
 .popup-bad {
   color: var(--red);
@@ -667,10 +667,10 @@ textarea.input {
   min-height: 44px;
 }
 .tab-icon {
-  font-size: 22px;
+  font-size: 1.375rem;
 }
 .tab-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .tab.active {
   color: var(--gold);
@@ -725,12 +725,12 @@ textarea.input {
 /* --- Panels -------------------------------------------------------------------------- */
 
 .panel-title {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 6px 0;
 }
 .group-title {
   margin: 14px 0 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
@@ -798,7 +798,7 @@ textarea.input {
   color: var(--muted);
 }
 .skill-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
   width: 30px;
   text-align: center;
 }
@@ -813,7 +813,7 @@ textarea.input {
 }
 .skill-level {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 1.125rem;
   min-width: 28px;
   text-align: right;
   color: var(--gold);
@@ -821,11 +821,11 @@ textarea.input {
 .badge-running {
   color: var(--green);
   margin-left: 6px;
-  font-size: 10px;
+  font-size: 0.625rem;
   vertical-align: middle;
 }
 .phase-badge {
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 2px 8px;
   border-radius: 99px;
   background: var(--panel-2);
@@ -848,7 +848,7 @@ textarea.input {
   );
 }
 .skill-head-icon {
-  font-size: 40px;
+  font-size: 2.5rem;
 }
 .skill-head-info {
   flex: 1;
@@ -856,16 +856,16 @@ textarea.input {
   gap: 6px;
 }
 .skill-head h2 {
-  font-size: 19px;
+  font-size: 1.1875rem;
 }
 .skill-head .lvl {
   color: var(--gold);
-  font-size: 15px;
+  font-size: 0.9375rem;
   margin-left: 6px;
 }
 .skill-desc {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .skill-facts {
   display: flex;
@@ -874,7 +874,7 @@ textarea.input {
   margin-bottom: 8px;
 }
 .fact {
-  font-size: 12px;
+  font-size: 0.75rem;
   padding: 4px 8px;
   border-radius: 8px;
   background: var(--panel);
@@ -906,7 +906,7 @@ textarea.input {
   min-width: 82px;
 }
 .action-icon {
-  font-size: 28px;
+  font-size: 1.75rem;
   width: 34px;
   text-align: center;
 }
@@ -932,7 +932,7 @@ textarea.input {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 10px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .action-items {
   display: flex;
@@ -946,7 +946,7 @@ textarea.input {
   gap: 3px;
   padding: 2px 7px;
   border-radius: 99px;
-  font-size: 12px;
+  font-size: 0.75rem;
   background: var(--panel-2);
 }
 .item-pill.missing {
@@ -964,7 +964,7 @@ textarea.input {
 }
 .nerd {
   display: block;
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 6px;
   border-radius: 6px;
   background: #11141c;
@@ -978,7 +978,7 @@ textarea.input {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 4px 0 8px;
 }
 .inv-controls {
@@ -1033,16 +1033,16 @@ textarea.input {
   outline: 2px solid var(--gold);
 }
 .item-icon {
-  font-size: 26px;
+  font-size: 1.625rem;
 }
 .item-icon.big {
-  font-size: 40px;
+  font-size: 2.5rem;
 }
 .item-qty {
   position: absolute;
   right: 4px;
   bottom: 2px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-shadow: 0 1px 2px #000;
 }
@@ -1091,7 +1091,7 @@ textarea.input {
   margin-top: 4px;
 }
 .tag {
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 2px 8px;
   border-radius: 99px;
   background: var(--panel-2);
@@ -1155,7 +1155,7 @@ textarea.input {
   display: grid;
 }
 .tech-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 .stat-list {
   margin: 0;
@@ -1230,12 +1230,12 @@ textarea.input {
   animation: pop-in 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
 }
 .levelup-card strong {
-  font-size: 26px;
+  font-size: 1.625rem;
   color: var(--gold);
   letter-spacing: 1px;
 }
 .levelup-icon {
-  font-size: 44px;
+  font-size: 2.75rem;
 }
 .levelup-burst {
   position: absolute;
@@ -1245,7 +1245,7 @@ textarea.input {
 .levelup-burst span {
   position: absolute;
   color: var(--gold);
-  font-size: 18px;
+  font-size: 1.125rem;
   transform: rotate(var(--a)) translateY(0);
   animation: burst 0.9s ease-out forwards;
 }
@@ -1334,10 +1334,10 @@ textarea.input {
     gap: 6px;
   }
   .col-center .tab-icon {
-    font-size: 16px;
+    font-size: 1rem;
   }
   .col-center .tab-label {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .center-panel {
     flex: 1;
@@ -1375,7 +1375,7 @@ textarea.input {
   display: inline-block;
   padding: 1px 7px;
   border-radius: 99px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   white-space: nowrap;
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -1432,7 +1432,7 @@ textarea.input {
 .buff-chip {
   padding: 4px 9px;
   border-radius: 99px;
-  font-size: 12px;
+  font-size: 0.75rem;
   background: rgba(60, 30, 90, 0.85);
   border: 1px solid var(--purple);
   box-shadow: 0 0 12px rgba(176, 133, 245, 0.5);
@@ -1468,7 +1468,7 @@ textarea.input {
   color: inherit;
 }
 .equip-info {
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 6px 8px;
   border-radius: 8px;
   background: var(--panel-2);
@@ -1491,7 +1491,7 @@ textarea.input {
   border: 1px solid var(--gold);
 }
 .achievement-icon {
-  font-size: 26px;
+  font-size: 1.625rem;
 }
 .achievement-body {
   flex: 1;
@@ -1616,7 +1616,7 @@ textarea.input {
   min-width: 90px;
 }
 .monster-icon {
-  font-size: 32px;
+  font-size: 2rem;
 }
 .monster-body {
   flex: 1;
@@ -1642,7 +1642,7 @@ textarea.input {
   text-align: center;
 }
 .gear-slot small {
-  font-size: 10px;
+  font-size: 0.625rem;
   line-height: 1.1;
 }
 .gear-slot.empty {
@@ -1663,7 +1663,7 @@ textarea.input {
 }
 button.chip {
   font: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .tech-list {
@@ -1719,10 +1719,10 @@ button.chip {
   line-height: 1;
 }
 .element small {
-  font-size: 7px;
+  font-size: 0.4375rem;
 }
 .element b {
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .element.known {
   background: linear-gradient(135deg, #2b6b5c, #1f4a63);
@@ -1753,7 +1753,7 @@ button.chip {
   box-shadow: 0 0 12px rgba(242, 201, 76, 0.35);
 }
 .plot-icon {
-  font-size: 32px;
+  font-size: 2rem;
   transition: transform 1s;
 }
 .shop-row.locked {
@@ -1869,7 +1869,7 @@ button.chip {
   margin: 0;
   font-style: italic;
   color: #cfd5e3;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .quest-objective {
   display: grid;
@@ -1901,7 +1901,7 @@ button.chip {
   border: 1px solid var(--gold);
 }
 .pet-icon {
-  font-size: 36px;
+  font-size: 2.25rem;
 }
 .segments {
   overflow-x: auto;
@@ -1942,7 +1942,7 @@ button.chip {
   border-radius: 99px;
   background: var(--red);
   color: #fff;
-  font-size: 10px;
+  font-size: 0.625rem;
   line-height: 16px;
   font-weight: 700;
 }
@@ -1965,7 +1965,7 @@ button.chip {
   background: #0d1018;
   border: 1px solid var(--line);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-style: italic;
   z-index: 50;
   pointer-events: none;

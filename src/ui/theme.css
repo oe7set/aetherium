@@ -582,7 +582,7 @@ body.reduce-motion *::after {
   z-index: 1;
 }
 .title-ae {
-  font-size: 72px;
+  font-size: 4.5rem;
   line-height: 1;
   background: linear-gradient(135deg, var(--gold), var(--aether), var(--aether-2));
   -webkit-background-clip: text;
@@ -613,13 +613,13 @@ body.reduce-motion *::after {
 .title-stats {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   z-index: 1;
 }
 .title-btn {
   min-width: 220px;
   min-height: 52px;
-  font-size: 17px;
+  font-size: 1.0625rem;
   z-index: 1;
   animation:
     rise-in 0.9s ease-out 0.45s both,
@@ -654,7 +654,7 @@ body.reduce-motion *::after {
 }
 .empire-crest {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 2.5rem;
   background: linear-gradient(135deg, var(--gold), var(--aether));
   -webkit-background-clip: text;
   background-clip: text;
@@ -685,7 +685,7 @@ body.reduce-motion *::after {
   transform: scale(0.97);
 }
 .empire-card-icon {
-  font-size: 26px;
+  font-size: 1.625rem;
 }
 .empire-badge {
   position: absolute;
@@ -694,7 +694,7 @@ body.reduce-motion *::after {
   padding: 2px 8px;
   border-radius: 99px;
   background: var(--red);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
 }
 .goal-list {
@@ -713,7 +713,7 @@ body.reduce-motion *::after {
   cursor: pointer;
 }
 .goal-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 .goal-body {
   flex: 1;
@@ -1042,7 +1042,7 @@ h4.rift-h4::before,
     flex: 1 1 auto;
     min-height: 34px;
     padding: 0 8px;
-    font-size: 12.5px;
+    font-size: 0.7812rem;
   }
 
   /* Feed: only the newest line, a short toast that fades away; tap opens the full log. */
@@ -1053,7 +1053,7 @@ h4.rift-h4::before,
     bottom: 84px;
   }
   .feed-compact li {
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 5px 9px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1095,11 +1095,11 @@ h4.rift-h4::before,
     border: 1px dashed var(--line-strong);
     background: rgba(255, 255, 255, 0.04);
     color: var(--muted);
-    font-size: 13px;
+    font-size: 0.8125rem;
     text-align: left;
   }
   .active-idle .active-icon {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
   .active-idle .active-text {
     flex: 1;
@@ -1124,7 +1124,7 @@ h4.rift-h4::before,
   border: 1px solid var(--line-strong);
   background: linear-gradient(135deg, rgba(124, 92, 255, 0.45), rgba(94, 242, 255, 0.2));
   color: #fff;
-  font-size: 14px;
+  font-size: 0.875rem;
   box-shadow: 0 0 12px rgba(124, 92, 255, 0.35);
 }
 .agenda-btn.empty {
@@ -1238,7 +1238,7 @@ h4.rift-h4::before,
   gap: 2px;
 }
 .skill-hint {
-  font-size: 11.5px;
+  font-size: 0.7188rem;
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
@@ -1314,4 +1314,29 @@ h4.rift-h4::before,
   inset: -10px -14px -4px;
   background: #151a33;
   z-index: -1;
+}
+
+/* --- Accessibility -------------------------------------------------------------------------- */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+.high-contrast {
+  --muted: #d3d8ee;
+  --line: rgba(220, 230, 255, 0.45);
+  --line-strong: rgba(240, 245, 255, 0.7);
+}
+.high-contrast body,
+.high-contrast .sheet,
+.high-contrast .qnav {
+  background: #0a0c18;
+}
+.high-contrast .chip,
+.high-contrast .segment,
+.high-contrast .btn {
+  border-color: rgba(240, 245, 255, 0.6);
 }

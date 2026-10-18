@@ -2,6 +2,7 @@
 import { HEROES } from '../../data/rift';
 import { WEAPON_MAP, weaponStats, type RunState } from '../../rift/sim';
 import { drawSprite } from '../sprites';
+import { motionReduced } from '../a11y';
 
 /** Deterministic hash for ground decoration. */
 function hash(x: number, y: number): number {
@@ -117,8 +118,9 @@ export function render(
 ): void {
   const { width, height, dpr, scale } = view;
   const h = run.hero;
-  const shakeX = run.shake ? (Math.sin(time * 91) * run.shake) / 2 : 0;
-  const shakeY = run.shake ? (Math.cos(time * 77) * run.shake) / 2 : 0;
+  const shake = motionReduced ? 0 : run.shake;
+  const shakeX = shake ? (Math.sin(time * 91) * shake) / 2 : 0;
+  const shakeY = shake ? (Math.cos(time * 77) * shake) / 2 : 0;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const [base, accent] = run.biome.ground;
   ctx.fillStyle = base;

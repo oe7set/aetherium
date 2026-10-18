@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.18.0] – Für alle Augen
+
+### Hinzugefügt
+
+- **Barrierefreiheit** (Einstellungen → ♿ Lesbarkeit & Bewegung):
+  - **Textgröße** Normal / Groß / Sehr groß – alle Texte skalieren mit.
+  - **Bewegung reduzieren**: keine Wackel-, Puls- und Übergangsanimationen, kein Bildschirmwackeln im Riss
+    (folgt automatisch auch der Systemeinstellung).
+  - **Hoher Kontrast**: hellere Nebentexte, kräftigere Rahmen, dunklere Flächen.
+
+### Technik
+
+- Alle Schriftgrößen im CSS in `rem` umgestellt, damit sie mit der Textgröße skalieren.
+
 ## [1.17.0] – Der Boss hat ein Thema
 
 ### Hinzugefügt

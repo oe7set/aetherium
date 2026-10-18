@@ -41,6 +41,35 @@ export function SettingsPanel() {
           />
         </label>
       )}
+      <h4 className="group-title">♿ Lesbarkeit & Bewegung</h4>
+      <label className="field">
+        <span>🔠 Textgröße</span>
+        <select
+          className="input"
+          value={settings.textSize}
+          onChange={(e) => setSetting('textSize', e.target.value as typeof settings.textSize)}
+        >
+          <option value="normal">Normal</option>
+          <option value="large">Groß</option>
+          <option value="xlarge">Sehr groß</option>
+        </select>
+      </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.reduceMotion}
+          onChange={(e) => setSetting('reduceMotion', e.target.checked)}
+        />
+        <span>🧘 Bewegung reduzieren (keine Wackel-, Puls- und Bildschirm-Effekte)</span>
+      </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.highContrast}
+          onChange={(e) => setSetting('highContrast', e.target.checked)}
+        />
+        <span>🌗 Hoher Kontrast (hellere Texte und Rahmen)</span>
+      </label>
       <h4 className="group-title">⚙️ Anzeige & Leistung</h4>
       <label className="field">
         <span>{t('menu.numberFormat')}</span>

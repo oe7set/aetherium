@@ -73,6 +73,8 @@ describe('Speichern & Laden', () => {
     expect(loaded.settings.sound).toBe(false);
     expect(loaded.settings.music).toBe(true);
     expect(loaded.settings.musicVolume).toBe(0.5);
+    expect(loaded.settings.textSize).toBe('normal');
+    expect(loaded.settings.reduceMotion).toBe(false);
   });
 });
 

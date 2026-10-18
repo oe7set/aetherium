@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.17.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.18.0**.
 
 ## 1. Der große Kreislauf
 
@@ -131,6 +131,8 @@
   `ui/agendaNav.ts` springt hin. **Neue Systeme mit Handlungsbedarf dort eintragen.**
 - Leere Zustände nie als Sackgasse: `ui/EmptyState.tsx` erklärt, was fehlt, und bietet den Weg dorthin.
 - Zurück-Taste/-Geste schließt Overlays, Tagesbonus und Fenster (`useBackButton` in `App.tsx`).
+- Barrierefreiheit: `ui/a11y.ts` (Textgröße über `html { font-size }` – Schriftgrößen immer in `rem`!,
+  `reduce-motion`, `high-contrast`).
 - Skill-Liste: je Skill eine Zeile „läuft gerade / Freischalt-Grund / nächste Freischaltung".
 
 **Atmosphäre**
@@ -154,7 +156,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Qualität**
 
-- [ ] Englisch (`tContent`-Overlays), Barrierefreiheit (Farbenblind-Modi, Schriftgröße).
+- [ ] Englisch (`tContent`-Overlays); Farbenblind-Paletten für Rarität und Ressourcenbalken.
 - [ ] Riss-Performance-Budget: ≥ 500 Gegner auf Mittelklasse (Spatial Hash und Pooling prüfen).
 - [ ] Desktop-Ansicht: Menüführung analog zum Handy prüfen (Unterreiter, Karte im Vollbild).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.

@@ -29,6 +29,10 @@ export interface Settings {
   /** Procedural background music and its volume (0–1). */
   music: boolean;
   musicVolume: number;
+  /** Accessibility: text size, fewer animations, stronger contrast. */
+  textSize: 'normal' | 'large' | 'xlarge';
+  reduceMotion: boolean;
+  highContrast: boolean;
 }
 
 export interface ActiveAction {
@@ -408,6 +412,9 @@ export function defaultSettings(): Settings {
     haptics: true,
     music: true,
     musicVolume: 0.5,
+    textSize: 'normal',
+    reduceMotion: false,
+    highContrast: false,
   };
 }
 
