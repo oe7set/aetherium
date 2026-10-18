@@ -44,7 +44,10 @@ function LockedSkill({ skillId, onBack }: { skillId: string; onBack?: () => void
         Schalte diesen Skill mit der Forschung <b>{tech ? `${tech.icon} ${tech.name}` : '???'}</b>{' '}
         frei.
       </p>
-      <button className="btn btn-primary" onClick={() => setUi({ tab: 'research' })}>
+      <button
+        className="btn btn-primary"
+        onClick={() => setUi({ tab: 'menu', menuSection: 'research' })}
+      >
         🔬 Zum Tech-Baum
       </button>
     </div>

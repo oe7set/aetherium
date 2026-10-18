@@ -25,8 +25,7 @@ export function TabBar({ tabs = TABS }: { tabs?: typeof TABS }) {
   const researchBadge = useGame((s) => affordableTechs(s.game).length);
   const colonyBadge = useGame((s) => colonyAttention(s.game));
   const badges: Partial<Record<string, number>> = {
-    menu: questBadge,
-    research: researchBadge,
+    menu: questBadge + researchBadge,
     colony: colonyBadge,
   };
   return (

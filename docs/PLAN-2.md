@@ -199,8 +199,8 @@ Doku (CHANGELOG, CLAUDE.md), CI grün, Browser-Test (Playwright-Screenshots).
 | ----- | --------------------------------------------------------- | --------- |
 | 8     | Look-Overhaul, Design-System, Startbildschirm, Reichsbuch | fertig    |
 | 9     | Kolonie (Catan-Kern, KI, Siedler-Ketten, Ruhm)            | fertig    |
-| 10    | Ätherriss (Survivor-Arena, Waffen, Evolutionen, Meta)     | in Arbeit |
-| 11    | Zusammenspiel & Querschnitts-Quests                       | geplant   |
+| 10    | Ätherriss (Survivor-Arena, Waffen, Evolutionen, Meta)     | fertig    |
+| 11    | Zusammenspiel & Querschnitts-Quests                       | in Arbeit |
 | 12    | Content & Juice                                           | geplant   |
 | 13    | Endgame                                                   | geplant   |
 | 14    | Qualität & Barrierefreiheit                               | geplant   |

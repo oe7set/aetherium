@@ -4,8 +4,8 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–9 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.2.0). Als Nächstes:
-Phase 10 Ätherriss. Siehe `docs/CHANGELOG.md`.
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.3.0). Als Nächstes:
+Phase 11 Zusammenspiel. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
 
@@ -30,6 +30,11 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `ColonyMatch`), `ai.ts` (KI-Züge/Angebote), `index.ts` (Würfel als Zeiteffekt, Spieleraktionen, Gebäude, Ruhm,
   Verwalter). Spieler ist immer Index 0 (`PLAYER_INDEX`); Ereignisse tragen Persona-IDs. Kolonie überlebt Prestige.
   UI: `ui/colony/` (SVG-Brett `HexBoard`, Panel liest State über eine Signatur-Zeichenkette `colonyKey`).
+- Ätherriss (Survivor-Roguelike): Echtzeit-Simulation `src/rift/sim.ts` (pur, deterministisch, eigene `stepRun`-
+  Schleife, nicht im Spielstand), Inhalte `data/rift.ts` (Waffen-Verhalten, Passive, Evolutionen, Biome, Helden,
+  Talente), Meta `engine/rift.ts` (Freischaltungen über Skills/Techs, `prepareRun`/`finishRun`, Echo-Läufe).
+  UI `ui/rift/`: Hub `RiftPanel`, Lauf `RiftOverlay` (lazy, Canvas `render.ts` mit Emoji-Sprite-Cache, Joystick),
+  laufender Lauf in eigenem Store `runStore.ts`.
 - UI-Nebenwirkungen (Sound `ui/audio.ts`, Benachrichtigungen `ui/notify.ts`) hängen in `applyEvents` im Store.
 - PWA über `vite-plugin-pwa` (Konfiguration in `vite.config.ts`), Icons in `public/icons/`.
 - Boni: `registerModifierSource` + `mod(s, key)`/`modFor(s, key, skill)` (Keys siehe `data/types.ts`

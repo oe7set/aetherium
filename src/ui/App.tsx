@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
 import { AchievementToast } from './AchievementToast';
@@ -14,7 +14,8 @@ import { LevelUpBanner } from './LevelUpBanner';
 import { MenuPanel } from './menu/MenuPanel';
 import { OfflineModal } from './OfflineModal';
 import { ColonyPanel } from './colony/ColonyPanel';
-import { ResearchPanel } from './science/ResearchPanel';
+import { RiftPanel } from './rift/RiftPanel';
+import { useRiftRun } from './rift/runStore';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
@@ -22,9 +23,12 @@ import { TitleScreen } from './TitleScreen';
 import { TABS } from './tabs';
 import { World } from './World';
 
+const RiftOverlay = lazy(() => import('./rift/RiftOverlay'));
+
 function useKeyboardShortcuts() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (useRiftRun.getState().run) return; // the arena owns the keyboard
       const target = e.target as HTMLElement | null;
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
       const store = useGame.getState();
@@ -75,7 +79,7 @@ function MobileLayout() {
         {tab === 'skills' && <MobileSkills />}
         {tab === 'inventory' && <InventoryPanel />}
         {tab === 'colony' && <ColonyPanel />}
-        {tab === 'research' && <ResearchPanel />}
+        {tab === 'rift' && <RiftPanel />}
         {tab === 'menu' && <MenuPanel />}
       </BottomSheet>
       <ActiveActionBar />
@@ -110,7 +114,7 @@ function DesktopLayout() {
         <div className="center-panel">
           {center === 'skills' && <SkillView skillId={selected} />}
           {center === 'colony' && <ColonyPanel />}
-          {center === 'research' && <ResearchPanel />}
+          {center === 'rift' && <RiftPanel />}
           {center === 'menu' && <MenuPanel />}
         </div>
       </main>
@@ -124,6 +128,7 @@ function DesktopLayout() {
 
 export function App() {
   const desktop = useIsDesktop();
+  const inRift = useRiftRun((s) => s.run !== null);
   useKeyboardShortcuts();
   return (
     <>
@@ -133,6 +138,13 @@ export function App() {
       <Confetti />
       <OfflineModal />
       <TitleScreen />
+      {inRift && (
+        <Suspense
+          fallback={<div className="rift-overlay rift-loading">🌀 Der Riss öffnet sich …</div>}
+        >
+          <RiftOverlay />
+        </Suspense>
+      )}
     </>
   );
 }

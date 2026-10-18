@@ -400,6 +400,18 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
       case 'colonyClaimed':
         out.feed.push({ kind: 'gold', text: `🌟 +${e.fame} Ruhm für Platz ${e.place}.` });
         break;
+      case 'riftFinished':
+        out.feed.push({
+          kind: e.won ? 'rare' : 'gold',
+          text: `🌀 ${e.won ? 'Riss bezwungen!' : 'Zurück aus dem Riss.'} ${Math.floor(e.time / 60)}:${String(Math.floor(e.time % 60)).padStart(2, '0')} überlebt, ${e.kills} Gegner – +${e.essence} Essenz${e.record ? ' (Rekord!)' : ''}.`,
+        });
+        break;
+      case 'riftEcho':
+        out.feed.push({
+          kind: 'chatter',
+          text: `👥 Ein Echo kehrt aus dem Riss zurück: +${e.essence} Essenz.`,
+        });
+        break;
       case 'intelligence':
         out.feed.push({
           kind: 'rare',

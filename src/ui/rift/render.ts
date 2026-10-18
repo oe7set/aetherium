@@ -1,0 +1,469 @@
+// Canvas 2D renderer for the rift. Reads the run state; never mutates gameplay.
+import { HEROES } from '../../data/rift';
+import { WEAPON_MAP, weaponStats, type RunState } from '../../rift/sim';
+
+// --- Sprite cache: emoji rendered once to offscreen canvases -------------------------------------
+
+const sprites = new Map<string, HTMLCanvasElement>();
+
+function sprite(emoji: string, size: number): HTMLCanvasElement {
+  const px = Math.max(8, Math.round(size / 4) * 4);
+  const key = `${emoji}|${px}`;
+  let c = sprites.get(key);
+  if (!c) {
+    c = document.createElement('canvas');
+    c.width = c.height = Math.ceil(px * 1.3);
+    const ctx = c.getContext('2d')!;
+    ctx.font = `${px}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, c.width / 2, c.height / 2 + px * 0.06);
+    sprites.set(key, c);
+    if (sprites.size > 400) sprites.delete(sprites.keys().next().value!);
+  }
+  return c;
+}
+
+function drawSprite(
+  ctx: CanvasRenderingContext2D,
+  emoji: string,
+  x: number,
+  y: number,
+  size: number,
+  angle = 0,
+  flip = false,
+): void {
+  const img = sprite(emoji, size);
+  const w = (img.width * size) / Math.max(8, Math.round(size / 4) * 4);
+  if (!angle && !flip) {
+    ctx.drawImage(img, x - w / 2, y - w / 2, w, w);
+    return;
+  }
+  ctx.save();
+  ctx.translate(x, y);
+  if (angle) ctx.rotate(angle);
+  if (flip) ctx.scale(-1, 1);
+  ctx.drawImage(img, -w / 2, -w / 2, w, w);
+  ctx.restore();
+}
+
+/** Deterministic hash for ground decoration. */
+function hash(x: number, y: number): number {
+  let h = (x * 374761393 + y * 668265263) | 0;
+  h = (h ^ (h >>> 13)) * 1274126177;
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+export interface View {
+  width: number;
+  height: number;
+  dpr: number;
+  /** World px → css px. */
+  scale: number;
+}
+
+export function viewFor(width: number, height: number, dpr: number): View {
+  return { width, height, dpr, scale: Math.max(width / 620, height / 1000, 0.5) };
+}
+
+const TILE = 160;
+
+export function render(
+  ctx: CanvasRenderingContext2D,
+  run: RunState,
+  view: View,
+  time: number,
+): void {
+  const { width, height, dpr, scale } = view;
+  const h = run.hero;
+  const shakeX = run.shake ? (Math.sin(time * 91) * run.shake) / 2 : 0;
+  const shakeY = run.shake ? (Math.cos(time * 77) * run.shake) / 2 : 0;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const [base, accent] = run.biome.ground;
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, width, height);
+
+  // World transform: hero in the centre.
+  ctx.setTransform(
+    dpr * scale,
+    0,
+    0,
+    dpr * scale,
+    dpr * (width / 2 + shakeX),
+    dpr * (height / 2 + shakeY),
+  );
+  ctx.translate(-h.x, -h.y);
+  const halfW = width / 2 / scale + TILE;
+  const halfH = height / 2 / scale + TILE;
+  const x0 = Math.floor((h.x - halfW) / TILE);
+  const x1 = Math.floor((h.x + halfW) / TILE);
+  const y0 = Math.floor((h.y - halfH) / TILE);
+  const y1 = Math.floor((h.y + halfH) / TILE);
+
+  // Ground: checker tint + scattered decoration.
+  ctx.fillStyle = accent;
+  ctx.globalAlpha = 0.35;
+  for (let tx = x0; tx <= x1; tx++)
+    for (let ty = y0; ty <= y1; ty++)
+      if ((tx + ty) % 2 === 0) ctx.fillRect(tx * TILE, ty * TILE, TILE, TILE);
+  ctx.globalAlpha = 0.5;
+  const decor = run.biome.decor;
+  for (let tx = x0; tx <= x1; tx++)
+    for (let ty = y0; ty <= y1; ty++) {
+      const r = hash(tx, ty);
+      if (r > 0.45) continue;
+      const emoji = decor[Math.floor(hash(ty, tx) * decor.length)]!;
+      drawSprite(
+        ctx,
+        emoji,
+        tx * TILE + r * TILE * 2,
+        ty * TILE + hash(tx + 7, ty) * TILE,
+        18 + r * 20,
+      );
+    }
+  ctx.globalAlpha = 1;
+
+  // Zones.
+  for (const z of run.zones) {
+    const fade = Math.min(1, z.life / 0.4, (z.maxLife - z.life) / 0.2 + 0.2);
+    const g = ctx.createRadialGradient(z.x, z.y, 0, z.x, z.y, z.radius);
+    const col = WEAPON_MAP.get(z.weapon)?.color ?? '#7dff6b';
+    g.addColorStop(0, `${col}aa`);
+    g.addColorStop(0.7, `${col}55`);
+    g.addColorStop(1, `${col}00`);
+    ctx.globalAlpha = fade;
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+    ctx.fill();
+    if (z.kind === 'well') {
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 3;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(z.x, z.y, z.radius * (0.3 + i * 0.25), time * 4 + i, time * 4 + i + Math.PI * 1.2);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Aura weapons (fire ring / fusion) under everything else.
+  for (const w of run.weapons) {
+    const def = WEAPON_MAP.get(w.id);
+    if (def?.behavior !== 'aura') continue;
+    const st = weaponStats(run, def, w.level);
+    const pulse = 1 + Math.sin(time * 6) * 0.04;
+    const g = ctx.createRadialGradient(h.x, h.y, st.area * 0.2, h.x, h.y, st.area * pulse);
+    g.addColorStop(0, `${def.color}00`);
+    g.addColorStop(0.75, `${def.color}44`);
+    g.addColorStop(1, `${def.color}aa`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(h.x, h.y, st.area * pulse, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // XP gems.
+  for (const g of run.gems) {
+    const col = g.xp >= 20 ? '#ff5d73' : g.xp >= 5 ? '#5be38a' : '#5aa9ff';
+    const s = g.xp >= 20 ? 8 : g.xp >= 5 ? 6 : 5;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(g.x, g.y - s);
+    ctx.lineTo(g.x + s * 0.7, g.y);
+    ctx.lineTo(g.x, g.y + s);
+    ctx.lineTo(g.x - s * 0.7, g.y);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Pickups bob a little.
+  for (const p of run.pickups) {
+    const icon =
+      p.kind === 'chest' ? '🎁' : p.kind === 'heal' ? '🍗' : p.kind === 'magnet' ? '🧲' : '💣';
+    const bob = Math.sin(time * 4 + p.x) * 3;
+    if (p.kind === 'chest') {
+      ctx.fillStyle = 'rgba(255, 209, 102, 0.35)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 24 + Math.sin(time * 5) * 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    drawSprite(ctx, icon, p.x, p.y + bob, p.kind === 'chest' ? 34 : 24);
+  }
+
+  // Enemies (shadow, sprite, flash, elite/boss marks).
+  for (const e of run.enemies) {
+    const size = e.radius * 2.3;
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.beginPath();
+    ctx.ellipse(e.x, e.y + e.radius * 0.8, e.radius * 0.9, e.radius * 0.35, 0, 0, Math.PI * 2);
+    ctx.fill();
+    if (e.elite || e.boss) {
+      ctx.strokeStyle = e.boss ? '#ff5d73' : '#ffd166';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius + 4 + Math.sin(time * 6) * 2, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    const wobble = Math.sin(time * 10 + e.id) * 0.08;
+    drawSprite(ctx, e.def.icon, e.x, e.y, size, wobble, e.x > h.x);
+    if (e.flash > 0) {
+      ctx.globalAlpha = Math.min(0.6, e.flash * 5);
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    if (e.boss || e.elite) {
+      const w = e.radius * 2.4;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(e.x - w / 2, e.y - e.radius - 14, w, 5);
+      ctx.fillStyle = e.boss ? '#ff5d73' : '#ffd166';
+      ctx.fillRect(e.x - w / 2, e.y - e.radius - 14, (w * Math.max(0, e.hp)) / e.maxHp, 5);
+    }
+  }
+
+  // Enemy shots.
+  ctx.fillStyle = '#ff5d73';
+  for (const s of run.shots) {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Hero.
+  const hero = HEROES.find((x) => x.id === run.config.hero) ?? HEROES[0]!;
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.beginPath();
+  ctx.ellipse(h.x, h.y + 14, 14, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  const step = h.moving ? Math.sin(time * 14) * 2.5 : 0;
+  if (h.invuln > 0 && Math.floor(time * 20) % 2 === 0) ctx.globalAlpha = 0.5;
+  drawSprite(ctx, hero.icon, h.x, h.y - Math.abs(step), 36, 0, h.fx < 0);
+  ctx.globalAlpha = 1;
+  if (h.hurt > 0) {
+    ctx.fillStyle = `rgba(255, 60, 80, ${h.hurt * 1.6})`;
+    ctx.beginPath();
+    ctx.arc(h.x, h.y, 18, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // HP bar under the hero.
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillRect(h.x - 20, h.y + 22, 40, 5);
+  ctx.fillStyle = h.hp / run.stats.maxHp < 0.3 ? '#ff5d73' : '#5be38a';
+  ctx.fillRect(h.x - 20, h.y + 22, (40 * Math.max(0, h.hp)) / run.stats.maxHp, 5);
+
+  // Projectiles.
+  ctx.globalCompositeOperation = 'lighter';
+  for (const p of run.projectiles) {
+    const def = WEAPON_MAP.get(p.weapon);
+    if (!def) continue;
+    if (p.kind === 'orbit') {
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 2.2);
+      g.addColorStop(0, `${def.color}cc`);
+      g.addColorStop(1, `${def.color}00`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (p.kind === 'aimed') {
+      ctx.strokeStyle = def.color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - p.vx * 0.03, p.y - p.vy * 0.03);
+      ctx.stroke();
+    }
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  for (const p of run.projectiles) {
+    const def = WEAPON_MAP.get(p.weapon);
+    if (!def) continue;
+    if (p.kind === 'aimed')
+      drawSprite(ctx, def.icon, p.x, p.y, p.radius * 3.2, p.angle + Math.PI / 4);
+    else if (p.kind === 'lob') {
+      const t = 1 - p.life / p.maxLife;
+      const arc = Math.sin(t * Math.PI) * 60;
+      drawSprite(ctx, def.icon, p.x, p.y - arc, 20, t * 10);
+    } else drawSprite(ctx, def.icon, p.x, p.y, p.radius * 2.4, p.angle);
+  }
+
+  // Spin beams.
+  ctx.globalCompositeOperation = 'lighter';
+  for (const w of run.weapons) {
+    const def = WEAPON_MAP.get(w.id);
+    if (def?.behavior !== 'spin' || w.active <= 0) continue;
+    const st = weaponStats(run, def, w.level);
+    const n = Math.max(1, Math.round(st.amount));
+    for (let i = 0; i < n; i++) {
+      const a = w.angle + (i / n) * Math.PI * 2;
+      beam(
+        ctx,
+        h.x,
+        h.y,
+        h.x + Math.cos(a) * st.area,
+        h.y + Math.sin(a) * st.area,
+        10,
+        def.color,
+        1,
+      );
+    }
+  }
+
+  // Effects.
+  for (const f of run.fx) {
+    const a = Math.max(0, f.life / f.max);
+    switch (f.type) {
+      case 'beam':
+        beam(ctx, f.x1, f.y1, f.x2, f.y2, f.width, f.color, a);
+        break;
+      case 'ring':
+        ctx.globalAlpha = a;
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = 6 * a + 2;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r * (1 - a * 0.7), 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        break;
+      case 'bolt': {
+        ctx.globalAlpha = a;
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(f.points[0]!, f.points[1]!);
+        for (let i = 2; i < f.points.length; i += 2) {
+          const px = f.points[i - 2]!;
+          const py = f.points[i - 1]!;
+          const nx = f.points[i]!;
+          const ny = f.points[i + 1]!;
+          // Jagged midpoint.
+          ctx.lineTo(
+            (px + nx) / 2 + (hash(i, Math.floor(time * 30)) - 0.5) * 24,
+            (py + ny) / 2 + (hash(Math.floor(time * 30), i) - 0.5) * 24,
+          );
+          ctx.lineTo(nx, ny);
+        }
+        ctx.stroke();
+        ctx.lineWidth = 8;
+        ctx.globalAlpha = a * 0.3;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        break;
+      }
+      case 'sweep': {
+        ctx.globalAlpha = a;
+        const g = ctx.createLinearGradient(f.x, 0, f.x + f.dir * f.len, 0);
+        g.addColorStop(0, `${f.color}00`);
+        g.addColorStop(1, `${f.color}dd`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.ellipse(
+          f.x + (f.dir * f.len) / 2,
+          f.y,
+          f.len / 2,
+          (f.height / 2) * (0.4 + a * 0.6),
+          0,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        break;
+      }
+      case 'burst':
+        ctx.globalAlpha = a;
+        ctx.fillStyle = f.color;
+        for (let i = 0; i < 6; i++) {
+          const ang = (i / 6) * Math.PI * 2;
+          const r = f.size * (1.6 - a);
+          ctx.beginPath();
+          ctx.arc(f.x + Math.cos(ang) * r, f.y + Math.sin(ang) * r, 2.5 * a + 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        break;
+      case 'text':
+        break;
+    }
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Damage numbers on top.
+  ctx.textAlign = 'center';
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+  for (const f of run.fx) {
+    if (f.type !== 'text') continue;
+    ctx.globalAlpha = Math.min(1, (f.life / f.max) * 2);
+    ctx.font = `${f.big ? 800 : 700} ${f.big ? 18 : 13}px Inter, system-ui, sans-serif`;
+    ctx.strokeText(f.text, f.x, f.y);
+    ctx.fillStyle = f.color;
+    ctx.fillText(f.text, f.x, f.y);
+  }
+  ctx.globalAlpha = 1;
+
+  // Off-screen boss arrows.
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  for (const e of run.enemies) {
+    if (!e.boss && !e.elite) continue;
+    const sx = (e.x - h.x) * scale + width / 2;
+    const sy = (e.y - h.y) * scale + height / 2;
+    if (sx > 0 && sx < width && sy > 0 && sy < height) continue;
+    const ang = Math.atan2(sy - height / 2, sx - width / 2);
+    const ax = Math.min(width - 24, Math.max(24, sx));
+    const ay = Math.min(height - 24, Math.max(24, sy));
+    ctx.save();
+    ctx.translate(ax, ay);
+    ctx.rotate(ang);
+    ctx.fillStyle = e.boss ? '#ff5d73' : '#ffd166';
+    ctx.beginPath();
+    ctx.moveTo(12, 0);
+    ctx.lineTo(-8, -8);
+    ctx.lineTo(-8, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Vignette, red when hurt.
+  const v = ctx.createRadialGradient(
+    width / 2,
+    height / 2,
+    Math.min(width, height) * 0.35,
+    width / 2,
+    height / 2,
+    Math.max(width, height) * 0.75,
+  );
+  v.addColorStop(0, 'rgba(0,0,0,0)');
+  v.addColorStop(1, h.hurt > 0 ? `rgba(160,0,20,${0.35 + h.hurt})` : 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = v;
+  ctx.fillRect(0, 0, width, height);
+}
+
+function beam(
+  ctx: CanvasRenderingContext2D,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  width: number,
+  color: string,
+  alpha: number,
+): void {
+  ctx.globalAlpha = alpha * 0.45;
+  ctx.strokeStyle = color;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = width * 2.2;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.globalAlpha = alpha;
+  ctx.lineWidth = width * 0.6;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}

@@ -15,7 +15,7 @@ import {
   wisdomGain,
 } from '../../engine';
 import { WIN_POINTS } from '../../data/colony';
-import { useGame, type TabId } from '../../store/gameStore';
+import { useGame, type MenuSection, type TabId } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 
@@ -24,6 +24,7 @@ interface Goal {
   label: string;
   fraction: number;
   tab: TabId;
+  section?: MenuSection;
 }
 
 /** „Reichsbuch": one screen with every loop's status and the closest next goals. */
@@ -64,7 +65,8 @@ export function EmpirePanel() {
       icon: nextTech.icon,
       label: `Forschung: ${nextTech.name}`,
       fraction: Math.min(1, game.research / nextTech.cost),
-      tab: 'research',
+      tab: 'menu',
+      section: 'research',
     });
   }
 
@@ -113,7 +115,10 @@ export function EmpirePanel() {
           </small>
           {colonyAttention(game) > 0 && <span className="empire-badge">wartet auf dich</span>}
         </button>
-        <button className="empire-card" onClick={() => setUi({ tab: 'research' })}>
+        <button
+          className="empire-card"
+          onClick={() => setUi({ tab: 'menu', menuSection: 'research' })}
+        >
           <span className="empire-card-icon">🔬</span>
           <strong>Forschung</strong>
           <small>
@@ -155,7 +160,11 @@ export function EmpirePanel() {
       <h4 className="group-title">Nächste Ziele</h4>
       <div className="goal-list">
         {goals.map((g) => (
-          <button key={g.label} className="goal" onClick={() => setUi({ tab: g.tab })}>
+          <button
+            key={g.label}
+            className="goal"
+            onClick={() => setUi({ tab: g.tab, ...(g.section ? { menuSection: g.section } : {}) })}
+          >
             <span className="goal-icon">{g.icon}</span>
             <span className="goal-body">
               <span>{g.label}</span>

@@ -60,7 +60,16 @@ export type GameEvent =
   | { type: 'colonyOffer'; from: string }
   | { type: 'colonyQuip'; player: string; line: number }
   | { type: 'colonyFinished'; winner: string; place: number }
-  | { type: 'colonyClaimed'; fame: number; place: number };
+  | { type: 'colonyClaimed'; fame: number; place: number }
+  | {
+      type: 'riftFinished';
+      essence: number;
+      won: boolean;
+      time: number;
+      kills: number;
+      record: boolean;
+    }
+  | { type: 'riftEcho'; essence: number };
 
 export type Emit = (event: GameEvent) => void;
 

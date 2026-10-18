@@ -32,7 +32,7 @@ export function Header() {
           <button
             className={`chip ${canResearch ? 'chip-glow' : ''}`}
             title="Forschungspunkte"
-            onClick={() => setUi({ tab: 'research' })}
+            onClick={() => setUi({ tab: 'menu', menuSection: 'research' })}
           >
             🔬 <b>{research}</b>
           </button>

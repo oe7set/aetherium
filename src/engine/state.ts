@@ -172,6 +172,28 @@ export interface ColonyState {
   nextOfferId: number;
 }
 
+export interface RiftBest {
+  time: number;
+  kills: number;
+  level: number;
+}
+
+/** Ätherriss meta progression (runs themselves are not saved). */
+export interface RiftState {
+  essence: number;
+  essenceTotal: number;
+  talents: Record<string, number>;
+  runs: number;
+  wins: number;
+  best: Record<string, RiftBest>;
+  /** Evolutions discovered at least once (codex). */
+  evolutions: string[];
+  hero: string;
+  biome: string;
+  /** Seconds until the next echo run. */
+  echo: number;
+}
+
 export interface BuffState {
   id: string;
   remaining: number;
@@ -227,9 +249,10 @@ export interface GameState {
   quests: { active: Record<string, Record<string, number>>; done: string[] };
   tasks: { day: string; week: string; list: TaskState[] };
   colony: ColonyState;
+  rift: RiftState;
 }
 
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 
 export function defaultSettings(): Settings {
   return {
@@ -290,6 +313,22 @@ export function newGame(now: number = Date.now()): GameState {
     quests: { active: {}, done: [] },
     tasks: { day: '', week: '', list: [] },
     colony: defaultColony(),
+    rift: defaultRift(),
+  };
+}
+
+export function defaultRift(): RiftState {
+  return {
+    essence: 0,
+    essenceTotal: 0,
+    talents: {},
+    runs: 0,
+    wins: 0,
+    best: {},
+    evolutions: [],
+    hero: 'farmer',
+    biome: 'meadow',
+    echo: 600,
   };
 }
 
@@ -361,6 +400,12 @@ export function cloneState(s: GameState): GameState {
     },
     tasks: { ...s.tasks, list: s.tasks.list.map((t) => ({ ...t })) },
     colony: cloneColony(s.colony),
+    rift: {
+      ...s.rift,
+      talents: { ...s.rift.talents },
+      best: { ...s.rift.best },
+      evolutions: [...s.rift.evolutions],
+    },
   };
 }
 

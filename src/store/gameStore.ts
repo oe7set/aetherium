@@ -65,17 +65,30 @@ import {
   type Settings,
   type ShopResult,
   type ColonyResult,
+  buyRiftTalent,
+  finishRun,
+  prepareRun,
+  type RiftReward,
   type Rng,
 } from '../engine';
 import { t, type MessageKey } from '../i18n';
+import type { RunConfig, RunResult } from '../rift/sim';
 import { playEventSounds } from '../ui/audio';
 import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
-export type TabId = 'world' | 'skills' | 'inventory' | 'colony' | 'research' | 'menu';
+export type TabId = 'world' | 'skills' | 'inventory' | 'colony' | 'rift' | 'menu';
 export type MenuSection =
-  'empire' | 'quests' | 'prestige' | 'achievements' | 'stats' | 'settings' | 'save' | 'debug';
+  | 'empire'
+  | 'research'
+  | 'quests'
+  | 'prestige'
+  | 'achievements'
+  | 'stats'
+  | 'settings'
+  | 'save'
+  | 'debug';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools';
 
 const FEED_LIMIT = 60;
@@ -141,6 +154,11 @@ export interface GameStore {
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
+  /** Packs provisions and returns the config for a new rift run (null if locked). */
+  riftPrepare: (hero: string, biome: string) => RunConfig | null;
+  /** Books the rewards of a finished rift run. */
+  riftFinish: (result: RunResult) => RiftReward | null;
+  riftTalent: (id: string) => void;
   /** Runs a colony action; a failed result becomes a warning line in the feed. */
   colony: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => ColonyResult | void,
@@ -453,7 +471,7 @@ export const useGame = create<GameStore>()((set, get) => {
         return;
       }
       if (skill === 'research') {
-        get().setUi({ tab: 'research' });
+        get().setUi({ tab: 'menu', menuSection: 'research' });
         return;
       }
       if (skill === 'farming') {
@@ -464,6 +482,24 @@ export const useGame = create<GameStore>()((set, get) => {
       if (best) get().start(best.id);
       else get().openSkill(skill);
     },
+    riftPrepare: (hero, biome) => {
+      let cfg: RunConfig | null = null;
+      mutate((s) => {
+        cfg = prepareRun(s, hero, biome, defaultRng);
+      });
+      return cfg;
+    },
+    riftFinish: (result) => {
+      let reward: RiftReward | null = null;
+      mutate((s, emit) => {
+        reward = finishRun(s, result, defaultRng, emit);
+      });
+      return reward;
+    },
+    riftTalent: (id) =>
+      mutate((s) => {
+        buyRiftTalent(s, id);
+      }),
     colony: (fn) => {
       let result: ColonyResult | void = undefined;
       mutate((s, emit) => {

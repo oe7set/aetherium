@@ -134,6 +134,8 @@ function resetRun(s: GameState): void {
     tasks: s.tasks,
     // The colony is its own world: matches, Ruhm and talents survive every reset.
     colony: s.colony,
+    // Rift meta progression is permanent, too (talents are its own prestige).
+    rift: s.rift,
   };
   Object.assign(s, fresh, kept);
 

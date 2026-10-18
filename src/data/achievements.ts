@@ -44,6 +44,39 @@ const fmt = (n: number) => n.toLocaleString('de-DE');
 
 const STAT_SERIES: StatSeries[] = [
   {
+    key: 'riftKills',
+    icon: '🌀',
+    desc: (n) => `Besiege ${n} Gegner im Ätherriss.`,
+    steps: [
+      [100, 'Rissbewohner·in'],
+      [5000, 'Hordenbrecher·in'],
+      [50000, 'Vampir? Überlebt!'],
+      [500000, 'Massenvernichtungsforscher·in'],
+    ],
+    reward: (i) => ({ 'combat.damage': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'riftBestMinutes',
+    icon: '⏱️',
+    desc: (n) => `Überlebe ${n} Minuten in einem Riss-Lauf.`,
+    steps: [
+      [5, 'Fünf Minuten Ruhm'],
+      [10, 'Halbzeit im Chaos'],
+      [15, 'Bis zum Prüfer'],
+    ],
+    reward: (i) => ({ xp: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'riftWins',
+    icon: '🧑‍⚖️',
+    desc: (n) => `Besiege den Prüfer ${n}-mal.`,
+    steps: [
+      [1, 'Prüfung bestanden'],
+      [10, 'Summa cum laude'],
+    ],
+    reward: (i) => ({ research: 0.02 * (i + 1) }),
+  },
+  {
     key: 'colonyWins',
     icon: '🏆',
     desc: (n) => `Gewinne ${n} Partie(n) in Neu-Aetherium.`,

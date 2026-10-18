@@ -15,6 +15,7 @@ import {
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
 import { COLONY_BUILDINGS, FAME_TALENTS } from '../data/colony';
+import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
 import { BOARD } from './colony/board';
 import {
   defaultCombatSettings,
@@ -27,6 +28,7 @@ import {
   type CombatState,
   type GameState,
   type PrestigeState,
+  type RiftState,
 } from './state';
 
 /** Shape stored in localStorage / export strings. */
@@ -76,6 +78,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   5: (data) => ({ ...data, pets: [], quests: null, tasks: null }),
   // 6 → 7 (Phase 9): the colony (Catan-like board game with Siedler chains).
   6: (data) => ({ ...data, colony: null }),
+  // 7 → 8 (Phase 10): Ätherriss meta progression.
+  7: (data) => ({ ...data, rift: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -218,6 +222,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     quests: hydrateQuests(data.quests),
     tasks: hydrateTasks(data.tasks, base.tasks),
     colony: hydrateColony(data.colony, base.colony),
+    rift: hydrateRift(data.rift, base.rift),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -232,6 +237,36 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateRift(v: unknown, fallback: RiftState): RiftState {
+  if (!isRecord(v)) return fallback;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const best: RiftState['best'] = {};
+  if (isRecord(v.best))
+    for (const [id, b] of Object.entries(v.best))
+      if (isRecord(b) && BIOMES.some((x) => x.id === id))
+        best[id] = { time: num(b.time, 0), kills: num(b.kills, 0), level: num(b.level, 0) };
+  return {
+    essence: Math.max(0, num(v.essence, 0)),
+    essenceTotal: Math.max(0, num(v.essenceTotal, 0)),
+    talents: Object.fromEntries(
+      Object.entries(numberRecord(v.talents)).filter(([id]) =>
+        RIFT_TALENTS.some((t) => t.id === id),
+      ),
+    ),
+    runs: num(v.runs, 0),
+    wins: num(v.wins, 0),
+    best,
+    evolutions: stringArray(v.evolutions).filter((id) => RIFT_WEAPONS.some((w) => w.id === id)),
+    hero:
+      typeof v.hero === 'string' && HEROES.some((h) => h.id === v.hero) ? v.hero : fallback.hero,
+    biome:
+      typeof v.biome === 'string' && BIOMES.some((b) => b.id === v.biome)
+        ? v.biome
+        : fallback.biome,
+    echo: Math.max(0, num(v.echo, fallback.echo)),
   };
 }
 

@@ -11,6 +11,8 @@ export const de = {
   'tab.research': 'Forschung',
   'tab.menu': 'Mehr',
   'tab.colony': 'Kolonie',
+  'tab.rift': 'Riss',
+  'menu.research': 'Forschung',
   'menu.quests': 'Quests',
   'colonyFail.running': 'Es läuft bereits eine Partie.',
   'colonyFail.notYourTurn': 'Du bist gerade nicht dran.',

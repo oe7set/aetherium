@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.3.0] – Phase 10 „Ätherriss" (Survivor-Roguelike)
+
+### Hinzugefügt
+
+- **Ätherriss**: Echtzeit-Arena im Stil von Vampire Survivors. Schwebender Touch-Joystick (oder WASD), Waffen feuern
+  automatisch, Gegnerhorden wachsen, Elite-Gegner mit Truhen, Bosse bei 5:00 und 10:00, der **Prüfer** bei 15:00.
+- **12 Waffen** mit eigenem Verhalten (Axtwurf, Bumerang, Feuerkreis, Runen-Orbit, Pfeile, Blitzkette, Säureflasche,
+  Kraftfeld, Mana-Laser, Pendelklinge, Gravitationsbrunnen, Teilchenstrahl), je 8 Stufen.
+- **12 Passive** und **8 Evolutionen** (Maximalstufe + passendes Passiv + Truhe), z. B. _Kontrollierte Kernfusion_,
+  _Teslaspule_, _Federsturm_, _Prismen-Laser_.
+- **6 Biome** mit je 5 Gegnertypen (Verfolger, Schwärme, Schützen, Teiler, Tanks, Teleporter) und 2 Bossen.
+- **6 Helden** mit Startwaffe und Bonus; freigeschaltet über Inselskills (Schmieden, Alchemie, Fernkampf, Magie) bzw.
+  Forschung (Teilchenbeschleuniger). Waffen werden über Techs freigeschaltet.
+- **Level-Up-Auswahl** (3–4 Optionen) mit Neu würfeln, Überspringen und Verbannen.
+- **Riss-Essenz** und **19 Riss-Talente** (Macht, Panzerung, Zweite Chance, Echo-Läufe im Idle …), Kodex mit
+  entdeckten Evolutionen, Bestwerte pro Biom.
+- **Verflechtung**: Kampfskills der Insel stärken den Helden, Essen aus dem Inventar wird zu Proviant, ausgerüstete
+  Waffe verbessert die Startwaffe; Beute (Äther, Manakristalle, Leere-Splitter, Truhen) geht auf die Insel, Tribut an
+  die laufende Kolonie; Gesamtessenz gibt dauerhaft Kampfboni. 9 neue Erfolge.
+
+### Geändert
+
+- Tab-Leiste: neuer Tab **Riss**; **Forschung** ist jetzt im Bereich **Mehr**.
+- Spielstand-Version 8.
+
 ## [1.2.0] – Phase 9 „Neu-Aetherium" (Kolonie)
 
 ### Hinzugefügt

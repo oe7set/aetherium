@@ -6,6 +6,6 @@ export const TABS: { id: TabId; icon: string; label: MessageKey }[] = [
   { id: 'skills', icon: '🎯', label: 'tab.skills' },
   { id: 'inventory', icon: '🎒', label: 'tab.inventory' },
   { id: 'colony', icon: '🏘️', label: 'tab.colony' },
-  { id: 'research', icon: '🔬', label: 'tab.research' },
+  { id: 'rift', icon: '🌀', label: 'tab.rift' },
   { id: 'menu', icon: '☰', label: 'tab.menu' },
 ];
