@@ -1410,3 +1410,17 @@ h4.rift-h4::before,
   background: linear-gradient(90deg, rgba(255, 209, 102, 0.45), rgba(94, 242, 255, 0.35));
   color: #fff;
 }
+/* Colour-blind friendly: success/danger become blue/orange (distinguishable for red-green weakness). */
+.colorblind {
+  --green: #3fa9f5;
+  --red: #ff9f1a;
+}
+.colorblind .v-field.ready,
+.colorblind .v-bld.ready.built,
+.colorblind .v-bld.ready.site {
+  border-color: #3fa9f5;
+  box-shadow: 0 0 16px rgba(63, 169, 245, 0.55);
+}
+.colorblind .btn-primary {
+  background: linear-gradient(180deg, #4fb4ff, #2a7fd0);
+}

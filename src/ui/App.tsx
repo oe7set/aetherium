@@ -67,23 +67,37 @@ function useBackgroundMusic() {
   const tab = useGame((s) => s.ui.tab);
   const inRift = useRiftRun((s) => s.run !== null);
   const trial = useRiftRun((s) => s.run?.config.trial === true);
+  // A living boss in a normal rift run switches to the boss theme (checked every 2 s).
+  const [bossAlive, setBossAlive] = useState(false);
+  useEffect(() => {
+    if (!inRift) {
+      setBossAlive(false);
+      return;
+    }
+    const id = window.setInterval(() => {
+      const run = useRiftRun.getState().run;
+      setBossAlive(!!run?.enemies.some((e) => (e.boss || e.final) && !e.dead));
+    }, 2000);
+    return () => window.clearInterval(id);
+  }, [inRift]);
   // Night on the island (in-game clock, 20 min per day): re-checked every 20 s.
   const [night, setNight] = useState(() => daylight(dayPhase()) < 0.25);
   useEffect(() => {
     const id = window.setInterval(() => setNight(daylight(dayPhase()) < 0.25), 20000);
     return () => window.clearInterval(id);
   }, []);
-  const theme: MusicTheme = trial
-    ? 'boss'
-    : inRift
-      ? 'rift'
-      : tab === 'village'
-        ? 'village'
-        : tab === 'rift'
-          ? 'hero'
-          : night
-            ? 'night'
-            : 'island';
+  const theme: MusicTheme =
+    trial || (inRift && bossAlive)
+      ? 'boss'
+      : inRift
+        ? 'rift'
+        : tab === 'village'
+          ? 'village'
+          : tab === 'rift'
+            ? 'hero'
+            : night
+              ? 'night'
+              : 'island';
   useEffect(() => {
     setMusic({ enabled, volume, theme });
   }, [enabled, volume, theme]);

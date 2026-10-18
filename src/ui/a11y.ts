@@ -11,6 +11,7 @@ export function useAccessibility(): void {
   const text = useGame((s) => s.game.settings.textSize);
   const reduce = useGame((s) => s.game.settings.reduceMotion);
   const contrast = useGame((s) => s.game.settings.highContrast);
+  const colorblind = useGame((s) => s.game.settings.colorblind);
   useEffect(() => {
     const root = document.documentElement;
     const systemReduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -18,5 +19,6 @@ export function useAccessibility(): void {
     root.style.fontSize = TEXT_SCALE[text] ?? '100%';
     root.classList.toggle('reduce-motion', motionReduced);
     root.classList.toggle('high-contrast', contrast);
-  }, [text, reduce, contrast]);
+    root.classList.toggle('colorblind', colorblind);
+  }, [text, reduce, contrast, colorblind]);
 }

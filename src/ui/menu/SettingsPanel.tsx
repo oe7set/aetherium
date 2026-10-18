@@ -70,6 +70,14 @@ export function SettingsPanel() {
         />
         <span>🌗 Hoher Kontrast (hellere Texte und Rahmen)</span>
       </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.colorblind}
+          onChange={(e) => setSetting('colorblind', e.target.checked)}
+        />
+        <span>🎨 Farbenblind-freundlich (Blau/Orange statt Grün/Rot)</span>
+      </label>
       <h4 className="group-title">⚙️ Anzeige & Leistung</h4>
       <label className="field">
         <span>{t('menu.numberFormat')}</span>

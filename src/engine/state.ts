@@ -33,6 +33,8 @@ export interface Settings {
   textSize: 'normal' | 'large' | 'xlarge';
   reduceMotion: boolean;
   highContrast: boolean;
+  /** Colour-blind friendly palette: blue/orange instead of green/red. */
+  colorblind: boolean;
 }
 
 export interface ActiveAction {
@@ -417,6 +419,7 @@ export function defaultSettings(): Settings {
     textSize: 'normal',
     reduceMotion: false,
     highContrast: false,
+    colorblind: false,
   };
 }
 

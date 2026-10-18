@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.27.0] – Für alle Farben
+
+### Hinzugefügt
+
+- **Farbenblind-freundlicher Modus** (Einstellungen → ♿): Blau/Orange statt Grün/Rot für „bereit", Erfolg und
+  Warnungen – gut unterscheidbar bei Rot-Grün-Schwäche.
+- **Bossmusik auch im normalen Riss**: Sobald ein Boss lebt, wechselt die Musik zum Bossthema und danach zurück.
+
+### Geprüft
+
+- Ein Live-Dungeon wurde im Browser komplett durchgespielt (Start aus der Heldenkarte, Kampf, Level-ups,
+  Ergebnis mit Buchung von Helden-XP, Essenz, Rohstoffen und Gesundheit) – ohne Fehler.
+- README auf den Stand 1.27 gebracht.
+
 ## [1.26.1] – Nachtmusik
 
 ### Hinzugefügt

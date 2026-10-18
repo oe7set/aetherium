@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.26.1**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.27.0**.
 
 ## 1. Der große Kreislauf
 
@@ -159,15 +159,13 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
       über Export-Codes.
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
-- [ ] Musik: Bossmusik auch bei normalen Riss-Bossen (dynamisch, sobald ein Boss lebt).
 
 **Qualität**
 
-- [ ] Englisch (`tContent`-Overlays); Farbenblind-Paletten für Rarität und Ressourcenbalken.
+- [ ] Englisch (`tContent`-Overlays).
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
-- [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
 - [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente), Prestige, 7+ Tage; Spieler ohne Truppen werden oft
       geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
 

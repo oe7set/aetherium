@@ -7,11 +7,12 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.26)
+## Was dich erwartet (v1.27)
 
 **🏝️ Die Insel**
 
-- 18 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 250 Aktionen.
+- 18 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 250 Aktionen – jede mit eigener
+  **Meisterschaft** 🏅 (Stufe 1–99: schneller und öfter doppelte Ausbeute).
 - Sammeln: Holzfällen (20 Baumarten), Bergbau, Angeln, Landwirtschaft (Echtzeit-Beete, Mutationen), Jagen,
   Archäologie.
 - Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes.
@@ -19,37 +20,42 @@ greift ineinander.
 - 3D-Low-Poly-Insel (React Three Fiber) mit antippbaren Stationen, Pfaden, Strand, Fluss und Tag/Nacht.
   Sie wächst mit dem Fortschritt bis zum Teilchenbeschleuniger-Ring.
 - Forschung mit Tech-Baum, Periodensystem-Codex (118 Elemente) und Helfern.
-- Dynamischer Markt, Krämer und Werkzeuge.
+- Dynamischer Markt, Krämer und Werkzeuge (Axt, Spitzhacke, Angel, Archäologie bis zum Ätherlot).
 
 **🏘️ Das Dorf (wie Travian)**
 
-- 18 Rohstofffelder, 20 Gebäude, 7 Truppentypen, Bauschleifen.
-- Raubzüge mit echter Kampfformel, Oasen annektieren, Invasionen abwehren.
+- 18 Rohstofffelder, 20 Gebäude, 7 Truppentypen, Bauschleifen – ein Dorfplatz, der sichtbar mitwächst.
+- Raubzüge mit echter Kampfformel, Oasen annektieren, **Riss-Invasionen** abwehren – mit Truppen, Mauer, Held,
+  Riss-Talenten und der Inselwehr; Vorwarnung inklusive.
 - Kulturpunkte und bis zu 5 Dörfer.
 - Weltkarte als Raster mit Lagern, Oasen, Ruinen, freien Tälern und Abenteuern, auch im Vollbild.
 - Das Dorf stärkt die Insel (Tempo, XP, Gold), die Insel versorgt das Dorf über den Hafen.
 
 **🦸 Der Held, einer für alles**
 
-- Level, 4 Attribute, 6 Ausrüstungsplätze mit 18 Gegenständen in 3 Seltenheitsstufen, Gesundheit.
+- Level, 4 Attribute, 6 Ausrüstungsplätze mit 18 Gegenständen in 3 Seltenheitsstufen, Gesundheit, **Titel**
+  aus deinen Erfolgen.
 - Er wohnt im Dorf, verteidigt es, plündert mit und erobert Oasen.
 - Abenteuer auf der Karte: automatisch erkunden oder **live als Echtzeit-Dungeon** spielen.
 
 **🌀 Der Ätherriss (Survivor-Roguelike)**
 
 - 15-Minuten-Läufe gegen Horden, 20 Waffen mit Evolutionen, 6 Biome, 6 Kampfstile, 19 Meta-Talente.
-- **Wochenboss**: jede Woche eine neue Prüfung mit eigener Wochenregel und großer Belohnung.
+- **Wochenboss**: jede Woche eine neue Prüfung mit eigener Wochenregel, am Ende der **Montagsfürst** 🦹.
+- **Endlos-Riss** ♾️: kein Zeitlimit, alle 5 Minuten ein Boss – wie lange hältst du durch?
 
 **🎁 Belohnungen und Motivation**
 
 - Tägliche Belohnung mit 7-Tage-Serie.
 - Ruhmesleiter mit 50 Stufen, Chronik als Zielkette durch alle Systeme.
-- **Sammelbuch** mit 14 Sets und Dauer-Boni, fast 300 Erfolge, Quests, Aufträge, Haustiere.
-- Prestige in drei Ebenen: Wiedergeburt, Paradigmenwechsel, Urknall. Dorf, Held und Riss bleiben dabei erhalten.
+- **Sammelbuch** mit 14 Sets und Dauer-Boni, über 300 Erfolge, Aufträge, Haustiere.
+- **Questreihen**, die alles verbinden: „Das Band der Welten", „Wissen ist Macht", „Spuren der Vorläufer".
+- Prestige in drei Ebenen: Wiedergeburt, Paradigmenwechsel (Naturgesetze wirken auf Insel, Dorf und Riss),
+  Urknall. Dorf, Held und Riss bleiben dabei erhalten.
 
 **🎵 Atmosphäre**
 
-- Prozedurale Musik ohne Audiodateien: je Bereich ein eigenes Thema (Insel, Dorf, Held, Riss).
+- Prozedurale Musik ohne Audiodateien: eigene Themen für Insel (Tag und Nacht), Dorf, Held, Riss und Bosse.
 - Soundeffekte, Konfetti, Belohnungs-Enthüllungen, Vibration.
 - Über 200 humorvolle Texte.
 
@@ -59,6 +65,7 @@ greift ineinander.
 - Akku-Modus mit Eco-Leistungsprofil (das Handy bleibt kühl) und 2D-Ansicht ohne 3D.
 - **„Was jetzt?" 📌**: alles, was gerade auf dich wartet – über alle Systeme, mit Direktsprung.
 - Schnellzugriff 🧭 zu jedem Bereich, Zurück-Taste schließt Fenster.
+- **Barrierefreiheit**: Textgröße, Bewegung reduzieren, hoher Kontrast.
 
 ## Steuerung
 
