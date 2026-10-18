@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.0] – Der Boss hat ein Thema
+
+### Hinzugefügt
+
+- **Wochenboss-HUD**: Im Lauf zeigt ein Banner die Wochenregel und wann die Bosse kommen.
+- **Boss-Musik**: Der Wochenboss hat ein eigenes, schnelleres und düsteres Thema (E-phrygisch, 140 BPM).
+- Bei Level-Ups und Belohnungen wird die Musik kurz leiser, damit der Jingle durchkommt.
+
 ## [1.16.0] – Spaten, Pinsel, Ätherlot
 
 ### Hinzugefügt

@@ -88,6 +88,7 @@ import {
 import { t, type MessageKey } from '../i18n';
 import type { RunConfig, RunResult } from '../rift/sim';
 import { playEventSounds, SOUNDS } from '../ui/audio';
+import { duckMusic } from '../ui/music';
 import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
@@ -255,6 +256,7 @@ export const useGame = create<GameStore>()((set, get) => {
     const now = performance.now();
     if (events.length) {
       if (game.settings.sound) playEventSounds(events);
+      if (events.some((e) => e.type === 'levelUp' || e.type === 'heroLevel')) duckMusic(1.2);
       notifyInBackground(events, game.settings.notifications);
     }
     const { feed, popups, levelUps, achievements } = translateEvents(
@@ -285,6 +287,7 @@ export const useGame = create<GameStore>()((set, get) => {
 
   const showReward = (title: string, icon: string, lines: RewardLine[]): void => {
     set({ reward: { title, icon, lines, at: performance.now() } });
+    duckMusic(2.5);
     const best = Math.max(0, ...lines.map((l) => l.rarity));
     if (get().game.settings.sound) (best >= 2 ? SOUNDS.achievement : SOUNDS.rare)();
     try {

@@ -64,13 +64,16 @@ function useBackgroundMusic() {
   const volume = useGame((s) => s.game.settings.musicVolume);
   const tab = useGame((s) => s.ui.tab);
   const inRift = useRiftRun((s) => s.run !== null);
-  const theme: MusicTheme = inRift
-    ? 'rift'
-    : tab === 'village'
-      ? 'village'
-      : tab === 'rift'
-        ? 'hero'
-        : 'island';
+  const trial = useRiftRun((s) => s.run?.config.trial === true);
+  const theme: MusicTheme = trial
+    ? 'boss'
+    : inRift
+      ? 'rift'
+      : tab === 'village'
+        ? 'village'
+        : tab === 'rift'
+          ? 'hero'
+          : 'island';
   useEffect(() => {
     setMusic({ enabled, volume, theme });
   }, [enabled, volume, theme]);

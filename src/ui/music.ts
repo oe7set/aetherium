@@ -4,7 +4,7 @@ import { audioContext } from './audio';
 // oscillators per beat. Every area has its own theme; changes crossfade. Notes are scheduled a
 // fraction of a second ahead by a cheap timer, nothing runs while the tab is hidden or music is off.
 
-export type MusicTheme = 'island' | 'village' | 'hero' | 'rift';
+export type MusicTheme = 'island' | 'village' | 'hero' | 'rift' | 'boss';
 
 interface ThemeDef {
   bpm: number;
@@ -79,6 +79,24 @@ const THEMES: Record<MusicTheme, ThemeDef> = {
     density: 0.3,
     cutoff: 900,
     drive: false,
+    pluck: false,
+  },
+  // E phrygian, the weekly boss: i – bII – i – VII, faster and darker.
+  boss: {
+    bpm: 140,
+    root: 52,
+    scale: [0, 1, 3, 5, 7, 8, 10],
+    chords: [
+      [0, 3, 7],
+      [1, 5, 8],
+      [0, 3, 7],
+      [-2, 2, 5],
+    ],
+    pad: 'sawtooth',
+    lead: 'sawtooth',
+    density: 0.3,
+    cutoff: 900,
+    drive: true,
     pluck: false,
   },
   // A minor, driving: i – VI – III – VII.
@@ -316,6 +334,19 @@ function apply(): void {
   const active = wanted && !document.hidden;
   if (active) start();
   else stop();
+}
+
+/** Briefly lowers the music so a jingle (level-up, reward) can shine through. */
+export function duckMusic(seconds: number): void {
+  const a = audioContext();
+  if (!a || !master || timer === null) return;
+  const g = master.gain;
+  const t = a.currentTime;
+  g.cancelScheduledValues(t);
+  g.setValueAtTime(g.value, t);
+  g.linearRampToValueAtTime(volume * 0.12, t + 0.15);
+  g.setValueAtTime(volume * 0.12, t + seconds);
+  g.linearRampToValueAtTime(volume * 0.4, t + seconds + 1);
 }
 
 /** Called by the UI whenever settings, the area or visibility change. */

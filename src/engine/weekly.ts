@@ -69,6 +69,7 @@ export function prepareWeekly(s: GameState, hero: string, now: number, rng: Rng)
     stats,
     mode: 'dungeon',
     trial: true,
+    trialLabel: `${c.mutator.icon} ${c.mutator.name}`,
     minutes: WEEKLY_MINUTES,
     difficulty: c.difficulty,
   };

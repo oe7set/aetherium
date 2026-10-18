@@ -216,6 +216,8 @@ export interface RunConfig {
   difficulty?: number;
   /** Wochenboss: booked by `finishWeekly` instead of the adventure. */
   trial?: boolean;
+  /** HUD label of the week's rule, e.g. "🌕 Blutmond". */
+  trialLabel?: string;
 }
 
 /** Minutes until the final boss of a run. */

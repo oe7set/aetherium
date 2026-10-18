@@ -294,6 +294,12 @@ function Hud({ run, onPause }: { run: RunState; onPause: () => void }) {
           ⏸
         </button>
       </div>
+      {run.config.trial && (
+        <div className="rift-trial">
+          🦹 Wochenboss · {run.config.trialLabel} · Boss bei {runMinutes(run.config) / 2}:00 und{' '}
+          {runMinutes(run.config)}:00
+        </div>
+      )}
       <div className="rift-icons passives">
         {run.passives.map((p) => (
           <span key={p.id} className="rift-icon small">
