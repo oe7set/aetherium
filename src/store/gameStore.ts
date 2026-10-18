@@ -57,7 +57,10 @@ import {
   startAction,
   stopAction,
   summaryHasContent,
+  collectionsClaimable,
   consumeAll,
+  passClaimable,
+  taskProgress,
   formatNumber,
   consumeItem,
   xpForLevel,
@@ -195,6 +198,8 @@ export interface GameStore {
   riftTalent: (id: string) => void;
   claimDaily: () => void;
   claimPass: (tier: number) => void;
+  /** Claims every waiting Ruhmesleiter tier, finished task and Sammelbuch set in one reveal. */
+  claimAllRewards: () => void;
   claimChronicle: () => void;
   claimCollection: (id: string) => void;
   dismissReward: () => void;
@@ -603,6 +608,20 @@ export const useGame = create<GameStore>()((set, get) => {
         lines = claimPassTier(s, tier, defaultRng, emit);
       });
       if (lines) showReward(`Ruhmesleiter Stufe ${tier}`, '🏅', lines);
+    },
+    claimAllRewards: () => {
+      const lines: RewardLine[] = [];
+      let tasks = 0;
+      mutate((s, emit) => {
+        for (const tier of passClaimable(s))
+          lines.push(...(claimPassTier(s, tier, defaultRng, emit) ?? []));
+        for (const c of collectionsClaimable(s))
+          lines.push(...(claimCollection(s, c.id, defaultRng, emit) ?? []));
+        for (const tk of s.tasks.list)
+          if (!tk.claimed && taskProgress(s, tk) >= tk.target && claimTask(s, tk.id, emit)) tasks++;
+      });
+      if (tasks) lines.push({ icon: '📋', label: `${tasks} Aufträge abgeschlossen`, rarity: 1 });
+      if (lines.length) showReward('Alles abgeholt!', '🎁', lines);
     },
     claimChronicle: () => {
       const step = currentChronicle(get().game);

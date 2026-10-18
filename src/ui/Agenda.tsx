@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { agenda, type AgendaItem } from '../engine';
+import {
+  agenda,
+  collectionsClaimable,
+  passClaimable,
+  taskProgress,
+  type AgendaItem,
+} from '../engine';
 import { useGame } from '../store/gameStore';
 import { goToAgenda } from './agendaNav';
 
@@ -56,6 +62,23 @@ export function AgendaList({ onGo, limit }: { onGo?: () => void; limit?: number 
   );
 }
 
+/** One tap for every waiting Ruhmesleiter tier, Sammelbuch set and finished task. */
+function ClaimAll() {
+  const count = useGame(
+    (s) =>
+      passClaimable(s.game).length +
+      collectionsClaimable(s.game).length +
+      s.game.tasks.list.filter((tk) => !tk.claimed && taskProgress(s.game, tk) >= tk.target).length,
+  );
+  const claimAll = useGame((s) => s.claimAllRewards);
+  if (count < 2) return null;
+  return (
+    <button className="btn btn-gold btn-wide claim-all" onClick={claimAll}>
+      🎁 Alle {count} Belohnungen abholen
+    </button>
+  );
+}
+
 /** "Was jetzt?" overlay. */
 export function AgendaPanel() {
   const open = useGame((s) => s.ui.agenda);
@@ -74,6 +97,7 @@ export function AgendaPanel() {
             ✕
           </button>
         </header>
+        <ClaimAll />
         <div className="qnav-body">
           <AgendaList onGo={close} />
         </div>

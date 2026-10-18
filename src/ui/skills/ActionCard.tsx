@@ -147,9 +147,10 @@ export function ActionCard({ def }: { def: ActionDef }) {
             {def.drops.map((d) => {
               const it = getItem(d.item);
               return (
-                <Tip key={d.item} text={it.desc}>
+                <Tip key={d.item} text={`${it.name}: ${it.desc}`}>
                   <span className={`item-pill ${d.rare ? 'rare' : ''}`}>
-                    {it.icon} {it.name} <small>{chanceLabel(d.chance)}</small>
+                    {it.icon} <span className="pill-name">{it.name}</span>{' '}
+                    <small>{chanceLabel(d.chance)}</small>
                   </span>
                 </Tip>
               );

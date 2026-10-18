@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.34.0] – Alles abholen & kompakte Skills
+
+- „Was jetzt?": „Alle Belohnungen abholen" – Ruhmesleiter-Stufen, Sammelbuch-Sets und fertige Aufträge mit einem Tipp, in einer gemeinsamen Enthüllung.
+- Skills am Handy kompakter: Zurück-Pfeil sitzt neben dem festen Skill-Kopf, Beschreibungen sind gekürzt, mögliche Funde erscheinen als Symbol mit Chance (Name per Antippen) – deutlich weniger Scrollen.
+
 ## [1.33.0] – Stationskarten & Komfort
 
 - Insel: Station antippen öffnet eine Karte mit den besten Aktionen (antippen = starten oder stoppen), der nächsten Freischaltung und dem Weg in den Skill – statt sofort irgendetwas zu starten.
