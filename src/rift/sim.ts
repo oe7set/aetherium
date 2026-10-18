@@ -1229,7 +1229,9 @@ function updateWeapons(run: RunState, dt: number): void {
         const x2 = h.x + Math.cos(a) * st.area;
         const y2 = h.y + Math.sin(a) * st.area;
         hitSegment(h.x, h.y, x2, y2, 8, (e) => {
-          if (canHit(e, def.id, run.time, 0.3)) damageEnemy(run, e, st.damage, st.knockback);
+          if (!canHit(e, def.id, run.time, 0.3)) return;
+          damageEnemy(run, e, st.damage, st.knockback);
+          if (def.id === 'harvest_moon') h.hp = Math.min(run.stats.maxHp, h.hp + 0.3);
         });
       }
       if (w.active <= 0) w.timer = st.cooldown;

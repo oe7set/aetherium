@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.29.0] – Riss-Arsenal
+
+- Ätherriss: 6 neue Waffen (Erntesichel, Eintopf-Katapult, Angelhaken, Münzschleuder, Glockenschlag, Quantenwürfel), freigeschaltet über Forschung – jede mit eigener Evolution (Erntemond heilt, Festbankett, Krakenhaken, Midas-Regen, Domglocke, Schrödingers Würfel). Jetzt 32 Waffen.
+- 12 neue Gegner, zwei pro Biom (ab Minute 9 und 11): Taubenschwarm, Vogelscheuche, Nachteule, Waldtroll, Spähdrohne, Wandelndes Geschütz, Fluchrolle, Zensor, Feuersalamander, Phönixküken, Wildes Photon, Zeitparadoxon – 48 insgesamt.
+- Test: jede Waffe und Evolution läuft in der Simulation, jede Evolution hat Basiswaffe und Passiv.
+
 ## [1.28.0] – Kopfzeile, Tab-Gesten & App-Knöpfe
 
 - Kopfzeile passt sich an: im Dorf Holz, Lehm, Eisen, Getreide und Einwohner (mit Lager-Füllbalken), beim Helden Stufe, Gesundheit und Essenz. Antippen zeigt Produktion pro Stunde, Verbrauch, Netto und Zeit bis voll.

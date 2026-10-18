@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BASE_STATS, RIFT_WEAPONS } from '../src/data/rift';
+import { BASE_STATS, BIOMES, RIFT_PASSIVES, RIFT_WEAPONS } from '../src/data/rift';
 import {
   advance,
   biomeUnlocked,
@@ -127,6 +127,29 @@ describe('Ätherriss: Simulation', () => {
     botRun(run, 60);
     expect(run.phase === 'playing' || run.phase === 'levelup').toBe(true);
     expect(run.kills).toBeGreaterThan(10);
+  });
+});
+
+describe('Ätherriss: Inhalte', () => {
+  it('jede Evolution hat eine Basiswaffe und ein Passiv, jede Basiswaffe höchstens eine Evolution', () => {
+    const evos = RIFT_WEAPONS.filter((w) => w.evolvesFrom);
+    for (const evo of evos) {
+      expect(RIFT_WEAPONS.some((w) => w.id === evo.evolvesFrom && !w.evolvesFrom)).toBe(true);
+      expect(RIFT_PASSIVES.some((p) => p.id === evo.requires)).toBe(true);
+    }
+    const from = evos.map((e) => e.evolvesFrom);
+    expect(new Set(from).size).toBe(from.length);
+    expect(RIFT_WEAPONS.length).toBeGreaterThanOrEqual(30);
+    expect(BIOMES.reduce((n, b) => n + b.enemies.length, 0)).toBeGreaterThanOrEqual(40);
+  });
+
+  it.each(RIFT_WEAPONS.map((w) => w.id))('Waffe %s trifft und bleibt stabil', (id) => {
+    const run = createRun(config({ seed: 3 }));
+    run.weapons[0]!.id = id;
+    run.weapons[0]!.level = RIFT_WEAPONS.find((w) => w.id === id)!.evolvesFrom ? 1 : 8;
+    botRun(run, 25);
+    expect(run.kills).toBeGreaterThan(0);
+    expect(Number.isFinite(run.hero.hp)).toBe(true);
   });
 });
 
