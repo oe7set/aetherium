@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.9.0] – Der Wochenboss
+
+### Hinzugefügt
+
+- **Wochenboss** 🦹 (Held → Riss, auch im Schnellzugriff): jede Woche eine neue Prüfung im schwersten offenen Biom
+  mit einer Wochenregel – Blutmond, Glaskanone, Wirbelsturm, Magnetsturm, Eisenhaut oder Schwarmzeit. Sechs Minuten,
+  Zwischenboss zur Halbzeit, großer Boss am Ende. Der erste Sieg der Woche bringt legendäre Heldenausrüstung, Essenz,
+  Gold, Helden-XP und einmalig den Avatar 🦹; der erste Fehlversuch gibt einen Trostpreis. Jeder Sieg macht den
+  nächsten Wochenboss etwas stärker.
+- Erfolge für Wochenbosse und eine neue Quelle für die Ruhmesleiter.
+
+### Technik
+
+- Spielstand-Version 13 (Wochenboss-Fortschritt im Riss-Spielstand).
+
 ## [1.8.0] – Sammelbuch & Grabungsstätte
 
 ### Hinzugefügt

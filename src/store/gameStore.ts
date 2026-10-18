@@ -75,6 +75,9 @@ import {
   type HeroResult,
   type AdventureReward,
   prepareDungeon,
+  prepareWeekly,
+  finishWeekly,
+  type WeeklyReward,
   finishDungeon,
   buyRiftTalent,
   finishRun,
@@ -191,6 +194,9 @@ export interface GameStore {
   /** Config for the adventure the hero stands at, as a live dungeon. */
   dungeonPrepare: () => RunConfig | null;
   dungeonFinish: (result: RunResult) => AdventureReward | null;
+  /** Wochenboss: start and book (the first win of the week opens a reward reveal). */
+  weeklyPrepare: (hero: string) => RunConfig | null;
+  weeklyFinish: (result: RunResult) => WeeklyReward | null;
   /** Runs a village action; a failed result becomes a warning line in the feed. */
   village: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
@@ -608,6 +614,27 @@ export const useGame = create<GameStore>()((set, get) => {
         reward = finishDungeon(s, result, defaultRng, emit);
       });
       return reward;
+    },
+    weeklyPrepare: (hero) => {
+      let cfg: RunConfig | null = null;
+      mutate((s) => {
+        cfg = prepareWeekly(s, hero, Date.now(), defaultRng);
+      });
+      return cfg;
+    },
+    weeklyFinish: (result) => {
+      let reward: WeeklyReward | null = null;
+      mutate((s, emit) => {
+        reward = finishWeekly(s, result, Date.now(), defaultRng, emit);
+      });
+      const r = reward as WeeklyReward | null;
+      if (r?.lines)
+        showReward(
+          r.firstWin ? 'Wochenboss besiegt!' : 'Mutiger Versuch',
+          r.firstWin ? '🦹' : '🎖️',
+          r.lines,
+        );
+      return r;
     },
     village: (fn) => {
       let result: VResult | void = undefined;

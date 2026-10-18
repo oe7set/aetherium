@@ -214,6 +214,8 @@ export interface RunConfig {
   minutes?: number;
   /** Extra enemy HP/damage multiplier. */
   difficulty?: number;
+  /** Wochenboss: booked by `finishWeekly` instead of the adventure. */
+  trial?: boolean;
 }
 
 /** Minutes until the final boss of a run. */

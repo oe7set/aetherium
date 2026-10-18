@@ -25,4 +25,5 @@ export * from './skills';
 export * from './state';
 export * from './village';
 export * from './villageWorld';
+export * from './weekly';
 export * from './xp';

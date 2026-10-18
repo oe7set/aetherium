@@ -21,7 +21,9 @@ import {
   riftTalentLevel,
   runStats,
   weaponUnlocked,
+  weeklyChallenge,
 } from '../../engine';
+import { WEEKLY_MINUTES } from '../../data/weekly';
 import { createRun } from '../../rift/sim';
 import { useGame } from '../../store/gameStore';
 import { AdventuresView, HeroView } from './HeroView';
@@ -85,6 +87,73 @@ function fmt(seconds: number): string {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 }
 
+function WeeklyCard({ hero }: { hero: string }) {
+  useGame(
+    (s) => `${s.game.rift.weekly.week}|${s.game.rift.weekly.attempts}|${s.game.rift.weekly.won}`,
+  );
+  const prepare = useGame((s) => s.weeklyPrepare);
+  const game = useGame.getState().game;
+  const now = Date.now();
+  const c = weeklyChallenge(game, now);
+  const w = game.rift.weekly.week === c.week ? game.rift.weekly : null;
+  const biome = BIOMES.find((b) => b.id === c.biome)!;
+  const check = canStartRun(game, hero, c.biome);
+  const start = () => {
+    const cfg = prepare(hero);
+    if (cfg) useRiftRun.getState().setRun(createRun(cfg));
+  };
+  return (
+    <div className={`weekly-card${w?.won ? ' done' : ''}`}>
+      <div className="weekly-head">
+        <span className="weekly-icon">{w?.won ? '🏆' : '🦹'}</span>
+        <div>
+          <strong>Wochenboss</strong>
+          <small className="muted">
+            {biome.icon} {biome.name} · noch {weekLeft(now)} · Sieg Nr. {game.rift.weekly.wins + 1}
+          </small>
+        </div>
+      </div>
+      <p className="weekly-mut">
+        <b>
+          {c.mutator.icon} {c.mutator.name}:
+        </b>{' '}
+        {c.mutator.desc}
+      </p>
+      <p className="small muted">
+        {WEEKLY_MINUTES} Minuten, Zwischenboss zur Halbzeit, am Ende der große Boss. Gegnerstärke ×
+        {c.difficulty.toFixed(2)}.{' '}
+        {w?.won
+          ? 'Diese Woche bezwungen – Wiederholen bringt normale Riss-Beute.'
+          : 'Erster Sieg der Woche: legendäre Heldenausrüstung, Essenz, Gold & ein besonderer Avatar.'}
+      </p>
+      {w && w.attempts > 0 && (
+        <p className="small">
+          Versuche: {w.attempts} · Bestzeit {fmt(w.bestTime)} · 💀 {w.bestKills}
+        </p>
+      )}
+      <button className="btn btn-primary" disabled={!check.ok} onClick={start}>
+        {check.ok
+          ? w?.won
+            ? 'Nochmal antreten'
+            : 'Zum Wochenboss'
+          : check.reason === 'dead'
+            ? 'Held erholt sich noch'
+            : check.reason === 'busy'
+              ? 'Held ist unterwegs'
+              : 'Kampfstil gesperrt'}
+      </button>
+    </div>
+  );
+}
+
+function weekLeft(now: number): string {
+  const d = new Date(now);
+  const day = (d.getDay() + 6) % 7;
+  const end = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day + 7).getTime();
+  const hours = Math.max(0, Math.floor((end - now) / 3600000));
+  return hours >= 24 ? `${Math.floor(hours / 24)} T ${hours % 24} h` : `${hours} h`;
+}
+
 function StartView() {
   const game = useGame.getState().game;
   const prepare = useGame((s) => s.riftPrepare);
@@ -115,6 +184,8 @@ function StartView() {
           </p>
         </div>
       </div>
+
+      <WeeklyCard hero={hero} />
 
       <h4 className="rift-h4">Kampfstil von {game.hero.name}</h4>
       <div className="hero-grid">

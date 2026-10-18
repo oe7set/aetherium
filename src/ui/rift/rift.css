@@ -914,3 +914,42 @@
   font-weight: 700;
   color: var(--gold);
 }
+
+/* --- Wochenboss ------------------------------------------------------------------------------ */
+.weekly-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 90, 120, 0.55);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(255, 60, 100, 0.28), transparent 60%),
+    linear-gradient(160deg, rgba(60, 16, 40, 0.92), rgba(14, 10, 26, 0.95));
+  box-shadow: 0 0 22px rgba(255, 60, 100, 0.25);
+}
+.weekly-card.done {
+  border-color: var(--gold);
+  box-shadow: 0 0 18px rgba(255, 209, 102, 0.3);
+}
+.weekly-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.weekly-head > div {
+  display: flex;
+  flex-direction: column;
+}
+.weekly-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 10px rgba(255, 80, 120, 0.7));
+}
+.weekly-mut {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.weekly-card p {
+  margin: 0;
+}

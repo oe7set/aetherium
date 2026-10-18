@@ -194,6 +194,13 @@ export function QuickNav() {
         ui: h('start'),
       },
       {
+        icon: '🦹',
+        label: 'Wochenboss',
+        group: 'Held',
+        keywords: 'woche boss event prüfung',
+        ui: h('start'),
+      },
+      {
         icon: '✨',
         label: 'Riss-Talente',
         group: 'Held',

@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.8.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.9.0**.
 
 ## 1. Der große Kreislauf
 
@@ -31,20 +31,21 @@
 
 ## 2. Systeme im Einzelnen
 
-| System                      | Daten                                                               | Engine                                       | UI                             |
-| --------------------------- | ------------------------------------------------------------------- | -------------------------------------------- | ------------------------------ |
-| Insel-Skills & Aktionen     | `data/skills.ts`, `actions.ts`, `expansion.ts`, je Skill eine Datei | `engine/actions.ts` (`advance`)              | `ui/skills/`, `scene/` (3D)    |
-| Kampf & Dungeons (Insel)    | `data/combat.ts`                                                    | `engine/combat.ts`                           | `ui/combat/`                   |
-| Forschung, Beete, Helfer    | `data/science.ts`                                                   | `engine/science.ts`                          | `ui/science/`                  |
-| Markt, Krämer, Werkzeuge    | `data/tools.ts`, `data/balance.ts`                                  | `engine/shop.ts`, `market.ts`                | `ui/inventory/`                |
-| Dorf & Weltkarte            | `data/village.ts`                                                   | `engine/village.ts`, `villageWorld.ts`       | `ui/village/`                  |
-| Held & Abenteuer            | `data/hero.ts`                                                      | `engine/hero.ts`                             | `ui/rift/HeroView.tsx`         |
-| Ätherriss                   | `data/rift.ts`                                                      | `rift/sim.ts` (Simulation), `engine/rift.ts` | `ui/rift/`                     |
-| Belohnungs-Schicht          | `data/progress.ts`                                                  | `engine/progress.ts`                         | `ui/rewards/`                  |
-| Sammelbuch                  | `data/collections.ts`                                               | `engine/collections.ts`                      | `ui/inventory/CollectionPanel` |
-| Haustiere, Quests, Aufträge | `data/meta.ts`                                                      | `engine/meta.ts`                             | `ui/quests/`                   |
-| Erfolge                     | `data/achievements.ts`                                              | `engine/achievements.ts`                     | `ui/menu/`                     |
-| Prestige                    | `data/prestige.ts`                                                  | `engine/prestige.ts` (`resetRun`)            | `ui/menu/`                     |
+| System                      | Daten                                                               | Engine                                       | UI                               |
+| --------------------------- | ------------------------------------------------------------------- | -------------------------------------------- | -------------------------------- |
+| Insel-Skills & Aktionen     | `data/skills.ts`, `actions.ts`, `expansion.ts`, je Skill eine Datei | `engine/actions.ts` (`advance`)              | `ui/skills/`, `scene/` (3D)      |
+| Kampf & Dungeons (Insel)    | `data/combat.ts`                                                    | `engine/combat.ts`                           | `ui/combat/`                     |
+| Forschung, Beete, Helfer    | `data/science.ts`                                                   | `engine/science.ts`                          | `ui/science/`                    |
+| Markt, Krämer, Werkzeuge    | `data/tools.ts`, `data/balance.ts`                                  | `engine/shop.ts`, `market.ts`                | `ui/inventory/`                  |
+| Dorf & Weltkarte            | `data/village.ts`                                                   | `engine/village.ts`, `villageWorld.ts`       | `ui/village/`                    |
+| Held & Abenteuer            | `data/hero.ts`                                                      | `engine/hero.ts`                             | `ui/rift/HeroView.tsx`           |
+| Ätherriss                   | `data/rift.ts`                                                      | `rift/sim.ts` (Simulation), `engine/rift.ts` | `ui/rift/`                       |
+| Belohnungs-Schicht          | `data/progress.ts`                                                  | `engine/progress.ts`                         | `ui/rewards/`                    |
+| Sammelbuch                  | `data/collections.ts`                                               | `engine/collections.ts`                      | `ui/inventory/CollectionPanel`   |
+| Wochenboss                  | `data/weekly.ts`                                                    | `engine/weekly.ts`                           | `ui/rift/RiftPanel` (WeeklyCard) |
+| Haustiere, Quests, Aufträge | `data/meta.ts`                                                      | `engine/meta.ts`                             | `ui/quests/`                     |
+| Erfolge                     | `data/achievements.ts`                                              | `engine/achievements.ts`                     | `ui/menu/`                       |
+| Prestige                    | `data/prestige.ts`                                                  | `engine/prestige.ts` (`resetRun`)            | `ui/menu/`                       |
 
 ## 3. Verbindungen (wer gibt wem was?)
 
@@ -79,6 +80,13 @@
 - Riss-Läufe geben Helden-XP und kosten Gesundheit.
 - Abenteuer sind Riss-Dungeons: Boss in der Mitte, Wächter am Ende.
 
+**Wochenboss (Riss + Belohnungs-Schicht)**
+
+- Jede Woche eine feste Prüfung im schwersten offenen Biom mit einer Wochenregel (Mutator, verändert Startwerte und
+  Gegnerstärke). Läuft als Riss-Lauf im Dungeon-Modus (`trial: true`), bucht normale Riss-Beute über `finishRun`.
+- Erster Sieg der Woche: großes `applyReward` (legendäres Heldenitem, Avatar 🦹); jeder Sieg macht den nächsten
+  Boss etwas stärker. Statistik `weeklyWins` → Erfolge und Ruhmesleiter.
+
 **Riss → Insel**
 
 - Beute aus dem Riss: Äther, Manakristalle, Leerensplitter, Dungeon-Truhen.
@@ -108,7 +116,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Wöchentlicher Riss-Boss (Event mit Rangliste gegen eigene Bestzeit, besondere Belohnung).
+- [ ] Wochenboss ausbauen: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses, HUD-Hinweis im Lauf.
 - [ ] Querschnitts-Quests: Ketten, die Insel, Dorf, Held und Riss verbinden (PLAN-2 Phase 11).
 - [ ] Invasionen stärker verzahnen: Verteidigung mit Held und Riss-Talenten, Belohnung für gewonnene Abwehr.
 - [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.

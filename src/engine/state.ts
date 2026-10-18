@@ -317,6 +317,17 @@ export interface RiftState {
   biome: string;
   /** Seconds until the next echo run. */
   echo: number;
+  weekly: WeeklyState;
+}
+
+/** Wochenboss: progress in the current week plus the lifetime count of weekly victories. */
+export interface WeeklyState {
+  week: string;
+  attempts: number;
+  won: boolean;
+  bestTime: number;
+  bestKills: number;
+  wins: number;
 }
 
 export interface BuffState {
@@ -379,7 +390,7 @@ export interface GameState {
   rift: RiftState;
 }
 
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 
 export function defaultSettings(): Settings {
   return {
@@ -494,6 +505,7 @@ export function defaultRift(): RiftState {
     hero: 'farmer',
     biome: 'meadow',
     echo: 600,
+    weekly: { week: '', attempts: 0, won: false, bestTime: 0, bestKills: 0, wins: 0 },
   };
 }
 
@@ -566,6 +578,7 @@ export function cloneState(s: GameState): GameState {
       talents: { ...s.rift.talents },
       best: { ...s.rift.best },
       evolutions: [...s.rift.evolutions],
+      weekly: { ...s.rift.weekly },
     },
   };
 }

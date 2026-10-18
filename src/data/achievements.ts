@@ -67,6 +67,18 @@ const STAT_SERIES: StatSeries[] = [
     reward: (i) => ({ xp: 0.01 * (i + 1) }),
   },
   {
+    key: 'weeklyWins',
+    icon: '🦹',
+    desc: (n) => `Besiege ${n} Wochenbosse.`,
+    steps: [
+      [1, 'Wochenend-Held·in'],
+      [4, 'Monatsbeste·r'],
+      [12, 'Quartalsschreck'],
+      [52, 'Ein ganzes Jahr Boss-Montag'],
+    ],
+    reward: (i) => ({ 'combat.damage': 0.01 * (i + 1) }),
+  },
+  {
     key: 'albumItems',
     icon: '📗',
     desc: (n) => `Finde ${n} verschiedene Gegenstände.`,

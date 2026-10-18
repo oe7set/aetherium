@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getItem } from '../../data';
 import { HERO_ITEMS, TIER_NAMES } from '../../data/hero';
 import { BIOMES, RIFT_PASSIVES } from '../../data/rift';
-import type { AdventureReward, RiftReward } from '../../engine';
+import type { AdventureReward, RiftReward, WeeklyReward } from '../../engine';
 import {
   banishChoice,
   chooseUpgrade,
@@ -45,6 +45,7 @@ export default function RiftOverlay() {
   const [joy, setJoy] = useState<{ ox: number; oy: number; x: number; y: number } | null>(null);
   const [reward, setReward] = useState<RiftReward | null>(null);
   const [advReward, setAdvReward] = useState<AdventureReward | null>(null);
+  const [weekly, setWeekly] = useState<WeeklyReward | null>(null);
   const finished = useRef(false);
 
   // Game loop.
@@ -165,7 +166,11 @@ export default function RiftOverlay() {
     if (!run || finished.current) return;
     if (run.phase === 'dead' || run.phase === 'won') {
       finished.current = true;
-      if (run.config.mode === 'dungeon')
+      if (run.config.trial) {
+        const w = useGame.getState().weeklyFinish(runResult(run));
+        setWeekly(w);
+        setReward(w?.run ?? null);
+      } else if (run.config.mode === 'dungeon')
         setAdvReward(useGame.getState().dungeonFinish(runResult(run)));
       else setReward(useGame.getState().riftFinish(runResult(run)));
     }
@@ -250,7 +255,9 @@ export default function RiftOverlay() {
           </div>
         </div>
       )}
-      {over && <Results run={run} reward={reward} advReward={advReward} onLeave={leave} />}
+      {over && (
+        <Results run={run} reward={reward} advReward={advReward} weekly={weekly} onLeave={leave} />
+      )}
     </div>
   );
 }
@@ -489,37 +496,50 @@ function Results({
   run,
   reward,
   advReward,
+  weekly,
   onLeave,
 }: {
   run: RunState;
   reward: RiftReward | null;
   advReward: AdventureReward | null;
+  weekly: WeeklyReward | null;
   onLeave: () => void;
 }) {
   const won = run.phase === 'won';
-  const dungeon = run.config.mode === 'dungeon';
+  const trial = run.config.trial === true;
+  const dungeon = run.config.mode === 'dungeon' && !trial;
   const biome = BIOMES.find((b) => b.id === run.config.biome);
   return (
     <div className="rift-modal results">
       <div className={`rift-card ${won ? 'won' : ''}`}>
         <div className="chest-icon">{won ? '🏆' : '💀'}</div>
         <h2 className="rift-title">
-          {dungeon
+          {trial
             ? won
-              ? 'Dungeon gemeistert!'
-              : 'Rückzug!'
-            : won
-              ? 'Prüfung bestanden!'
-              : 'Durchgefallen'}
+              ? 'Wochenboss besiegt!'
+              : 'Der Boss lacht noch'
+            : dungeon
+              ? won
+                ? 'Dungeon gemeistert!'
+                : 'Rückzug!'
+              : won
+                ? 'Prüfung bestanden!'
+                : 'Durchgefallen'}
         </h2>
         <p className="rift-sub">
-          {dungeon
+          {trial
             ? won
-              ? 'Der Wächter liegt am Boden, die Schatzkammer steht offen.'
-              : 'Dein Held schleppt sich verwundet zurück. Ein Teil der Beute bleibt trotzdem.'
-            : won
-              ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
-              : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
+              ? weekly?.firstWin
+                ? 'Die Belohnung der Woche gehört dir. Nächste Woche wartet ein neuer Boss – etwas stärker.'
+                : 'Schon wieder? Der Boss beantragt Urlaub. Die Wochenbelohnung gab es bereits.'
+              : 'Diesmal nicht. Versuche sind unbegrenzt – die Wochenbelohnung wartet.'
+            : dungeon
+              ? won
+                ? 'Der Wächter liegt am Boden, die Schatzkammer steht offen.'
+                : 'Dein Held schleppt sich verwundet zurück. Ein Teil der Beute bleibt trotzdem.'
+              : won
+                ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
+                : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
         </p>
         <div className="result-grid">
           <div>

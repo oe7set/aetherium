@@ -111,6 +111,8 @@ export const MIGRATIONS: Record<number, Migration> = {
     const stats = isRecord(data.stats) ? { ...data.stats, albumItems: found.length } : data.stats;
     return { ...data, stats, progress: { ...progress, found, sets: [] } };
   },
+  // 12 → 13: Wochenboss (hydrate fills the defaults).
+  12: (data) => data,
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -388,6 +390,20 @@ function hydrateRift(v: unknown, fallback: RiftState): RiftState {
         ? v.biome
         : fallback.biome,
     echo: Math.max(0, num(v.echo, fallback.echo)),
+    weekly: hydrateWeekly(v.weekly, fallback.weekly),
+  };
+}
+
+function hydrateWeekly(v: unknown, fallback: RiftState['weekly']): RiftState['weekly'] {
+  if (!isRecord(v)) return { ...fallback };
+  const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? Math.max(0, x) : 0);
+  return {
+    week: typeof v.week === 'string' ? v.week : '',
+    attempts: num(v.attempts),
+    won: v.won === true,
+    bestTime: num(v.bestTime),
+    bestKills: num(v.bestKills),
+    wins: num(v.wins),
   };
 }
 
