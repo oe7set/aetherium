@@ -327,7 +327,7 @@ export function grantAdventure(
 ): AdventureReward {
   const h = s.hero;
   const mult = (a.hard ? 2 : 1) * quality * (success ? 1 : 0.3);
-  const xp = Math.round(40 * a.level * mult);
+  const xp = Math.round(80 * a.level * mult);
   gainHeroXp(s, xp, emit);
   const loot = 1 + heroStat(s, 'loot');
   let item: HeroItem | null = null;

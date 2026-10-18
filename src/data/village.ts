@@ -18,11 +18,13 @@ export const V_RES_INFO: Record<
 
 /** Game speed: production ×SPEED, build/train/travel times ÷SPEED (like a speed server). */
 export const SPEED = 10;
+/** Production (and crop upkeep) tempo – faster than build times so the village never stalls. */
+export const PROD_SPEED = 20;
 
 // --- Resource fields ------------------------------------------------------------------------------
 
 /** Base production per hour by field level (before SPEED). */
-export const FIELD_PROD = [4, 10, 18, 30, 46, 68, 96, 132, 178, 236, 310, 400, 520, 670, 860, 1100];
+export const FIELD_PROD = [10, 18, 28, 42, 60, 82, 110, 146, 190, 245, 310, 400, 520, 670, 860, 1100];
 export const FIELD_MAX = 10;
 export const CAPITAL_FIELD_MAX = 15;
 

@@ -66,3 +66,43 @@ describe('Balancing-Kurve', () => {
     expect(rows.length).toBe(4);
   });
 });
+
+describe('Dorf-Tempo (Bot spielt 10 Stunden)', () => {
+  it('erste Ziele kommen zügig: Felder ≥1 < 3 h, Kaserne < 8 h', async () => {
+    const e = await import('../src/engine');
+    const { gameWith } = await import('./helpers');
+    const s = gameWith();
+    const v = e.activeVillage(s);
+    const rng = e.createRng(1);
+    let allFields = Infinity;
+    let barracks = Infinity;
+    const order = ['main', 'warehouse', 'granary', 'rally', 'barracks', 'academy', 'market'];
+    for (let t = 0; t < 10 * 3600; t += 60) {
+      for (let k = 0; k < 3; k++) {
+        if (e.netCrop(s, v) < 150) {
+          const crop = v.fields
+            .map((l, i) => [l, i] as const)
+            .filter(([, i]) => e.fieldType(v, i) === 'crop')
+            .sort((a, b) => a[0] - b[0])[0];
+          if (crop && e.canUpgradeField(s, v, crop[1]).ok) e.upgradeField(s, v.id, crop[1]);
+        }
+        if (Math.max(v.res.wood, v.res.clay, v.res.iron) > e.storageCap(v) * 0.8)
+          e.upgradeBuilding(s, v.id, 'warehouse');
+        const cheapest = v.fields
+          .map((_, i) => i)
+          .sort((a, b) => (v.fields[a] ?? 0) - (v.fields[b] ?? 0))[0]!;
+        if (e.canUpgradeField(s, v, cheapest).ok) e.upgradeField(s, v.id, cheapest);
+        for (const id of order)
+          if (e.canUpgradeBuilding(s, v, id).ok) {
+            e.upgradeBuilding(s, v.id, id);
+            break;
+          }
+      }
+      e.advance(s, 60, rng, () => {});
+      if (allFields === Infinity && v.fields.every((l) => l >= 1)) allFields = t / 3600;
+      if (barracks === Infinity && (v.buildings.barracks ?? 0) >= 1) barracks = t / 3600;
+    }
+    expect(allFields).toBeLessThan(3);
+    expect(barracks).toBeLessThan(8);
+  }, 60000);
+});

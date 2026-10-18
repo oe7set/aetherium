@@ -35,7 +35,7 @@ export const MAX_ATTR = 100;
 export const HERO_MAX_LEVEL = 100;
 
 export function heroXpForLevel(level: number): number {
-  return Math.round(60 + level * 40 + level * level * 4);
+  return Math.round(50 + level * 30 + level * level * 3);
 }
 
 export const HERO_AVATARS = ['🧑‍🚀', '🧙', '🥷', '🧝', '🧛', '🤴', '👸', '🦸', '🧑‍🔬', '🧔'];

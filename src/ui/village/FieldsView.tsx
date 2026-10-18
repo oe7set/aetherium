@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FIELD_PROD, SPEED, V_RES_INFO } from '../../data/village';
+import { FIELD_PROD, PROD_SPEED, V_RES_INFO } from '../../data/village';
 import {
   canUpgradeField,
   fieldCost,
@@ -89,8 +89,8 @@ function FieldDetail({
   const next = plannedLevel(v, 'field', String(index)) + 1;
   const max = next > fieldMax(v);
   const check = canUpgradeField(game, v, index);
-  const prodNow = (FIELD_PROD[level] ?? 0) * SPEED;
-  const prodNext = (FIELD_PROD[Math.min(FIELD_PROD.length - 1, next)] ?? 0) * SPEED;
+  const prodNow = (FIELD_PROD[level] ?? 0) * PROD_SPEED;
+  const prodNext = (FIELD_PROD[Math.min(FIELD_PROD.length - 1, next)] ?? 0) * PROD_SPEED;
   return (
     <div className="v-detail glass">
       <div className="v-detail-head">

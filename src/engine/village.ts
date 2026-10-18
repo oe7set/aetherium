@@ -19,6 +19,7 @@ import {
   MAX_VILLAGES,
   OASIS_BONUS,
   OASIS_SLOTS,
+  PROD_SPEED,
   SETTLERS_PER_VILLAGE,
   SMITHY_BONUS,
   SPEED,
@@ -156,7 +157,7 @@ export function upkeep(s: GameState, v: Village): number {
   let troops = 0;
   for (const [id, n] of Object.entries(allTroops(s, v)))
     troops += n * (TROOP_MAP.get(id)?.upkeep ?? 0);
-  return (population(v) + troops) * SPEED;
+  return (population(v) + troops) * PROD_SPEED;
 }
 
 /** Gross production per hour for each resource. */
@@ -172,7 +173,7 @@ export function production(s: GameState, v: Village): VCostState {
     if (t?.bonus) bonus[t.bonus] += OASIS_BONUS;
   }
   const hero = heroResourceBonus(s, v.id);
-  for (const r of V_RESOURCES) out[r] = out[r] * SPEED * (1 + bonus[r] + hero);
+  for (const r of V_RESOURCES) out[r] = out[r] * PROD_SPEED * (1 + bonus[r] + hero);
   return out;
 }
 
@@ -253,7 +254,7 @@ export function canUpgradeField(s: GameState, v: Village, index: number): VResul
   if (v.queue.field.length >= QUEUE_SIZE) return fail('queue');
   if (!canPay(v, fieldCost(v, index, next))) return fail('resources');
   const res = fieldType(v, index);
-  if (res !== 'crop' && netCrop(s, v) - FIELD_DEFS[res].pop * SPEED < 0) return fail('crop');
+  if (res !== 'crop' && netCrop(s, v) - FIELD_DEFS[res].pop * PROD_SPEED < 0) return fail('crop');
   return OK;
 }
 
@@ -277,7 +278,7 @@ export function canUpgradeBuilding(s: GameState, v: Village, id: string): VResul
   if (next > def.maxLevel) return fail('max');
   if (v.queue.center.length >= QUEUE_SIZE) return fail('queue');
   if (!canPay(v, buildingCost(id, next))) return fail('resources');
-  if (netCrop(s, v) - def.pop * SPEED < 0) return fail('crop');
+  if (netCrop(s, v) - def.pop * PROD_SPEED < 0) return fail('crop');
   return OK;
 }
 
@@ -407,7 +408,7 @@ export function canTrain(s: GameState, v: Village, troopId: string, count: numbe
   if (!troopUnlocked(s, t)) return fail('research');
   if (buildingLevel(v, t.building) < t.buildingLevel) return fail('requires');
   if (maxTrainable(v, t) < count) return fail('resources');
-  if (netCrop(s, v) - t.upkeep * count * SPEED < 0) return fail('crop');
+  if (netCrop(s, v) - t.upkeep * count * PROD_SPEED < 0) return fail('crop');
   return OK;
 }
 
