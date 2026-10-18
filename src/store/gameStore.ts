@@ -1,6 +1,6 @@
 import Decimal from 'break_eternity.js';
 import { create } from 'zustand';
-import { getAction, getItem, getTool } from '../data';
+import { getAction, getItem, getTool, type EquipSlot } from '../data';
 import { BALANCE } from '../data/balance';
 import {
   RANDOM_CHATTER,
@@ -13,6 +13,13 @@ import {
 import {
   advance,
   bestAvailableAction,
+  eat,
+  equipItem,
+  startCombat,
+  stopCombat,
+  unequip as unequipSlot,
+  type CombatSettings,
+  type EquipResult,
   checkAchievementsFast,
   applyOfflineProgress,
   buyItem,
@@ -43,7 +50,7 @@ import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './fe
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
 export type TabId = 'world' | 'skills' | 'inventory' | 'research' | 'menu';
-export type InventorySegment = 'items' | 'market' | 'shop' | 'tools';
+export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools';
 
 const FEED_LIMIT = 60;
 const POPUP_LIMIT = 8;
@@ -83,6 +90,12 @@ export interface GameStore {
   equipTool: (toolId: string) => void;
   buySlot: () => void;
   use: (item: string) => void;
+  fight: (kind: 'monster' | 'dungeon', target: string) => void;
+  flee: () => void;
+  equip: (item: string) => void;
+  unequip: (slot: EquipSlot) => void;
+  eatNow: () => void;
+  setCombatSetting: <K extends keyof CombatSettings>(key: K, value: CombatSettings[K]) => void;
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
@@ -263,12 +276,43 @@ export const useGame = create<GameStore>()((set, get) => {
         consumeItem(s, item, defaultRng, emit);
       }),
 
+    fight: (kind, target) =>
+      mutate((s, emit) => {
+        startCombat(s, kind, target, emit);
+      }),
+    flee: () => mutate((s, emit) => stopCombat(s, emit)),
+    equip: (item) => {
+      let res = { ok: true } as EquipResult;
+      mutate((s) => {
+        res = equipItem(s, item);
+      });
+      if (!res.ok) get().pushFeed(`❌ ${t(`equipFail.${res.reason}` as MessageKey)}`, 'warn');
+    },
+    unequip: (slot) => {
+      let res = { ok: true } as EquipResult;
+      mutate((s) => {
+        res = unequipSlot(s, slot);
+      });
+      if (!res.ok) get().pushFeed(`❌ ${t(`equipFail.${res.reason}` as MessageKey)}`, 'warn');
+    },
+    eatNow: () =>
+      mutate((s, emit) => {
+        eat(s, emit);
+      }),
+    setCombatSetting: (key, value) =>
+      mutate((s) => {
+        s.combatSettings = { ...s.combatSettings, [key]: value };
+      }),
     setSetting: (key, value) =>
       mutate((s) => {
         s.settings = { ...s.settings, [key]: value };
       }),
     setUi: (patch) => set({ ui: { ...get().ui, ...patch } }),
     tapStation: (skill) => {
+      if (skill === 'combat') {
+        get().openSkill('melee');
+        return;
+      }
       const best = bestAvailableAction(get().game, skill);
       if (best) get().start(best.id);
       else get().openSkill(skill);

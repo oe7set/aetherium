@@ -22,6 +22,7 @@ export function useCounterPulse(
 
 /** Current active skill, read without subscribing React. */
 export function activeSkillNow(): string | null {
-  const a = useGame.getState().game.active;
-  return a ? getAction(a.actionId).skill : null;
+  const { active, combat } = useGame.getState().game;
+  if (combat) return 'combat';
+  return active ? getAction(active.actionId).skill : null;
 }

@@ -28,6 +28,42 @@ function Tool({ skill }: { skill: string | null }) {
       </group>
     );
   }
+  if (skill === 'combat-melee') {
+    return (
+      <group position={[0, -0.55, 0.15]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[0, 0.35, 0]}>
+          <boxGeometry args={[0.06, 0.8, 0.02]} />
+          <meshStandardMaterial color="#c9ced6" metalness={0.8} roughness={0.25} />
+        </mesh>
+        <mesh position={[0, -0.05, 0]}>
+          <boxGeometry args={[0.25, 0.05, 0.05]} />
+          <meshStandardMaterial color="#7a5536" />
+        </mesh>
+      </group>
+    );
+  }
+  if (skill === 'combat-ranged') {
+    return (
+      <mesh position={[0, -0.5, 0.15]} rotation={[0, 0, 0]}>
+        <torusGeometry args={[0.35, 0.025, 4, 10, Math.PI]} />
+        <meshStandardMaterial color="#8a6440" />
+      </mesh>
+    );
+  }
+  if (skill === 'combat-magic') {
+    return (
+      <group position={[0, -0.55, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.03, 0.03, 1.1, 5]} />
+          <meshStandardMaterial color="#5a3b22" />
+        </mesh>
+        <mesh position={[0, 0.6, 0]}>
+          <octahedronGeometry args={[0.1, 0]} />
+          <meshStandardMaterial color="#7d5fd6" emissive="#7d5fd6" emissiveIntensity={1.5} />
+        </mesh>
+      </group>
+    );
+  }
   if (skill === 'smithing') {
     return (
       <group position={[0, -0.55, 0.1]} rotation={[Math.PI / 2, 0, 0]}>

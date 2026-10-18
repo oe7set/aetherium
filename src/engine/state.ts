@@ -2,6 +2,8 @@ import Decimal from 'break_eternity.js';
 import { BALANCE } from '../data/balance';
 import { SKILLS } from '../data/skills';
 import { STARTER_TOOLS } from '../data/tools';
+import type { EquipSlot } from '../data/types';
+import { xpForLevel } from './xp';
 
 export type NumberFormat = 'short' | 'scientific' | 'engineering';
 export type GraphicsSetting = 'auto' | 'low' | 'medium' | 'high';
@@ -32,6 +34,31 @@ export interface MarketState {
   trend: { item: string; mult: number; remaining: number } | null;
   /** Seconds until the next trend roll. */
   nextTrend: number;
+}
+
+export interface CombatState {
+  kind: 'monster' | 'dungeon';
+  /** Monster id or dungeon id. */
+  target: string;
+  /** Position inside a dungeon. */
+  index: number;
+  monster: string;
+  monsterHp: number;
+  /** Boss phase index. */
+  phase: number;
+  /** Seconds until the next monster spawns (0 while fighting). */
+  respawn: number;
+  playerTimer: number;
+  monsterTimer: number;
+}
+
+export interface CombatSettings {
+  /** Where combat XP goes: the weapon's style or defence. */
+  training: 'style' | 'defence';
+  /** Eat when HP drops to this fraction of max (0 = never). */
+  autoEat: number;
+  /** Preferred food; null = best available. */
+  food: string | null;
 }
 
 export interface BuffState {
@@ -71,9 +98,14 @@ export interface GameState {
   buffs: BuffState[];
   /** Active-play seconds until the next lucky event. */
   nextLucky: number;
+  /** Current hit points (may be fractional while regenerating). */
+  hp: number;
+  equipment: Partial<Record<EquipSlot, string>>;
+  combat: CombatState | null;
+  combatSettings: CombatSettings;
 }
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 export function defaultSettings(): Settings {
   return {
@@ -86,9 +118,15 @@ export function defaultSettings(): Settings {
   };
 }
 
+export function defaultCombatSettings(): CombatSettings {
+  return { training: 'style', autoEat: 0.5, food: null };
+}
+
 export function newGame(now: number = Date.now()): GameState {
   const skills: Record<string, SkillState> = {};
   for (const s of SKILLS) skills[s.id] = { xp: 0 };
+  // Like in old-school MMOs you start with 10 hit points.
+  skills.hitpoints = { xp: xpForLevel(10) };
   return {
     version: SAVE_VERSION,
     createdAt: now,
@@ -108,6 +146,10 @@ export function newGame(now: number = Date.now()): GameState {
     achievements: [],
     buffs: [],
     nextLucky: 240,
+    hp: 10,
+    equipment: {},
+    combat: null,
+    combatSettings: defaultCombatSettings(),
   };
 }
 
@@ -130,6 +172,9 @@ export function cloneState(s: GameState): GameState {
     },
     achievements: [...s.achievements],
     buffs: s.buffs.map((b) => ({ ...b })),
+    equipment: { ...s.equipment },
+    combat: s.combat ? { ...s.combat } : null,
+    combatSettings: { ...s.combatSettings },
   };
 }
 

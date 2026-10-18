@@ -1,3 +1,5 @@
+import { COMBAT_ITEMS } from './combat';
+import { CRAFTING_ITEMS } from './crafting';
 import { FISHING_ITEMS } from './fishing';
 import { SMITHING_ITEMS } from './smithing';
 import type { ItemDef } from './types';
@@ -263,6 +265,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'baked_apple',
+    heal: 2,
     name: 'Bratapfel',
     icon: '🍎',
     category: 'food',
@@ -271,6 +274,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'mushroom_pan',
+    heal: 3,
     name: 'Pilzpfanne',
     icon: '🍳',
     category: 'food',
@@ -279,6 +283,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'fried_egg',
+    heal: 4,
     name: 'Spiegelei',
     icon: '🍳',
     category: 'food',
@@ -287,6 +292,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'baked_potato',
+    heal: 4,
     name: 'Ofenkartoffel',
     icon: '🥔',
     category: 'food',
@@ -295,6 +301,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'roast_chicken',
+    heal: 6,
     name: 'Brathähnchen',
     icon: '🍗',
     category: 'food',
@@ -303,6 +310,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'bread',
+    heal: 5,
     name: 'Brot',
     icon: '🍞',
     category: 'food',
@@ -311,6 +319,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'steak',
+    heal: 9,
     name: 'Steak',
     icon: '🥩',
     category: 'food',
@@ -319,6 +328,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'mushroom_stew',
+    heal: 12,
     name: 'Pilzeintopf',
     icon: '🍲',
     category: 'food',
@@ -327,6 +337,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'apple_pie',
+    heal: 15,
     name: 'Apfelkuchen',
     icon: '🥧',
     category: 'food',
@@ -335,6 +346,7 @@ const FOOD: ItemDef[] = [
   },
   {
     id: 'feast',
+    heal: 30,
     name: 'Festmahl der Gelehrten',
     icon: '🍱',
     category: 'food',
@@ -437,4 +449,6 @@ export const ITEMS: ItemDef[] = [
   ...MISC,
   ...FISHING_ITEMS,
   ...SMITHING_ITEMS,
+  ...CRAFTING_ITEMS,
+  ...COMBAT_ITEMS,
 ];

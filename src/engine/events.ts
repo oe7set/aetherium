@@ -1,6 +1,7 @@
 import type { SkillId } from '../data/types';
 
 export type StopReason = 'noInputs' | 'inventoryFull' | 'noFire' | 'levelTooLow' | 'manual';
+export type CombatStopReason = 'manual' | 'noAmmo' | 'noRunes' | 'died';
 
 /** Everything the engine wants the UI (feed, popups, sounds) to know about. */
 export type GameEvent =
@@ -22,7 +23,16 @@ export type GameEvent =
   | { type: 'buffStarted'; id: string }
   | { type: 'buffExpired'; id: string }
   | { type: 'marketTrend'; item: string; mult: number }
-  | { type: 'toolUnlocked'; tool: string };
+  | { type: 'toolUnlocked'; tool: string }
+  | { type: 'combatStarted'; monster: string }
+  | { type: 'monsterSpawned'; monster: string }
+  | { type: 'combatStopped'; monster: string; reason: CombatStopReason }
+  | { type: 'hit'; target: 'monster' | 'player'; damage: number }
+  | { type: 'monsterKilled'; monster: string }
+  | { type: 'bossPhase'; monster: string; phase: number }
+  | { type: 'dungeonCompleted'; dungeon: string }
+  | { type: 'playerDied'; monster: string }
+  | { type: 'ate'; item: string; heal: number };
 
 export type Emit = (event: GameEvent) => void;
 

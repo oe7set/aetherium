@@ -3,6 +3,7 @@ import { ITEMS } from './items';
 import { SKILLS } from './skills';
 import { TOOLS } from './tools';
 import { ACHIEVEMENTS } from './achievements';
+import { AREAS, DUNGEONS, MONSTERS, type MonsterDef } from './combat';
 import { LUCKY_EVENTS, POTION_BUFFS } from './buffs';
 import type { AchievementDef, ActionDef, BuffDef, ItemDef, SkillDef, ToolDef } from './types';
 
@@ -12,6 +13,8 @@ export { ITEMS } from './items';
 export { SKILLS, COMING_SOON_SKILLS } from './skills';
 export { TOOLS, STARTER_TOOLS, SHOP_OFFERS } from './tools';
 export { BALANCE } from './balance';
+export { AREAS, DUNGEONS, MONSTERS } from './combat';
+export type { AreaDef, BossPhase, DungeonDef, MonsterDef } from './combat';
 export { ACHIEVEMENTS } from './achievements';
 export { LUCKY_EVENTS, POTION_BUFFS } from './buffs';
 
@@ -30,6 +33,9 @@ export const ITEM_MAP = indexById(ITEMS, 'Item');
 export const ACTION_MAP = indexById(ACTIONS, 'Aktion');
 export const SKILL_MAP = indexById(SKILLS, 'Skill');
 export const TOOL_MAP = indexById(TOOLS, 'Werkzeug');
+export const MONSTER_MAP = indexById(MONSTERS, 'Monster');
+export const AREA_MAP = indexById(AREAS, 'Gebiet');
+export const DUNGEON_MAP = indexById(DUNGEONS, 'Dungeon');
 export const ACHIEVEMENT_MAP = indexById(ACHIEVEMENTS, 'Erfolg');
 export const BUFF_MAP = indexById(BUFFS, 'Buff');
 
@@ -44,6 +50,7 @@ export const getAction = (id: string): ActionDef => lookup(ACTION_MAP, id, 'Akti
 export const getSkill = (id: string): SkillDef => lookup(SKILL_MAP, id, 'Skill');
 export const getTool = (id: string): ToolDef => lookup(TOOL_MAP, id, 'Werkzeug');
 export const getAchievement = (id: string): AchievementDef => lookup(ACHIEVEMENT_MAP, id, 'Erfolg');
+export const getMonster = (id: string): MonsterDef => lookup(MONSTER_MAP, id, 'Monster');
 export const getBuff = (id: string): BuffDef => lookup(BUFF_MAP, id, 'Buff');
 
 export const actionsForSkill = (skill: string): ActionDef[] =>

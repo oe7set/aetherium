@@ -3,7 +3,8 @@ import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { labelElements } from './labels';
-import { getAction } from '../data';
+import { getAction, getItem } from '../data';
+import { Arena } from './Arena';
 import { useGame } from '../store/gameStore';
 import { Character } from './Character';
 import { Island } from './Island';
@@ -57,9 +58,14 @@ function LabelProjector() {
  */
 export default function WorldScene({ quality }: { quality: QualityProfile }) {
   const visible = usePageVisible();
-  const activeSkill = useGame((s) =>
-    s.game.active ? getAction(s.game.active.actionId).skill : null,
-  );
+  const activeSkill = useGame((s) => {
+    if (s.game.combat) {
+      const w = s.game.equipment.weapon;
+      const style = w ? (getItem(w).equip?.style ?? 'melee') : 'melee';
+      return `combat-${style}`;
+    }
+    return s.game.active ? getAction(s.game.active.actionId).skill : null;
+  });
   const tapStation = useGame((s) => s.tapStation);
 
   const tap = (skill: string) => (e: ThreeEvent<MouseEvent>) => {
@@ -87,6 +93,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Kitchen onTap={tap('cooking')} particles={quality.particles} />
       <Forge onTap={tap('smithing')} particles={quality.particles} />
       <FishingSpot onTap={tap('fishing')} particles={quality.particles} />
+      <Arena onTap={tap('combat')} particles={quality.particles} />
       <Tower />
       <Character skill={activeSkill} />
       <LabelProjector />

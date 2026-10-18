@@ -1,3 +1,4 @@
+import { CRAFTING_ACTIONS } from './crafting';
 import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
 import { SMITHING_ACTIONS } from './smithing';
 import type { ActionDef, LootEntry } from './types';
@@ -489,4 +490,5 @@ export const ACTIONS: ActionDef[] = [
   ...FISH_COOKING_ACTIONS,
   ...FISHING_ACTIONS,
   ...SMITHING_ACTIONS,
+  ...CRAFTING_ACTIONS,
 ];

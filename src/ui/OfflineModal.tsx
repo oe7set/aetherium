@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getAction, getItem, getSkill } from '../data';
+import { getAction, getItem, getMonster, getSkill } from '../data';
 import { OFFLINE_LINES } from '../data/flavor';
 import { defaultRng, flavor, formatDuration } from '../engine';
 import { t, type MessageKey } from '../i18n';
@@ -36,7 +36,7 @@ export function OfflineModal() {
   if (!summary) return null;
 
   const capped = summary.simulatedSeconds < summary.elapsedSeconds;
-  const nothing = summary.actionsCompleted === 0;
+  const nothing = summary.actionsCompleted === 0 && Object.keys(summary.kills).length === 0;
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal aria-label={t('offline.title')}>
@@ -86,6 +86,28 @@ export function OfflineModal() {
                   )}
                 />
               </>
+            )}
+            {Object.keys(summary.kills).length > 0 && (
+              <>
+                <h4 className="group-title">⚔️ Besiegt</h4>
+                <div className="pill-wrap">
+                  {Object.entries(summary.kills).map(([id, n]) => (
+                    <span key={id} className="item-pill">
+                      {getMonster(id).icon} {int(n)}× {getMonster(id).name}
+                    </span>
+                  ))}
+                </div>
+                {summary.dungeons > 0 && <p>🗝️ {summary.dungeons} Dungeon-Durchläufe</p>}
+                {summary.foodEaten > 0 && (
+                  <p className="muted">🍖 {int(summary.foodEaten)} Portionen gegessen</p>
+                )}
+              </>
+            )}
+            {summary.died && (
+              <p className="warn">💀 Du bist im Kampf gestorben und hast pausiert.</p>
+            )}
+            {summary.combatStopped && summary.combatStopped !== 'died' && (
+              <p className="warn">⚠️ {t(`combat.stop.${summary.combatStopped}` as MessageKey)}</p>
             )}
             {Object.keys(summary.gained).length > 0 && (
               <>

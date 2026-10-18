@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-**Phase 3 „Handwerk" fertig** (v0.3.0). Nächstes: **Phase 4 – Kampf**. Siehe `docs/CHANGELOG.md`.
+**Phase 4 „Kampf" fertig** (v0.4.0). Nächstes: **Phase 5 – Wissenschaft & Magie**. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
 

@@ -1,4 +1,12 @@
-import { getAchievement, getAction, getBuff, getItem, getSkill, getTool } from '../data';
+import {
+  getAchievement,
+  getAction,
+  getBuff,
+  getItem,
+  getMonster,
+  getSkill,
+  getTool,
+} from '../data';
 import {
   BURNT_LINES,
   FIRE_LIT_LINES,
@@ -12,6 +20,10 @@ import {
   RARE_DROP_LINES,
   ACTION_START_LINES,
   ACHIEVEMENT_LINES,
+  BOSS_KILL_LINES,
+  DEATH_LINES,
+  FIGHT_LINES,
+  KILL_LINES,
   LUCKY_LINES,
   TOOL_UNLOCK_LINES,
   TREND_DOWN_LINES,
@@ -155,6 +167,63 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         });
         break;
       }
+      case 'hit':
+        if (e.target === 'monster')
+          out.popups.push({
+            kind: e.damage > 0 ? 'xp' : 'bad',
+            text: e.damage > 0 ? `💥 ${e.damage}` : 'daneben',
+          });
+        else if (e.damage > 0) out.popups.push({ kind: 'bad', text: `❤️ −${e.damage}` });
+        break;
+      case 'monsterKilled': {
+        const m = getMonster(e.monster);
+        if (m.boss)
+          out.feed.push({
+            kind: 'rare',
+            text: `👑 ${flavor(rng, BOSS_KILL_LINES, { item: m.name })}`,
+          });
+        else if (rng() < 0.08)
+          out.feed.push({
+            kind: 'info',
+            text: `${m.icon} ${flavor(rng, KILL_LINES, { item: m.name })}`,
+          });
+        break;
+      }
+      case 'bossPhase': {
+        const m = getMonster(e.monster);
+        const phase = m.phases?.[e.phase];
+        if (phase)
+          out.feed.push({ kind: 'warn', text: `${m.icon} ${phase.name}: ${phase.message}` });
+        break;
+      }
+      case 'dungeonCompleted':
+        out.feed.push({ kind: 'rare', text: `🗝️ Dungeon abgeschlossen! Die Truhe gehört dir.` });
+        break;
+      case 'playerDied':
+        out.feed.push({
+          kind: 'warn',
+          text: `💀 ${flavor(rng, DEATH_LINES, { item: getMonster(e.monster).name })}`,
+        });
+        break;
+      case 'combatStarted': {
+        const m = getMonster(e.monster);
+        out.feed.push({
+          kind: 'info',
+          text: `${m.icon} ${flavor(rng, FIGHT_LINES, { item: m.name })}`,
+        });
+        break;
+      }
+      case 'combatStopped':
+        if (e.reason === 'noAmmo' || e.reason === 'noRunes') {
+          out.feed.push({
+            kind: 'warn',
+            text: `⚠️ ${e.reason === 'noAmmo' ? 'Keine Pfeile mehr! Der Bogen ist jetzt ein sehr teurer Stock.' : 'Keine Runen mehr! Ohne Runen ist ein Zauberstab nur ein Stock.'}`,
+          });
+        }
+        break;
+      case 'ate':
+        out.popups.push({ kind: 'item', text: `🍖 +${e.heal} LP` });
+        break;
       case 'intelligence':
         out.feed.push({
           kind: 'rare',

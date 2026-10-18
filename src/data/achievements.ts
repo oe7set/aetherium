@@ -209,6 +209,74 @@ const STAT_SERIES: StatSeries[] = [
     ],
     reward: () => ({ double: 0.005 }),
   },
+  {
+    key: 'monstersKilled',
+    icon: '⚔️',
+    desc: (n) => `Besiege ${n} Monster.`,
+    steps: [
+      [1, 'Erstes Blut'],
+      [100, 'Monsterjäger'],
+      [1000, 'Schrecken der Wildnis'],
+      [10000, 'Artenschützer besorgt'],
+      [100000, 'Massenaussterben'],
+    ],
+    reward: (i) => ({ 'combat.damage': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'bossKills',
+    icon: '👹',
+    desc: (n) => `Besiege ${n} Bosse.`,
+    steps: [
+      [1, 'Boss-Besieger'],
+      [10, 'Raid-Leiter'],
+      [100, 'Weltboss-Abo'],
+    ],
+    reward: (i) => ({ 'combat.loot': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'dungeonsCompleted',
+    icon: '🗝️',
+    desc: (n) => `Schließe ${n} Dungeons ab.`,
+    steps: [
+      [1, 'Dungeon-Crawler'],
+      [25, 'Kerkermeister'],
+      [250, 'Speedrunner'],
+    ],
+    reward: () => ({ 'combat.accuracy': 0.02 }),
+  },
+  {
+    key: 'deaths',
+    icon: '💀',
+    desc: (n) => `Stirb ${n}-mal.`,
+    steps: [
+      [1, 'Respawn-Erfahrung'],
+      [10, 'Unsterblich (fast)'],
+      [100, 'Dark-Souls-Veteran'],
+    ],
+    reward: () => ({ 'combat.hp': 0.02 }),
+  },
+  {
+    key: 'foodEaten',
+    icon: '🍗',
+    desc: (n) => `Iss im Kampf ${n} Portionen.`,
+    steps: [
+      [10, 'Snackpause'],
+      [1000, 'Zweites Frühstück'],
+      [10000, 'Hobbit-Ernährungsplan'],
+    ],
+    reward: () => ({ 'combat.hp': 0.01 }),
+  },
+  {
+    key: 'kills.chicken',
+    icon: '🐔',
+    desc: (n) => `Besiege ${n} Hühner.`,
+    steps: [
+      [1, 'Warum über die Straße?'],
+      [100, 'Hühnerschreck'],
+      [1000, 'Colonel'],
+    ],
+    reward: () => ({ 'xp.melee': 0.01 }),
+  },
 ];
 
 function statAchievements(): AchievementDef[] {

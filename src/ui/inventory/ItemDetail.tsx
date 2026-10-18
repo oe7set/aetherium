@@ -10,6 +10,7 @@ export function ItemDetail({ itemId }: { itemId: string }) {
   const qty = useGame((s) => s.game.inventory[itemId] ?? 0);
   const sell = useGame((s) => s.sell);
   const use = useGame((s) => s.use);
+  const equip = useGame((s) => s.equip);
   const { num, int } = useFmt();
   const price = useGame((s) => unitPrice(s.game, itemId));
   const mult = useGame((s) => marketMult(s.game, itemId) * trendMult(s.game, itemId));
@@ -43,6 +44,11 @@ export function ItemDetail({ itemId }: { itemId: string }) {
       {def.heal && <p className="muted">❤️ Heilt {def.heal} LP</p>}
       {def.equip && <EquipInfo itemId={itemId} />}
       <div className="btn-row">
+        {def.equip && (
+          <button className="btn btn-primary" onClick={() => equip(itemId)}>
+            Anlegen
+          </button>
+        )}
         {def.consume && (
           <button className="btn btn-primary" onClick={() => use(itemId)}>
             {t('inv.use')}

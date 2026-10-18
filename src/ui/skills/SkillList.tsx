@@ -4,12 +4,14 @@ import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
 
-const GROUPS = ['gathering', 'processing'] as const;
+const GROUPS = ['gathering', 'processing', 'combat'] as const;
 
 function SkillRow({ id }: { id: string }) {
   const xp = useGame((s) => s.game.skills[id]?.xp ?? 0);
   const isActive = useGame((s) =>
-    s.game.active ? getAction(s.game.active.actionId).skill === id : false,
+    s.game.active
+      ? getAction(s.game.active.actionId).skill === id
+      : !!s.game.combat && SKILLS.find((k) => k.id === id)?.group === 'combat',
   );
   const selected = useGame((s) => s.ui.selectedSkill === id);
   const openSkill = useGame((s) => s.openSkill);

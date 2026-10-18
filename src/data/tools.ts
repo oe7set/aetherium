@@ -221,4 +221,6 @@ export const SHOP_OFFERS: ShopOffer[] = [
   { item: 'apple', price: 4 },
   { item: 'bait', price: 3 },
   { item: 'feather', price: 4 },
+  { item: 'arrow_bronze', price: 3 },
+  { item: 'rune_basic', price: 6 },
 ];

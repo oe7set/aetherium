@@ -1,6 +1,22 @@
 import Decimal from 'break_eternity.js';
-import { ACHIEVEMENT_MAP, ACTION_MAP, BUFF_MAP, ITEM_MAP, TOOL_MAP } from '../data';
-import { defaultSettings, newGame, SAVE_VERSION, type GameState } from './state';
+import {
+  ACHIEVEMENT_MAP,
+  ACTION_MAP,
+  BUFF_MAP,
+  DUNGEON_MAP,
+  ITEM_MAP,
+  MONSTER_MAP,
+  TOOL_MAP,
+} from '../data';
+import {
+  defaultCombatSettings,
+  defaultSettings,
+  newGame,
+  SAVE_VERSION,
+  type CombatSettings,
+  type CombatState,
+  type GameState,
+} from './state';
 
 /** Shape stored in localStorage / export strings. */
 export interface SaveEnvelope {
@@ -30,6 +46,17 @@ export const MIGRATIONS: Record<number, Migration> = {
     buffs: data.buffs ?? [],
     nextLucky: data.nextLucky ?? 240,
   }),
+  // 2 → 3 (Phase 4): combat. Existing players get the 10 starting hit points.
+  2: (data) => {
+    const skills = (isRecord(data.skills) ? data.skills : {}) as Record<string, unknown>;
+    return {
+      ...data,
+      skills: { ...skills, hitpoints: skills.hitpoints ?? { xp: 1154 } },
+      hp: 10,
+      equipment: {},
+      combat: null,
+    };
+  },
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -143,6 +170,15 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     settings: settings as GameState['settings'],
     market: hydrateMarket(data.market, base.market),
     nextLucky: Math.max(1, num(data.nextLucky, base.nextLucky)),
+    hp: Math.max(1, num(data.hp, base.hp)),
+    equipment: Object.fromEntries(
+      Object.entries(stringRecord(data.equipment)).filter(([, id]) => ITEM_MAP.get(id)?.equip),
+    ),
+    combat: hydrateCombat(data.combat),
+    combatSettings: {
+      ...defaultCombatSettings(),
+      ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
+    },
     achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
     buffs: Array.isArray(data.buffs)
       ? data.buffs.filter(
@@ -153,6 +189,29 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateCombat(v: unknown): CombatState | null {
+  if (
+    !isRecord(v) ||
+    (v.kind !== 'monster' && v.kind !== 'dungeon') ||
+    typeof v.target !== 'string'
+  )
+    return null;
+  const known = v.kind === 'monster' ? MONSTER_MAP.has(v.target) : DUNGEON_MAP.has(v.target);
+  if (!known || typeof v.monster !== 'string' || !MONSTER_MAP.has(v.monster)) return null;
+  const n = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? x : 0);
+  return {
+    kind: v.kind,
+    target: v.target,
+    index: n(v.index),
+    monster: v.monster,
+    monsterHp: n(v.monsterHp),
+    phase: n(v.phase),
+    respawn: n(v.respawn),
+    playerTimer: n(v.playerTimer),
+    monsterTimer: n(v.monsterTimer),
   };
 }
 

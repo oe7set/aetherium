@@ -44,3 +44,11 @@ Tabelle bis 120 für spätere Prestige-Inhalte.
 ## Offline
 
 Gedeckelt auf 24 h, identische Simulation wie live (getestet).
+
+## Kampf
+
+- Spieler-Treffsicherheit `(Lvl + 8) · (Angriffsbonus + 64) · (1 + mods)`, Monster-Verteidigung `(Def + 9) · 64`,
+  Trefferchance nach OSRS-Formel. Max. Treffer `⌊0,5 + (Lvl + 8)(Stärke + 64)/640 · (1 + mods)⌋`.
+- XP: 4 pro Schadenspunkt auf Waffenstil (oder Verteidigung), 1,33 auf Lebenspunkte.
+- LP-Skala wie OSRS (Start 10, Max 99); Essen heilt 2–30 LP. Auto-Essen standardmäßig bei 50 %.
+- Tod: Kampf stoppt, volle LP, kein Itemverlust (keine Frust-Mechanik, Spec §8).

@@ -4,6 +4,7 @@ import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
+import { CombatView } from '../combat/CombatView';
 import { ActionCard } from './ActionCard';
 
 function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
@@ -16,6 +17,11 @@ function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
 }
 
 export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
+  if (getSkill(skillId).group === 'combat') return <CombatView onBack={onBack} />;
+  return <SkillDetail skillId={skillId} onBack={onBack} />;
+}
+
+function SkillDetail({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
   const skill = getSkill(skillId);
   const xp = useGame((s) => s.game.skills[skillId]?.xp ?? 0);
   const toolId = useGame((s) => s.game.equippedTools[skillId]);

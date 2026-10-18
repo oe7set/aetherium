@@ -1,5 +1,5 @@
 import { BALANCE } from '../data/balance';
-import { formatDuration, formatNumber, totalLevel } from '../engine';
+import { formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 
@@ -8,6 +8,9 @@ export function Header() {
   const total = useGame((s) => totalLevel(s.game));
   const fire = useGame((s) => Math.ceil(s.game.fire));
   const intelligence = useGame((s) => s.game.intelligence);
+  const hp = useGame((s) => Math.ceil(s.game.hp));
+  const max = useGame((s) => maxHp(s.game));
+  const inCombat = useGame((s) => !!s.game.combat);
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
@@ -30,6 +33,11 @@ export function Header() {
         >
           {fire > 0 ? '🔥' : '🪵'} <b>{fire > 0 ? formatDuration(fire) : '–'}</b>
         </span>
+        {(inCombat || hp < max) && (
+          <span className={`chip ${hp < max * 0.35 ? 'chip-danger' : ''}`} title="Lebenspunkte">
+            ❤️ <b>{hp}</b>
+          </span>
+        )}
         {intelligence > 0 && (
           <span className="chip" title={t('header.intelligence')}>
             🧠 <b>{intelligence}</b>

@@ -198,6 +198,10 @@ export const ACTION_START_LINES: Record<string, string[]> = {
     'Schmieden gestartet. Es wird heiß. Und laut.',
     'Du entfachst die Esse. Hephaistos schaut neidisch.',
   ],
+  crafting: [
+    'Du schnitzt und nähst. Eine ruhige Hand ist alles.',
+    'Handwerk hat goldenen Boden. Und Holzspäne auf dem Boden.',
+  ],
   cooking: [
     'Du stellst die Pfanne aufs Feuer. Gordon wäre … neutral.',
     'Kochen gestartet. Es duftet nach Erfolg und leicht nach Rauch.',
@@ -234,6 +238,33 @@ export const LUCKY_LINES: string[] = [
 export const TOOL_UNLOCK_LINES: string[] = [
   'Selbst geschmiedet, doppelt gefreut: {item} ist jetzt dein Werkzeug!',
   '{item} übernommen. DIY-Level: Zwerg.',
+];
+
+export const FIGHT_LINES: string[] = [
+  'Du forderst {item} heraus. {item} nimmt an.',
+  'Kampf gegen {item}! Möge die bessere Statistik gewinnen.',
+  '{item} sieht dich an. Du siehst {item} an. Es wird gekämpft.',
+  'Ring frei für {item}!',
+];
+
+export const KILL_LINES: string[] = [
+  '{item} besiegt. Es war nichts Persönliches.',
+  '{item} liegt am Boden. Respawn in 3 … 2 …',
+  'Ein weiterer {item} weniger. Die Population schwankt.',
+  '{item} wurde erfolgreich falsifiziert.',
+];
+
+export const BOSS_KILL_LINES: string[] = [
+  '{item} ist besiegt! Accepted with minor revisions.',
+  'Triumph! {item} fällt. Barden schreiben bereits Lieder.',
+  '{item} besiegt! Screenshot für die Gilde machen!',
+];
+
+export const DEATH_LINES: string[] = [
+  '{item} hat dich besiegt. Ein Gnom-Sanitäter schleppt dich zurück zum Lagerfeuer.',
+  'Du bist ohnmächtig geworden. {item} tanzt einen Siegestanz.',
+  'Game Over? Nein, nur ein Nickerchen. {item} war stärker. Diesmal.',
+  'Gestorben. Tipp: Essen hilft. Und Rüstung. Und vielleicht ein leichterer Gegner als {item}.',
 ];
 
 export const RANDOM_CHATTER: string[] = [
@@ -299,6 +330,10 @@ export const FLAVOR_POOLS: Record<string, string[]> = {
   TREND_DOWN_LINES,
   LUCKY_LINES,
   TOOL_UNLOCK_LINES,
+  FIGHT_LINES,
+  KILL_LINES,
+  BOSS_KILL_LINES,
+  DEATH_LINES,
   ...Object.fromEntries(
     Object.entries(ACTION_START_LINES).map(([k, v]) => [`ACTION_START_${k}`, v]),
   ),

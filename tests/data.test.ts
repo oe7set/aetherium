@@ -42,7 +42,8 @@ describe('Datenintegrität', () => {
   });
 
   it('jeder Skill hat eine Aktion auf Level 1', () => {
-    for (const id of SKILL_MAP.keys()) {
+    for (const [id, skill] of SKILL_MAP) {
+      if (skill.group === 'combat') continue;
       expect(
         ACTIONS.some((a) => a.skill === id && a.levelReq === 1),
         id,

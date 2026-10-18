@@ -26,7 +26,9 @@ class SceneBoundary extends Component<
 }
 
 function SceneLabels() {
-  const active = useGame((s) => (s.game.active ? getAction(s.game.active.actionId).skill : null));
+  const active = useGame((s) =>
+    s.game.combat ? 'combat' : s.game.active ? getAction(s.game.active.actionId).skill : null,
+  );
   return (
     <div className="scene-labels" aria-hidden>
       {STATIONS.map((st) => (

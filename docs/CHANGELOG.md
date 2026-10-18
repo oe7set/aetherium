@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0] – Phase 4 „Kampf"
+
+### Hinzugefügt
+
+- Kampf-Skills: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte (Start mit 10 LP wie in alten MMOs).
+- Auto-Kampf als Runner in der Engine (live = offline): OSRS-artige Treffer-/Schadensformeln, Angriffstempo,
+  Schwächen (+25 % Treffsicherheit), Auto-Essen mit Schwelle, Essenswahl, LP-Regeneration, Tod ohne Itemverlust.
+- 6 Gebiete mit 18 Monstern (Huhn bis Schwarzes-Loch-Imp), Loot-Tabellen, Gold.
+- 3 Dungeons mit Phasen-Bossen: **Der Peer Reviewer #2** („Major Revisions“: lehnt 40 % deiner Angriffe ab,
+  „Reject!“: schneller und härter), Thermodynamos, Das Standardmodell. Einzigartige Beute bis Seltenheit _Peer-Reviewed_.
+- **Handwerk** (Skill): Pfeilschäfte, Bögen, Pfeile, Zauberstäbe, Leder-/Fell-/Seidenrüstung.
+- Ausrüstung mit 8 Slots (Kopf, Amulett, Waffe, Brust, Schild, Beine, Ring, Munition), Level-Anforderungen,
+  Boni über das Modifikator-System; Munition (Pfeile) und Runen werden pro Angriff verbraucht.
+- Kampf-Ansicht mit Trefferchance, Schaden/s und Zeit pro Kill; Kampfleiste mit Monster- und Spieler-LP.
+- 3D-Arena mit Monster (Trefferblitz, Wackeln, Todes-Puff, Krone für Bosse); Figur mit Schwert/Bogen/Stab.
+- Kampf-Erfolge, Kampf in der Offline-Zusammenfassung. Spielstand v3.
+
 ## [0.3.0] – Phase 3 „Handwerk"
 
 ### Hinzugefügt

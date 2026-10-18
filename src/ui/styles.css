@@ -1518,3 +1518,129 @@ textarea.input {
 .achievement-toast span:last-child {
   display: grid;
 }
+
+/* --- Phase 4: combat --------------------------------------------------------------------------- */
+
+.st-arena {
+  left: 82%;
+  top: 70%;
+}
+.character.st-arena {
+  left: 74%;
+  top: 66%;
+}
+.chip-danger {
+  border-color: var(--red);
+  animation: flicker 0.5s infinite alternate;
+}
+.combat-view h2 {
+  margin: 4px 0 8px;
+}
+.combat-player,
+.combat-fight {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  margin-bottom: 8px;
+}
+.combat-fight {
+  border: 1px solid var(--red);
+}
+.combat-fight.boss {
+  border-color: var(--gold);
+  box-shadow: 0 0 18px rgba(242, 201, 76, 0.25);
+}
+.combat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+.field-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.field-inline .input {
+  min-height: 36px;
+}
+.area {
+  margin-bottom: 6px;
+}
+.area-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  cursor: pointer;
+  text-align: left;
+}
+.area-head.open {
+  border-color: var(--gold);
+}
+.area-body {
+  display: grid;
+  gap: 6px;
+  padding: 6px 0;
+}
+.monster-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid transparent;
+}
+.monster-card.active {
+  border-color: var(--red);
+}
+.monster-card.dungeon {
+  margin-bottom: 6px;
+}
+.monster-card > .btn {
+  align-self: center;
+  min-width: 90px;
+}
+.monster-icon {
+  font-size: 32px;
+}
+.monster-body {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.gear-slot {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  min-height: 74px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  cursor: pointer;
+  text-align: center;
+}
+.gear-slot small {
+  font-size: 10px;
+  line-height: 1.1;
+}
+.gear-slot.empty {
+  opacity: 0.5;
+  border-style: dashed;
+}

@@ -1,6 +1,6 @@
 import { BALANCE } from '../data/balance';
 import { advance } from './actions';
-import type { Emit, StopReason } from './events';
+import type { CombatStopReason, Emit, StopReason } from './events';
 import type { Rng } from './rng';
 import { skillLevel } from './skills';
 import type { GameState } from './state';
@@ -21,6 +21,11 @@ export interface ProgressSummary {
   burnt: number;
   stopped?: { actionId: string; reason: StopReason; missingItem?: string };
   fireWentOut: boolean;
+  kills: Record<string, number>;
+  dungeons: number;
+  died: boolean;
+  combatStopped?: CombatStopReason;
+  foodEaten: number;
 }
 
 function bump(map: Record<string, number>, key: string, amount: number): void {
@@ -46,6 +51,10 @@ export function summaryCollector(
     gold: 0,
     burnt: 0,
     fireWentOut: false,
+    kills: {},
+    dungeons: 0,
+    died: false,
+    foodEaten: 0,
   };
   const before: Record<string, number> = {};
   for (const id of Object.keys(s.skills)) before[id] = skillLevel(s, id);
@@ -83,6 +92,21 @@ export function summaryCollector(
         if (e.reason !== 'manual') {
           summary.stopped = { actionId: e.actionId, reason: e.reason, missingItem: e.missingItem };
         }
+        break;
+      case 'monsterKilled':
+        bump(summary.kills, e.monster, 1);
+        break;
+      case 'dungeonCompleted':
+        summary.dungeons++;
+        break;
+      case 'playerDied':
+        summary.died = true;
+        break;
+      case 'ate':
+        summary.foodEaten++;
+        break;
+      case 'combatStopped':
+        if (e.reason !== 'manual') summary.combatStopped = e.reason;
         break;
       default:
         break;
@@ -123,6 +147,8 @@ export function applyOfflineProgress(
 export function summaryHasContent(summary: ProgressSummary): boolean {
   return (
     summary.actionsCompleted > 0 ||
+    Object.keys(summary.kills).length > 0 ||
+    summary.died ||
     Object.keys(summary.xp).length > 0 ||
     summary.fireWentOut ||
     summary.stopped !== undefined

@@ -140,7 +140,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 3 „Handwerk“',
+  'menu.version': 'Version {version} · Phase 4 „Kampf“',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 
@@ -173,6 +173,15 @@ export const de = {
   'shopFail.unknown': 'Das geht so nicht.',
 
   'levelUp.title': 'Level Up!',
+  'equipFail.notEquippable': 'Das kann man nicht anziehen. Glaub mir, ich hab’s versucht.',
+  'equipFail.level': 'Dein Level reicht dafür noch nicht.',
+  'equipFail.space': 'Kein Platz im Inventar zum Ablegen.',
+  'equipFail.notEnough': 'Das hast du gar nicht.',
+  'inv.segment.gear': 'Ausrüstung',
+  'combat.stop.noAmmo': 'Keine Pfeile mehr!',
+  'combat.stop.noRunes': 'Keine Runen mehr!',
+  'combat.stop.died': 'Du bist gestorben.',
+  'combat.stop.manual': 'Kampf beendet.',
   'feed.title': 'Ereignisse',
   'common.close': 'Schließen',
   'common.gold': 'Gold',
