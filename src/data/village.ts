@@ -724,8 +724,23 @@ export const INVASION_INTERVAL: [number, number] = [2 * 3600, 4 * 3600];
 
 /** Village resources per island item shipped through the harbor. */
 export const HARBOR_IMPORTS: { res: VRes; items: string[]; per: number }[] = [
-  { res: 'wood', items: ['log_oak', 'log_birch', 'log_willow', 'log_maple', 'log_yew'], per: 6 },
-  { res: 'clay', items: ['ash', 'ore_copper', 'ore_tin'], per: 5 },
+  {
+    res: 'wood',
+    items: [
+      'log_oak',
+      'log_birch',
+      'log_willow',
+      'log_maple',
+      'log_yew',
+      'log_spruce',
+      'log_poplar',
+      'log_cherry',
+      'log_linden',
+      'log_teak',
+    ],
+    per: 6,
+  },
+  { res: 'clay', items: ['ash', 'ore_copper', 'ore_tin', 'stone_granite'], per: 5 },
   { res: 'iron', items: ['ore_iron', 'bar_iron', 'bar_bronze'], per: 8 },
   { res: 'crop', items: ['wheat', 'potato', 'apple'], per: 10 },
 ];

@@ -5,6 +5,7 @@ import { SCIENCE_ITEMS } from './science';
 import { SMITHING_ITEMS } from './smithing';
 import type { ItemDef } from './types';
 import { VILLAGE_ITEMS } from './village';
+import { EXPANSION_ITEMS } from './expansion';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
 
@@ -455,4 +456,5 @@ export const ITEMS: ItemDef[] = [
   ...COMBAT_ITEMS,
   ...SCIENCE_ITEMS,
   ...VILLAGE_ITEMS,
+  ...EXPANSION_ITEMS,
 ];

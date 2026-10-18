@@ -45,6 +45,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Geduld, Köder und ein Hauch Quantenmechanik. Schrödingers Fisch beißt manchmal an. Oder auch nicht.',
   },
   {
+    id: 'archaeology',
+    name: 'Archäologie',
+    icon: '🏺',
+    color: '#d6a35c',
+    group: 'gathering',
+    desc: 'Graben, pinseln, staunen. Was die Vorläufer vergraben haben, wird zu Gold, Forschung und Schätzen.',
+  },
+  {
     id: 'smithing',
     name: 'Schmieden',
     icon: '🔨',
