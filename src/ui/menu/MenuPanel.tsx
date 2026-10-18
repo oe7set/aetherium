@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { t } from '../../i18n';
 import { AchievementsPanel } from './AchievementsPanel';
 import { DebugPanel } from './DebugPanel';
+import { EmpirePanel } from './EmpirePanel';
 import { PrestigePanel } from './PrestigePanel';
 import { SavePanel } from './SavePanel';
 import { SettingsPanel } from './SettingsPanel';
 import { StatsPanel } from './StatsPanel';
 
-type Section = 'prestige' | 'settings' | 'achievements' | 'stats' | 'save' | 'debug';
+type Section = 'empire' | 'prestige' | 'settings' | 'achievements' | 'stats' | 'save' | 'debug';
 
 export function MenuPanel() {
-  const [section, setSection] = useState<Section>('achievements');
+  const [section, setSection] = useState<Section>('empire');
   const sections: Section[] = import.meta.env.DEV
-    ? ['prestige', 'achievements', 'stats', 'settings', 'save', 'debug']
-    : ['prestige', 'achievements', 'stats', 'settings', 'save'];
+    ? ['empire', 'prestige', 'achievements', 'stats', 'settings', 'save', 'debug']
+    : ['empire', 'prestige', 'achievements', 'stats', 'settings', 'save'];
   return (
     <div className="panel">
       <div className="segments" role="tablist">
@@ -33,6 +34,7 @@ export function MenuPanel() {
         ))}
       </div>
       {section === 'settings' && <SettingsPanel />}
+      {section === 'empire' && <EmpirePanel />}
       {section === 'prestige' && <PrestigePanel />}
       {section === 'achievements' && <AchievementsPanel />}
       {section === 'stats' && <StatsPanel />}

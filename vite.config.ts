@@ -45,7 +45,7 @@ export default defineConfig(({ command, isPreview }) => ({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,woff2}'],
         // The lazy 3D chunk is ~1 MB; cache it too so the game starts offline.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: 'index.html',

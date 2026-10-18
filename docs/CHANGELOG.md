@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0] – Phase 8 „Aether-Glanz" (Look-Overhaul)
+
+### Hinzugefügt
+
+- Neues Design-System (`src/ui/theme.css`): Nacht-Indigo mit Aether-Cyan/Gold-Akzenten, Glas-Panels mit Blur,
+  animierter Aether-Nebel mit Sternenfeld, Display-Schrift Cinzel + Inter (selbst gehostet, offline verfügbar),
+  Glow-Buttons, Fortschrittsbalken mit Glanz-Sweep, Leucht-Indikator in der Tab-Leiste, gestaffelte Einblendungen,
+  Rarity-Rahmen mit Glow (Legendär pulsiert, _Peer-Reviewed_ mit rotierendem Regenbogenrand), „Reduced Motion".
+- **Titelbildschirm** mit animiertem Logo und Orbit-Ringen (entsperrt zugleich den Sound).
+- **Reichsbuch**: neue Übersicht im Menü mit Status aller Bereiche und „Nächste Ziele".
+- 3D: animierter Ozean-Shader mit Brandung und Glitzern, driftende Wolken, Glühwürmchen nachts / Pollen am Tag.
+
+### Geändert
+
+- Lebenspunkte-Erfolge für Level 5/10 entfernt (wurden beim Start sofort freigeschaltet).
+
 ## [1.0.0] – Phase 7 „Feinschliff"
 
 ### Hinzugefügt

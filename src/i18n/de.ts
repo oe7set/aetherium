@@ -116,6 +116,7 @@ export const de = {
   'menu.debug': 'Debug',
   'menu.achievements': 'Erfolge',
   'menu.prestige': 'Prestige',
+  'menu.empire': 'Reich',
   'menu.numberFormat': 'Zahlenformat',
   'menu.format.short': 'Kurz (1,5 Mio.)',
   'menu.format.scientific': 'Wissenschaftlich (1,5e6)',

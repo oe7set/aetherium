@@ -18,6 +18,7 @@ import { ResearchPanel } from './science/ResearchPanel';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
+import { TitleScreen } from './TitleScreen';
 import { TABS } from './tabs';
 import { World } from './World';
 
@@ -128,6 +129,7 @@ export function App() {
       <AchievementToast />
       <Confetti />
       <OfflineModal />
+      <TitleScreen />
     </>
   );
 }

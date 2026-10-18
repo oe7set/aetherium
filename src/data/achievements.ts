@@ -17,7 +17,8 @@ const LEVEL_MILESTONES: { level: number; title: string; bonus: number }[] = [
 /** Skills that will exist in later phases are included here once they are added to SKILLS. */
 function levelAchievements(): AchievementDef[] {
   return SKILLS.flatMap((skill) =>
-    LEVEL_MILESTONES.map((m) => ({
+    // Hit points start at 10, so their first milestones would unlock instantly.
+    LEVEL_MILESTONES.filter((m) => skill.id !== 'hitpoints' || m.level > 10).map((m) => ({
       id: `lvl_${skill.id}_${m.level}`,
       name: `${skill.name}: ${m.title}`,
       desc:

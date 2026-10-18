@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { labelElements } from './labels';
 import { getAction, getItem } from '../data';
+import { Clouds, Fireflies, Ocean } from './Ambience';
 import { Arena } from './Arena';
 import { useGame } from '../store/gameStore';
 import { Character } from './Character';
@@ -95,6 +96,9 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <CameraRig />
       <DayNight shadows={quality.shadows} shadowMapSize={quality.shadowMapSize} />
       <Island />
+      <Ocean />
+      <Clouds count={quality.level === 'low' ? 3 : 7} />
+      <Fireflies count={quality.particles} />
       <Forest count={quality.trees} />
       <Decorations count={quality.level === 'low' ? 8 : 20} />
       <WorkTree onTap={tap('woodcutting')} />

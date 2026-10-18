@@ -36,11 +36,6 @@ export function Island() {
           opacity={0.9}
         />
       </mesh>
-      {/* Ocean */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.2, 0]}>
-        <circleGeometry args={[80, 24]} />
-        <meshStandardMaterial color="#1f5f8b" roughness={0.4} />
-      </mesh>
     </group>
   );
 }
