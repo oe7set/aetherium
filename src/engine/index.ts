@@ -10,6 +10,7 @@ export * from './consume';
 export * from './events';
 export * from './flavor';
 export * from './format';
+export * from './hero';
 export * from './inventory';
 export * from './offline';
 export * from './prestige';

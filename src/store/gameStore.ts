@@ -65,6 +65,10 @@ import {
   type Settings,
   type ShopResult,
   type VResult,
+  type HeroResult,
+  type AdventureReward,
+  prepareDungeon,
+  finishDungeon,
   buyRiftTalent,
   finishRun,
   prepareRun,
@@ -159,6 +163,13 @@ export interface GameStore {
   /** Books the rewards of a finished rift run. */
   riftFinish: (result: RunResult) => RiftReward | null;
   riftTalent: (id: string) => void;
+  /** Runs a hero action; failures become warnings (heroFail.*). */
+  hero: (
+    fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => HeroResult | void,
+  ) => boolean;
+  /** Config for the adventure the hero stands at, as a live dungeon. */
+  dungeonPrepare: () => RunConfig | null;
+  dungeonFinish: (result: RunResult) => AdventureReward | null;
   /** Runs a village action; a failed result becomes a warning line in the feed. */
   village: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
@@ -500,6 +511,32 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s) => {
         buyRiftTalent(s, id);
       }),
+    hero: (fn) => {
+      let result: HeroResult | void = undefined;
+      mutate((s, emit) => {
+        result = fn(s, emit, defaultRng);
+      });
+      const r = result as HeroResult | void;
+      if (r && !r.ok) {
+        get().pushFeed(`❌ ${t(`heroFail.${r.reason}` as MessageKey)}`, 'warn');
+        return false;
+      }
+      return true;
+    },
+    dungeonPrepare: () => {
+      let cfg: RunConfig | null = null;
+      mutate((s) => {
+        cfg = prepareDungeon(s, defaultRng);
+      });
+      return cfg;
+    },
+    dungeonFinish: (result) => {
+      let reward: AdventureReward | null = null;
+      mutate((s, emit) => {
+        reward = finishDungeon(s, result, defaultRng, emit);
+      });
+      return reward;
+    },
     village: (fn) => {
       let result: VResult | void = undefined;
       mutate((s, emit) => {

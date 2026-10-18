@@ -89,6 +89,11 @@ Ziel: Das Spiel soll auf den ersten Blick hochwertig, magisch-wissenschaftlich u
 - **Verflechtung**: Einwohner → Insel-XP/Gold, Bonusgebäude → Inselskills, Schmiede/Mauer → Riss-Held,
   Riss-Läufe → Rohstoff-Tribut, Hafen ↔ Inselwaren und Gold.
 
+## Phase 9b – Der Held & die Weltkarte (umgesetzt in 1.5.0)
+
+- Ein einziger Held verbindet Dorf und Riss: Attribute, Ausrüstung, Gesundheit, Abenteuer als Echtzeit-Dungeons
+  oder automatisch, Raubzug-Begleitung, Verteidigung, Oasen-Annexion. Weltkarte als Travian-Raster.
+
 ## Phase 10 – Ätherriss (Roguelike-Action, Vampire-Survivors-Mechanik)
 
 ### 10.1 Kern

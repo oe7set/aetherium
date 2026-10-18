@@ -11,6 +11,7 @@ import {
 } from '../../data/rift';
 import {
   autoProvisions,
+  canStartRun,
   biomeUnlocked,
   echoEssence,
   heroUnlocked,
@@ -23,10 +24,11 @@ import {
 } from '../../engine';
 import { createRun } from '../../rift/sim';
 import { useGame } from '../../store/gameStore';
+import { AdventuresView, HeroView } from './HeroView';
 import { useRiftRun } from './runStore';
 import './rift.css';
 
-type Segment = 'start' | 'talents' | 'codex';
+type Segment = 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
 
 export function RiftPanel() {
   // Re-render on meta changes only (a primitive signature keeps the selector stable).
@@ -35,17 +37,23 @@ export function RiftPanel() {
       s.game.rift.essence,
       s.game.rift.talents,
       s.game.rift.runs,
+      s.game.hero.status,
+      Math.floor(s.game.hero.health),
+      s.game.hero.level,
+      s.game.hero.avatar,
       s.game.techs.length,
       s.game.equipment.weapon ?? '',
       Object.keys(s.game.inventory).length,
     ]),
   );
-  const [seg, setSeg] = useState<Segment>('start');
+  const [seg, setSeg] = useState<Segment>('hero');
   return (
     <div className="panel rift-panel">
       <div className="segments" role="tablist">
         {(
           [
+            ['hero', '🦸 Held'],
+            ['adventures', '❗ Abenteuer'],
             ['start', '🌀 Riss'],
             ['talents', '✨ Talente'],
             ['codex', '📖 Kodex'],
@@ -62,6 +70,8 @@ export function RiftPanel() {
           </button>
         ))}
       </div>
+      {seg === 'hero' && <HeroView />}
+      {seg === 'adventures' && <AdventuresView />}
       {seg === 'start' && <StartView />}
       {seg === 'talents' && <TalentView />}
       {seg === 'codex' && <CodexView />}
@@ -80,7 +90,8 @@ function StartView() {
   const [biome, setBiome] = useState(game.rift.biome);
   const stats = runStats(game, hero);
   const provisions = autoProvisions(game);
-  const canStart = heroUnlocked(game, hero) && biomeUnlocked(game, biome);
+  const check = canStartRun(game, hero, biome);
+  const canStart = check.ok;
   const start = () => {
     const cfg = prepare(hero, biome);
     if (cfg) useRiftRun.getState().setRun(createRun(cfg));
@@ -89,7 +100,7 @@ function StartView() {
     <div className="rift-start">
       <div className="rift-hero-banner">
         <div className="rift-portal" aria-hidden>
-          <span>{HEROES.find((h) => h.id === hero)?.icon}</span>
+          <span>{game.hero.avatar}</span>
         </div>
         <div>
           <h2 className="rift-heading">Ätherriss</h2>
@@ -103,7 +114,7 @@ function StartView() {
         </div>
       </div>
 
-      <h4 className="rift-h4">Held</h4>
+      <h4 className="rift-h4">Kampfstil von {game.hero.name}</h4>
       <div className="hero-grid">
         {HEROES.map((h) => {
           const unlocked = heroUnlocked(game, h.id);
@@ -195,7 +206,13 @@ function StartView() {
       </div>
 
       <button className="btn btn-primary btn-big rift-go" disabled={!canStart} onClick={start}>
-        🌀 Riss betreten
+        {canStart
+          ? '🌀 Riss betreten'
+          : check.reason === 'dead'
+            ? '💀 Dein Held ist gefallen'
+            : check.reason === 'busy'
+              ? `${game.hero.avatar} Held ist unterwegs`
+              : '🔒 Gesperrt'}
       </button>
       <p className="small muted center">
         Steuerung: Finger irgendwo auf den Bildschirm legen und ziehen · WASD/Pfeiltasten · P =

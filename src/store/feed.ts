@@ -35,6 +35,7 @@ import {
   TREND_UP_LINES,
 } from '../data/flavor';
 import { TROOPS } from '../data/village';
+import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
 import {
   flavor,
   formatNumber,
@@ -45,6 +46,7 @@ import {
   type Rng,
 } from '../engine';
 
+const HERO_ITEM_NAMES = new Map(HERO_ITEMS.map((i) => [i.id, `${i.icon} ${i.name}`]));
 const TROOP_NAMES = new Map(TROOPS.map((tr) => [tr.id, `${tr.icon} ${tr.name}`]));
 
 export type FeedKind = 'info' | 'level' | 'rare' | 'warn' | 'chatter' | 'gold';
@@ -340,6 +342,38 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           text: `🌀 ${e.won ? 'Riss bezwungen!' : 'Zurück aus dem Riss.'} ${Math.floor(e.time / 60)}:${String(Math.floor(e.time % 60)).padStart(2, '0')} überlebt, ${e.kills} Gegner – +${e.essence} Essenz${e.record ? ' (Rekord!)' : ''}.`,
         });
         break;
+      case 'heroLevel':
+        out.feed.push({
+          kind: 'level',
+          text: `⭐ Dein Held erreicht Stufe ${e.level}! +4 Attributpunkte zu verteilen.`,
+        });
+        break;
+      case 'heroDied':
+        out.feed.push({
+          kind: 'warn',
+          text: '💀 Dein Held ist gefallen. Wiederbelebung im Heimatdorf – oder in 4 Stunden von selbst.',
+        });
+        break;
+      case 'heroRevived':
+        out.feed.push({
+          kind: 'rare',
+          text: '✨ Dein Held steht wieder auf. Etwas blass, aber motiviert.',
+        });
+        break;
+      case 'heroArrived':
+        out.feed.push({
+          kind: 'info',
+          text: '🗺️ Dein Held ist am Abenteuer angekommen: live spielen oder automatisch erkunden!',
+        });
+        break;
+      case 'heroAdventure': {
+        const item = e.item ? HERO_ITEM_NAMES.get(e.item) : null;
+        out.feed.push({
+          kind: e.success ? 'gold' : 'warn',
+          text: `${e.success ? '🏆' : '🩹'} Abenteuer „${e.name}" ${e.success ? 'gemeistert' : 'abgebrochen'}: +${e.xp} Helden-XP${item ? ` und ${item} (${TIER_NAMES[e.tier]})` : ''}.`,
+        });
+        break;
+      }
       case 'riftEcho':
         out.feed.push({
           kind: 'chatter',

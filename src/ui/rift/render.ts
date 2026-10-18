@@ -1,51 +1,7 @@
 // Canvas 2D renderer for the rift. Reads the run state; never mutates gameplay.
 import { HEROES } from '../../data/rift';
 import { WEAPON_MAP, weaponStats, type RunState } from '../../rift/sim';
-
-// --- Sprite cache: emoji rendered once to offscreen canvases -------------------------------------
-
-const sprites = new Map<string, HTMLCanvasElement>();
-
-function sprite(emoji: string, size: number): HTMLCanvasElement {
-  const px = Math.max(8, Math.round(size / 4) * 4);
-  const key = `${emoji}|${px}`;
-  let c = sprites.get(key);
-  if (!c) {
-    c = document.createElement('canvas');
-    c.width = c.height = Math.ceil(px * 1.3);
-    const ctx = c.getContext('2d')!;
-    ctx.font = `${px}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, c.width / 2, c.height / 2 + px * 0.06);
-    sprites.set(key, c);
-    if (sprites.size > 400) sprites.delete(sprites.keys().next().value!);
-  }
-  return c;
-}
-
-function drawSprite(
-  ctx: CanvasRenderingContext2D,
-  emoji: string,
-  x: number,
-  y: number,
-  size: number,
-  angle = 0,
-  flip = false,
-): void {
-  const img = sprite(emoji, size);
-  const w = (img.width * size) / Math.max(8, Math.round(size / 4) * 4);
-  if (!angle && !flip) {
-    ctx.drawImage(img, x - w / 2, y - w / 2, w, w);
-    return;
-  }
-  ctx.save();
-  ctx.translate(x, y);
-  if (angle) ctx.rotate(angle);
-  if (flip) ctx.scale(-1, 1);
-  ctx.drawImage(img, -w / 2, -w / 2, w, w);
-  ctx.restore();
-}
+import { drawSprite } from '../sprites';
 
 /** Deterministic hash for ground decoration. */
 function hash(x: number, y: number): number {
@@ -60,6 +16,91 @@ export interface View {
   dpr: number;
   /** World px → css px. */
   scale: number;
+  /** Low quality: fewer decorations, shadows and glows (weak devices). */
+  low?: boolean;
+}
+
+const vignettes = new Map<string, HTMLCanvasElement>();
+
+/** Full-screen vignette rendered once per size (a radial gradient over the whole screen is costly). */
+function vignette(width: number, height: number, dpr: number, hurt: boolean): HTMLCanvasElement {
+  const key = `${Math.round(width)}x${Math.round(height)}@${dpr}${hurt ? 'h' : ''}`;
+  let c = vignettes.get(key);
+  if (!c) {
+    if (vignettes.size > 6) vignettes.clear();
+    c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(width * dpr * 0.5));
+    c.height = Math.max(1, Math.round(height * dpr * 0.5));
+    const g = c.getContext('2d')!;
+    const grad = g.createRadialGradient(
+      c.width / 2,
+      c.height / 2,
+      Math.min(c.width, c.height) * 0.35,
+      c.width / 2,
+      c.height / 2,
+      Math.max(c.width, c.height) * 0.75,
+    );
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, hurt ? 'rgba(170,0,25,0.75)' : 'rgba(0,0,0,0.55)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, c.width, c.height);
+    vignettes.set(key, c);
+  }
+  return c;
+}
+
+const patterns = new Map<string, CanvasPattern>();
+/** All 9 tile offsets, so blotches wrap seamlessly across edges and corners. */
+const WRAP = [-256, 0, 256].flatMap((ox) => [-256, 0, 256].map((oy) => [ox, oy] as const));
+
+/** Ground texture per biome: blotches, speckles and grass strokes on a 256 px tile. */
+function groundPattern(
+  ctx: CanvasRenderingContext2D,
+  id: string,
+  base: string,
+  accent: string,
+): CanvasPattern {
+  let p = patterns.get(id);
+  if (!p) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const g = c.getContext('2d')!;
+    g.fillStyle = base;
+    g.fillRect(0, 0, 256, 256);
+    let seed = id.length * 977;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    // Soft blotches (wrap around the edges so the tile is seamless).
+    for (let i = 0; i < 26; i++) {
+      const x = rnd() * 256;
+      const y = rnd() * 256;
+      const r = 18 + rnd() * 46;
+      for (const [ox, oy] of WRAP) {
+        const grad = g.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, r);
+        grad.addColorStop(0, `${accent}88`);
+        grad.addColorStop(1, `${accent}00`);
+        g.fillStyle = grad;
+        g.fillRect(x + ox - r, y + oy - r, r * 2, r * 2);
+      }
+    }
+    // Speckles and little strokes.
+    for (let i = 0; i < 260; i++) {
+      g.fillStyle = rnd() < 0.5 ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.10)';
+      g.fillRect(rnd() * 256, rnd() * 256, 2, 2);
+    }
+    g.strokeStyle = 'rgba(255,255,255,0.07)';
+    g.lineWidth = 1.2;
+    for (let i = 0; i < 70; i++) {
+      const x = rnd() * 256;
+      const y = rnd() * 256;
+      g.beginPath();
+      g.moveTo(x, y);
+      g.lineTo(x + (rnd() - 0.5) * 4, y - 4 - rnd() * 5);
+      g.stroke();
+    }
+    p = ctx.createPattern(c, 'repeat')!;
+    patterns.set(id, p);
+  }
+  return p;
 }
 
 export function viewFor(width: number, height: number, dpr: number): View {
@@ -100,15 +141,12 @@ export function render(
   const y0 = Math.floor((h.y - halfH) / TILE);
   const y1 = Math.floor((h.y + halfH) / TILE);
 
-  // Ground: checker tint + scattered decoration.
-  ctx.fillStyle = accent;
-  ctx.globalAlpha = 0.35;
-  for (let tx = x0; tx <= x1; tx++)
-    for (let ty = y0; ty <= y1; ty++)
-      if ((tx + ty) % 2 === 0) ctx.fillRect(tx * TILE, ty * TILE, TILE, TILE);
+  // Ground: pre-rendered texture pattern (cheap) + scattered decoration.
+  ctx.fillStyle = groundPattern(ctx, run.biome.id, base, accent);
+  ctx.fillRect(x0 * TILE, y0 * TILE, (x1 - x0 + 1) * TILE, (y1 - y0 + 1) * TILE);
   ctx.globalAlpha = 0.5;
-  const decor = run.biome.decor;
-  for (let tx = x0; tx <= x1; tx++)
+  const decor = view.low ? [] : run.biome.decor;
+  for (let tx = x0; tx <= x1 && decor.length; tx++)
     for (let ty = y0; ty <= y1; ty++) {
       const r = hash(tx, ty);
       if (r > 0.45) continue;
@@ -195,10 +233,12 @@ export function render(
   // Enemies (shadow, sprite, flash, elite/boss marks).
   for (const e of run.enemies) {
     const size = e.radius * 2.3;
-    ctx.fillStyle = 'rgba(0,0,0,0.28)';
-    ctx.beginPath();
-    ctx.ellipse(e.x, e.y + e.radius * 0.8, e.radius * 0.9, e.radius * 0.35, 0, 0, Math.PI * 2);
-    ctx.fill();
+    if (!view.low) {
+      ctx.fillStyle = 'rgba(0,0,0,0.28)';
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y + e.radius * 0.8, e.radius * 0.9, e.radius * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
     if (e.elite || e.boss) {
       ctx.strokeStyle = e.boss ? '#ff5d73' : '#ffd166';
       ctx.lineWidth = 3;
@@ -241,7 +281,7 @@ export function render(
   ctx.fill();
   const step = h.moving ? Math.sin(time * 14) * 2.5 : 0;
   if (h.invuln > 0 && Math.floor(time * 20) % 2 === 0) ctx.globalAlpha = 0.5;
-  drawSprite(ctx, hero.icon, h.x, h.y - Math.abs(step), 36, 0, h.fx < 0);
+  drawSprite(ctx, run.config.avatar ?? hero.icon, h.x, h.y - Math.abs(step), 36, 0, h.fx < 0);
   ctx.globalAlpha = 1;
   if (h.hurt > 0) {
     ctx.fillStyle = `rgba(255, 60, 80, ${h.hurt * 1.6})`;
@@ -428,19 +468,13 @@ export function render(
     ctx.restore();
   }
 
-  // Vignette, red when hurt.
-  const v = ctx.createRadialGradient(
-    width / 2,
-    height / 2,
-    Math.min(width, height) * 0.35,
-    width / 2,
-    height / 2,
-    Math.max(width, height) * 0.75,
-  );
-  v.addColorStop(0, 'rgba(0,0,0,0)');
-  v.addColorStop(1, h.hurt > 0 ? `rgba(160,0,20,${0.35 + h.hurt})` : 'rgba(0,0,0,0.55)');
-  ctx.fillStyle = v;
-  ctx.fillRect(0, 0, width, height);
+  // Vignette (cached), red flash when hurt.
+  ctx.drawImage(vignette(width, height, dpr, false), 0, 0, width, height);
+  if (h.hurt > 0) {
+    ctx.globalAlpha = Math.min(1, h.hurt * 3);
+    ctx.drawImage(vignette(width, height, dpr, true), 0, 0, width, height);
+    ctx.globalAlpha = 1;
+  }
 }
 
 function beam(

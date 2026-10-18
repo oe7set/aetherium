@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.4.0, Phase 9 = Dorf). Als Nächstes:
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.5.0, Phase 9 = Dorf + Held). Als Nächstes:
 Phase 11 Zusammenspiel. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
@@ -30,6 +30,10 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung
   `engine/villageWorld.ts`, Inhalte `data/village.ts` (Tempo über `SPEED`). Mehrere Dörfer in `s.village.villages`.
   UI `ui/village/` (Felder-Ring, Dorfplatz, Militär, Markt, Berichte, Reich); Panel rendert über `villageKey`.
+- Held = `engine/hero.ts` (ein Held für Dorf und Riss: Attribute, Ausrüstung `data/hero.ts`, Gesundheit, Abenteuer
+  mit Reise/Auto-Erkunden, Zeiteffekt `hero`). Abenteuer live = Riss-Simulation im `mode: 'dungeon'`
+  (`prepareDungeon`/`finishDungeon` in `engine/rift.ts`). `village.ts` importiert den Helden, nie umgekehrt.
+  Weltkarte `ui/village/WorldMap.tsx` + `mapRender.ts` (Gelände einmal vorgerendert). Sprites: `ui/sprites.ts`.
 - Ätherriss (Survivor-Roguelike): Echtzeit-Simulation `src/rift/sim.ts` (pur, deterministisch, eigene `stepRun`-
   Schleife, nicht im Spielstand), Inhalte `data/rift.ts` (Waffen-Verhalten, Passive, Evolutionen, Biome, Helden,
   Talente), Meta `engine/rift.ts` (Freischaltungen über Skills/Techs, `prepareRun`/`finishRun`, Echo-Läufe).

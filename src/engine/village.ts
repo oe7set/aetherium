@@ -48,6 +48,17 @@ import {
   type VQueueItem,
   type VReport,
 } from './state';
+import {
+  gainHeroXp,
+  heroAtHome,
+  heroDefense,
+  heroDefenseBonus,
+  heroOffenseBonus,
+  heroResourceBonus,
+  heroStat,
+  heroStrength,
+  hurtHero,
+} from './hero';
 import { createVillage } from './villageWorld';
 
 export const V_BUILDING_MAP = new Map(V_BUILDINGS.map((b) => [b.id, b]));
@@ -60,6 +71,8 @@ export const INSTANT_GOLD_PER_SECOND = 4;
 export const MARKET_FEE = 1;
 /** Resources one merchant carries. */
 export const MERCHANT_CARRY = 750;
+/** Loot the hero carries on a raid. */
+export const HERO_CARRY = 200;
 
 export type VResult = { ok: true } | { ok: false; reason: string };
 const OK: VResult = { ok: true };
@@ -158,7 +171,8 @@ export function production(s: GameState, v: Village): VCostState {
     const t = s.village.targets.find((x) => x.id === id);
     if (t?.bonus) bonus[t.bonus] += OASIS_BONUS;
   }
-  for (const r of V_RESOURCES) out[r] = out[r] * SPEED * (1 + bonus[r]);
+  const hero = heroResourceBonus(s, v.id);
+  for (const r of V_RESOURCES) out[r] = out[r] * SPEED * (1 + bonus[r] + hero);
   return out;
 }
 
@@ -375,9 +389,10 @@ export function startResearch(s: GameState, villageId: number, troopId: string):
   return OK;
 }
 
-export function trainTime(v: Village, t: TroopDef): number {
+export function trainTime(v: Village, t: TroopDef, s?: GameState): number {
   const lvl = buildingLevel(v, t.building);
-  return Math.max(1, (t.time * Math.pow(0.94, Math.max(0, lvl - 1))) / SPEED);
+  const helmet = s ? Math.min(0.5, heroStat(s, 'train')) : 0;
+  return Math.max(1, (t.time * Math.pow(0.94, Math.max(0, lvl - 1)) * (1 - helmet)) / SPEED);
 }
 
 export function maxTrainable(v: Village, t: TroopDef): number {
@@ -408,7 +423,7 @@ export function trainTroops(
   if (!check.ok) return check;
   const t = TROOP_MAP.get(troopId)!;
   for (const r of V_RESOURCES) v.res[r] -= t.cost[r] * count;
-  v.training.push({ troop: troopId, count, each: trainTime(v, t), progress: 0 });
+  v.training.push({ troop: troopId, count, each: trainTime(v, t, s), progress: 0 });
   return OK;
 }
 
@@ -477,15 +492,22 @@ export function sendRaid(
   villageId: number,
   targetId: string,
   troops: Record<string, number>,
+  withHero = false,
 ): VResult {
   const v = getVillage(s, villageId);
   const target = s.village.targets.find((t) => t.id === targetId);
   if (!v || !target) return fail('illegal');
   if (buildingLevel(v, 'rally') < 1) return fail('rally');
   if (troops.settler) return fail('illegal');
-  const taken = takeTroops(v, troops);
+  if (withHero && !heroAtHome(s, v.id)) return fail('hero');
+  const hasTroops = Object.values(troops).some((n) => Math.floor(n) > 0);
+  const taken = hasTroops ? takeTroops(v, troops) : withHero ? {} : null;
   if (!taken) return fail('troops');
-  const time = travelTime(v, taken, distance(v.x, v.y, target.x, target.y));
+  const time = travelTime(
+    v,
+    withHero && !hasTroops ? { militia: 1 } : taken,
+    distance(v.x, v.y, target.x, target.y),
+  );
   newMovement(s, {
     kind: 'raid',
     from: v.id,
@@ -494,7 +516,9 @@ export function sendRaid(
     res: zero(),
     remaining: time,
     total: time,
+    hero: withHero,
   });
+  if (withHero) s.hero.status = 'raid';
   addStat(s, 'villageRaids');
   return OK;
 }
@@ -506,8 +530,9 @@ export function oasisSlots(v: Village): number {
   return OASIS_SLOTS.filter((x) => lvl >= x).length;
 }
 
-export function canAnnex(v: Village, target: RaidTarget): VResult {
+export function canAnnex(s: GameState, v: Village, target: RaidTarget): VResult {
   if (target.kind !== 'oasis' || target.owner !== null) return fail('illegal');
+  if (!heroAtHome(s, v.id)) return fail('hero');
   if (target.defense > target.maxDefense * 0.02) return fail('defended');
   if (v.oases.length >= oasisSlots(v)) return fail('slots');
   if (distance(v.x, v.y, target.x, target.y) > 7) return fail('far');
@@ -518,7 +543,7 @@ export function annexOasis(s: GameState, villageId: number, targetId: string): V
   const v = getVillage(s, villageId);
   const target = s.village.targets.find((t) => t.id === targetId);
   if (!v || !target) return fail('illegal');
-  const check = canAnnex(v, target);
+  const check = canAnnex(s, v, target);
   if (!check.ok) return check;
   target.owner = v.id;
   v.oases.push(target.id);
@@ -705,7 +730,7 @@ export function cpPerHour(s: GameState): number {
   for (const v of s.village.villages)
     for (const [id, lvl] of Object.entries(v.buildings))
       cp += lvl * (V_BUILDING_MAP.get(id)?.cp ?? 0);
-  return cp * SPEED;
+  return cp * SPEED * (1 + heroStat(s, 'cp'));
 }
 
 // --- Reports --------------------------------------------------------------------------------------
@@ -756,7 +781,11 @@ function resolveRaid(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
   const v = getVillage(s, m.from);
   const target = s.village.targets.find((t) => t.id === m.target);
   if (!v || !target) return;
-  const attack = attackValue(v, m.troops, target.kind === 'ruin');
+  const heroJoins = m.hero === true && s.hero.status === 'raid';
+  const attack =
+    attackValue(v, m.troops, target.kind === 'ruin') * (heroJoins ? 1 + heroOffenseBonus(s) : 1) +
+    (heroJoins ? heroStrength(s) : 0);
+  const defBefore = target.defense;
   const result = battle(attack, target.defense);
   const troops = { ...m.troops };
   const losses = applyLosses(troops, result.attackerLoss);
@@ -764,7 +793,7 @@ function resolveRaid(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
   if (target.defense < target.maxDefense * 0.02) target.defense = 0;
   const loot = zero();
   if (result.won) {
-    let carry = carryOf(troops);
+    let carry = carryOf(troops) + (heroJoins ? HERO_CARRY : 0);
     const total = V_RESOURCES.reduce((a, r) => a + target.stock[r], 0);
     if (total > 0 && carry > 0) {
       const share = Math.min(1, carry / total);
@@ -774,6 +803,12 @@ function resolveRaid(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
         carry -= loot[r];
       }
     }
+  }
+  let heroBack = heroJoins;
+  if (heroJoins) {
+    gainHeroXp(s, Math.round((defBefore - target.defense) / 12 + 10 * target.level), emit);
+    hurtHero(s, Math.round(result.attackerLoss * 70), emit);
+    heroBack = s.hero.status !== 'dead';
   }
   const survivors = Object.values(troops).reduce((a, b) => a + b, 0);
   const lootSum = V_RESOURCES.reduce((a, r) => a + loot[r], 0);
@@ -792,7 +827,7 @@ function resolveRaid(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
     },
     emit,
   );
-  if (survivors > 0) {
+  if (survivors > 0 || heroBack) {
     newMovement(s, {
       kind: 'return',
       from: v.id,
@@ -801,6 +836,7 @@ function resolveRaid(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
       res: loot,
       remaining: m.total,
       total: m.total,
+      hero: heroBack,
     });
   }
   // Rift ruins also guard aether for the island.
@@ -815,6 +851,7 @@ function arrive(s: GameState, m: VMovement, rng: Rng, emit: Emit): void {
       break;
     case 'return': {
       const v = getVillage(s, m.from);
+      if (m.hero && s.hero.status === 'raid') s.hero.status = 'home';
       if (!v) return;
       for (const [id, n] of Object.entries(m.troops)) v.troops[id] = (v.troops[id] ?? 0) + n;
       add(v, m.res);
@@ -869,8 +906,15 @@ export function invasionStrength(s: GameState): number {
 function invade(s: GameState, rng: Rng, emit: Emit): void {
   const v = s.village.villages.reduce((a, b) => (population(b) > population(a) ? b : a));
   const attack = invasionStrength(s) * (0.8 + rng() * 0.4);
-  const defense = defenseValue(v, v.troops);
+  const heroHome = heroAtHome(s, v.id);
+  const defense =
+    defenseValue(v, v.troops) * (heroHome ? 1 + heroDefenseBonus(s) : 1) +
+    (heroHome ? heroDefense(s) : 0);
   const result = battle(attack, defense);
+  if (heroHome) {
+    gainHeroXp(s, Math.round(attack / 15), emit);
+    hurtHero(s, Math.round(result.defenderLoss * 60), emit);
+  }
   const losses = applyLosses(v.troops, result.defenderLoss);
   // Defender view: `result.won` is the attacker's win.
   const plunder = zero();

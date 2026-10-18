@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { getItem } from '../../data';
-import { BIOMES, RIFT_PASSIVES, RUN_MINUTES } from '../../data/rift';
-import type { RiftReward } from '../../engine';
+import { HERO_ITEMS, TIER_NAMES } from '../../data/hero';
+import { BIOMES, RIFT_PASSIVES } from '../../data/rift';
+import type { AdventureReward, RiftReward } from '../../engine';
 import {
   banishChoice,
   chooseUpgrade,
@@ -9,6 +10,7 @@ import {
   maxLevelOf,
   PASSIVE_MAP,
   rerollChoices,
+  runMinutes,
   runResult,
   skipLevelUp,
   stepRun,
@@ -42,6 +44,7 @@ export default function RiftOverlay() {
   const keys = useRef(new Set<string>());
   const [joy, setJoy] = useState<{ ox: number; oy: number; x: number; y: number } | null>(null);
   const [reward, setReward] = useState<RiftReward | null>(null);
+  const [advReward, setAdvReward] = useState<AdventureReward | null>(null);
   const finished = useRef(false);
 
   // Game loop.
@@ -55,8 +58,15 @@ export default function RiftOverlay() {
     let lastPhase = run.phase;
     let lastLevel = run.hero.level;
     let lastKills = 0;
+    // Adaptive quality: if frames get slow, lower the resolution first, then the detail level.
+    const quality = {
+      dpr: Math.min(2, window.devicePixelRatio || 1),
+      low: false,
+      ema: 1 / 60,
+      frames: 0,
+    };
     const resize = () => {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = quality.dpr;
       canvas.width = Math.floor(window.innerWidth * dpr);
       canvas.height = Math.floor(window.innerHeight * dpr);
       canvas.style.width = `${window.innerWidth}px`;
@@ -79,8 +89,19 @@ export default function RiftOverlay() {
         input.y += (j.y - j.oy) / JOY_RADIUS;
       }
       stepRun(run, dt, input);
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      render(ctx, run, viewFor(window.innerWidth, window.innerHeight, dpr), now / 1000);
+      quality.ema = quality.ema * 0.95 + dt * 0.05;
+      if (++quality.frames % 90 === 0 && quality.ema > 1 / 38) {
+        if (quality.dpr > 1) {
+          quality.dpr = Math.max(1, quality.dpr - 0.5);
+          resize();
+        } else quality.low = true;
+      }
+      render(
+        ctx,
+        run,
+        { ...viewFor(window.innerWidth, window.innerHeight, quality.dpr), low: quality.low },
+        now / 1000,
+      );
       // HUD refresh: on phase changes immediately, otherwise ~8×/s.
       if (run.phase !== lastPhase || run.hero.level !== lastLevel || now - lastHud > 125) {
         if (useGame.getState().game.settings.sound) {
@@ -138,7 +159,9 @@ export default function RiftOverlay() {
     if (!run || finished.current) return;
     if (run.phase === 'dead' || run.phase === 'won') {
       finished.current = true;
-      setReward(useGame.getState().riftFinish(runResult(run)));
+      if (run.config.mode === 'dungeon')
+        setAdvReward(useGame.getState().dungeonFinish(runResult(run)));
+      else setReward(useGame.getState().riftFinish(runResult(run)));
     }
   }, [run, version]);
 
@@ -221,14 +244,14 @@ export default function RiftOverlay() {
           </div>
         </div>
       )}
-      {over && <Results run={run} reward={reward} onLeave={leave} />}
+      {over && <Results run={run} reward={reward} advReward={advReward} onLeave={leave} />}
     </div>
   );
 }
 
 function Hud({ run, onPause }: { run: RunState; onPause: () => void }) {
   const h = run.hero;
-  const left = RUN_MINUTES * 60 - run.time;
+  const left = runMinutes(run.config) * 60 - run.time;
   return (
     <div className="rift-hud">
       <div className="rift-xp">
@@ -459,23 +482,38 @@ function Loadout({ run }: { run: RunState }) {
 function Results({
   run,
   reward,
+  advReward,
   onLeave,
 }: {
   run: RunState;
   reward: RiftReward | null;
+  advReward: AdventureReward | null;
   onLeave: () => void;
 }) {
   const won = run.phase === 'won';
+  const dungeon = run.config.mode === 'dungeon';
   const biome = BIOMES.find((b) => b.id === run.config.biome);
   return (
     <div className="rift-modal results">
       <div className={`rift-card ${won ? 'won' : ''}`}>
         <div className="chest-icon">{won ? '🏆' : '💀'}</div>
-        <h2 className="rift-title">{won ? 'Prüfung bestanden!' : 'Durchgefallen'}</h2>
+        <h2 className="rift-title">
+          {dungeon
+            ? won
+              ? 'Dungeon gemeistert!'
+              : 'Rückzug!'
+            : won
+              ? 'Prüfung bestanden!'
+              : 'Durchgefallen'}
+        </h2>
         <p className="rift-sub">
-          {won
-            ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
-            : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
+          {dungeon
+            ? won
+              ? 'Der Wächter liegt am Boden, die Schatzkammer steht offen.'
+              : 'Dein Held schleppt sich verwundet zurück. Ein Teil der Beute bleibt trotzdem.'
+            : won
+              ? 'Der Prüfer nickt anerkennend. Mit Note 1,0 – mehr oder weniger.'
+              : 'Der Riss hat dich wieder ausgespuckt. Die Wissenschaft lernt aus Fehlschlägen.'}
         </p>
         <div className="result-grid">
           <div>
@@ -515,9 +553,29 @@ function Results({
             )}
           </div>
         )}
+        {advReward && (
+          <div className="reward">
+            <p className="reward-essence">
+              +{advReward.xp} ⭐ Helden-XP · +{advReward.essence} 🌀
+            </p>
+            {advReward.item && (
+              <p className="reward-item">
+                🎁 {HERO_ITEMS.find((i) => i.id === advReward.item!.base)?.icon}{' '}
+                {HERO_ITEMS.find((i) => i.id === advReward.item!.base)?.name} (
+                {TIER_NAMES[advReward.item.tier]})
+              </p>
+            )}
+            <p className="rift-sub">
+              🏘️ je {advReward.resources} Rohstoffe fürs Heimatdorf
+              {advReward.islandItem &&
+                ` · ${getItem(advReward.islandItem).icon} ${getItem(advReward.islandItem).name}`}
+              {advReward.health > 0 && ` · −${advReward.health} % Gesundheit`}
+            </p>
+          </div>
+        )}
         <Loadout run={run} />
         <button className="btn btn-primary btn-big" onClick={onLeave}>
-          Zurück zur Insel
+          {dungeon ? 'Zurück ins Dorf' : 'Zurück zur Insel'}
         </button>
       </div>
     </div>

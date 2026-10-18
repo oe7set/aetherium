@@ -20,14 +20,17 @@ import { FieldsView } from './FieldsView';
 import { MarketView } from './MarketView';
 import { MilitaryView } from './MilitaryView';
 import { ReportsView } from './ReportsView';
+import { WorldMap } from './WorldMap';
 import { duration, short, villageKey } from './vui';
 import './village.css';
 
-export type VillageSegment = 'fields' | 'center' | 'military' | 'market' | 'reports' | 'empire';
+export type VillageSegment =
+  'fields' | 'center' | 'map' | 'military' | 'market' | 'reports' | 'empire';
 
 const SEGMENTS: [VillageSegment, string][] = [
   ['fields', '🌾 Felder'],
   ['center', '🏘️ Dorf'],
+  ['map', '🗺️ Karte'],
   ['military', '⚔️ Militär'],
   ['market', '⚖️ Markt'],
   ['reports', '📜 Berichte'],
@@ -84,6 +87,7 @@ export function VillagePanel() {
       <BuildQueue village={v} />
       {seg === 'fields' && <FieldsView village={v} onCenter={() => setSeg('center')} />}
       {seg === 'center' && <CenterView village={v} onSegment={setSeg} />}
+      {seg === 'map' && <WorldMap village={v} />}
       {seg === 'military' && <MilitaryView village={v} />}
       {seg === 'market' && <MarketView village={v} />}
       {seg === 'reports' && <ReportsView />}

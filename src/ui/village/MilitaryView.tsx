@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { TROOPS, V_RES_INFO, V_RESOURCES, type TroopDef } from '../../data/village';
 import {
   annexOasis,
+  HERO_CARRY,
+  heroAtHome,
+  heroOffenseBonus,
+  heroStrength,
   attackValue,
   buildingLevel,
   canAnnex,
@@ -293,25 +297,33 @@ function TargetList({ village: v }: { village: Village }) {
   );
 }
 
-function RaidForm({ village: v, target }: { village: Village; target: RaidTarget }) {
+export function RaidForm({ village: v, target }: { village: Village; target: RaidTarget }) {
   const act = useGame((s) => s.village);
+  const game = useGame.getState().game;
   const [sel, setSel] = useState<Record<string, number>>(() =>
     Object.fromEntries(
       TROOPS.filter((tr) => tr.id !== 'settler').map((tr) => [tr.id, v.troops[tr.id] ?? 0]),
     ),
   );
+  const heroHere = heroAtHome(game, v.id);
+  const [withHero, setWithHero] = useState(heroHere);
+  const hero = withHero && heroHere;
   const available = TROOPS.filter((tr) => tr.id !== 'settler' && (v.troops[tr.id] ?? 0) > 0);
-  const attack = attackValue(v, sel, target.kind === 'ruin');
+  const attack =
+    attackValue(v, sel, target.kind === 'ruin') * (hero ? 1 + heroOffenseBonus(game) : 1) +
+    (hero ? heroStrength(game) : 0);
   const tpl = {
     camp: 'Räuber bewachen die Beute.',
-    oasis: 'Wilde Tiere verteidigen die Oase.',
+    oasis:
+      'Wilde Tiere verteidigen die Oase. Geräumt annektiert sie dein Held (Residenz 10/15/20).',
     ruin: 'Ätherwesen – Kampfmagier zählen doppelt.',
   };
-  const annex = target.kind === 'oasis' ? canAnnex(v, target) : null;
+  const annex = target.kind === 'oasis' ? canAnnex(game, v, target) : null;
+  const travelSet = Object.values(sel).some((n) => n > 0) ? sel : { militia: 1 };
   return (
     <div className="v-raid">
       <p className="small muted">{tpl[target.kind]}</p>
-      {available.length === 0 && <p className="small">Keine Truppen verfügbar.</p>}
+      {available.length === 0 && !heroHere && <p className="small">Keine Truppen verfügbar.</p>}
       {available.map((tr) => (
         <label key={tr.id} className="v-raid-row">
           <span>
@@ -327,17 +339,29 @@ function RaidForm({ village: v, target }: { village: Village; target: RaidTarget
           <b>{Math.min(sel[tr.id] ?? 0, v.troops[tr.id] ?? 0)}</b>
         </label>
       ))}
-      {available.length > 0 && (
+      {heroHere && (
+        <label className="v-hero-toggle">
+          <input
+            type="checkbox"
+            checked={withHero}
+            onChange={(e) => setWithHero(e.target.checked)}
+          />
+          {game.hero.avatar} Held begleitet (+{Math.round(heroStrength(game))} Kampfkraft, sammelt
+          XP, riskiert Gesundheit {Math.round(game.hero.health)} %)
+        </label>
+      )}
+      {(available.length > 0 || heroHere) && (
         <>
           <p className="small">
             Angriff <b className={attack > target.defense ? 'good' : 'bad'}>{Math.round(attack)}</b>{' '}
-            gegen {Math.round(target.defense)} · Tragkraft {short(carryOf(sel))} · Weg{' '}
-            {duration(travelTime(v, sel, distance(v.x, v.y, target.x, target.y)))}
+            gegen {Math.round(target.defense)} · Tragkraft{' '}
+            {short(carryOf(sel) + (hero ? HERO_CARRY : 0))} · Weg{' '}
+            {duration(travelTime(v, travelSet, distance(v.x, v.y, target.x, target.y)))}
           </p>
           <button
             className="btn btn-primary"
             disabled={attack <= 0}
-            onClick={() => act((s) => sendRaid(s, v.id, target.id, sel))}
+            onClick={() => act((s) => sendRaid(s, v.id, target.id, sel, hero))}
           >
             ⚔️ Raubzug starten
           </button>

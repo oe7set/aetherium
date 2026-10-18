@@ -966,7 +966,7 @@ export interface HeroDef {
 export const HEROES: HeroDef[] = [
   {
     id: 'farmer',
-    name: 'Bauer Bodo',
+    name: 'Bauernkraft',
     icon: '🧑‍🌾',
     weapon: 'axe',
     desc: 'Robust und bodenständig: +20 LP.',
@@ -974,7 +974,7 @@ export const HEROES: HeroDef[] = [
   },
   {
     id: 'smith',
-    name: 'Schmiedin Hilde',
+    name: 'Schmiedekunst',
     icon: '👩‍🏭',
     weapon: 'pick',
     desc: 'Hart im Nehmen: +2 Rüstung.',
@@ -983,7 +983,7 @@ export const HEROES: HeroDef[] = [
   },
   {
     id: 'alchemist',
-    name: 'Alchemist Paracelsus',
+    name: 'Alchemie',
     icon: '🧙‍♂️',
     weapon: 'acid',
     desc: 'Großzügige Dosierung: +15 % Bereich.',
@@ -992,7 +992,7 @@ export const HEROES: HeroDef[] = [
   },
   {
     id: 'ranger',
-    name: 'Waldläuferin Wilma',
+    name: 'Waldläuferei',
     icon: '🧝‍♀️',
     weapon: 'arrows',
     desc: 'Leichtfüßig: +12 % Tempo.',
@@ -1001,7 +1001,7 @@ export const HEROES: HeroDef[] = [
   },
   {
     id: 'mage',
-    name: 'Magier Merlinus',
+    name: 'Runenmagie',
     icon: '🧙',
     weapon: 'runes',
     desc: 'Schnelle Formeln: −10 % Abklingzeit.',
@@ -1010,7 +1010,7 @@ export const HEROES: HeroDef[] = [
   },
   {
     id: 'physicist',
-    name: 'Physikerin Dr. Curie-Ous',
+    name: 'Teilchenphysik',
     icon: '👩‍🔬',
     weapon: 'particle',
     desc: 'Anziehend: +50 % Sammelradius, +1 Projektil.',

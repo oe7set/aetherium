@@ -648,3 +648,269 @@
     animation: none !important;
   }
 }
+
+/* --- Hero ---------------------------------------------------------------------------------- */
+.hero-view {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hero-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hero-box p {
+  margin: 0;
+}
+.hero-card-big {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 14px;
+  align-items: center;
+  background:
+    radial-gradient(circle at 15% 40%, rgba(94, 242, 255, 0.25), transparent 55%),
+    linear-gradient(160deg, rgba(40, 30, 80, 0.95), rgba(14, 12, 30, 0.95)) !important;
+  border-color: rgba(160, 128, 255, 0.45) !important;
+}
+.hero-card-big.status-dead {
+  filter: grayscale(0.7);
+}
+.hero-portrait {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 3.4rem;
+  background: radial-gradient(circle at 40% 35%, #2a2160, #0b0920);
+  box-shadow:
+    0 0 0 3px rgba(255, 209, 102, 0.7),
+    0 0 30px rgba(124, 92, 255, 0.6);
+}
+.hero-portrait::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(94, 242, 255, 0.45);
+  animation: portal-spin 18s linear infinite;
+}
+.hero-level {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-2));
+  color: #3a2a18;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 30px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.hero-name {
+  cursor: pointer;
+  font-size: 1.25rem !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hero-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hero-edit input {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+}
+.hero-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.hero-avatars button {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 1.2rem;
+}
+.hero-avatars button.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+}
+.hero-bar {
+  position: relative;
+  height: 14px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.hero-bar.thin {
+  height: 4px;
+  margin-top: 3px;
+}
+.hero-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7c5cff, var(--aether));
+  transition: width 0.6s ease;
+}
+.hero-bar.hp i {
+  background: linear-gradient(90deg, #2fbf68, #5be38a);
+}
+.hero-bar.hp.low i {
+  background: linear-gradient(90deg, #c62828, var(--red));
+}
+.hero-bar span {
+  position: absolute;
+  inset: 0;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  text-shadow: 0 1px 2px #000;
+}
+.hero-attr {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+.hero-attr-icon {
+  font-size: 1.4rem;
+}
+.hero-attr-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hero-attr-body small {
+  font-size: 0.7rem;
+}
+.hero-attr-body b {
+  color: var(--gold);
+}
+.hero-attr-btns {
+  display: flex;
+  gap: 4px;
+}
+.hero-slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.hero-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  border: 1px dashed var(--line-strong);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+.hero-slot.filled {
+  border: 1px solid var(--tier);
+  color: inherit;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tier) 40%, transparent);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--tier) 18%, transparent),
+    rgba(0, 0, 0, 0.3)
+  );
+}
+.hero-slot-icon {
+  font-size: 1.6rem;
+}
+.hero-bag {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hero-item {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--tier) 55%, transparent);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--tier) 14%, transparent),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+.hero-item.equipped {
+  outline: 2px solid var(--tier);
+}
+.hero-item-icon {
+  font-size: 1.6rem;
+}
+.hero-item-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hero-item-body small {
+  font-size: 0.7rem;
+}
+.hero-item-body .tier {
+  color: var(--tier);
+  font-weight: 700;
+}
+.hero-item-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.adventure-here {
+  border-color: rgba(255, 209, 102, 0.6) !important;
+  box-shadow: 0 0 24px rgba(255, 209, 102, 0.25);
+}
+.adventure-card {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.adventure-card.hard {
+  border-color: rgba(255, 93, 115, 0.55) !important;
+}
+.adventure-icon {
+  font-size: 1.8rem;
+}
+.adventure-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.adventure-body small {
+  font-size: 0.72rem;
+}
+.reward-item {
+  margin: 0;
+  font-weight: 700;
+  color: var(--gold);
+}

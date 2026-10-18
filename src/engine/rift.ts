@@ -23,6 +23,15 @@ import { hasTech } from './science';
 import { skillLevel } from './skills';
 import { addStat, type GameState } from './state';
 import { villageRiftBonus, villageTribute } from './village';
+import {
+  currentAdventure,
+  gainHeroXp,
+  grantAdventure,
+  heroRiftStats,
+  hurtHero,
+  type AdventureReward,
+} from './hero';
+import { DUNGEON_MINUTES } from '../data/hero';
 
 export const RIFT_TALENT_MAP = new Map(RIFT_TALENTS.map((t) => [t.id, t]));
 
@@ -117,6 +126,17 @@ export function runStats(s: GameState, hero: string): RiftStats {
   const village = villageRiftBonus(s);
   out.might += village.might;
   out.armor += village.armor;
+  // The one hero: level, attributes, equipment and health.
+  const h = heroRiftStats(s);
+  out.maxHp *= h.hpMult;
+  out.might += h.might;
+  out.cooldown += h.cooldown;
+  out.armor += h.armor;
+  out.area += h.area;
+  out.speed *= 1 + h.speed;
+  out.luck += h.luck;
+  out.magnet *= 1 + h.magnet;
+  out.growth += h.growth;
   return out;
 }
 
@@ -143,26 +163,45 @@ export function autoProvisions(s: GameState): string[] {
 }
 
 export function canStartRun(s: GameState, hero: string, biome: string): RiftResultCode {
+  if (s.hero.status === 'dead') return { ok: false, reason: 'dead' };
+  if (s.hero.status !== 'home') return { ok: false, reason: 'busy' };
   if (!heroUnlocked(s, hero)) return { ok: false, reason: 'hero' };
   if (!biomeUnlocked(s, biome)) return { ok: false, reason: 'biome' };
   return { ok: true };
 }
 
 /** Builds the run config and packs the provisions (food leaves the inventory). */
-export function prepareRun(s: GameState, hero: string, biome: string, rng: Rng): RunConfig | null {
-  if (!canStartRun(s, hero, biome).ok) return null;
+function packProvisions(s: GameState): number[] {
   const provisions: number[] = [];
   for (const item of autoProvisions(s)) {
     if (removeItem(s, item, 1)) provisions.push(riftHeal(item));
   }
+  return provisions;
+}
+
+export function prepareRun(s: GameState, hero: string, biome: string, rng: Rng): RunConfig | null {
+  if (!canStartRun(s, hero, biome).ok) return null;
+  const provisions = packProvisions(s);
   s.rift.hero = hero;
+  s.hero.style = hero;
   s.rift.biome = biome;
   s.rift.runs++;
   addStat(s, 'riftRuns');
+  return baseConfig(s, hero, biome, rng, provisions);
+}
+
+function baseConfig(
+  s: GameState,
+  hero: string,
+  biome: string,
+  rng: Rng,
+  provisions: number[],
+): RunConfig {
   return {
     hero,
     biome,
     seed: Math.floor(rng() * 2 ** 31),
+    avatar: s.hero.avatar,
     stats: runStats(s, hero),
     startWeaponLevel: 1 + (s.equipment.weapon ? 1 : 0),
     pool: weaponPool(s, hero),
@@ -172,6 +211,40 @@ export function prepareRun(s: GameState, hero: string, biome: string, rng: Rng):
     revives: riftTalentLevel(s, 't_revival'),
     provisions,
   };
+}
+
+// --- Adventures as real-time dungeons -------------------------------------------------------------
+
+/** Starts the adventure the hero stands at as a live dungeon (with the hero's combat style). */
+export function prepareDungeon(s: GameState, rng: Rng): RunConfig | null {
+  const adv = currentAdventure(s);
+  if (!adv) return null;
+  const style = heroUnlocked(s, s.hero.style) ? s.hero.style : 'farmer';
+  const provisions = packProvisions(s);
+  addStat(s, 'heroDungeons');
+  // Within a biome tier the level adds pressure; hard adventures hit harder.
+  const tierStep = (adv.level - 1) % 3;
+  return {
+    ...baseConfig(s, style, adv.biome, rng, provisions),
+    mode: 'dungeon',
+    minutes: adv.hard ? DUNGEON_MINUTES.hard : DUNGEON_MINUTES.normal,
+    difficulty: (0.8 + 0.15 * tierStep) * (adv.hard ? 1.35 : 1),
+  };
+}
+
+/** Books a live dungeon: better rewards than auto-exploring, health loss on defeat. */
+export function finishDungeon(
+  s: GameState,
+  r: RunResult,
+  rng: Rng,
+  emit: Emit,
+): AdventureReward | null {
+  const adv = currentAdventure(s);
+  if (!adv) return null;
+  gainHeroXp(s, Math.round(r.kills / 10), emit);
+  addStat(s, 'riftKills', r.kills);
+  const quality = 1 + Math.min(0.3, r.kills / 2000);
+  return grantAdventure(s, adv, r.won, quality, r.won ? 5 : 45, rng, emit);
 }
 
 // --- Rewards --------------------------------------------------------------------------------------
@@ -213,6 +286,21 @@ export function finishRun(s: GameState, r: RunResult, rng: Rng, emit: Emit): Rif
     addStat(s, 'riftWins');
   }
   addStat(s, 'riftKills', r.kills);
+  // The hero learns from every run – and carries the scars.
+  gainHeroXp(
+    s,
+    Math.round(
+      (r.kills / 8 + r.level * 3 + r.bossKills * 40) *
+        (1 +
+          0.5 *
+            Math.max(
+              0,
+              BIOMES.findIndex((b) => b.id === r.biome),
+            )),
+    ),
+    emit,
+  );
+  hurtHero(s, r.won ? 0 : r.time >= 600 ? 15 : 30, emit);
   addStat(s, 'riftBossKills', r.bossKills);
   addStat(s, 'riftEssence', essence);
   s.stats.riftBestMinutes = Math.max(s.stats.riftBestMinutes ?? 0, Math.floor(r.time / 60));

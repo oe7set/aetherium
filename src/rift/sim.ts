@@ -206,6 +206,19 @@ export interface RunConfig {
   revives: number;
   /** Food from the island inventory: heal per item. */
   provisions: number[];
+  /** The player's hero avatar (sprite). */
+  avatar?: string;
+  /** 'dungeon' = adventure: shorter, mid boss at half time, the biome's big boss as final guardian. */
+  mode?: 'rift' | 'dungeon';
+  /** Run length in minutes (default 15). */
+  minutes?: number;
+  /** Extra enemy HP/damage multiplier. */
+  difficulty?: number;
+}
+
+/** Minutes until the final boss of a run. */
+export function runMinutes(config: RunConfig): number {
+  return config.minutes ?? RUN_MINUTES;
 }
 
 export type RunPhase = 'playing' | 'levelup' | 'chest' | 'paused' | 'dead' | 'won';
@@ -450,14 +463,18 @@ function pushFx(run: RunState, fx: Fx): void {
 }
 
 function scaleHp(run: RunState): number {
-  return run.biome.difficulty * (1 + (run.time / 60) * 0.2);
+  return run.biome.difficulty * (run.config.difficulty ?? 1) * (1 + (run.time / 60) * 0.2);
 }
 
 function scaleDamage(run: RunState): number {
   const minute = run.time / 60;
   // The first two minutes are a gentle warm-up.
   const warmup = Math.min(1, 0.6 + minute * 0.2);
-  return Math.pow(run.biome.difficulty, 0.7) * (1 + minute * 0.04) * warmup;
+  return (
+    Math.pow(run.biome.difficulty * (run.config.difficulty ?? 1), 0.7) *
+    (1 + minute * 0.04) *
+    warmup
+  );
 }
 
 // --- Damage ---------------------------------------------------------------------------------------
@@ -603,7 +620,12 @@ function spawnEnemy(
     // Bosses are defined with absolute HP; they still grow with the hero.
     hp =
       def.hp *
-      (kind === 'final' ? Math.pow(run.biome.difficulty, 0.85) : 1) *
+      (kind === 'final'
+        ? run.config.mode === 'dungeon'
+          ? 0.8
+          : Math.pow(run.biome.difficulty, 0.85)
+        : 1) *
+      (run.config.difficulty ?? 1) *
       (0.55 + run.hero.level * 0.035);
   }
   const h = run.hero;
@@ -698,38 +720,43 @@ function updateSpawns(run: RunState, dt: number): void {
       spawnEnemy(run, pickWeighted(run, pool), x, y, 'elite');
     }
   }
-  for (const b of run.biome.bosses) {
-    if (minute >= b.at && !run.bossesSpawned.includes(b.id)) {
+  const total = runMinutes(run.config);
+  const dungeon = run.config.mode === 'dungeon';
+  // Dungeons: the first biome boss at half time, the second one guards the exit.
+  const bosses = dungeon
+    ? run.biome.bosses.slice(0, 1).map((b) => ({ def: b, at: total / 2 }))
+    : run.biome.bosses.map((b) => ({ def: b, at: b.at }));
+  for (const { def: b, at } of bosses) {
+    if (minute >= at && !run.bossesSpawned.includes(b.id)) {
       run.bossesSpawned.push(b.id);
       const [x, y] = ringPoint(run);
       spawnEnemy(run, b, x, y, 'boss');
-      pushFx(run, {
-        type: 'text',
-        x: run.hero.x,
-        y: run.hero.y - 80,
-        text: `${b.icon} ${b.name}!`,
-        color: '#ff5d73',
-        life: 2.5,
-        max: 2.5,
-        big: true,
-      });
+      announce(run, `${b.icon} ${b.name}!`);
     }
   }
-  if (minute >= RUN_MINUTES && !run.examinerSpawned) {
+  if (minute >= total && !run.examinerSpawned) {
     run.examinerSpawned = true;
     const [x, y] = ringPoint(run);
-    spawnEnemy(run, EXAMINER, x, y, 'final');
-    pushFx(run, {
-      type: 'text',
-      x: run.hero.x,
-      y: run.hero.y - 80,
-      text: '🧑‍⚖️ Der Prüfer erscheint!',
-      color: '#ff5d73',
-      life: 3,
-      max: 3,
-      big: true,
-    });
+    const guardian = dungeon ? (run.biome.bosses[1] ?? EXAMINER) : EXAMINER;
+    spawnEnemy(run, guardian, x, y, 'final');
+    announce(
+      run,
+      dungeon ? `${guardian.icon} Der Wächter: ${guardian.name}!` : '🧑‍⚖️ Der Prüfer erscheint!',
+    );
   }
+}
+
+function announce(run: RunState, text: string): void {
+  pushFx(run, {
+    type: 'text',
+    x: run.hero.x,
+    y: run.hero.y - 80,
+    text,
+    color: '#ff5d73',
+    life: 3,
+    max: 3,
+    big: true,
+  });
 }
 
 // --- Enemies --------------------------------------------------------------------------------------
@@ -737,7 +764,7 @@ function updateSpawns(run: RunState, dt: number): void {
 function updateEnemies(run: RunState, dt: number): void {
   const h = run.hero;
   const decay = Math.exp(-dt * 8);
-  const enraged = run.examinerSpawned && run.time > (RUN_MINUTES + 5) * 60 ? 2 : 1;
+  const enraged = run.examinerSpawned && run.time > (runMinutes(run.config) + 5) * 60 ? 2 : 1;
   for (const e of run.enemies) {
     if (e.dead) continue;
     e.flash = Math.max(0, e.flash - dt);
@@ -1585,6 +1612,7 @@ export interface RunResult {
   evolutions: string[];
   foodEaten: number;
   bonusEssence: number;
+  mode: 'rift' | 'dungeon';
 }
 
 export function runResult(run: RunState): RunResult {
@@ -1600,5 +1628,6 @@ export function runResult(run: RunState): RunResult {
     evolutions: [...run.evolutions],
     foodEaten: run.foodEaten,
     bonusEssence: run.bonusEssence,
+    mode: run.config.mode ?? 'rift',
   };
 }

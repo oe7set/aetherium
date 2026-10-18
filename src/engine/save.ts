@@ -15,6 +15,7 @@ import {
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
 import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
+import { HERO_ITEMS, HERO_SLOTS, type HeroSlot } from '../data/hero';
 import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
 import { createVillage } from './villageWorld';
 import {
@@ -27,6 +28,7 @@ import {
   type VillageState,
   type CombatState,
   type GameState,
+  type HeroState,
   type PrestigeState,
   type RiftState,
 } from './state';
@@ -86,6 +88,8 @@ export const MIGRATIONS: Record<number, Migration> = {
     delete rest.colony;
     return { ...rest, village: null };
   },
+  // 9 → 10: the one hero (village + rift).
+  9: (data) => ({ ...data, hero: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -229,6 +233,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     tasks: hydrateTasks(data.tasks, base.tasks),
     village: hydrateVillage(data.village, base.village),
     rift: hydrateRift(data.rift, base.rift),
+    hero: hydrateHero(data.hero, base.hero),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -243,6 +248,77 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateHero(v: unknown, fallback: HeroState): HeroState {
+  if (!isRecord(v)) return fallback;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const attrs = numberRecord(v.attrs);
+  const bag = Array.isArray(v.bag)
+    ? v.bag
+        .filter(isRecord)
+        .filter((i) => HERO_ITEMS.some((d) => d.id === i.base))
+        .map((i) => ({
+          uid: num(i.uid, 0),
+          base: String(i.base),
+          tier: Math.max(1, Math.min(3, num(i.tier, 1))),
+        }))
+    : [];
+  const equipped: HeroState['equipped'] = {};
+  for (const [slot, uid] of Object.entries(numberRecord(v.equipped)))
+    if (HERO_SLOTS.some((x) => x.id === slot) && bag.some((i) => i.uid === uid))
+      equipped[slot as HeroSlot] = uid;
+  const status = ['home', 'moving', 'adventure', 'raid', 'dead'].includes(v.status as string)
+    ? (v.status as HeroState['status'])
+    : 'home';
+  const trip = isRecord(v.trip)
+    ? {
+        kind: (v.trip.kind === 'return' ? 'return' : 'adventure') as 'adventure' | 'return',
+        target: num(v.trip.target, 0),
+        remaining: Math.max(0, num(v.trip.remaining, 0)),
+        total: num(v.trip.total, 1),
+      }
+    : null;
+  return {
+    ...fallback,
+    name: typeof v.name === 'string' ? v.name.slice(0, 24) : fallback.name,
+    avatar: typeof v.avatar === 'string' ? v.avatar : fallback.avatar,
+    level: Math.max(1, num(v.level, 1)),
+    xp: Math.max(0, num(v.xp, 0)),
+    points: Math.max(0, num(v.points, 0)),
+    attrs: {
+      power: num(attrs.power, 0),
+      offense: num(attrs.offense, 0),
+      defense: num(attrs.defense, 0),
+      resources: num(attrs.resources, 0),
+    },
+    health: Math.max(0, Math.min(100, num(v.health, 100))),
+    home: num(v.home, fallback.home),
+    // A hero on a raid is lost with the movement data – bring them home instead.
+    status: status === 'raid' ? 'home' : status === 'moving' && !trip ? 'home' : status,
+    trip: status === 'moving' ? trip : null,
+    at: typeof v.at === 'number' ? v.at : null,
+    autoIn: Math.max(0, num(v.autoIn, 0)),
+    equipped,
+    bag,
+    nextUid: Math.max(num(v.nextUid, 1), ...bag.map((i) => i.uid + 1)),
+    adventures: Array.isArray(v.adventures)
+      ? v.adventures.filter(isRecord).map((a) => ({
+          id: num(a.id, 0),
+          x: num(a.x, 0),
+          y: num(a.y, 0),
+          biome: BIOMES.some((b) => b.id === a.biome) ? String(a.biome) : 'meadow',
+          level: Math.max(1, num(a.level, 1)),
+          hard: a.hard === true,
+          name: typeof a.name === 'string' ? a.name : 'Abenteuer',
+          expires: num(a.expires, 3600),
+        }))
+      : [],
+    nextAdventureId: num(v.nextAdventureId, 1),
+    adventureIn: Math.max(0, num(v.adventureIn, fallback.adventureIn)),
+    revive: num(v.revive, 0),
+    style: typeof v.style === 'string' && HEROES.some((h) => h.id === v.style) ? v.style : 'farmer',
   };
 }
 

@@ -151,6 +151,8 @@ export interface Village {
 export interface VMovement {
   id: number;
   kind: 'raid' | 'return' | 'settle' | 'trade';
+  /** The hero marches with these troops. */
+  hero?: boolean;
   /** Village id the movement started from (returns go back there). */
   from: number;
   /** Target id, site id or village id (as string). */
@@ -223,6 +225,56 @@ export interface VillageState {
   invasionsLost: number;
   /** Total village time in seconds (report timestamps). */
   clock: number;
+}
+
+export interface HeroItem {
+  uid: number;
+  base: string;
+  tier: number;
+}
+
+export interface Adventure {
+  id: number;
+  x: number;
+  y: number;
+  biome: string;
+  level: number;
+  hard: boolean;
+  name: string;
+  /** Seconds until it vanishes. */
+  expires: number;
+}
+
+/** The one hero: lives in a village, explores adventures, fights in the rift. */
+export interface HeroState {
+  name: string;
+  avatar: string;
+  level: number;
+  xp: number;
+  points: number;
+  attrs: Record<'power' | 'offense' | 'defense' | 'resources', number>;
+  /** 0–100. */
+  health: number;
+  /** Village id the hero lives in. */
+  home: number;
+  status: 'home' | 'moving' | 'adventure' | 'raid' | 'dead';
+  /** Travel to/from an adventure. */
+  trip: { kind: 'adventure' | 'return'; target: number; remaining: number; total: number } | null;
+  /** Adventure the hero is standing at (waiting to be played). */
+  at: number | null;
+  /** Seconds until an adventure the hero waits at resolves itself. */
+  autoIn: number;
+  equipped: Partial<Record<'helmet' | 'armor' | 'weapon' | 'boots' | 'horse' | 'amulet', number>>;
+  bag: HeroItem[];
+  nextUid: number;
+  adventures: Adventure[];
+  nextAdventureId: number;
+  /** Seconds until the next adventure appears. */
+  adventureIn: number;
+  /** Seconds until revived (while dead). */
+  revive: number;
+  /** Rift combat style (starting weapon). */
+  style: string;
 }
 
 export interface RiftBest {
@@ -302,10 +354,11 @@ export interface GameState {
   quests: { active: Record<string, Record<string, number>>; done: string[] };
   tasks: { day: string; week: string; list: TaskState[] };
   village: VillageState;
+  hero: HeroState;
   rift: RiftState;
 }
 
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 
 export function defaultSettings(): Settings {
   return {
@@ -366,7 +419,33 @@ export function newGame(now: number = Date.now()): GameState {
     quests: { active: {}, done: [] },
     tasks: { day: '', week: '', list: [] },
     village: createVillageState(),
+    hero: defaultHero(),
     rift: defaultRift(),
+  };
+}
+
+export function defaultHero(): HeroState {
+  return {
+    name: 'Abenteurer·in',
+    avatar: '🧑‍🚀',
+    level: 1,
+    xp: 0,
+    points: 4,
+    attrs: { power: 0, offense: 0, defense: 0, resources: 0 },
+    health: 100,
+    home: 1,
+    status: 'home',
+    trip: null,
+    at: null,
+    autoIn: 0,
+    equipped: {},
+    bag: [],
+    nextUid: 1,
+    adventures: [],
+    nextAdventureId: 1,
+    adventureIn: 60,
+    revive: 0,
+    style: 'farmer',
   };
 }
 
@@ -440,6 +519,14 @@ export function cloneState(s: GameState): GameState {
     },
     tasks: { ...s.tasks, list: s.tasks.list.map((t) => ({ ...t })) },
     village: cloneVillageState(s.village),
+    hero: {
+      ...s.hero,
+      attrs: { ...s.hero.attrs },
+      trip: s.hero.trip ? { ...s.hero.trip } : null,
+      equipped: { ...s.hero.equipped },
+      bag: s.hero.bag,
+      adventures: s.hero.adventures.map((a) => ({ ...a })),
+    },
     rift: {
       ...s.rift,
       talents: { ...s.rift.talents },

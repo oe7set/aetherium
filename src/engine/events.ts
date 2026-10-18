@@ -57,7 +57,19 @@ export type GameEvent =
       kills: number;
       record: boolean;
     }
-  | { type: 'riftEcho'; essence: number };
+  | { type: 'riftEcho'; essence: number }
+  | { type: 'heroLevel'; level: number }
+  | { type: 'heroDied' }
+  | { type: 'heroRevived' }
+  | { type: 'heroArrived' }
+  | {
+      type: 'heroAdventure';
+      name: string;
+      success: boolean;
+      xp: number;
+      item: string | null;
+      tier: number;
+    };
 
 export type Emit = (event: GameEvent) => void;
 

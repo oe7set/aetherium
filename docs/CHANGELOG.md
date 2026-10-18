@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.5.0] – Der Held, Abenteuer-Dungeons und die Weltkarte
+
+### Hinzugefügt
+
+- **Ein Held für alles**: Name und Avatar wählbar, Stufen und Erfahrung, 4 Attribute (Kampfkraft, Angriffs- und
+  Verteidigungsbonus, Rohstoffe), Gesundheit mit Regeneration, Tod und Wiederbelebung. Der Held lebt in einem
+  Dorf, begleitet Raubzüge, verteidigt gegen Riss-Invasionen und ist zugleich deine Figur im Ätherriss.
+- **Ausrüstung**: 6 Plätze (Kopf, Rüstung, Waffe, Stiefel, Reittier, Amulett), 18 Gegenstände in 3 Stufen
+  (Einfach, Edel, Legendär) mit Boni für Insel, Dorf, Held und Riss; Zerlegen in Riss-Essenz.
+- **Abenteuer**: erscheinen alle 40 Minuten rund ums Heimatdorf. Der Held reist hin und spielt sie **live als
+  Echtzeit-Dungeon** (4–6 Minuten, Zwischenboss, Wächter am Ende, bessere Beute) oder erkundet automatisch
+  (Erfolgschance nach Stärke; nach 30 Minuten Warten automatisch, auch offline).
+- **Weltkarte** im Dorf: Travian-Raster mit Gelände (Wiesen, Wälder, Hügel, Seen), deinen Dörfern, Räuberlagern,
+  Oasen, Riss-Ruinen, freien Tälern, Abenteuern, Truppenbewegungen und dem Helden; ziehen, zoomen (auch Pinch),
+  antippen für Raubzug, Besiedeln, Abenteuer oder Heldenumzug.
+- Oasen annektiert jetzt der Held (er muss im Dorf sein).
+
+### Geändert
+
+- Tab **Riss** heißt jetzt **Held** (Held · Abenteuer · Riss · Talente · Kodex); die früheren Riss-Helden sind
+  **Kampfstile** deines einen Helden.
+- Grafik: Emoji-Sprites in doppelter Auflösung (scharf auf Handys), Bodentextur im Riss, gecachte Vignette,
+  adaptive Qualität (Auflösung und Details sinken automatisch, wenn ein Handy ins Stocken gerät).
+- Spielstand-Version 10.
+
 ## [1.4.0] – Dorf statt Kolonie (Travian-Stil)
 
 ### Geändert

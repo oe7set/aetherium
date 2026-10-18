@@ -123,6 +123,15 @@ export function playEventSounds(events: GameEvent[]): void {
       case 'villageReport':
         kinds.add(e.won ? 'coin' : 'bad');
         break;
+      case 'heroLevel':
+        kinds.add('levelUp');
+        break;
+      case 'heroDied':
+        kinds.add('hurt');
+        break;
+      case 'heroAdventure':
+        kinds.add(e.success ? 'rare' : 'bad');
+        break;
       case 'villageFounded':
       case 'villageResearched':
         kinds.add('achievement');
