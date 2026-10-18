@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.15.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.16.0**.
 
 ## 1. Der große Kreislauf
 
@@ -147,7 +147,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 - [ ] Wochenboss ausbauen: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses, HUD-Hinweis im Lauf.
 - [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
-- [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.
 - [ ] Endgame (Phase 13): Meisterschaft pro Aktion, Endlos-Riss, Titel und Kosmetik.
 - [ ] Prestige-Naturgesetze, die auch im Dorf und im Riss wirken (Phase 11).
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.

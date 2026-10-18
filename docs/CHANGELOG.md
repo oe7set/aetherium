@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.16.0] – Spaten, Pinsel, Ätherlot
+
+### Hinzugefügt
+
+- **Archäologie-Werkzeuge**: Holzkelle → Feiner Pinsel → Eisenspaten → Feinsieb → Grabungskoffer → Bodenradar →
+  Ätherlot (bis ×2,5 Tempo), beim Krämer unter Werkzeuge.
+- „Was jetzt?" meldet, sobald du dir ein **besseres Werkzeug** für einen Skill leisten kannst.
+
+### Behoben
+
+- Die mitlaufende Unterreiter-Leiste in Fenstern ist jetzt deckend – beim Scrollen scheint kein Text mehr durch.
+
 ## [1.15.0] – Gemeinsam gegen den Riss
 
 ### Geändert

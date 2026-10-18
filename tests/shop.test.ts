@@ -1,6 +1,9 @@
 import Decimal from 'break_eternity.js';
 import { describe, expect, it } from 'vitest';
+import { getAction } from '../src/data';
 import {
+  actionDuration,
+  agenda,
   buyItem,
   buySlot,
   buyTool,
@@ -73,5 +76,19 @@ describe('Benutzbare Items', () => {
   it('nicht benutzbare Items werden abgelehnt', () => {
     const s = gameWith({ inventory: { log_oak: 1 } });
     expect(consumeItem(s, 'log_oak', createRng(1), () => {}).ok).toBe(false);
+  });
+});
+
+describe('Archäologie-Werkzeuge', () => {
+  it('beschleunigen das Graben und tauchen in „Was jetzt?" auf, sobald bezahlbar', () => {
+    const s = gameWith();
+    const dig = actionDuration(s, getAction('arch_beach'));
+    expect(s.equippedTools.archaeology).toBe('arch_trowel');
+    expect(agenda(s, Date.now()).some((i) => i.id === 'tool-upgrade')).toBe(false);
+    s.gold = new Decimal(1000);
+    expect(agenda(s, Date.now()).find((i) => i.id === 'tool-upgrade')?.title).toContain('Werkzeug');
+    expect(buyTool(s, 'arch_brush').ok).toBe(true);
+    expect(s.equippedTools.archaeology).toBe('arch_brush');
+    expect(actionDuration(s, getAction('arch_beach'))).toBeLessThan(dig);
   });
 });

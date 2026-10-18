@@ -306,13 +306,95 @@ const RODS: ToolDef[] = [
   },
 ];
 
-export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES, ...RODS];
+/** Archäologie: from soup spoon to aether plumb line. */
+const DIG_TOOLS: ToolDef[] = [
+  {
+    id: 'arch_trowel',
+    name: 'Holzkelle',
+    icon: '🥄',
+    skill: 'archaeology',
+    tier: 0,
+    levelReq: 1,
+    speed: 1,
+    price: 0,
+    desc: 'Eigentlich ein Suppenlöffel. Der Suppe fehlt er nicht.',
+  },
+  {
+    id: 'arch_brush',
+    name: 'Feiner Pinsel',
+    icon: '🖌️',
+    skill: 'archaeology',
+    tier: 1,
+    levelReq: 1,
+    speed: 1.15,
+    price: 120,
+    desc: 'Staubt Jahrtausende ab. Und Spinnweben.',
+  },
+  {
+    id: 'arch_spade',
+    name: 'Eisenspaten',
+    icon: '⛏️',
+    skill: 'archaeology',
+    tier: 2,
+    levelReq: 12,
+    speed: 1.3,
+    price: 800,
+    desc: 'Für Hügelgräber, die nicht freiwillig aufgehen.',
+  },
+  {
+    id: 'arch_sieve',
+    name: 'Feinsieb',
+    icon: '🧺',
+    skill: 'archaeology',
+    tier: 3,
+    levelReq: 25,
+    speed: 1.5,
+    price: 4000,
+    desc: 'Findet jede Münze. Und jeden Kieselstein. Vor allem Kieselsteine.',
+  },
+  {
+    id: 'arch_kit',
+    name: 'Grabungskoffer',
+    icon: '🧰',
+    skill: 'archaeology',
+    tier: 4,
+    levelReq: 40,
+    speed: 1.75,
+    price: 20000,
+    desc: 'Pinsel, Lupe, Maßband und belegte Brote – alles, was die Wissenschaft braucht.',
+  },
+  {
+    id: 'arch_radar',
+    name: 'Bodenradar',
+    icon: '📡',
+    skill: 'archaeology',
+    tier: 5,
+    levelReq: 55,
+    speed: 2.1,
+    price: 120000,
+    desc: 'Piept bei Schätzen. Und bei Kronkorken. Und bei Nachbars Katze.',
+  },
+  {
+    id: 'arch_aether',
+    name: 'Ätherlot',
+    icon: '🔮',
+    skill: 'archaeology',
+    tier: 6,
+    levelReq: 75,
+    speed: 2.5,
+    price: 900000,
+    desc: 'Schwingt dorthin, wo die Vorläufer etwas vergessen haben. Meistens ihre Schlüssel.',
+  },
+];
+
+export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES, ...RODS, ...DIG_TOOLS];
 
 /** The tool every new game starts with, per skill. */
 export const STARTER_TOOLS: Record<string, string> = {
   woodcutting: 'axe_stone',
   mining: 'pick_stone',
   fishing: 'rod_stick',
+  archaeology: 'arch_trowel',
 };
 
 /** What the general store (Krämer) sells. Phase 3 replaces this with a dynamic market. */

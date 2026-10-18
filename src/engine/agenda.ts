@@ -3,6 +3,8 @@ import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey } from './meta';
 import { QUESTS } from '../data/meta';
+import { SKILLS, TOOL_MAP, toolsForSkill } from '../data';
+import { skillLevel } from './skills';
 import { currentChronicle, dailyAvailable, passClaimable } from './progress';
 import { canStartRun } from './rift';
 import { affordableTechs } from './science';
@@ -26,7 +28,7 @@ export type AgendaTarget =
   | { area: 'daily' }
   | { area: 'chronicle' }
   | { area: 'skills' }
-  | { area: 'inventory'; section: 'items' | 'album' }
+  | { area: 'inventory'; section: 'items' | 'album' | 'tools' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
   | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'quests' };
@@ -224,6 +226,28 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Neue Skills, Tempo und Boni',
       kind: 'todo',
       target: { area: 'menu', section: 'research' },
+    });
+  // A better tool the player can afford right now (any tool skill).
+  const upgrade = SKILLS.filter((sk) => sk.usesTools)
+    .map((sk) => {
+      const tier = TOOL_MAP.get(s.equippedTools[sk.id] ?? '')?.tier ?? -1;
+      return toolsForSkill(sk.id).find(
+        (t) =>
+          t.tier > tier &&
+          !s.ownedTools.includes(t.id) &&
+          skillLevel(s, sk.id) >= t.levelReq &&
+          s.gold.gte(t.price),
+      );
+    })
+    .find((t) => t);
+  if (upgrade)
+    add({
+      id: 'tool-upgrade',
+      icon: upgrade.icon,
+      title: `Besseres Werkzeug: ${upgrade.name}`,
+      detail: `×${upgrade.speed} Tempo – du kannst es dir leisten`,
+      kind: 'todo',
+      target: { area: 'inventory', section: 'tools' },
     });
   if (freeSlots(s) <= 0)
     add({

@@ -50,6 +50,7 @@ export const SKILLS: SkillDef[] = [
     icon: '🏺',
     color: '#d6a35c',
     group: 'gathering',
+    usesTools: true,
     desc: 'Graben, pinseln, staunen. Was die Vorläufer vergraben haben, wird zu Gold, Forschung und Schätzen.',
   },
   {

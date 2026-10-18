@@ -1302,3 +1302,16 @@ h4.rift-h4::before,
   border-color: rgba(160, 128, 255, 0.6);
   background: linear-gradient(150deg, rgba(124, 92, 255, 0.22), rgba(14, 12, 30, 0.6));
 }
+
+/* Sticky sub-tabs inside sheets must be opaque – no content shining through while scrolling. */
+.sheet .segments {
+  background: #141831;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.7);
+}
+.sheet .segments::before {
+  content: '';
+  position: absolute;
+  inset: -10px -14px -4px;
+  background: #151a33;
+  z-index: -1;
+}
