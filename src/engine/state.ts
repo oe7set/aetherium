@@ -302,6 +302,8 @@ export interface ProgressState {
   found: string[];
   /** Claimed Sammelbuch sets. */
   sets: string[];
+  /** Chosen title: id of an unlocked achievement ('' = none). */
+  title: string;
 }
 
 export interface RiftBest {
@@ -475,6 +477,7 @@ export function newGame(now: number = Date.now()): GameState {
       avatars: [],
       found: [],
       sets: [],
+      title: '',
     },
     rift: defaultRift(),
   };

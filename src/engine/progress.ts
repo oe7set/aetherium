@@ -1,5 +1,5 @@
 import Decimal from 'break_eternity.js';
-import { getItem, ITEM_MAP } from '../data';
+import { ACHIEVEMENT_MAP, getItem, ITEM_MAP } from '../data';
 import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
 import {
   CHRONICLE,
@@ -223,4 +223,18 @@ export function rewardsWaiting(s: GameState, now: number): number {
   return (
     (dailyAvailable(s, now) ? 1 : 0) + passClaimable(s).length + (currentChronicle(s)?.done ? 1 : 0)
   );
+}
+
+// --- Titles ----------------------------------------------------------------------------------------
+
+/** Every unlocked achievement can be worn as a title next to the hero's name. */
+export function setTitle(s: GameState, achievementId: string): boolean {
+  if (achievementId && !s.achievements.includes(achievementId)) return false;
+  s.progress.title = achievementId;
+  return true;
+}
+
+export function currentTitle(s: GameState): string {
+  const id = s.progress.title;
+  return id && s.achievements.includes(id) ? (ACHIEVEMENT_MAP.get(id)?.name ?? '') : '';
 }

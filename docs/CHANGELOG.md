@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.22.0] – Mit Titel
+
+### Hinzugefügt
+
+- **Titel** 🏷️: Jeder freigeschaltete Erfolg kann als Titel neben dem Heldennamen getragen werden –
+  „Quartalsschreck", „Museumsdirektion", „Hat alles. Wirklich alles." … Antippen in der Heldenkarte, suchen,
+  wählen. Witzige Titel stehen vor den Stufen-Titeln.
+
 ## [1.21.0] – Kessel, Runen, Äther
 
 ### Hinzugefügt

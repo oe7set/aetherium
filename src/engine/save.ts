@@ -289,6 +289,7 @@ function hydrateProgress(v: unknown, fallback: GameState['progress']): GameState
     avatars: stringArray(v.avatars),
     found: stringArray(v.found).filter((id) => ITEM_MAP.has(id)),
     sets: stringArray(v.sets).filter((id) => COLLECTION_MAP.has(id)),
+    title: typeof v.title === 'string' && ACHIEVEMENT_MAP.has(v.title) ? v.title : '',
   };
 }
 

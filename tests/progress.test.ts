@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CHRONICLE, DAILY_REWARDS, passThreshold } from '../src/data/progress';
-import { ITEM_MAP } from '../src/data';
+import { ACHIEVEMENTS, ITEM_MAP } from '../src/data';
 import {
   activeVillage,
   applyOfflineProgress,
@@ -9,6 +9,8 @@ import {
   claimPassTier,
   createRng,
   currentChronicle,
+  currentTitle,
+  setTitle,
   dailyAvailable,
   deserialize,
   nextDailyDay,
@@ -118,5 +120,19 @@ describe('Fortschritt bleibt erhalten', () => {
     const summary = applyOfflineProgress(s, Date.now(), createRng(1));
     expect(summary.village.built.length).toBeGreaterThan(0);
     expect(summary.village.resources).toBeGreaterThan(0);
+  });
+});
+
+describe('Titel', () => {
+  it('nur freigeschaltete Erfolge, übersteht Speichern', () => {
+    const s = gameWith();
+    const id = ACHIEVEMENTS[0]!.id;
+    expect(setTitle(s, id)).toBe(false);
+    s.achievements.push(id);
+    expect(setTitle(s, id)).toBe(true);
+    expect(currentTitle(s)).toBe(ACHIEVEMENTS[0]!.name);
+    expect(deserialize(serialize(s)).progress.title).toBe(id);
+    expect(setTitle(s, '')).toBe(true);
+    expect(currentTitle(s)).toBe('');
   });
 });

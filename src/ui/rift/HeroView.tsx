@@ -13,6 +13,7 @@ import {
   DISMANTLE_ESSENCE,
 } from '../../data/hero';
 import { BIOMES } from '../../data/rift';
+import { ACHIEVEMENTS } from '../../data';
 import {
   adventureDistance,
   assignPoints,
@@ -24,6 +25,8 @@ import {
   equipHeroItem,
   HERO_ITEM_MAP,
   HERO_STATUS_TEXT,
+  currentTitle,
+  setTitle,
   heroDefense,
   heroStrength,
   heroTravelTime,
@@ -134,6 +137,7 @@ export function HeroView() {
               {h.name} ✏️
             </h2>
           )}
+          <TitlePicker />
           <small className="muted">
             Stufe {h.level} · {HERO_STATUS_TEXT[h.status]} · Heimat:{' '}
             {game.village.villages.find((v) => v.id === h.home)?.name ?? '–'}
@@ -334,6 +338,56 @@ function AdventureHere() {
         </button>
       </div>
     </section>
+  );
+}
+
+/** Title next to the hero's name: any unlocked achievement. */
+function TitlePicker() {
+  const title = useGame((s) => currentTitle(s.game));
+  const count = useGame((s) => s.game.achievements.length);
+  const act = useGame((s) => s.hero);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  if (!open)
+    return (
+      <button className="hero-title" onClick={() => setOpen(true)}>
+        {title ? `„${title}“` : count ? '🏷️ Titel wählen' : '🏷️ Titel: schalte Erfolge frei'}
+      </button>
+    );
+  const game = useGame.getState().game;
+  const q = query.trim().toLowerCase();
+  // Funny milestone names first, plain skill-level titles last.
+  const list = ACHIEVEMENTS.filter(
+    (a) => game.achievements.includes(a.id) && (!q || a.name.toLowerCase().includes(q)),
+  )
+    .sort((a, b) => Number(a.id.startsWith('lvl_')) - Number(b.id.startsWith('lvl_')))
+    .slice(0, 80);
+  const pick = (id: string) => {
+    act((s) => void setTitle(s, id));
+    setOpen(false);
+  };
+  return (
+    <div className="title-picker">
+      <input
+        className="input"
+        placeholder={`${count} Titel durchsuchen …`}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <div className="title-list">
+        <button className="title-opt" onClick={() => pick('')}>
+          — kein Titel —
+        </button>
+        {list.map((a) => (
+          <button key={a.id} className="title-opt" onClick={() => pick(a.id)} title={a.desc}>
+            {a.icon} {a.name}
+          </button>
+        ))}
+      </div>
+      <button className="btn" onClick={() => setOpen(false)}>
+        Schließen
+      </button>
+    </div>
   );
 }
 
