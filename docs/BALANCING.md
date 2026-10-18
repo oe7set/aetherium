@@ -82,3 +82,9 @@ Der Test schlägt fehl, wenn ein Skill unter 20 h oder über 400 h bis 99 rutsch
   gecachte Tech-Freischaltungen, Dauer einmal pro Schritt, Inventar-Fast-Path, internierte Modifier-Keys.
 - 3D: Wald und Deko instanziert, Partikel gepoolt, Labels als DOM-Overlay, Render-Pause bei verstecktem Tab,
   Schatten nur auf „Hoch", Pixel-Ratio ≤ 2. Die Szene ist ein eigener Lazy-Chunk (~260 KB gzip).
+
+## Riss-Leistung (gemessen 1.19)
+
+Simulation (`stepRun`, 60 Schritte/s) mit voller Horde am Desktop-CPU: 339 Gegner ≈ 0,2 ms, 675 Gegner
+≈ 0,5 ms pro Schritt – linear dank Spatial Hash (`EnemyGrid`). Selbst bei 5–8× langsameren Handys bleibt
+die Simulation unter 4 ms; das Gegnerlimit von 360 lässt Reserven für das Zeichnen.

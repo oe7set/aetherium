@@ -162,7 +162,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Qualität**
 
 - [ ] Englisch (`tContent`-Overlays); Farbenblind-Paletten für Rarität und Ressourcenbalken.
-- [ ] Riss-Performance-Budget: ≥ 500 Gegner auf Mittelklasse (Spatial Hash und Pooling prüfen).
+- [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
+      am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
 - [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
 - [ ] Balancing über alle Schleifen mit Langzeit-Bot (Insel + Dorf + Held zusammen, 7 Tage).
