@@ -3,6 +3,7 @@ import { BALANCE } from '../data/balance';
 import { SKILLS } from '../data/skills';
 import { STARTER_TOOLS } from '../data/tools';
 import type { EquipSlot } from '../data/types';
+import { createVillageState } from './villageWorld';
 import { xpForLevel } from './xp';
 
 export type NumberFormat = 'short' | 'scientific' | 'engineering';
@@ -107,69 +108,121 @@ export interface TaskState {
   claimed: boolean;
 }
 
-export type ColonyRes = Record<'wood' | 'brick' | 'wool' | 'grain' | 'ore', number>;
+export type VCostState = Record<'wood' | 'clay' | 'iron' | 'crop', number>;
 
-export interface ColonyPlayer {
-  /** 'you' or an AI persona id. */
-  persona: string;
-  res: ColonyRes;
-  settlements: number[];
-  cities: number[];
-  roads: number[];
-  devHand: string[];
-  knights: number;
-  victoryCards: number;
+export interface VQueueItem {
+  /** Field index (as string) or building id. */
+  key: string;
+  level: number;
+  remaining: number;
+  total: number;
 }
 
-export interface ColonyOffer {
+export interface VTraining {
+  troop: string;
+  count: number;
+  /** Seconds per unit. */
+  each: number;
+  /** Progress on the current unit. */
+  progress: number;
+}
+
+export interface Village {
   id: number;
+  name: string;
+  capital: boolean;
+  x: number;
+  y: number;
+  /** Valley layout key (see VALLEYS). */
+  layout: string;
+  fields: number[];
+  buildings: Record<string, number>;
+  res: VCostState;
+  queue: { field: VQueueItem[]; center: VQueueItem[] };
+  training: VTraining[];
+  troops: Record<string, number>;
+  research: { troop: string; remaining: number; total: number } | null;
+  /** Remaining seconds of a running celebration (and its CP). */
+  celebration: { remaining: number; cp: number } | null;
+  /** Annexed oases (target ids). */
+  oases: string[];
+}
+
+export interface VMovement {
+  id: number;
+  kind: 'raid' | 'return' | 'settle' | 'trade';
+  /** Village id the movement started from (returns go back there). */
   from: number;
-  give: keyof ColonyRes;
-  giveQty: number;
-  want: keyof ColonyRes;
-  wantQty: number;
-  /** Rolls until the offer expires. */
-  expires: number;
+  /** Target id, site id or village id (as string). */
+  target: string;
+  troops: Record<string, number>;
+  res: VCostState;
+  remaining: number;
+  total: number;
 }
 
-export interface ColonyMatch {
-  seed: number;
-  terrain: string[];
-  numbers: (number | null)[];
-  harbors: { edge: number; kind: string }[];
-  robber: number;
-  players: ColonyPlayer[];
-  deck: string[];
-  phase: 'setup' | 'running' | 'finished';
-  /** Player indices still to place in the setup (snake order). */
-  setupQueue: number[];
-  /** Vertex of the settlement just placed in setup, awaiting its road. */
-  setupVertex: number | null;
-  rolls: number;
-  lastRoll: [number, number] | null;
-  turn: number;
-  longestRoad: number | null;
-  largestArmy: number | null;
-  offers: ColonyOffer[];
-  winner: number | null;
-  /** Siedler buildings on own settlements/cities: vertex → building ids. */
-  buildings: Record<string, string[]>;
-  /** Free roads from a road-building card. */
-  freeRoads: number;
-  /** Waiting for the player to pick a hex for the robber (after a knight). */
-  robberMode: boolean;
+export interface RaidTarget {
+  id: string;
+  kind: 'camp' | 'oasis' | 'ruin';
+  name: string;
+  icon: string;
+  level: number;
+  x: number;
+  y: number;
+  defense: number;
+  maxDefense: number;
+  stock: VCostState;
+  stockMax: number;
+  /** Oasis production bonus. */
+  bonus?: 'wood' | 'clay' | 'iron' | 'crop';
+  /** Village id that annexed this oasis. */
+  owner: number | null;
 }
 
-export interface ColonyState {
-  match: ColonyMatch | null;
-  fame: number;
-  fameTotal: number;
-  talents: Record<string, number>;
-  wins: number;
-  matches: number;
-  /** Seconds until the next dice roll. */
-  nextRoll: number;
-  nextOfferId: number;
+export interface ValleySite {
+  id: string;
+  x: number;
+  y: number;
+  layout: string;
+}
+
+export interface VReport {
+  id: number;
+  /** Village clock (seconds) when it happened. */
+  at: number;
+  kind: 'raid' | 'invasion' | 'settle' | 'starve' | 'trade';
+  village: number;
+  won: boolean;
+  title: string;
+  text: string;
+  loot?: VCostState;
+  losses?: Record<string, number>;
+}
+
+/** Dorf (Travian-like village builder). */
+export interface VillageState {
+  villages: Village[];
+  /** Currently selected village id. */
+  active: number;
+  /** Troops researched in the academy (shared by all villages). */
+  researched: string[];
+  cp: number;
+  cpTotal: number;
+  targets: RaidTarget[];
+  sites: ValleySite[];
+  movements: VMovement[];
+  reports: VReport[];
+  /** Unread reports (badge). */
+  unread: number;
+  nextId: number;
+  /** Seconds of beginner protection left. */
+  protection: number;
+  /** Seconds until the next rift invasion. */
+  invasionIn: number;
+  invasionsWon: number;
+  invasionsLost: number;
+  /** Total village time in seconds (report timestamps). */
+  clock: number;
 }
 
 export interface RiftBest {
@@ -248,11 +301,11 @@ export interface GameState {
   catState: 'unknown' | 'alive' | 'ghost';
   quests: { active: Record<string, Record<string, number>>; done: string[] };
   tasks: { day: string; week: string; list: TaskState[] };
-  colony: ColonyState;
+  village: VillageState;
   rift: RiftState;
 }
 
-export const SAVE_VERSION = 8;
+export const SAVE_VERSION = 9;
 
 export function defaultSettings(): Settings {
   return {
@@ -312,7 +365,7 @@ export function newGame(now: number = Date.now()): GameState {
     catState: 'unknown',
     quests: { active: {}, done: [] },
     tasks: { day: '', week: '', list: [] },
-    colony: defaultColony(),
+    village: createVillageState(),
     rift: defaultRift(),
   };
 }
@@ -329,19 +382,6 @@ export function defaultRift(): RiftState {
     hero: 'farmer',
     biome: 'meadow',
     echo: 600,
-  };
-}
-
-export function defaultColony(): ColonyState {
-  return {
-    match: null,
-    fame: 0,
-    fameTotal: 0,
-    talents: {},
-    wins: 0,
-    matches: 0,
-    nextRoll: 30,
-    nextOfferId: 1,
   };
 }
 
@@ -399,7 +439,7 @@ export function cloneState(s: GameState): GameState {
       done: [...s.quests.done],
     },
     tasks: { ...s.tasks, list: s.tasks.list.map((t) => ({ ...t })) },
-    colony: cloneColony(s.colony),
+    village: cloneVillageState(s.village),
     rift: {
       ...s.rift,
       talents: { ...s.rift.talents },
@@ -417,33 +457,29 @@ export function getStat(s: GameState, key: string): number {
   return s.stats[key] ?? 0;
 }
 
-/** Colony state is nested; matches are cloned deeply (they are small: 4 players, 19 hexes). */
-export function cloneColony(c: ColonyState): ColonyState {
+/** Village state is nested; cloned by hand (runs on every tick, so no structuredClone). */
+export function cloneVillageState(v: VillageState): VillageState {
   return {
-    ...c,
-    talents: { ...c.talents },
-    match: c.match
-      ? {
-          ...c.match,
-          terrain: [...c.match.terrain],
-          numbers: [...c.match.numbers],
-          harbors: c.match.harbors.map((h) => ({ ...h })),
-          players: c.match.players.map((p) => ({
-            ...p,
-            res: { ...p.res },
-            settlements: [...p.settlements],
-            cities: [...p.cities],
-            roads: [...p.roads],
-            devHand: [...p.devHand],
-          })),
-          deck: [...c.match.deck],
-          setupQueue: [...c.match.setupQueue],
-          lastRoll: c.match.lastRoll ? [...c.match.lastRoll] : null,
-          offers: c.match.offers.map((o) => ({ ...o })),
-          buildings: Object.fromEntries(
-            Object.entries(c.match.buildings).map(([k, v]) => [k, [...v]]),
-          ),
-        }
-      : null,
+    ...v,
+    villages: v.villages.map((vl) => ({
+      ...vl,
+      fields: [...vl.fields],
+      buildings: { ...vl.buildings },
+      res: { ...vl.res },
+      queue: {
+        field: vl.queue.field.map((q) => ({ ...q })),
+        center: vl.queue.center.map((q) => ({ ...q })),
+      },
+      training: vl.training.map((tr) => ({ ...tr })),
+      troops: { ...vl.troops },
+      research: vl.research ? { ...vl.research } : null,
+      celebration: vl.celebration ? { ...vl.celebration } : null,
+      oases: [...vl.oases],
+    })),
+    researched: [...v.researched],
+    targets: v.targets.map((tg) => ({ ...tg, stock: { ...tg.stock } })),
+    sites: v.sites.map((st) => ({ ...st })),
+    movements: v.movements.map((m) => ({ ...m, troops: { ...m.troops }, res: { ...m.res } })),
+    reports: v.reports,
   };
 }

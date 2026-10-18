@@ -1,5 +1,4 @@
 import { getItem, ITEM_MAP, SKILL_MAP, TECH_MAP } from '../data';
-import { RESOURCES } from '../data/colony';
 import {
   BASE_PROVISIONS,
   BASE_STATS,
@@ -23,6 +22,7 @@ import type { Rng } from './rng';
 import { hasTech } from './science';
 import { skillLevel } from './skills';
 import { addStat, type GameState } from './state';
+import { villageRiftBonus, villageTribute } from './village';
 
 export const RIFT_TALENT_MAP = new Map(RIFT_TALENTS.map((t) => [t.id, t]));
 
@@ -113,6 +113,10 @@ export function runStats(s: GameState, hero: string): RiftStats {
   out.area += skillLevel(s, 'magic') * 0.002;
   out.armor += Math.floor(skillLevel(s, 'defence') / 25);
   out.maxHp += skillLevel(s, 'hitpoints');
+  // The village forges and fortifies: smithy → might, wall → armor.
+  const village = villageRiftBonus(s);
+  out.might += village.might;
+  out.armor += village.armor;
   return out;
 }
 
@@ -175,7 +179,8 @@ export function prepareRun(s: GameState, hero: string, biome: string, rng: Rng):
 export interface RiftReward {
   essence: number;
   items: { item: string; qty: number }[];
-  colony: number;
+  /** Resources of each kind shipped to the active village. */
+  village: number;
   record: boolean;
 }
 
@@ -227,17 +232,12 @@ export function finishRun(s: GameState, r: RunResult, rng: Rng, emit: Emit): Rif
   for (const it of items)
     if (ITEM_MAP.has(it.item)) gainItem(s, it.item, it.qty, emit, it.item !== 'aether');
 
-  // Tribute for the colony: rift spoils are shipped as resources.
-  let colony = 0;
-  const m = s.colony.match;
-  if (m && m.phase === 'running') {
-    colony = Math.floor(minutes / 3) + r.bossKills;
-    for (let i = 0; i < colony; i++)
-      m.players[0]!.res[RESOURCES[Math.floor(rng() * RESOURCES.length)]!]++;
-  }
+  // Tribute for the village: rift spoils are shipped as resources.
+  const village = Math.round((Math.floor(minutes) * 40 + r.bossKills * 200) * (1 + biome));
+  if (village > 0) villageTribute(s, village);
   invalidateMods(s);
   emit({ type: 'riftFinished', essence, won: r.won, time: r.time, kills: r.kills, record });
-  return { essence, items, colony, record };
+  return { essence, items, village, record };
 }
 
 /** Food names for the UI. */

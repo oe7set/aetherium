@@ -2,7 +2,6 @@
 export * from './actions';
 export * from './achievements';
 export * from './buffs';
-export * from './colony';
 export * from './combat';
 export * from './market';
 export * from './meta';
@@ -21,4 +20,6 @@ export * from './science';
 export * from './shop';
 export * from './skills';
 export * from './state';
+export * from './village';
+export * from './villageWorld';
 export * from './xp';

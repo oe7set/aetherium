@@ -13,7 +13,7 @@ import { InventoryPanel } from './inventory/InventoryPanel';
 import { LevelUpBanner } from './LevelUpBanner';
 import { MenuPanel } from './menu/MenuPanel';
 import { OfflineModal } from './OfflineModal';
-import { ColonyPanel } from './colony/ColonyPanel';
+import { VillagePanel } from './village/VillagePanel';
 import { RiftPanel } from './rift/RiftPanel';
 import { useRiftRun } from './rift/runStore';
 import { SkillList } from './skills/SkillList';
@@ -78,7 +78,7 @@ function MobileLayout() {
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
         {tab === 'skills' && <MobileSkills />}
         {tab === 'inventory' && <InventoryPanel />}
-        {tab === 'colony' && <ColonyPanel />}
+        {tab === 'village' && <VillagePanel />}
         {tab === 'rift' && <RiftPanel />}
         {tab === 'menu' && <MenuPanel />}
       </BottomSheet>
@@ -102,8 +102,8 @@ function DesktopLayout() {
         <SkillList />
       </aside>
       <main className="col-center">
-        {/* The colony board needs the room: it replaces the 3D stage while open. */}
-        {center !== 'colony' && (
+        {/* The village needs the room: it replaces the 3D stage while open. */}
+        {center !== 'village' && (
           <div className="stage">
             <World />
             <BuffBar />
@@ -113,7 +113,7 @@ function DesktopLayout() {
         <TabBar tabs={DESKTOP_CENTER_TABS} />
         <div className="center-panel">
           {center === 'skills' && <SkillView skillId={selected} />}
-          {center === 'colony' && <ColonyPanel />}
+          {center === 'village' && <VillagePanel />}
           {center === 'rift' && <RiftPanel />}
           {center === 'menu' && <MenuPanel />}
         </div>

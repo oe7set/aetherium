@@ -4,7 +4,7 @@ import { FISHING_ITEMS } from './fishing';
 import { SCIENCE_ITEMS } from './science';
 import { SMITHING_ITEMS } from './smithing';
 import type { ItemDef } from './types';
-import { COLONY_ITEMS } from './colony';
+import { VILLAGE_ITEMS } from './village';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
 
@@ -454,5 +454,5 @@ export const ITEMS: ItemDef[] = [
   ...CRAFTING_ITEMS,
   ...COMBAT_ITEMS,
   ...SCIENCE_ITEMS,
-  ...COLONY_ITEMS,
+  ...VILLAGE_ITEMS,
 ];

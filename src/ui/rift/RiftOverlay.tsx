@@ -508,8 +508,10 @@ function Results({
                   .join(', ')}
               </p>
             )}
-            {reward.colony > 0 && (
-              <p className="rift-sub">⛵ {reward.colony} Rohstoffe als Tribut an die Kolonie</p>
+            {reward.village > 0 && (
+              <p className="rift-sub">
+                🏘️ Tribut ans Dorf: je {reward.village} Holz, Lehm, Eisen und Getreide
+              </p>
             )}
           </div>
         )}

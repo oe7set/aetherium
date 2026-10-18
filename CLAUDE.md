@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.3.0). Als Nächstes:
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.4.0, Phase 9 = Dorf). Als Nächstes:
 Phase 11 Zusammenspiel. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
@@ -26,10 +26,10 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `registerAvailabilityCheck` (Tech-Sperren). Kampf = `engine/combat.ts`, Forschung/Beete/Helfer = `engine/science.ts`,
   Prestige = `engine/prestige.ts` (`resetRun` legt fest, was bei Resets erhalten bleibt – neue State-Felder dort
   bewusst einordnen!). Level-Cap: `levelCap(s)`. Haustiere/Quests/Aufträge = `engine/meta.ts`.
-- Kolonie (Catan/Siedler) = `engine/colony/`: `board.ts` (Hex-Geometrie, fest), `rules.ts` (pure Regeln auf
-  `ColonyMatch`), `ai.ts` (KI-Züge/Angebote), `index.ts` (Würfel als Zeiteffekt, Spieleraktionen, Gebäude, Ruhm,
-  Verwalter). Spieler ist immer Index 0 (`PLAYER_INDEX`); Ereignisse tragen Persona-IDs. Kolonie überlebt Prestige.
-  UI: `ui/colony/` (SVG-Brett `HexBoard`, Panel liest State über eine Signatur-Zeichenkette `colonyKey`).
+- Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,
+  Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung
+  `engine/villageWorld.ts`, Inhalte `data/village.ts` (Tempo über `SPEED`). Mehrere Dörfer in `s.village.villages`.
+  UI `ui/village/` (Felder-Ring, Dorfplatz, Militär, Markt, Berichte, Reich); Panel rendert über `villageKey`.
 - Ätherriss (Survivor-Roguelike): Echtzeit-Simulation `src/rift/sim.ts` (pur, deterministisch, eigene `stepRun`-
   Schleife, nicht im Spielstand), Inhalte `data/rift.ts` (Waffen-Verhalten, Passive, Evolutionen, Biome, Helden,
   Talente), Meta `engine/rift.ts` (Freischaltungen über Skills/Techs, `prepareRun`/`finishRun`, Echo-Läufe).

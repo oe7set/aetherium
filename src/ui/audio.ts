@@ -117,17 +117,15 @@ export function playEventSounds(events: GameEvent[]): void {
       case 'prestige':
         kinds.add('prestige');
         break;
-      case 'colonyRoll':
-        kinds.add('dice');
+      case 'villageBuilt':
+        kinds.add('build');
         break;
-      case 'colonyBuilt':
-        if (e.player === 'you' && !e.setup) kinds.add('build');
+      case 'villageReport':
+        kinds.add(e.won ? 'coin' : 'bad');
         break;
-      case 'colonyRobber':
-        if (e.victim === 'you' || e.lost > 0) kinds.add('bad');
-        break;
-      case 'colonyFinished':
-        kinds.add(e.place === 1 ? 'achievement' : 'rare');
+      case 'villageFounded':
+      case 'villageResearched':
+        kinds.add('achievement');
         break;
       default:
         break;

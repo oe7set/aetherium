@@ -71,56 +71,23 @@ Ziel: Das Spiel soll auf den ersten Blick hochwertig, magisch-wissenschaftlich u
 
 ---
 
-## Phase 9 – Kolonie „Neu-Aetherium" (Siedler/Catan-System)
+## Phase 9 – Dorf „Neu-Aetherium" (Aufbau-Strategie im Stil von Travian)
 
-### 9.1 Kernmechanik (Catan-Kern)
+> Ursprünglich als Catan-Brettspiel umgesetzt; auf Wunsch durch ein Travian-artiges Aufbauspiel ersetzt.
 
-- **Hex-Karte** (19 Felder, prozedural pro Partie): Wald (Holz), Lehmgrube (Lehm), Weide (Wolle), Acker (Getreide),
-  Gebirge (Erz), Aetherquelle (Aether, Sonderressource), Wüste (Räuber-Start).
-- **Zahlenchips 2–12**, **Würfelwurf** alle _N_ Sekunden (Echtzeit/Simulationszeit, auch offline).
-- **Siedlungen** an Ecken (Abstandsregel), **Städte** als Ausbau, **Straßen** an Kanten.
-- **Klassische Kosten**: Straße = Holz + Lehm; Siedlung = Holz + Lehm + Wolle + Getreide; Stadt = 2 Getreide + 3 Erz;
-  Entwicklungskarte = Wolle + Getreide + Erz.
-- **Räuber** bei der 7: blockiert ein Feld, Ressourcen über 7 Karten werden halbiert. Thematisch: „Reviewer #2" oder
-  „Steuereintreiber". Ritterkarten versetzen ihn.
-- **Handel**: Bank 4:1, Häfen 3:1 bzw. 2:1 (spezifisch), Spielerhandel mit KI-Gegnern (Angebote kommen rein).
-- **Entwicklungskarten**: Ritter, Straßenbau, Erfindung, Monopol, Siegpunkt – mit eigenem Humor.
-- **Siegpunkte**: Siedlung 1, Stadt 2, Längste Straße 2, Größte Rittermacht 2, Siegpunktkarten. Sieg bei 10.
-
-### 9.2 KI-Gegner („Online-Gefühl")
-
-- 3 Gegner-Kolonien mit Persönlichkeiten (z. B. _Baronin von Bürokratia_, _Gnom-Konsortium_, _Prof. Dr. Expansion_),
-  eigene Bau-Strategien, Handelsangebote, Chat-Sprüche im Feed, Rangliste der Partie.
-- Gleicher Würfel für alle; sie bauen in ihren Zügen (gleiche Regeln, deterministisch per Seed).
-
-### 9.3 Siedler-Wirtschaft (Produktionsketten)
-
-- Zusätzlich zum Catan-Kern: **Gebäude auf eigenen Siedlungsplätzen** mit Produktionsketten
-  (Sägewerk: Holz → Bretter, Mühle: Getreide → Mehl, Bäckerei: Mehl → Brot, Schmelze: Erz → Barren,
-  Weberei: Wolle → Tuch, Aether-Raffinerie: Aether → Essenz, Werkstatt, Akademie).
-- **Siedler-Bevölkerung**: Häuser erzeugen Siedler, Gebäude brauchen Arbeiter; Versorgung mit Brot/Fisch steigert
-  Produktivität (Siedler-Zufriedenheit).
-- **Lagerhaus** begrenzt Bestände (Upgrade-Stufen).
-
-### 9.4 Partien & Meta
-
-- **Partie** endet bei 10 Siegpunkten (oder Aufgabe). Belohnung: **Ruhm** (Meta-Währung), Truhen, Titel.
-- **Ruhm-Talente** (permanent): Startbonus-Ressourcen, bessere Häfen, zusätzlicher Startsiedler, schnellere Würfel,
-  Räuber-Immunität für 1 Feld, bessere KI-Handelskurse.
-- **Kartenvarianten** (freischaltbar): Inselwelt, Vulkanland, Quantenfeld (Felder wechseln Ressource).
-- **Saisons** (später): wöchentliche Seed-Karte mit Zusatzregel.
-
-### 9.5 Verflechtung
-
-- **Import**: Holz/Erz/Getreide aus dem Skilling-Inventar können in Kolonie-Ressourcen umgewandelt werden
-  (Hafen-Lieferung, Kurs abhängig von Tech/Ruhm).
-- **Export**: Kolonialwaren (Bretter, Tuch, Brot, Aether-Essenz) gehen ins Hauptinventar und werden für Alchemie,
-  Verzauberung und Handwerk gebraucht.
-- **Gebäude-Boni**: z. B. Sägewerk Stufe 3 → +5 % Holzfällen; Akademie → +Forschung; Kaserne → Riss-Startwaffen-Level.
-- **Riss-Invasionen**: gelegentlich greifen Riss-Kreaturen die Kolonie an – Türme/Mauern verteidigen, sonst geht
-  ein Gebäude in den „beschädigt"-Zustand (reparierbar). Ein Riss-Lauf „Gegenschlag" beendet die Invasion sofort.
-
----
+- **Rohstofffelder** rund ums Dorf: 18 Felder (Holzfäller, Lehmgrube, Eisenmine, Getreidefarm; Täler 4-4-4-6,
+  3-3-3-9, 1-1-1-15, 5-4-3-6), Stufe 10 (Hauptdorf 15). Produktion pro Stunde, Spieltempo ×10.
+- **Dorfzentrum** mit 20 Gebäuden: Hauptgebäude (Bautempo), Lager/Kornspeicher (Kapazität), Versteck,
+  Versammlungsplatz, Kaserne, Stall, Akademie, Schmiede, Marktplatz, Stadtmauer, Rathaus (Feste), Residenz (Siedler,
+  Oasen), Bonusgebäude (Sägewerk, Lehmbrennerei, Eisengießerei, Mühle, Bäckerei), Inselhafen, Bibliothek.
+- **Bauschleifen** (Felder und Zentrum parallel, je 1 Platz zum Vormerken), Getreideverbrauch durch Einwohner und
+  Truppen, Hungersnot bei negativem Getreide, sofort fertigstellen mit Inselgold.
+- **Militär**: 7 Einheiten, Akademie-Forschung, Schmiede-Boni, Raubzüge auf Räuberlager, Oasen und Riss-Ruinen
+  (Travian-Kampfformel, Beute nach Tragkraft), annektierbare Oasen (+25 %).
+- **Riss-Invasionen** nach 24 h Anfängerschutz: Mauer, Truppen, Versteck; Abwehr bringt Riss-Essenz und Äther.
+- **Expansion**: Kulturpunkte (Gebäude, Feste), Residenz 10/20, 3 Siedler → bis zu 5 Dörfer, Händler zwischen Dörfern.
+- **Verflechtung**: Einwohner → Insel-XP/Gold, Bonusgebäude → Inselskills, Schmiede/Mauer → Riss-Held,
+  Riss-Läufe → Rohstoff-Tribut, Hafen ↔ Inselwaren und Gold.
 
 ## Phase 10 – Ätherriss (Roguelike-Action, Vampire-Survivors-Mechanik)
 
@@ -198,7 +165,7 @@ Doku (CHANGELOG, CLAUDE.md), CI grün, Browser-Test (Playwright-Screenshots).
 | Phase | Schwerpunkt                                               | Status    |
 | ----- | --------------------------------------------------------- | --------- |
 | 8     | Look-Overhaul, Design-System, Startbildschirm, Reichsbuch | fertig    |
-| 9     | Kolonie (Catan-Kern, KI, Siedler-Ketten, Ruhm)            | fertig    |
+| 9     | Dorf (Travian-Aufbau, Truppen, Raubzüge, Expansion)       | fertig    |
 | 10    | Ätherriss (Survivor-Arena, Waffen, Evolutionen, Meta)     | fertig    |
 | 11    | Zusammenspiel & Querschnitts-Quests                       | in Arbeit |
 | 12    | Content & Juice                                           | geplant   |

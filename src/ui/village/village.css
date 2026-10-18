@@ -1,0 +1,681 @@
+/* Dorf – Travian-inspired: round field map around the village, round village square with a wall. */
+
+.village {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.village .glass {
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.village .small {
+  font-size: 0.82rem;
+}
+.village .muted {
+  color: var(--muted);
+}
+.village .center {
+  text-align: center;
+}
+.village .row {
+  display: flex;
+  align-items: center;
+}
+.village .gap {
+  gap: 6px;
+}
+.village h4 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  font-size: 0.95rem;
+}
+.village .chip.active {
+  outline: 2px solid var(--gold);
+}
+.village .good {
+  color: var(--green);
+}
+.village .bad {
+  color: var(--red);
+}
+.village-switch {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.v-segments {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.v-segments .segment {
+  position: relative;
+  white-space: nowrap;
+}
+.v-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.65rem;
+  line-height: 16px;
+}
+
+/* --- Resource bar -------------------------------------------------------------------------- */
+.v-resbar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+.v-res {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 4px;
+  gap: 2px 4px;
+  padding: 5px 6px 6px;
+  border-radius: 10px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--line);
+  font-size: 0.75rem;
+  min-width: 0;
+}
+.v-res.full {
+  border-color: rgba(255, 93, 115, 0.6);
+}
+.v-res-icon {
+  font-size: 1.05rem;
+  grid-row: 1;
+}
+.v-res-num {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  min-width: 0;
+}
+.v-res-num strong {
+  font-size: 0.85rem;
+}
+.v-res-num small {
+  font-size: 0.62rem;
+  color: var(--green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v-res-num small.neg {
+  color: var(--red);
+}
+.v-meta .v-res-num small {
+  color: var(--muted);
+}
+.v-res-bar {
+  grid-column: 1 / -1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.v-res-bar i {
+  display: block;
+  height: 100%;
+}
+
+/* --- Queue --------------------------------------------------------------------------------- */
+.v-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 209, 102, 0.07);
+  border: 1px solid rgba(255, 209, 102, 0.25);
+}
+.v-queue.idle {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--line);
+}
+.v-queue-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 70px auto auto;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.82rem;
+}
+.v-queue-row.waiting {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  opacity: 0.7;
+}
+.v-queue-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v-queue-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.v-queue-bar.wide {
+  margin: 6px 0;
+}
+.v-queue-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold));
+  transition: width 1s linear;
+}
+.v-queue-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+}
+
+/* --- Field ring ---------------------------------------------------------------------------- */
+.v-fields-wrap,
+.v-center-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.v-fields,
+.v-center {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.v-fields-ground {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0 20%, transparent 21%),
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 18px, rgba(0, 0, 0, 0.05) 18px 20px),
+    radial-gradient(circle at 40% 35%, #6aa84f, #3f7a35 55%, #2a5426 80%, #1b3a1d);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.5),
+    0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.v-fields-village {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 28%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 209, 102, 0.7);
+  background: radial-gradient(circle at 45% 40%, #e2c98f, #a88452);
+  box-shadow:
+    0 0 24px rgba(255, 209, 102, 0.35),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #3a2a18;
+  cursor: pointer;
+  font-weight: 700;
+}
+.v-fields-village span {
+  font-size: clamp(1.6rem, 7vw, 2.6rem);
+}
+.v-fields-village small {
+  font-size: 0.65rem;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v-field {
+  position: absolute;
+  width: 13%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+.v-field:hover,
+.v-field.selected {
+  transform: translate(-50%, -50%) scale(1.12);
+  z-index: 2;
+}
+.v-field.selected {
+  border-color: #fff;
+}
+.v-field.res-wood {
+  background: radial-gradient(circle at 40% 35%, #4fae5c, #1d5a2a);
+}
+.v-field.res-clay {
+  background: radial-gradient(circle at 40% 35%, #e08a5c, #8a3a24);
+}
+.v-field.res-iron {
+  background: radial-gradient(circle at 40% 35%, #b4bccb, #4a4f5c);
+}
+.v-field.res-crop {
+  background: radial-gradient(circle at 40% 35%, #f6d76a, #a57a1a);
+}
+.v-field-icon {
+  font-size: clamp(1rem, 4.5vw, 1.6rem);
+}
+.v-field-level,
+.v-bld-level {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 10px;
+  background: #f6ead0;
+  border: 1.5px solid #6a4a2a;
+  color: #3a2a18;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 17px;
+  text-align: center;
+}
+.v-field.ready .v-field-level,
+.v-bld.ready .v-bld-level {
+  background: var(--green);
+  border-color: #0b3a1d;
+  color: #08210f;
+}
+.v-field.ready {
+  box-shadow:
+    0 0 0 2px rgba(91, 227, 138, 0.8),
+    0 0 16px rgba(91, 227, 138, 0.45);
+}
+.v-field-crane {
+  position: absolute;
+  left: -4px;
+  top: -6px;
+  font-size: 0.9rem;
+  animation: crane 1s ease-in-out infinite alternate;
+}
+@keyframes crane {
+  to {
+    transform: rotate(-12deg) translateY(-2px);
+  }
+}
+
+/* --- Village square ------------------------------------------------------------------------ */
+.v-center-ground {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 47%, rgba(200, 170, 120, 0.55) 47% 53%, transparent 53%),
+    linear-gradient(0deg, transparent 47%, rgba(200, 170, 120, 0.55) 47% 53%, transparent 53%),
+    radial-gradient(circle at 50% 46%, #d6bd85 0 14%, transparent 15%),
+    radial-gradient(circle at 45% 40%, #7cb35b, #4f8a3f 60%, #2f5a2a);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.45),
+    0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.v-center.walled .v-center-ground {
+  outline: calc(4px + var(--wall) * 10px) solid #8d7a62;
+  outline-offset: calc(-2px - var(--wall) * 10px);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.45),
+    0 0 0 calc(2px + var(--wall) * 4px) rgba(0, 0, 0, 0.35),
+    0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.v-bld {
+  position: absolute;
+  width: 13%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: transparent;
+  transition: transform 0.15s;
+}
+.v-bld.built {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05) 70%);
+}
+.v-bld.site {
+  border: 2px dashed rgba(255, 255, 255, 0.55);
+  background: rgba(0, 0, 0, 0.12);
+}
+.v-bld.locked {
+  opacity: 0.4;
+}
+.v-bld.ready {
+  border-color: rgba(91, 227, 138, 0.8);
+  box-shadow: 0 0 14px rgba(91, 227, 138, 0.4);
+}
+.v-bld:hover,
+.v-bld.selected {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 2;
+}
+.v-bld.selected {
+  border-color: #fff;
+}
+.v-bld-icon {
+  font-size: clamp(1.1rem, 5vw, 1.9rem);
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.5));
+}
+.v-wall-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #6a4a2a;
+  background: #c9b28a;
+  color: #3a2a18;
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.v-wall-btn.selected {
+  outline: 2px solid #fff;
+}
+
+/* --- Detail cards -------------------------------------------------------------------------- */
+.v-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: v-pop 0.2s ease-out;
+}
+@keyframes v-pop {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+}
+.v-detail-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+.v-detail-icon {
+  font-size: 2rem;
+}
+.v-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.v-cost {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.v-cost .lacking {
+  color: var(--red);
+}
+.v-req {
+  color: var(--orange);
+}
+.v-effect {
+  color: var(--aether);
+}
+
+/* --- Lists --------------------------------------------------------------------------------- */
+.v-military,
+.v-market,
+.v-empire,
+.v-reports {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.v-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.v-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.v-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+.v-list-row .v-queue-bar {
+  flex: 1;
+  min-width: 60px;
+}
+.v-troops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.v-troop-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+}
+.v-train {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.v-train-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.v-train-row.locked {
+  opacity: 0.6;
+}
+.v-train-icon {
+  font-size: 1.8rem;
+}
+.v-train-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.v-train-form {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.v-train-form input,
+.v-name-input {
+  width: 80px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+}
+.v-name-input {
+  width: auto;
+  flex: 1;
+}
+.v-targets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.v-target {
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.v-target.kind-ruin {
+  border-color: rgba(185, 140, 255, 0.45);
+}
+.v-target.owned {
+  border-color: rgba(255, 209, 102, 0.5);
+}
+.v-target-head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px 1fr 50px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.v-target-icon {
+  font-size: 1.5rem;
+}
+.v-target-body {
+  display: flex;
+  flex-direction: column;
+}
+.v-target-body small {
+  font-size: 0.72rem;
+}
+.v-def-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.v-def-bar i {
+  display: block;
+  height: 100%;
+  background: var(--red);
+}
+.v-raid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 10px 10px;
+}
+.v-raid-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1.2fr 3ch;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.82rem;
+}
+.v-harbor-row {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 4px 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+.v-harbor-row .row {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+}
+.v-harbor-res {
+  font-size: 1.3rem;
+}
+.village .trade-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.village .trade-row input[type='range'] {
+  flex: 1;
+}
+.v-report header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.v-report p {
+  margin: 4px 0 0;
+}
+.v-report.won {
+  border-left: 3px solid var(--green) !important;
+}
+.v-report.lost {
+  border-left: 3px solid var(--red) !important;
+}
+.v-villages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+}
+.v-village-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+  color: inherit;
+  cursor: pointer;
+}
+.v-village-card.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
+}
+.v-village-icon {
+  font-size: 1.8rem;
+}
+
+@media (min-width: 1024px) {
+  .v-fields-wrap,
+  .v-center-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 1fr);
+    align-items: start;
+  }
+  .v-fields-wrap > p,
+  .v-center-wrap > p {
+    align-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .village * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.village .v-box p,
+.village .v-detail p {
+  margin: 0;
+}

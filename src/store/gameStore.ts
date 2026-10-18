@@ -64,7 +64,7 @@ import {
   type ProgressSummary,
   type Settings,
   type ShopResult,
-  type ColonyResult,
+  type VResult,
   buyRiftTalent,
   finishRun,
   prepareRun,
@@ -78,7 +78,7 @@ import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
-export type TabId = 'world' | 'skills' | 'inventory' | 'colony' | 'rift' | 'menu';
+export type TabId = 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
 export type MenuSection =
   | 'empire'
   | 'research'
@@ -159,9 +159,9 @@ export interface GameStore {
   /** Books the rewards of a finished rift run. */
   riftFinish: (result: RunResult) => RiftReward | null;
   riftTalent: (id: string) => void;
-  /** Runs a colony action; a failed result becomes a warning line in the feed. */
-  colony: (
-    fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => ColonyResult | void,
+  /** Runs a village action; a failed result becomes a warning line in the feed. */
+  village: (
+    fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
   ) => boolean;
   /** World tap on a station: start the best doable action of that skill, else open the skill. */
   tapStation: (skill: string) => void;
@@ -500,14 +500,14 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s) => {
         buyRiftTalent(s, id);
       }),
-    colony: (fn) => {
-      let result: ColonyResult | void = undefined;
+    village: (fn) => {
+      let result: VResult | void = undefined;
       mutate((s, emit) => {
         result = fn(s, emit, defaultRng);
       });
-      const r = result as ColonyResult | void;
+      const r = result as VResult | void;
       if (r && !r.ok) {
-        get().pushFeed(`❌ ${t(`colonyFail.${r.reason}` as MessageKey)}`, 'warn');
+        get().pushFeed(`❌ ${t(`villageFail.${r.reason}` as MessageKey)}`, 'warn');
         return false;
       }
       return true;

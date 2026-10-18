@@ -1,9 +1,8 @@
 import { ACHIEVEMENTS, ELEMENTS, getAction, getMonster, SKILLS, TECHS } from '../../data';
 import {
   affordableTechs,
-  colonyAttention,
-  PLAYER_INDEX,
-  victoryPoints,
+  totalPopulation,
+  villageAttention,
   combatLevel,
   conditionValue,
   levelCap,
@@ -14,7 +13,6 @@ import {
   totalLevel,
   wisdomGain,
 } from '../../engine';
-import { WIN_POINTS } from '../../data/colony';
 import { useGame, type MenuSection, type TabId } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
@@ -102,18 +100,20 @@ export function EmpirePanel() {
             📊 Gesamtlevel {total(game)} · ⚔️ Kampf {combatLevel(game)}
           </small>
         </button>
-        <button className="empire-card" onClick={() => setUi({ tab: 'colony' })}>
+        <button className="empire-card" onClick={() => setUi({ tab: 'village' })}>
           <span className="empire-card-icon">🏘️</span>
-          <strong>Kolonie</strong>
+          <strong>Dörfer</strong>
           <small>
-            {game.colony.match
-              ? `Partie läuft · ${victoryPoints(game.colony.match, PLAYER_INDEX)}/${WIN_POINTS} Siegpunkte`
-              : 'Keine Partie – starte eine!'}
+            {game.village.villages.length} Dorf{game.village.villages.length === 1 ? '' : 'er'} ·{' '}
+            {int(totalPopulation(game))} Einwohner
           </small>
           <small className="muted">
-            🌟 {game.colony.fame} Ruhm · 🏆 {game.colony.wins} Siege
+            🎭 {int(game.village.cp)} Kulturpunkte · 🛡️ {game.village.invasionsWon} Invasionen
+            abgewehrt
           </small>
-          {colonyAttention(game) > 0 && <span className="empire-badge">wartet auf dich</span>}
+          {villageAttention(game) > 0 && (
+            <span className="empire-badge">{villageAttention(game)} neue Berichte</span>
+          )}
         </button>
         <button
           className="empire-card"

@@ -43,24 +43,12 @@ export type GameEvent =
   | { type: 'petFound'; pet: string }
   | { type: 'questCompleted'; quest: string }
   | { type: 'taskCompleted'; task: string }
-  | { type: 'colonyStarted' }
-  | { type: 'colonySetupDone' }
-  | { type: 'colonyRoll'; roll: number; gained: number }
-  | { type: 'colonyRobber'; by: string; victim: string | null; res: string | null; lost: number }
-  | {
-      type: 'colonyBuilt';
-      /** Persona id ('you' for the player). */
-      player: string;
-      kind: 'road' | 'settlement' | 'city' | 'building';
-      id?: string;
-      setup?: boolean;
-    }
-  | { type: 'colonyDevCard'; card: string }
-  | { type: 'colonyDevPlayed'; card: string }
-  | { type: 'colonyOffer'; from: string }
-  | { type: 'colonyQuip'; player: string; line: number }
-  | { type: 'colonyFinished'; winner: string; place: number }
-  | { type: 'colonyClaimed'; fame: number; place: number }
+  | { type: 'villageBuilt'; village: string; name: string; level: number; field: boolean }
+  | { type: 'villageTrained'; village: string; troop: string }
+  | { type: 'villageResearched'; troop: string }
+  | { type: 'villageReport'; kind: string; won: boolean; title: string }
+  | { type: 'villageFounded'; name: string }
+  | { type: 'villageCelebration'; village: string; cp: number }
   | {
       type: 'riftFinished';
       essence: number;

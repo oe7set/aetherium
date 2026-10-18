@@ -1,7 +1,7 @@
 import { t } from '../i18n';
 import {
   affordableTechs,
-  colonyAttention,
+  villageAttention,
   QUEST_MAP,
   questProgress,
   taskProgress,
@@ -23,10 +23,10 @@ export function TabBar({ tabs = TABS }: { tabs?: typeof TABS }) {
       }).length,
   );
   const researchBadge = useGame((s) => affordableTechs(s.game).length);
-  const colonyBadge = useGame((s) => colonyAttention(s.game));
+  const villageBadge = useGame((s) => villageAttention(s.game));
   const badges: Partial<Record<string, number>> = {
     menu: questBadge + researchBadge,
-    colony: colonyBadge,
+    village: villageBadge,
   };
   return (
     <nav className="tabbar" aria-label="Navigation">

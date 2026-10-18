@@ -14,17 +14,17 @@ import {
 } from '../data';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
-import { COLONY_BUILDINGS, FAME_TALENTS } from '../data/colony';
+import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
 import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
-import { BOARD } from './colony/board';
+import { createVillage } from './villageWorld';
 import {
   defaultCombatSettings,
   defaultSettings,
   newGame,
   SAVE_VERSION,
   type CombatSettings,
-  type ColonyMatch,
-  type ColonyState,
+  type Village,
+  type VillageState,
   type CombatState,
   type GameState,
   type PrestigeState,
@@ -80,6 +80,12 @@ export const MIGRATIONS: Record<number, Migration> = {
   6: (data) => ({ ...data, colony: null }),
   // 7 → 8 (Phase 10): Ätherriss meta progression.
   7: (data) => ({ ...data, rift: null }),
+  // 8 → 9: the Catan colony is replaced by the Travian-like village.
+  8: (data) => {
+    const rest = { ...data };
+    delete rest.colony;
+    return { ...rest, village: null };
+  },
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -221,7 +227,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     catState: data.catState === 'alive' || data.catState === 'ghost' ? data.catState : 'unknown',
     quests: hydrateQuests(data.quests),
     tasks: hydrateTasks(data.tasks, base.tasks),
-    colony: hydrateColony(data.colony, base.colony),
+    village: hydrateVillage(data.village, base.village),
     rift: hydrateRift(data.rift, base.rift),
     combatSettings: {
       ...defaultCombatSettings(),
@@ -270,90 +276,138 @@ function hydrateRift(v: unknown, fallback: RiftState): RiftState {
   };
 }
 
-function hydrateColony(v: unknown, fallback: ColonyState): ColonyState {
-  if (!isRecord(v)) return fallback;
-  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
-  const talents = Object.fromEntries(
-    Object.entries(numberRecord(v.talents)).filter(([id]) => FAME_TALENTS.some((t) => t.id === id)),
-  );
-  return {
-    match: hydrateMatch(v.match),
-    fame: Math.max(0, num(v.fame, 0)),
-    fameTotal: Math.max(0, num(v.fameTotal, 0)),
-    talents,
-    wins: num(v.wins, 0),
-    matches: num(v.matches, 0),
-    nextRoll: Math.max(0, num(v.nextRoll, fallback.nextRoll)),
-    nextOfferId: num(v.nextOfferId, 1),
-  };
+function hydrateResearch(x: unknown): Village['research'] {
+  if (!isRecord(x) || !TROOPS.some((t) => t.id === x.troop)) return null;
+  const num = (y: unknown, d: number) => (typeof y === 'number' && Number.isFinite(y) ? y : d);
+  return { troop: String(x.troop), remaining: num(x.remaining, 0), total: num(x.total, 1) };
 }
 
-/** A saved match is only kept if its shape is intact; otherwise it is discarded (fresh board). */
-function hydrateMatch(v: unknown): ColonyMatch | null {
-  const strings = (x: unknown) =>
-    Array.isArray(x) ? x.filter((y): y is string => typeof y === 'string') : [];
-  if (!isRecord(v) || !Array.isArray(v.players) || !Array.isArray(v.terrain)) return null;
-  if (v.terrain.length !== BOARD.hexes.length || v.players.length < 2) return null;
-  if (!['setup', 'running', 'finished'].includes(v.phase as string)) return null;
-  const nums = (x: unknown) =>
-    Array.isArray(x) ? x.filter((n): n is number => typeof n === 'number') : [];
-  const players = v.players.filter(isRecord).map((p) => ({
-    persona: typeof p.persona === 'string' ? p.persona : 'you',
-    res: {
-      wood: 0,
-      brick: 0,
-      wool: 0,
-      grain: 0,
-      ore: 0,
-      ...numberRecord(p.res),
-    } as ColonyMatch['players'][number]['res'],
-    settlements: nums(p.settlements),
-    cities: nums(p.cities),
-    roads: nums(p.roads),
-    devHand: strings(p.devHand),
-    knights: typeof p.knights === 'number' ? p.knights : 0,
-    victoryCards: typeof p.victoryCards === 'number' ? p.victoryCards : 0,
-  }));
-  if (players.length !== v.players.length) return null;
-  const buildings: Record<string, string[]> = {};
-  if (isRecord(v.buildings))
-    for (const [k, list] of Object.entries(v.buildings))
-      buildings[k] = strings(list).filter((id) => COLONY_BUILDINGS.some((b) => b.id === id));
-  const optIndex = (x: unknown) => (typeof x === 'number' ? x : null);
-  const roll = nums(v.lastRoll);
-  return {
-    seed: typeof v.seed === 'number' ? v.seed : 0,
-    terrain: strings(v.terrain),
-    numbers: Array.isArray(v.numbers)
-      ? v.numbers.map((n) => (typeof n === 'number' ? n : null))
-      : [],
-    harbors: Array.isArray(v.harbors)
-      ? v.harbors.filter(isRecord).map((h) => ({
-          edge: typeof h.edge === 'number' ? h.edge : 0,
-          kind: typeof h.kind === 'string' ? h.kind : 'any',
+function hydrateVillage(v: unknown, fallback: VillageState): VillageState {
+  if (!isRecord(v) || !Array.isArray(v.villages)) return fallback;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const res = (x: unknown) => {
+    const r = numberRecord(x);
+    return {
+      wood: num(r.wood, 0),
+      clay: num(r.clay, 0),
+      iron: num(r.iron, 0),
+      crop: num(r.crop, 0),
+    };
+  };
+  const troops = (x: unknown) =>
+    Object.fromEntries(
+      Object.entries(numberRecord(x)).filter(([id, n]) => TROOPS.some((t) => t.id === id) && n > 0),
+    );
+  const queue = (x: unknown) =>
+    Array.isArray(x)
+      ? x.filter(isRecord).map((q) => ({
+          key: String(q.key ?? ''),
+          level: num(q.level, 1),
+          remaining: Math.max(0, num(q.remaining, 0)),
+          total: num(q.total, 1),
         }))
+      : [];
+  const villages: Village[] = v.villages.filter(isRecord).map((x, i) => {
+    const layout = typeof x.layout === 'string' && VALLEYS[x.layout] ? x.layout : 'standard';
+    const base = createVillage(
+      num(x.id, i + 1),
+      typeof x.name === 'string' ? x.name : `Dorf ${i + 1}`,
+      num(x.x, 0),
+      num(x.y, 0),
+      layout,
+      x.capital === true,
+    );
+    const fields = Array.isArray(x.fields) ? x.fields.map((f) => num(f, 0)) : base.fields;
+    const q = isRecord(x.queue) ? x.queue : {};
+    return {
+      ...base,
+      fields: base.fields.map((_, j) => fields[j] ?? 0),
+      buildings: Object.fromEntries(
+        Object.entries(numberRecord(x.buildings)).filter(([id]) =>
+          V_BUILDINGS.some((b) => b.id === id),
+        ),
+      ),
+      res: isRecord(x.res) ? res(x.res) : base.res,
+      queue: {
+        field: queue(q.field),
+        center: queue(q.center).filter((it) => V_BUILDINGS.some((b) => b.id === it.key)),
+      },
+      training: Array.isArray(x.training)
+        ? x.training
+            .filter(isRecord)
+            .filter((t) => TROOPS.some((d) => d.id === t.troop))
+            .map((t) => ({
+              troop: String(t.troop),
+              count: num(t.count, 0),
+              each: num(t.each, 1),
+              progress: num(t.progress, 0),
+            }))
+        : [],
+      troops: troops(x.troops),
+      research: hydrateResearch(x.research),
+      celebration: isRecord(x.celebration)
+        ? { remaining: num(x.celebration.remaining, 0), cp: num(x.celebration.cp, 0) }
+        : null,
+      oases: stringArray(x.oases),
+    };
+  });
+  if (!villages.length) return fallback;
+  // The world (targets/sites) is regenerated from the fallback and patched with saved progress.
+  const targets = fallback.targets.map((t) => {
+    const saved = Array.isArray(v.targets)
+      ? v.targets.filter(isRecord).find((x) => x.id === t.id)
+      : undefined;
+    if (!saved) return t;
+    return {
+      ...t,
+      defense: Math.min(t.maxDefense, Math.max(0, num(saved.defense, t.defense))),
+      stock: isRecord(saved.stock) ? res(saved.stock) : t.stock,
+      owner:
+        typeof saved.owner === 'number' && villages.some((vl) => vl.id === saved.owner)
+          ? saved.owner
+          : null,
+    };
+  });
+  const sites = Array.isArray(v.sites)
+    ? fallback.sites.filter((st) =>
+        (v.sites as unknown[]).some((x) => isRecord(x) && x.id === st.id),
+      )
+    : fallback.sites;
+  const movements = Array.isArray(v.movements)
+    ? v.movements
+        .filter(isRecord)
+        .filter((m) => ['raid', 'return', 'settle', 'trade'].includes(m.kind as string))
+        .map((m) => ({
+          id: num(m.id, 0),
+          kind: m.kind as 'raid' | 'return' | 'settle' | 'trade',
+          from: num(m.from, villages[0]!.id),
+          target: String(m.target ?? ''),
+          troops: troops(m.troops),
+          res: res(m.res),
+          remaining: Math.max(0, num(m.remaining, 0)),
+          total: num(m.total, 1),
+        }))
+    : [];
+  return {
+    ...fallback,
+    villages,
+    active: villages.some((vl) => vl.id === v.active) ? (v.active as number) : villages[0]!.id,
+    researched: stringArray(v.researched).filter((id) => TROOPS.some((t) => t.id === id)),
+    cp: Math.max(0, num(v.cp, 0)),
+    cpTotal: Math.max(0, num(v.cpTotal, 0)),
+    targets,
+    sites,
+    movements,
+    reports: Array.isArray(v.reports)
+      ? (v.reports.filter(isRecord) as unknown as VillageState['reports']).slice(0, 30)
       : [],
-    robber: typeof v.robber === 'number' ? v.robber : 0,
-    players,
-    deck: strings(v.deck),
-    phase: v.phase as ColonyMatch['phase'],
-    setupQueue: nums(v.setupQueue),
-    setupVertex: optIndex(v.setupVertex),
-    rolls: typeof v.rolls === 'number' ? v.rolls : 0,
-    lastRoll: roll.length === 2 ? [roll[0]!, roll[1]!] : null,
-    turn: typeof v.turn === 'number' ? v.turn : 0,
-    longestRoad: optIndex(v.longestRoad),
-    largestArmy: optIndex(v.largestArmy),
-    offers: Array.isArray(v.offers)
-      ? v.offers
-          .filter(isRecord)
-          .filter((o) => typeof o.id === 'number')
-          .map((o) => o as unknown as ColonyMatch['offers'][number])
-      : [],
-    winner: optIndex(v.winner),
-    buildings,
-    freeRoads: typeof v.freeRoads === 'number' ? v.freeRoads : 0,
-    robberMode: v.robberMode === true,
+    unread: num(v.unread, 0),
+    nextId: Math.max(num(v.nextId, 2), ...villages.map((vl) => vl.id + 1)),
+    protection: Math.max(0, num(v.protection, fallback.protection)),
+    invasionIn: Math.max(0, num(v.invasionIn, fallback.invasionIn)),
+    invasionsWon: num(v.invasionsWon, 0),
+    invasionsLost: num(v.invasionsLost, 0),
+    clock: num(v.clock, 0),
   };
 }
 

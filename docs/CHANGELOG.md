@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0] – Dorf statt Kolonie (Travian-Stil)
+
+### Geändert
+
+- Die Catan-Kolonie wurde durch ein **Dorf-Aufbauspiel im Stil von Travian** ersetzt (neuer Tab **Dorf**).
+  Alte Spielstände werden migriert (Spielstand-Version 9); Ruhm und Kolonie-Fortschritt entfallen.
+
+### Hinzugefügt
+
+- **18 Rohstofffelder** rund ums Dorf (Holz, Lehm, Eisen, Getreide) und **20 Gebäude** im Dorfzentrum, jeweils mit
+  Stufen, Kosten und Bauzeiten; zwei parallele Bauschleifen, sofort fertigstellen mit Inselgold.
+- Lager und Kornspeicher, Getreideverbrauch durch Einwohner und Truppen, Hungersnot.
+- **Militär**: 7 Einheiten (Knüppelbauer bis Ätherritter, Siedler), Akademie-Forschung, Schmiede, Raubzüge auf
+  Räuberlager, Oasen und Riss-Ruinen mit Kampfberichten, annektierbare Oasen.
+- **Riss-Invasionen** nach 24 h Anfängerschutz; Mauer und Versteck schützen, Abwehr bringt Essenz und Äther.
+- **Expansion**: Kulturpunkte, Feste im Rathaus, Siedler gründen bis zu 5 Dörfer; Händler zwischen den Dörfern.
+- **Inselhafen** (Inselwaren → Rohstoffe, Rohstoffe → Gold) und Boni für Insel und Riss; Riss-Läufe liefern
+  Rohstoff-Tribut. Neue Erfolge für Einwohner, Raubzüge, Invasionen und Gründungen.
+
 ## [1.3.0] – Phase 10 „Ätherriss" (Survivor-Roguelike)
 
 ### Hinzugefügt
