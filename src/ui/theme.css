@@ -902,3 +902,77 @@ button.chip {
   font: inherit;
   color: inherit;
 }
+
+/* --- Identity pass: gems, ornaments, glow ---------------------------------------------------- */
+.group-title::before {
+  content: '◆';
+  font-size: 0.55em;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(255, 209, 102, 0.7);
+}
+.skill-row .skill-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35), transparent 45%),
+    radial-gradient(circle, color-mix(in srgb, var(--sc, #7c5cff) 55%, #0b0e1a), #0b0e1a 85%);
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--sc, #7c5cff) 70%, transparent),
+    0 3px 8px rgba(0, 0, 0, 0.45);
+  font-size: 1.05rem;
+}
+.skill-row.locked .skill-icon {
+  filter: grayscale(1) brightness(0.7);
+}
+.skill-row .skill-level {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 4px;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--sc, #7c5cff) 45%, #1a1f38), #11142a);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.skill-row.mastered .skill-level {
+  background: linear-gradient(160deg, var(--gold), var(--gold-2));
+  color: #3a2a18;
+}
+.skill-row.running {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--sc, #5ef2ff) 60%, transparent),
+    0 0 16px color-mix(in srgb, var(--sc, #5ef2ff) 25%, transparent);
+}
+.tab .tab-icon {
+  position: relative;
+  transition: transform 0.2s;
+}
+.tab.active .tab-icon {
+  transform: translateY(-2px) scale(1.12);
+}
+.tab.active .tab-icon::after {
+  content: '';
+  position: absolute;
+  inset: -8px -10px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 242, 255, 0.28), transparent 70%);
+}
+.segment.active {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.55), rgba(94, 242, 255, 0.25));
+  box-shadow:
+    0 0 0 1px rgba(160, 190, 255, 0.35) inset,
+    0 4px 14px rgba(124, 92, 255, 0.3);
+}
+h4.rift-h4::before,
+.village h4::before {
+  content: '◆ ';
+  font-size: 0.6em;
+  color: var(--gold);
+  vertical-align: middle;
+}

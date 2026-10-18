@@ -24,7 +24,9 @@ export const PROD_SPEED = 20;
 // --- Resource fields ------------------------------------------------------------------------------
 
 /** Base production per hour by field level (before SPEED). */
-export const FIELD_PROD = [10, 18, 28, 42, 60, 82, 110, 146, 190, 245, 310, 400, 520, 670, 860, 1100];
+export const FIELD_PROD = [
+  10, 18, 28, 42, 60, 82, 110, 146, 190, 245, 310, 400, 520, 670, 860, 1100,
+];
 export const FIELD_MAX = 10;
 export const CAPITAL_FIELD_MAX = 15;
 
@@ -486,11 +488,11 @@ export const MAIN_SPEED = 0.964;
 
 /** Warehouse / granary capacity by level (level 0 = no building). */
 export const STORAGE = [
-  800, 1200, 1700, 2300, 3100, 4000, 5000, 6300, 7800, 9600, 11800, 14400, 17600, 21400, 25900,
-  31300, 37900, 45700, 55100, 66400, 80000,
+  1600, 2400, 3400, 4600, 6200, 8000, 10000, 12600, 15600, 19200, 23600, 28800, 35200, 42800, 51800,
+  62600, 75800, 91400, 110200, 132800, 160000,
 ];
 /** Resources the cranny protects (per resource). */
-export const CRANNY = [0, 100, 130, 170, 220, 280, 360, 460, 600, 770, 1000];
+export const CRANNY = [0, 200, 260, 340, 440, 560, 720, 920, 1200, 1540, 2000];
 
 // --- Troops --------------------------------------------------------------------------------------
 

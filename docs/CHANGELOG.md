@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.7.0] – Kühler, größer, übersichtlicher
+
+### Hinzugefügt
+
+- **Leistung & Akku** (Einstellungen): Automatisch (Handy = Eco), Eco oder Flüssig. Eco begrenzt die 3D-Insel auf
+  30 FPS (12 hinter Menüs), nutzt die sparsame GPU, schaltet Glas-Unschärfe, animierten Hintergrund und Endlos-Deko ab
+  und drosselt Karte und Riss. Die Simulation tickt 5- statt 10-mal pro Sekunde.
+- **Neuer Skill Archäologie** mit 7 Grabungsstätten (Strand bis Vorläufer-Ruinen); Funde werden zu Gold, Forschung
+  und Beutekisten.
+- **Mehr Stufen**: 12 neue Bäume (Holzfällen 20 Stufen), 12 neue Hölzer zum Verbrennen, 6 Erze/Gesteine, 7 Fische
+  samt Rezepten, 4 Jagdziele bis zum Phönix, 3 arkane Quellen.
+- **Schnellzugriff** 🧭 (Header oder Taste K//): durchsuchbar, führt zu jedem Bereich, Skill und Unterbereich.
+  Gold, Gesamtlevel und Feuer im Header sind jetzt Abkürzungen; die Chronik springt direkt zum richtigen Unterbereich.
+- **Design**: Skill-Symbole als Edelsteine in Skillfarbe, sechseckige Level-Abzeichen (Gold bei 99), Ornamente,
+  leuchtender aktiver Tab, kräftigere Segmente; Vibration abschaltbar.
+
+### Geändert (Balancing, per Bot gemessen)
+
+- Dorf: eigenes Produktionstempo und stärkere niedrige Feldstufen – alle Felder Stufe 1 nach ~1,5 h statt 9 h,
+  Kaserne nach ~4,5 h statt 15 h; Lager und Versteck doppelt so groß.
+- Held: flachere XP-Kurve, doppelte Abenteuer-XP.
+- Neuer Tempo-Test: ein Bot spielt 10 Stunden Dorf und prüft die ersten Meilensteine.
+
 ## [1.6.0] – Belohnungen, Ruhmesleiter & Chronik
 
 ### Hinzugefügt

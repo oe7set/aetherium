@@ -21,7 +21,8 @@ function SkillRow({ id }: { id: string }) {
   const p = levelProgress(xp, cap);
   return (
     <button
-      className={`skill-row ${selected ? 'selected' : ''} ${isActive ? 'running' : ''} ${unlocked ? '' : 'locked'}`}
+      className={`skill-row ${selected ? 'selected' : ''} ${isActive ? 'running' : ''} ${unlocked ? '' : 'locked'} ${p.level >= 99 ? 'mastered' : ''}`}
+      style={{ '--sc': skill.color } as React.CSSProperties}
       onClick={() => openSkill(id)}
     >
       <span className="skill-icon">{unlocked ? skill.icon : '🔒'}</span>
