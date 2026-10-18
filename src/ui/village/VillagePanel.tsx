@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { V_BUILDINGS, V_RES_INFO, V_RESOURCES } from '../../data/village';
 import {
   activeVillage,
@@ -41,7 +40,9 @@ export function VillagePanel() {
   useGame((s) => villageKey(s.game));
   const game = useGame.getState().game;
   const act = useGame((s) => s.village);
-  const [seg, setSeg] = useState<VillageSegment>('fields');
+  const seg = useGame((s) => s.ui.villageSegment);
+  const setUi = useGame((s) => s.setUi);
+  const setSeg = (villageSegment: VillageSegment) => setUi({ villageSegment });
   const v = activeVillage(game);
   const unread = game.village.unread;
   return (

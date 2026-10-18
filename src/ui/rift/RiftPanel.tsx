@@ -46,7 +46,9 @@ export function RiftPanel() {
       Object.keys(s.game.inventory).length,
     ]),
   );
-  const [seg, setSeg] = useState<Segment>('hero');
+  const seg = useGame((s) => s.ui.heroSegment);
+  const setUi = useGame((s) => s.setUi);
+  const setSeg = (heroSegment: Segment) => setUi({ heroSegment });
   return (
     <div className="panel rift-panel">
       <div className="segments" role="tablist">

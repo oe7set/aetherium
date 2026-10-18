@@ -103,7 +103,12 @@ export interface ChronicleStep {
   condition: ChronicleCondition;
   reward: RewardDef;
   /** Where the "Los" button leads. */
-  go: { tab: 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu'; skill?: string };
+  go: {
+    tab: 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
+    skill?: string;
+    /** Sub-section: village segment, hero segment or menu section. */
+    section?: string;
+  };
 }
 
 export const CHRONICLE: ChronicleStep[] = [
@@ -129,7 +134,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🌾',
     condition: { kind: 'stat', key: 'villageFieldLevels', gte: 1 },
     reward: { resources: 300 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'fields' },
   },
   {
     title: 'Hauptgebäude auf Stufe 3',
@@ -137,7 +142,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🏛️',
     condition: { kind: 'building', id: 'main', gte: 3 },
     reward: { resources: 500, gold: 200 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'center' },
   },
   {
     title: 'Verteile Attributpunkte',
@@ -145,7 +150,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '💪',
     condition: { kind: 'heroPoints', gte: 4 },
     reward: { heroXp: 80, essence: 10 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'hero' },
   },
   {
     title: 'Betritt den Ätherriss',
@@ -153,7 +158,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🌀',
     condition: { kind: 'stat', key: 'riftRuns', gte: 1 },
     reward: { essence: 20 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'start' },
   },
   {
     title: 'Überlebe 3 Minuten im Riss',
@@ -161,7 +166,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '⏱️',
     condition: { kind: 'riftMinutes', gte: 3 },
     reward: { essence: 40, heroItem: 1 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'start' },
   },
   {
     title: 'Bestehe ein Abenteuer',
@@ -169,7 +174,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '❗',
     condition: { kind: 'stat', key: 'heroAdventures', gte: 1 },
     reward: { heroXp: 150, resources: 400 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'adventures' },
   },
   {
     title: 'Baue eine Kaserne',
@@ -177,7 +182,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '⚔️',
     condition: { kind: 'building', id: 'barracks', gte: 1 },
     reward: { resources: 600 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'center' },
   },
   {
     title: 'Bilde 10 Truppen aus',
@@ -185,7 +190,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🧑‍🌾',
     condition: { kind: 'stat', key: 'villageTroopsTrained', gte: 10 },
     reward: { resources: 700, gold: 300 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'military' },
   },
   {
     title: 'Gewinne einen Raubzug',
@@ -193,7 +198,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '⛺',
     condition: { kind: 'stat', key: 'villageRaidsWon', gte: 1 },
     reward: { heroXp: 200, items: [{ item: 'coin_pouch', qty: 2 }] },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'map' },
   },
   {
     title: 'Gesamtlevel 50',
@@ -209,7 +214,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🔬',
     condition: { kind: 'stat', key: 'techsResearched', gte: 1 },
     reward: { research: 80, essence: 30 },
-    go: { tab: 'menu' },
+    go: { tab: 'menu', section: 'research' },
   },
   {
     title: 'Baue den Inselhafen',
@@ -217,7 +222,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '⚓',
     condition: { kind: 'building', id: 'harbor', gte: 1 },
     reward: { resources: 1200 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'center' },
   },
   {
     title: 'Heldenstufe 10',
@@ -225,7 +230,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '⭐',
     condition: { kind: 'heroLevel', gte: 10 },
     reward: { heroItem: 2, essence: 60 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'adventures' },
   },
   {
     title: 'Überlebe 10 Minuten im Riss',
@@ -233,7 +238,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🛡️',
     condition: { kind: 'riftMinutes', gte: 10 },
     reward: { essence: 120, items: [{ item: 'dungeon_chest', qty: 1 }] },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'start' },
   },
   {
     title: 'Wehre eine Riss-Invasion ab',
@@ -241,7 +246,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🧱',
     condition: { kind: 'stat', key: 'villageInvasionsRepelled', gte: 1 },
     reward: { essence: 80, resources: 1500 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'military' },
   },
   {
     title: '300 Einwohner',
@@ -249,7 +254,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '👥',
     condition: { kind: 'stat', key: 'villagePopulation', gte: 300 },
     reward: { gold: 3000, heroXp: 500 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'fields' },
   },
   {
     title: 'Entdecke eine Evolution',
@@ -257,7 +262,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '✨',
     condition: { kind: 'evolutions', gte: 1 },
     reward: { essence: 200, heroItem: 2 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'start' },
   },
   {
     title: 'Gründe ein zweites Dorf',
@@ -265,7 +270,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🧳',
     condition: { kind: 'stat', key: 'villagesFounded', gte: 1 },
     reward: { resources: 3000, essence: 150 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'empire' },
   },
   {
     title: 'Annektiere eine Oase',
@@ -273,7 +278,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🏝️',
     condition: { kind: 'stat', key: 'villageOases', gte: 1 },
     reward: { heroItem: 2, resources: 2000 },
-    go: { tab: 'village' },
+    go: { tab: 'village', section: 'map' },
   },
   {
     title: 'Besiege den Prüfer',
@@ -281,7 +286,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🧑‍⚖️',
     condition: { kind: 'stat', key: 'riftWins', gte: 1 },
     reward: { heroItem: 3, essence: 400 },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'start' },
   },
   {
     title: 'Erste Wiedergeburt',
@@ -289,7 +294,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '🌅',
     condition: { kind: 'stat', key: 'rebirths', gte: 1 },
     reward: { essence: 300, gold: 10000 },
-    go: { tab: 'menu' },
+    go: { tab: 'menu', section: 'prestige' },
   },
   {
     title: 'Heldenstufe 30',
@@ -297,7 +302,7 @@ export const CHRONICLE: ChronicleStep[] = [
     icon: '👑',
     condition: { kind: 'heroLevel', gte: 30 },
     reward: { heroItem: 3, avatar: '🧙‍♂️' },
-    go: { tab: 'rift' },
+    go: { tab: 'rift', section: 'adventures' },
   },
   {
     title: 'Gesamtlevel 500',

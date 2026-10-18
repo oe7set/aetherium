@@ -21,6 +21,7 @@ import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
 import { TitleScreen } from './TitleScreen';
+import { QuickNav } from './QuickNav';
 import { ChronicleBanner } from './rewards/ChronicleBanner';
 import { DailyModal } from './rewards/DailyModal';
 import { RewardReveal } from './rewards/RewardReveal';
@@ -148,6 +149,7 @@ export function App() {
       <OfflineModal />
       <TitleScreen />
       <DailyModal />
+      <QuickNav />
       <RewardReveal />
       {inRift && (
         <Suspense

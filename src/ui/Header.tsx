@@ -23,6 +23,7 @@ export function Header() {
   const hasResearch = useGame((s) => s.game.research > 0 || s.game.techs.length > 0);
   const canResearch = useGame((s) => affordableTechs(s.game).length > 0);
   const setUi = useGame((s) => s.setUi);
+  const openSkill = useGame((s) => s.openSkill);
   const wisdom = useGame((s) => s.game.prestige.wisdomTotal);
   const daily = useGame((s) => dailyAvailable(s.game, Date.now()));
   const gifts = useGame(
@@ -33,14 +34,24 @@ export function Header() {
 
   return (
     <header className="header">
-      <div className="brand" aria-label={t('app.title')}>
+      <button
+        className="brand qnav-btn"
+        aria-label="Schnellzugriff öffnen"
+        title="Schnellzugriff (K)"
+        onClick={() => setUi({ quickNav: true })}
+      >
+        <span className="qnav-compass">🧭</span>
         <span className="brand-mark">Æ</span>
         <span className="brand-name">{t('app.title')}</span>
-      </div>
+      </button>
       <div className="header-stats">
-        <span className="chip" title={t('header.gold')}>
+        <button
+          className="chip"
+          title="Gold – zum Krämer"
+          onClick={() => setUi({ tab: 'inventory', inventorySegment: 'shop' })}
+        >
           🪙 <b>{gold}</b>
-        </span>
+        </button>
         {hasResearch && (
           <button
             className={`chip ${canResearch ? 'chip-glow' : ''}`}
@@ -55,16 +66,21 @@ export function Header() {
             🦉 <b>{wisdom}</b>
           </span>
         )}
-        <span className="chip" title={t('header.totalLevel')}>
+        <button
+          className="chip"
+          title={`${t('header.totalLevel')} – zu den Skills`}
+          onClick={() => setUi({ tab: 'skills', skillDetail: false })}
+        >
           📊 <b>{total}</b>
-        </span>
-        <span
+        </button>
+        <button
+          onClick={() => openSkill('firemaking')}
           className={`chip ${fire > 0 ? 'chip-fire' : 'chip-dim'}`}
           title={fire > 0 ? `${t('header.fire')}: ${formatDuration(fire)}` : t('header.fireOut')}
           style={{ ['--fire' as string]: fireFraction }}
         >
           {fire > 0 ? '🔥' : '🪵'} <b>{fire > 0 ? formatDuration(fire) : '–'}</b>
-        </span>
+        </button>
         {(inCombat || hp < max) && (
           <span className={`chip ${hp < max * 0.35 ? 'chip-danger' : ''}`} title="Lebenspunkte">
             ❤️ <b>{hp}</b>

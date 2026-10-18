@@ -115,6 +115,10 @@ export interface UiState {
   inventorySegment: InventorySegment;
   selectedItem: string | null;
   menuSection: MenuSection;
+  villageSegment: 'fields' | 'center' | 'map' | 'military' | 'market' | 'reports' | 'empire';
+  heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
+  /** Quick navigation overlay. */
+  quickNav: boolean;
 }
 
 export interface GameStore {
@@ -306,6 +310,9 @@ export const useGame = create<GameStore>()((set, get) => {
       inventorySegment: 'items',
       selectedItem: null,
       menuSection: 'empire',
+      villageSegment: 'fields',
+      heroSegment: 'hero',
+      quickNav: false,
     },
 
     tick: (dt) => {

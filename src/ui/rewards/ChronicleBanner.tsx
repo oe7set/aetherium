@@ -14,14 +14,12 @@ export function ChronicleBanner({ compact = false }: { compact?: boolean }) {
   const c = currentChronicle(useGame.getState().game)!;
   const fraction = Math.min(1, c.value / c.target);
   const go = () => {
-    if (c.step.go.skill) openSkill(c.step.go.skill);
-    else
-      setUi({
-        tab: c.step.go.tab,
-        ...(c.step.go.tab === 'menu' && c.step.icon === '🔬'
-          ? { menuSection: 'research' as const }
-          : {}),
-      });
+    const { tab, skill, section } = c.step.go;
+    if (skill) return openSkill(skill);
+    if (tab === 'village' && section) return setUi({ tab, villageSegment: section as never });
+    if (tab === 'rift' && section) return setUi({ tab, heroSegment: section as never });
+    if (tab === 'menu' && section) return setUi({ tab, menuSection: section as never });
+    setUi({ tab });
   };
   return (
     <div className={`chronicle ${c.done ? 'done' : ''} ${compact ? 'compact' : ''}`}>
