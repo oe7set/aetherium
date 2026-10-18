@@ -145,6 +145,44 @@ export function OfflineModal() {
           </p>
         )}
         {summary.fireWentOut && <p className="muted">🌫️ {t('offline.fireOut')}</p>}
+        {(summary.village.resources > 0 ||
+          summary.village.built.length > 0 ||
+          summary.village.reports.length > 0) && (
+          <>
+            <h4 className="group-title">🏘️ Dein Dorf</h4>
+            {summary.village.resources > 0 && (
+              <p>🌾 +{num(summary.village.resources)} Rohstoffe produziert</p>
+            )}
+            {summary.village.built.length > 0 && (
+              <div className="pill-wrap">
+                {summary.village.built.map((b, i) => (
+                  <span key={i} className="item-pill">
+                    🏗️ {b}
+                  </span>
+                ))}
+              </div>
+            )}
+            {summary.village.reports.map((r, i) => (
+              <p key={i} className="muted">
+                📜 {r}
+              </p>
+            ))}
+          </>
+        )}
+        {(summary.hero.adventures > 0 ||
+          summary.hero.levels > 0 ||
+          summary.hero.died ||
+          summary.hero.essence > 0) && (
+          <>
+            <h4 className="group-title">🦸 Dein Held</h4>
+            {summary.hero.adventures > 0 && (
+              <p>❗ {summary.hero.adventures} Abenteuer gemeistert</p>
+            )}
+            {summary.hero.levels > 0 && <p>⭐ +{summary.hero.levels} Heldenstufen</p>}
+            {summary.hero.essence > 0 && <p>👥 Echo-Läufe: +{num(summary.hero.essence)} Essenz</p>}
+            {summary.hero.died && <p className="warn">💀 Dein Held ist gefallen.</p>}
+          </>
+        )}
         <button className="btn btn-primary btn-wide" onClick={dismiss} autoFocus>
           {t('offline.ok')}
         </button>

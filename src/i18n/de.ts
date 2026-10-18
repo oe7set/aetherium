@@ -13,6 +13,7 @@ export const de = {
   'tab.village': 'Dorf',
   'tab.rift': 'Held',
   'menu.research': 'Forschung',
+  'menu.pass': 'Ruhmesleiter',
   'menu.quests': 'Quests',
   'villageFail.illegal': 'Das geht so nicht.',
   'villageFail.max': 'Höchststufe erreicht.',

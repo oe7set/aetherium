@@ -277,6 +277,18 @@ export interface HeroState {
   style: string;
 }
 
+/** Motivation layer: daily streak, Ruhmesleiter, Chronik, unlocked avatars. */
+export interface ProgressState {
+  /** Day key of the last claimed daily reward. */
+  lastDaily: string;
+  streak: number;
+  dailyTotal: number;
+  passClaimed: number[];
+  /** Index of the current Chronik step. */
+  chronicle: number;
+  avatars: string[];
+}
+
 export interface RiftBest {
   time: number;
   kills: number;
@@ -355,10 +367,11 @@ export interface GameState {
   tasks: { day: string; week: string; list: TaskState[] };
   village: VillageState;
   hero: HeroState;
+  progress: ProgressState;
   rift: RiftState;
 }
 
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 
 export function defaultSettings(): Settings {
   return {
@@ -420,6 +433,14 @@ export function newGame(now: number = Date.now()): GameState {
     tasks: { day: '', week: '', list: [] },
     village: createVillageState(),
     hero: defaultHero(),
+    progress: {
+      lastDaily: '',
+      streak: 0,
+      dailyTotal: 0,
+      passClaimed: [],
+      chronicle: 0,
+      avatars: [],
+    },
     rift: defaultRift(),
   };
 }
@@ -527,6 +548,7 @@ export function cloneState(s: GameState): GameState {
       bag: s.hero.bag,
       adventures: s.hero.adventures.map((a) => ({ ...a })),
     },
+    progress: { ...s.progress },
     rift: {
       ...s.rift,
       talents: { ...s.rift.talents },

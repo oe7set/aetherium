@@ -65,6 +65,11 @@ import {
   type Settings,
   type ShopResult,
   type VResult,
+  type RewardLine,
+  claimDaily,
+  claimPassTier,
+  claimChronicle,
+  currentChronicle,
   type HeroResult,
   type AdventureReward,
   prepareDungeon,
@@ -77,7 +82,7 @@ import {
 } from '../engine';
 import { t, type MessageKey } from '../i18n';
 import type { RunConfig, RunResult } from '../rift/sim';
-import { playEventSounds } from '../ui/audio';
+import { playEventSounds, SOUNDS } from '../ui/audio';
 import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
@@ -85,6 +90,7 @@ import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 export type TabId = 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
 export type MenuSection =
   | 'empire'
+  | 'pass'
   | 'research'
   | 'quests'
   | 'prestige'
@@ -122,6 +128,9 @@ export interface GameStore {
   /** performance.now() of the last simulation tick, for smooth progress interpolation. */
   lastTickAt: number;
   ui: UiState;
+  /** Reward reveal modal (daily, Ruhmesleiter, Chronik). */
+  reward: { title: string; icon: string; lines: RewardLine[]; at: number } | null;
+  dailyOpen: boolean;
 
   tick: (dtSeconds: number) => void;
   catchUp: (now: number) => void;
@@ -163,6 +172,11 @@ export interface GameStore {
   /** Books the rewards of a finished rift run. */
   riftFinish: (result: RunResult) => RiftReward | null;
   riftTalent: (id: string) => void;
+  claimDaily: () => void;
+  claimPass: (tier: number) => void;
+  claimChronicle: () => void;
+  dismissReward: () => void;
+  setDailyOpen: (open: boolean) => void;
   /** Runs a hero action; failures become warnings (heroFail.*). */
   hero: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => HeroResult | void,
@@ -251,6 +265,17 @@ export const useGame = create<GameStore>()((set, get) => {
     });
   };
 
+  const showReward = (title: string, icon: string, lines: RewardLine[]): void => {
+    set({ reward: { title, icon, lines, at: performance.now() } });
+    const best = Math.max(0, ...lines.map((l) => l.rarity));
+    if (get().game.settings.sound) (best >= 2 ? SOUNDS.achievement : SOUNDS.rare)();
+    try {
+      navigator.vibrate?.(best >= 2 ? [30, 40, 60] : 25);
+    } catch {
+      /* not supported */
+    }
+  };
+
   const shopFeedback = (res: ShopResult, success: string): void => {
     if (res.ok) get().pushFeed(success, 'gold');
     else get().pushFeed(`❌ ${t(`shopFail.${res.reason}` as MessageKey)}`, 'warn');
@@ -270,6 +295,8 @@ export const useGame = create<GameStore>()((set, get) => {
     levelUp: null,
     achievementToast: null,
     offlineSummary: boot.summary,
+    reward: null,
+    dailyOpen: false,
     lastSavedAt: null,
     lastTickAt: performance.now(),
     ui: {
@@ -511,6 +538,33 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s) => {
         buyRiftTalent(s, id);
       }),
+    claimDaily: () => {
+      let lines: RewardLine[] | null = null;
+      let day = 1;
+      mutate((s, emit) => {
+        lines = claimDaily(s, Date.now(), defaultRng, emit);
+        day = ((s.progress.streak - 1) % 7) + 1;
+      });
+      if (lines) showReward(`Tag ${day} der Serie!`, '🎁', lines);
+      set({ dailyOpen: false });
+    },
+    claimPass: (tier) => {
+      let lines: RewardLine[] | null = null;
+      mutate((s, emit) => {
+        lines = claimPassTier(s, tier, defaultRng, emit);
+      });
+      if (lines) showReward(`Ruhmesleiter Stufe ${tier}`, '🏅', lines);
+    },
+    claimChronicle: () => {
+      const step = currentChronicle(get().game);
+      let lines: RewardLine[] | null = null;
+      mutate((s, emit) => {
+        lines = claimChronicle(s, defaultRng, emit);
+      });
+      if (lines && step) showReward(`Chronik: ${step.step.title}`, step.step.icon, lines);
+    },
+    dismissReward: () => set({ reward: null }),
+    setDailyOpen: (open) => set({ dailyOpen: open }),
     hero: (fn) => {
       let result: HeroResult | void = undefined;
       mutate((s, emit) => {

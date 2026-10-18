@@ -20,6 +20,9 @@ import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
 import { TitleScreen } from './TitleScreen';
+import { ChronicleBanner } from './rewards/ChronicleBanner';
+import { DailyModal } from './rewards/DailyModal';
+import { RewardReveal } from './rewards/RewardReveal';
 import { TABS } from './tabs';
 import { World } from './World';
 
@@ -74,6 +77,9 @@ function MobileLayout() {
         <World />
         <Feed limit={2} compact />
         <BuffBar />
+        <div className="stage-goal">
+          <ChronicleBanner compact />
+        </div>
       </div>
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
         {tab === 'skills' && <MobileSkills />}
@@ -109,6 +115,7 @@ function DesktopLayout() {
             <BuffBar />
           </div>
         )}
+        <ChronicleBanner />
         <ActiveActionBar />
         <TabBar tabs={DESKTOP_CENTER_TABS} />
         <div className="center-panel">
@@ -138,6 +145,8 @@ export function App() {
       <Confetti />
       <OfflineModal />
       <TitleScreen />
+      <DailyModal />
+      <RewardReveal />
       {inRift && (
         <Suspense
           fallback={<div className="rift-overlay rift-loading">🌀 Der Riss öffnet sich …</div>}

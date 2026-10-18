@@ -721,3 +721,22 @@ body.reduce-motion *::after {
   gap: 4px;
   min-width: 0;
 }
+
+/* Tactile press feedback everywhere (cheap: transform only). */
+.btn,
+.chip,
+.segment,
+.tab,
+.v-field,
+.v-bld,
+.hero-card,
+.choice {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active:not(:disabled),
+.chip:active,
+.segment:active,
+.tab:active {
+  transform: scale(0.95);
+  transition: transform 0.06s;
+}

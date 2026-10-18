@@ -1,5 +1,13 @@
 import { BALANCE } from '../data/balance';
-import { affordableTechs, formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
+import {
+  affordableTechs,
+  dailyAvailable,
+  formatDuration,
+  formatNumber,
+  maxHp,
+  passClaimable,
+  totalLevel,
+} from '../engine';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 
@@ -16,6 +24,11 @@ export function Header() {
   const canResearch = useGame((s) => affordableTechs(s.game).length > 0);
   const setUi = useGame((s) => s.setUi);
   const wisdom = useGame((s) => s.game.prestige.wisdomTotal);
+  const daily = useGame((s) => dailyAvailable(s.game, Date.now()));
+  const gifts = useGame(
+    (s) => (dailyAvailable(s.game, Date.now()) ? 1 : 0) + passClaimable(s.game).length,
+  );
+  const setDailyOpen = useGame((s) => s.setDailyOpen);
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
@@ -56,6 +69,17 @@ export function Header() {
           <span className={`chip ${hp < max * 0.35 ? 'chip-danger' : ''}`} title="Lebenspunkte">
             ❤️ <b>{hp}</b>
           </span>
+        )}
+        {gifts > 0 && (
+          <button
+            className="chip chip-glow chip-gift"
+            title="Belohnungen warten"
+            onClick={() =>
+              daily ? setDailyOpen(true) : setUi({ tab: 'menu', menuSection: 'pass' })
+            }
+          >
+            🎁 <b>{gifts}</b>
+          </button>
         )}
         {intelligence > 0 && (
           <span className="chip" title={t('header.intelligence')}>

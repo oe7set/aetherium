@@ -30,6 +30,9 @@ export interface ProgressSummary {
   research: number;
   elements: string[];
   harvests: number;
+  /** Village & hero activity while away. */
+  village: { built: string[]; reports: string[]; resources: number };
+  hero: { adventures: number; levels: number; died: boolean; essence: number };
 }
 
 function bump(map: Record<string, number>, key: string, amount: number): void {
@@ -62,6 +65,8 @@ export function summaryCollector(
     research: 0,
     elements: [],
     harvests: 0,
+    village: { built: [], reports: [], resources: 0 },
+    hero: { adventures: 0, levels: 0, died: false, essence: 0 },
   };
   const before: Record<string, number> = {};
   for (const id of Object.keys(s.skills)) before[id] = skillLevel(s, id);
@@ -118,6 +123,24 @@ export function summaryCollector(
       case 'ate':
         summary.foodEaten++;
         break;
+      case 'villageBuilt':
+        if (summary.village.built.length < 12) summary.village.built.push(`${e.name} ${e.level}`);
+        break;
+      case 'villageReport':
+        if (summary.village.reports.length < 6) summary.village.reports.push(e.title);
+        break;
+      case 'heroAdventure':
+        if (e.success) summary.hero.adventures++;
+        break;
+      case 'heroLevel':
+        summary.hero.levels++;
+        break;
+      case 'heroDied':
+        summary.hero.died = true;
+        break;
+      case 'riftEcho':
+        summary.hero.essence += e.essence;
+        break;
       case 'combatStopped':
         if (e.reason !== 'manual') summary.combatStopped = e.reason;
         break;
@@ -127,8 +150,15 @@ export function summaryCollector(
   };
 
   const researchBefore = s.research;
+  const villageRes = () =>
+    s.village.villages.reduce(
+      (sum, v) => sum + v.res.wood + v.res.clay + v.res.iron + v.res.crop,
+      0,
+    );
+  const resBefore = villageRes();
   const finish = (): ProgressSummary => {
     summary.research = Math.max(0, s.research - researchBefore);
+    summary.village.resources = Math.max(0, Math.round(villageRes() - resBefore));
     for (const id of Object.keys(s.skills)) {
       const to = skillLevel(s, id);
       const from = before[id] ?? 1;
@@ -171,6 +201,10 @@ export function summaryHasContent(summary: ProgressSummary): boolean {
     summary.died ||
     Object.keys(summary.xp).length > 0 ||
     summary.fireWentOut ||
-    summary.stopped !== undefined
+    summary.stopped !== undefined ||
+    summary.village.built.length > 0 ||
+    summary.village.reports.length > 0 ||
+    summary.village.resources > 0 ||
+    summary.hero.adventures > 0
   );
 }

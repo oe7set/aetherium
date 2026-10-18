@@ -164,7 +164,7 @@ export function resetPoints(s: GameState): HeroResult {
 export function setHeroLook(s: GameState, name: string, avatar: string): void {
   const clean = name.trim().slice(0, 24);
   if (clean) s.hero.name = clean;
-  if (HERO_AVATARS.includes(avatar)) s.hero.avatar = avatar;
+  if (HERO_AVATARS.includes(avatar) || s.progress.avatars.includes(avatar)) s.hero.avatar = avatar;
 }
 
 /** Health change; at 0 the hero falls and must be revived. */
@@ -188,13 +188,14 @@ export function rollHeroItem(
   rng: Rng,
   level: number,
   hard: boolean,
+  minTier = 1,
 ): HeroItem | null {
   if (s.hero.bag.length >= HERO_BAG_SIZE) return null;
   const def = HERO_ITEMS[Math.floor(rng() * HERO_ITEMS.length)]!;
   const r = rng();
   const p3 = Math.min(0.25, 0.01 * level + (hard ? 0.05 : 0));
   const p2 = Math.min(0.55, 0.15 + 0.025 * level + (hard ? 0.1 : 0));
-  const tier = r < p3 ? 3 : r < p3 + p2 ? 2 : 1;
+  const tier = Math.max(minTier, r < p3 ? 3 : r < p3 + p2 ? 2 : 1);
   const item: HeroItem = { uid: s.hero.nextUid++, base: def.id, tier };
   s.hero.bag = [...s.hero.bag, item];
   addStat(s, 'heroItems');

@@ -2,6 +2,7 @@ import { t } from '../../i18n';
 import { useGame, type MenuSection } from '../../store/gameStore';
 import { QuestsPanel } from '../quests/QuestsPanel';
 import { ResearchPanel } from '../science/ResearchPanel';
+import { PassPanel } from '../rewards/PassPanel';
 import { AchievementsPanel } from './AchievementsPanel';
 import { DebugPanel } from './DebugPanel';
 import { EmpirePanel } from './EmpirePanel';
@@ -19,6 +20,7 @@ export function MenuPanel() {
   const sections: Section[] = import.meta.env.DEV
     ? [
         'empire',
+        'pass',
         'research',
         'quests',
         'prestige',
@@ -28,7 +30,17 @@ export function MenuPanel() {
         'save',
         'debug',
       ]
-    : ['empire', 'research', 'quests', 'prestige', 'achievements', 'stats', 'settings', 'save'];
+    : [
+        'empire',
+        'pass',
+        'research',
+        'quests',
+        'prestige',
+        'achievements',
+        'stats',
+        'settings',
+        'save',
+      ];
   return (
     <div className="panel">
       <div className="segments" role="tablist">
@@ -49,6 +61,7 @@ export function MenuPanel() {
       </div>
       {section === 'settings' && <SettingsPanel />}
       {section === 'empire' && <EmpirePanel />}
+      {section === 'pass' && <PassPanel />}
       {section === 'research' && <ResearchPanel />}
       {section === 'quests' && <QuestsPanel />}
       {section === 'prestige' && <PrestigePanel />}

@@ -136,6 +136,9 @@ function resetRun(s: GameState): void {
     village: s.village,
     // Rift meta progression is permanent, too (talents are its own prestige).
     rift: s.rift,
+    // The hero and the motivation layer belong to the player, not to a run.
+    hero: s.hero,
+    progress: s.progress,
   };
   Object.assign(s, fresh, kept);
 

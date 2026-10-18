@@ -14,6 +14,7 @@ export * from './hero';
 export * from './inventory';
 export * from './offline';
 export * from './prestige';
+export * from './progress';
 export * from './rift';
 export * from './rng';
 export * from './save';

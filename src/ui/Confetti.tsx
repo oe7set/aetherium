@@ -7,7 +7,8 @@ const COLORS = ['#f2c94c', '#b085f5', '#6fbf4a', '#5aa9e6', '#ff8a3d', '#ff5ec4'
 export function Confetti() {
   const levelAt = useGame((s) => s.levelUp?.at ?? 0);
   const achAt = useGame((s) => s.achievementToast?.at ?? 0);
-  const trigger = Math.max(levelAt, achAt);
+  const rewardAt = useGame((s) => s.reward?.at ?? 0);
+  const trigger = Math.max(levelAt, achAt, rewardAt);
   const [burst, setBurst] = useState<number | null>(null);
 
   useEffect(() => {

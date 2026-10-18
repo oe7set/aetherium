@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.5.0, Phase 9 = Dorf + Held). Als Nächstes:
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.6.0, Phase 9 = Dorf + Held, plus Motivations-Schicht). Als Nächstes:
 Phase 11 Zusammenspiel. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
@@ -34,6 +34,9 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   mit Reise/Auto-Erkunden, Zeiteffekt `hero`). Abenteuer live = Riss-Simulation im `mode: 'dungeon'`
   (`prepareDungeon`/`finishDungeon` in `engine/rift.ts`). `village.ts` importiert den Helden, nie umgekehrt.
   Weltkarte `ui/village/WorldMap.tsx` + `mapRender.ts` (Gelände einmal vorgerendert). Sprites: `ui/sprites.ts`.
+- Motivation = `engine/progress.ts` + `data/progress.ts`: Tagesbonus (Serie), Ruhmesleiter (aus Statistiken
+  abgeleitet – neue Systeme brauchen nur einen Eintrag in `PASS_SOURCES`), Chronik (Zielkette/Tutorial).
+  Belohnungen immer über `applyReward` (skaliert mit `rewardScale`); UI `ui/rewards/` (Enthüllung, Kalender, Banner).
 - Ätherriss (Survivor-Roguelike): Echtzeit-Simulation `src/rift/sim.ts` (pur, deterministisch, eigene `stepRun`-
   Schleife, nicht im Spielstand), Inhalte `data/rift.ts` (Waffen-Verhalten, Passive, Evolutionen, Biome, Helden,
   Talente), Meta `engine/rift.ts` (Freischaltungen über Skills/Techs, `prepareRun`/`finishRun`, Echo-Läufe).

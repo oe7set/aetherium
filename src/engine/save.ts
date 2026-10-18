@@ -90,6 +90,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   },
   // 9 → 10: the one hero (village + rift).
   9: (data) => ({ ...data, hero: null }),
+  // 10 → 11: daily rewards, Ruhmesleiter, Chronik.
+  10: (data) => ({ ...data, progress: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -234,6 +236,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     village: hydrateVillage(data.village, base.village),
     rift: hydrateRift(data.rift, base.rift),
     hero: hydrateHero(data.hero, base.hero),
+    progress: hydrateProgress(data.progress, base.progress),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -248,6 +251,21 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateProgress(v: unknown, fallback: GameState['progress']): GameState['progress'] {
+  if (!isRecord(v)) return fallback;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  return {
+    lastDaily: typeof v.lastDaily === 'string' ? v.lastDaily : '',
+    streak: Math.max(0, num(v.streak, 0)),
+    dailyTotal: Math.max(0, num(v.dailyTotal, 0)),
+    passClaimed: Array.isArray(v.passClaimed)
+      ? v.passClaimed.filter((n): n is number => typeof n === 'number')
+      : [],
+    chronicle: Math.max(0, num(v.chronicle, 0)),
+    avatars: stringArray(v.avatars),
   };
 }
 

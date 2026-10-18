@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.6.0] – Belohnungen, Ruhmesleiter & Chronik
+
+### Hinzugefügt
+
+- **Tägliche Belohnung** mit 7-Tage-Serie (Tag 7: edle Heldenausrüstung). Erscheint einmal pro Sitzung; Belohnungen
+  wachsen mit deinem Reich.
+- **Ruhmesleiter**: 50 Stufen, gespeist aus allen Systemen (Gesamtlevel, Feld- und Gebäudestufen, Raubzüge,
+  Heldenstufe, Abenteuer, Riss-Gegner und -Bosse, Quests, Erfolge, Forschung, Aufträge). Belohnungen inkl.
+  Ausrüstung, Truhen und 5 seltenen Helden-Avataren.
+- **Chronik**: 25 geführte Ziele quer durch Insel, Dorf, Held und Riss – immer sichtbar über der Insel, mit
+  „Los"-Sprung zur richtigen Stelle. Dient zugleich als Tutorial.
+- **Belohnungs-Enthüllung** mit Lichtstrahlen, Seltenheits-Glow (selten/episch/legendär), Konfetti, Sound und
+  Vibration; Geschenk-Knopf im Header zeigt wartende Belohnungen.
+- **Willkommen zurück**: Die Offline-Übersicht zeigt jetzt auch Dorf (Rohstoffe, fertige Bauten, Berichte) und Held
+  (Abenteuer, Stufen, Echo-Essenz).
+- Taktiles Feedback beim Antippen von Knöpfen und Tabs.
+
+### Behoben
+
+- Der Held (und sein Fortschritt) bleibt bei einer Wiedergeburt jetzt erhalten.
+
+### Geändert
+
+- Spielstand-Version 11.
+
 ## [1.5.0] – Der Held, Abenteuer-Dungeons und die Weltkarte
 
 ### Hinzugefügt
