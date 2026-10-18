@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
+import { AchievementToast } from './AchievementToast';
 import { ActiveActionBar } from './ActiveActionBar';
+import { BuffBar } from './BuffBar';
 import { BottomSheet } from './BottomSheet';
 import { Feed } from './Feed';
 import { Header } from './Header';
@@ -64,6 +66,7 @@ function MobileLayout() {
       <div className="stage">
         <World />
         <Feed limit={2} compact />
+        <BuffBar />
       </div>
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
         {tab === 'skills' && <MobileSkills />}
@@ -93,6 +96,7 @@ function DesktopLayout() {
       <main className="col-center">
         <div className="stage">
           <World />
+          <BuffBar />
         </div>
         <ActiveActionBar />
         <TabBar tabs={DESKTOP_CENTER_TABS} />
@@ -117,6 +121,7 @@ export function App() {
     <>
       {desktop ? <DesktopLayout /> : <MobileLayout />}
       <LevelUpBanner />
+      <AchievementToast />
       <OfflineModal />
     </>
   );

@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-**Phase 2 „3D-Welt" fertig** (v0.2.0). Nächstes: **Phase 3 – Handwerk**. Siehe `docs/CHANGELOG.md`.
+**Phase 3 „Handwerk" fertig** (v0.3.0). Nächstes: **Phase 4 – Kampf**. Siehe `docs/CHANGELOG.md`.
 
 ## Befehle
 
@@ -17,6 +17,12 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `actions.ts`: springt ereignisgesteuert von Abschluss zu Abschluss; Live-Tick, Offline und Debug nutzen sie.
   Engine-Funktionen **mutieren** den übergebenen State; der Store ruft sie auf einer `cloneState`-Kopie auf.
   Ereignisse (`GameEvent`) gehen über `emit` raus; UI übersetzt sie in Feed/Popups (`src/store/feed.ts`).
+  Erweiterung über Registries in `actions.ts`: `registerRunnerFactory` (parallele Prozesse: Aktion, Kampf,
+  Helfer), `registerTimeEffect` (Feuer, Buffs, Markt – `next()` liefert Zeit bis zum nächsten Ereignis),
+  `registerAfterComplete`/`registerAfterAdvance` (Erfolge). Module registrieren sich beim Import über
+  `engine/index.ts` – Tests daher aus `../src/engine` importieren.
+- Boni: `registerModifierSource` + `mod(s, key)`/`modFor(s, key, skill)` (Keys siehe `data/types.ts`
+  `ModifierSet`). Nach Änderung einer Quelle `invalidateMods(s)` aufrufen.
 - `src/data/` – alle Inhalte typisiert (`types.ts`), IDs sind Strings; `tests/data.test.ts` prüft Referenzen.
   Neue Inhalte = nur Daten ergänzen. Balancing-Knöpfe in `balance.ts`, Begründungen in `docs/BALANCING.md`.
 - `src/store/` – Zustand-Store (`gameStore.ts`), Loop (`loop.ts`, 10 Ticks/s, Autosave 30 s,

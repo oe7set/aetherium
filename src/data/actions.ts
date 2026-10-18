@@ -1,3 +1,5 @@
+import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
+import { SMITHING_ACTIONS } from './smithing';
 import type { ActionDef, LootEntry } from './types';
 
 // --- Woodcutting -----------------------------------------------------------
@@ -479,4 +481,12 @@ const COOKING: ActionDef[] = [
   ),
 ];
 
-export const ACTIONS: ActionDef[] = [...WOODCUTTING, ...MINING, ...FIREMAKING, ...COOKING];
+export const ACTIONS: ActionDef[] = [
+  ...WOODCUTTING,
+  ...MINING,
+  ...FIREMAKING,
+  ...COOKING.map((a) => ({ ...a, category: 'Gerichte' })),
+  ...FISH_COOKING_ACTIONS,
+  ...FISHING_ACTIONS,
+  ...SMITHING_ACTIONS,
+];

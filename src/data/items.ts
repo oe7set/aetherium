@@ -1,3 +1,5 @@
+import { FISHING_ITEMS } from './fishing';
+import { SMITHING_ITEMS } from './smithing';
 import type { ItemDef } from './types';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
@@ -427,4 +429,12 @@ const MISC: ItemDef[] = [
   },
 ];
 
-export const ITEMS: ItemDef[] = [...LOGS, ...ORES, ...GEMS, ...FOOD, ...MISC];
+export const ITEMS: ItemDef[] = [
+  ...LOGS,
+  ...ORES,
+  ...GEMS,
+  ...FOOD,
+  ...MISC,
+  ...FISHING_ITEMS,
+  ...SMITHING_ITEMS,
+];

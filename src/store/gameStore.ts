@@ -13,6 +13,7 @@ import {
 import {
   advance,
   bestAvailableAction,
+  checkAchievementsFast,
   applyOfflineProgress,
   buyItem,
   buySlot,
@@ -42,7 +43,7 @@ import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './fe
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
 export type TabId = 'world' | 'skills' | 'inventory' | 'research' | 'menu';
-export type InventorySegment = 'items' | 'shop' | 'tools';
+export type InventorySegment = 'items' | 'market' | 'shop' | 'tools';
 
 const FEED_LIMIT = 60;
 const POPUP_LIMIT = 8;
@@ -64,6 +65,7 @@ export interface GameStore {
   feed: FeedEntry[];
   popups: Popup[];
   levelUp: { skill: string; level: number; at: number } | null;
+  achievementToast: { ids: string[]; at: number } | null;
   offlineSummary: ProgressSummary | null;
   lastSavedAt: number | null;
   /** performance.now() of the last simulation tick, for smooth progress interpolation. */
@@ -88,6 +90,7 @@ export interface GameStore {
   tapStation: (skill: string) => void;
   dismissOffline: () => void;
   dismissLevelUp: () => void;
+  dismissAchievement: () => void;
   save: () => void;
   exportString: () => string;
   importString: (text: string) => void;
@@ -121,14 +124,16 @@ export const useGame = create<GameStore>()((set, get) => {
   const mutate = (fn: (s: GameState, emit: (e: GameEvent) => void) => void): void => {
     const events: GameEvent[] = [];
     const next = cloneState(get().game);
-    fn(next, (e) => events.push(e));
+    const emit = (e: GameEvent) => events.push(e);
+    fn(next, emit);
+    checkAchievementsFast(next, emit);
     next.lastUpdate = Date.now();
     applyEvents(next, events);
   };
 
   const applyEvents = (game: GameState, events: GameEvent[]): void => {
     const now = performance.now();
-    const { feed, popups, levelUps } = translateEvents(
+    const { feed, popups, levelUps, achievements } = translateEvents(
       events,
       defaultRng,
       game.settings.numberFormat,
@@ -148,6 +153,9 @@ export const useGame = create<GameStore>()((set, get) => {
           ? [...freshPopups, ...newPopups].slice(-POPUP_LIMIT)
           : state.popups,
       levelUp: lastLevel ? { ...lastLevel, at: now } : state.levelUp,
+      achievementToast: achievements.length
+        ? { ids: achievements, at: now }
+        : state.achievementToast,
     });
   };
 
@@ -168,6 +176,7 @@ export const useGame = create<GameStore>()((set, get) => {
     ],
     popups: [],
     levelUp: null,
+    achievementToast: null,
     offlineSummary: boot.summary,
     lastSavedAt: null,
     lastTickAt: performance.now(),
@@ -268,6 +277,7 @@ export const useGame = create<GameStore>()((set, get) => {
       set({ ui: { ...get().ui, tab: 'skills', selectedSkill: skill, skillDetail: true } }),
     dismissOffline: () => set({ offlineSummary: null }),
     dismissLevelUp: () => set({ levelUp: null }),
+    dismissAchievement: () => set({ achievementToast: null }),
 
     save: () => {
       const now = Date.now();

@@ -1,4 +1,6 @@
 import { getItem } from '../../data';
+import { marketMult, saleRevenue, trendMult, unitPrice } from '../../engine';
+import { EquipInfo } from './EquipInfo';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
@@ -9,6 +11,9 @@ export function ItemDetail({ itemId }: { itemId: string }) {
   const sell = useGame((s) => s.sell);
   const use = useGame((s) => s.use);
   const { num, int } = useFmt();
+  const price = useGame((s) => unitPrice(s.game, itemId));
+  const mult = useGame((s) => marketMult(s.game, itemId) * trendMult(s.game, itemId));
+  const allRevenue = useGame((s) => saleRevenue(s.game, itemId, qty).revenue);
 
   return (
     <div className={`item-detail rarity-${def.rarity ?? 'common'}`}>
@@ -27,7 +32,16 @@ export function ItemDetail({ itemId }: { itemId: string }) {
         </div>
       </div>
       <p className="item-desc">{def.desc}</p>
-      <p className="muted">{t('inv.value', { gold: num(def.sellPrice) })}</p>
+      <p className="muted">
+        {t('inv.value', { gold: num(price) })}{' '}
+        {Math.abs(mult - 1) > 0.01 && (
+          <span className={mult > 1 ? 'up' : 'down'}>
+            ({mult > 1 ? '▲' : '▼'} {Math.round(mult * 100)} % vom Normalpreis)
+          </span>
+        )}
+      </p>
+      {def.heal && <p className="muted">❤️ Heilt {def.heal} LP</p>}
+      {def.equip && <EquipInfo itemId={itemId} />}
       <div className="btn-row">
         {def.consume && (
           <button className="btn btn-primary" onClick={() => use(itemId)}>
@@ -43,7 +57,7 @@ export function ItemDetail({ itemId }: { itemId: string }) {
           </button>
         )}
         <button className="btn btn-gold" onClick={() => sell(itemId, qty)}>
-          {t('inv.sellAll')} (+{num(def.sellPrice * qty)})
+          {t('inv.sellAll')} (+{num(allRevenue)})
         </button>
       </div>
     </div>

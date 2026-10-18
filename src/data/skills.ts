@@ -35,16 +35,25 @@ export const SKILLS: SkillDef[] = [
     group: 'processing',
     desc: 'Maillard-Reaktion meets Fantasy. Braucht ein brennendes Lagerfeuer. Anbrennen ist Teil der Lernkurve.',
   },
+  {
+    id: 'fishing',
+    name: 'Angeln',
+    icon: '🎣',
+    color: '#4aa3d8',
+    group: 'gathering',
+    desc: 'Geduld, Köder und ein Hauch Quantenmechanik. Schrödingers Fisch beißt manchmal an. Oder auch nicht.',
+  },
+  {
+    id: 'smithing',
+    name: 'Schmieden',
+    icon: '🔨',
+    color: '#d9822b',
+    group: 'processing',
+    desc: 'Erz rein, Barren raus, Werkzeug drauf. Geschmiedete Äxte und Spitzhacken ersetzen Krämer-Käufe.',
+  },
 ];
 
 export const COMING_SOON_SKILLS: ComingSoonSkill[] = [
-  {
-    name: 'Schmelzen & Schmieden',
-    icon: '🔨',
-    phase: 3,
-    teaser: 'Erz rein, Barren raus, Werkzeug drauf.',
-  },
-  { name: 'Angeln', icon: '🎣', phase: 3, teaser: 'Schrödingers Fisch wartet. Oder auch nicht.' },
   { name: 'Nahkampf', icon: '⚔️', phase: 4, teaser: 'Problemlösung durch stumpfe Gewalt.' },
   { name: 'Fernkampf', icon: '🏹', phase: 4, teaser: 'Ballistik, aber mit Federn.' },
   { name: 'Magie', icon: '🪄', phase: 4, teaser: 'Hinreichend fortschrittliche Technologie.' },

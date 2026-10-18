@@ -17,6 +17,8 @@ const STATIONS: Station[] = [
   { skill: 'mining', label: 'Mine', icon: '🪨', className: 'st-mine' },
   { skill: 'firemaking', label: 'Lagerfeuer', icon: '🔥', className: 'st-fire' },
   { skill: 'cooking', label: 'Kochstelle', icon: '🍲', className: 'st-cook' },
+  { skill: 'fishing', label: 'Angelplatz', icon: '🎣', className: 'st-fish' },
+  { skill: 'smithing', label: 'Schmiede', icon: '⚒️', className: 'st-forge' },
 ];
 
 function skyFor(phase: number): { sky: string; night: number } {

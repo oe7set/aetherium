@@ -10,7 +10,7 @@ import {
   formatSeconds,
   skillLevel,
   toolSpeed,
-  xpMultiplier,
+  xpMultiplierFor,
 } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
@@ -31,7 +31,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const haveKey = useGame((s) => def.inputs.map((i) => s.game.inventory[i.item] ?? 0).join(','));
   const derived = useGame((s) => {
     const g = s.game;
-    return `${actionDuration(g, def)}|${actionXp(g, def)}|${burnChance(g, def)}|${toolSpeed(g, def.skill)}|${xpMultiplier(g)}`;
+    return `${actionDuration(g, def)}|${actionXp(g, def)}|${burnChance(g, def)}|${toolSpeed(g, def.skill)}|${xpMultiplierFor(g, def.skill)}`;
   });
   const start = useGame((s) => s.start);
   const stop = useGame((s) => s.stop);

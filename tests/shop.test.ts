@@ -17,7 +17,9 @@ describe('Krämer', () => {
     const s = gameWith({ inventory: { log_oak: 10 } });
     expect(sellItem(s, 'log_oak', 4, () => {}).ok).toBe(true);
     expect(s.inventory.log_oak).toBe(6);
-    expect(s.gold.eq(4)).toBe(true);
+    // Dynamic market: a tiny discount for each unit sold.
+    expect(s.gold.toNumber()).toBeGreaterThan(3.9);
+    expect(s.gold.toNumber()).toBeLessThanOrEqual(4);
     sellItem(s, 'log_oak', 999, () => {});
     expect(s.inventory.log_oak).toBeUndefined();
   });

@@ -1,5 +1,6 @@
 import Decimal, { type DecimalSource } from 'break_eternity.js';
-import { getItem, getTool, SHOP_OFFERS } from '../data';
+import { getTool, SHOP_OFFERS } from '../data';
+import { applySale, saleRevenue } from './market';
 import { BALANCE } from '../data/balance';
 import type { Emit } from './events';
 import { addItem, itemCount, removeItem } from './inventory';
@@ -89,8 +90,10 @@ export function buyItem(s: GameState, item: string, qty: number): ShopResult {
 export function sellItem(s: GameState, item: string, qty: number, emit: Emit): ShopResult {
   const amount = Math.min(qty, itemCount(s, item));
   if (amount <= 0) return fail('notEnough');
+  const { revenue, newMult } = saleRevenue(s, item, amount);
   removeItem(s, item, amount);
-  earnGold(s, getItem(item).sellPrice * amount, emit);
+  applySale(s, item, newMult);
+  earnGold(s, revenue, emit);
   addStat(s, 'itemsSold', amount);
   return OK;
 }

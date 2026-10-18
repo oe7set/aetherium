@@ -1,4 +1,4 @@
-import { getAction, getItem, getSkill } from '../data';
+import { getAchievement, getAction, getBuff, getItem, getSkill, getTool } from '../data';
 import {
   BURNT_LINES,
   FIRE_LIT_LINES,
@@ -11,6 +11,11 @@ import {
   NO_INPUT_LINES,
   RARE_DROP_LINES,
   ACTION_START_LINES,
+  ACHIEVEMENT_LINES,
+  LUCKY_LINES,
+  TOOL_UNLOCK_LINES,
+  TREND_DOWN_LINES,
+  TREND_UP_LINES,
 } from '../data/flavor';
 import { flavor, formatNumber, type GameEvent, type NumberFormat, type Rng } from '../engine';
 
@@ -34,11 +39,12 @@ export interface Translated {
   feed: Omit<FeedEntry, 'id' | 'at'>[];
   popups: Omit<Popup, 'id' | 'at'>[];
   levelUps: { skill: string; level: number }[];
+  achievements: string[];
 }
 
 /** Turns raw engine events into player-facing feed lines and popups. */
 export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFormat): Translated {
-  const out: Translated = { feed: [], popups: [], levelUps: [] };
+  const out: Translated = { feed: [], popups: [], levelUps: [], achievements: [] };
   const xpBySkill = new Map<string, number>();
   const gained = new Map<string, number>();
 
@@ -114,6 +120,41 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
       case 'gold':
         out.popups.push({ kind: 'gold', text: `+${formatNumber(e.amount, format)} 🪙` });
         break;
+      case 'achievement': {
+        const a = getAchievement(e.id);
+        out.feed.push({
+          kind: 'rare',
+          text: `${a.icon} ${flavor(rng, ACHIEVEMENT_LINES, { item: a.name })}`,
+        });
+        out.popups.push({ kind: 'rare', text: `🏆 ${a.name}` });
+        out.achievements.push(e.id);
+        break;
+      }
+      case 'buffStarted': {
+        const b = getBuff(e.id);
+        out.feed.push({
+          kind: 'rare',
+          text: `${b.icon} ${flavor(rng, LUCKY_LINES, { item: `${b.name} – ${b.desc}` })}`,
+        });
+        break;
+      }
+      case 'marketTrend': {
+        const it = getItem(e.item);
+        const pool = e.mult >= 1 ? TREND_UP_LINES : TREND_DOWN_LINES;
+        out.feed.push({
+          kind: 'gold',
+          text: `📈 ${flavor(rng, pool, { item: `${it.icon} ${it.name}`, qty: e.mult.toFixed(1).replace('.', ',') })}`,
+        });
+        break;
+      }
+      case 'toolUnlocked': {
+        const tool = getTool(e.tool);
+        out.feed.push({
+          kind: 'gold',
+          text: `🛠️ ${flavor(rng, TOOL_UNLOCK_LINES, { item: tool.name })}`,
+        });
+        break;
+      }
       case 'intelligence':
         out.feed.push({
           kind: 'rare',

@@ -309,3 +309,131 @@ export function Decorations({ count }: { count: number }) {
     </instancedMesh>
   );
 }
+
+export function Forge({ onTap, particles }: { onTap: TapHandler; particles: number }) {
+  const st = stationFor('smithing')!;
+  const glow = useRef<THREE.MeshStandardMaterial>(null);
+  const light = useRef<THREE.PointLight>(null);
+  const sparks = useRef(0);
+  const working = () => activeSkillNow() === 'smithing';
+
+  useCounterPulse(
+    (s) => (s.stats.barsSmelted ?? 0) + (s.stats.itemsSmithed ?? 0),
+    () => {
+      sparks.current++;
+    },
+  );
+
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const on = working();
+    if (glow.current) glow.current.emissiveIntensity = on ? 2 + Math.sin(t * 9) * 0.5 : 0.4;
+    if (light.current) light.current.intensity = on ? 4 + Math.sin(t * 13) : 0.5;
+  });
+
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      {/* Furnace */}
+      <mesh position={[-0.6, 0.8, 0]} castShadow>
+        <boxGeometry args={[1.2, 1.6, 1.1]} />
+        <meshStandardMaterial color="#6e6258" flatShading />
+      </mesh>
+      <mesh position={[-0.6, 0.6, 0.56]}>
+        <boxGeometry args={[0.6, 0.45, 0.02]} />
+        <meshStandardMaterial
+          ref={glow}
+          color="#ff7a1a"
+          emissive="#ff5a00"
+          emissiveIntensity={0.4}
+        />
+      </mesh>
+      <mesh position={[-0.6, 1.9, 0]}>
+        <cylinderGeometry args={[0.18, 0.22, 0.8, 6]} />
+        <meshStandardMaterial color="#4f4640" flatShading />
+      </mesh>
+      <pointLight
+        ref={light}
+        position={[-0.6, 0.8, 1]}
+        color="#ff8a3d"
+        distance={6}
+        intensity={0.5}
+      />
+      {/* Anvil */}
+      <mesh position={[0.8, 0.25, 0.2]}>
+        <boxGeometry args={[0.35, 0.5, 0.35]} />
+        <meshStandardMaterial color="#5a3b22" flatShading />
+      </mesh>
+      <mesh position={[0.8, 0.6, 0.2]} castShadow>
+        <boxGeometry args={[0.8, 0.22, 0.32]} />
+        <meshStandardMaterial color="#3b3f46" metalness={0.7} roughness={0.35} flatShading />
+      </mesh>
+      <Rise
+        active={working}
+        count={Math.ceil(particles / 3)}
+        color="#777"
+        position={[-0.6, 2.3, 0]}
+        height={2.5}
+        opacity={0.35}
+        size={0.3}
+      />
+      <Burst
+        trigger={sparks}
+        color="#ffcc33"
+        count={Math.min(18, particles)}
+        position={[0.8, 0.8, 0.2]}
+        speed={4}
+        size={0.06}
+      />
+    </group>
+  );
+}
+
+export function FishingSpot({ onTap, particles }: { onTap: TapHandler; particles: number }) {
+  const st = stationFor('fishing')!;
+  const bobber = useRef<THREE.Mesh>(null);
+  const splash = useRef(0);
+  const fishing = () => activeSkillNow() === 'fishing';
+
+  useCounterPulse(
+    (s) => s.stats.fishCaught ?? 0,
+    () => {
+      splash.current++;
+    },
+  );
+
+  useFrame(() => {
+    const b = bobber.current;
+    if (!b) return;
+    const on = fishing();
+    b.visible = on;
+    b.position.y = 0.05 + Math.sin(performance.now() / 300) * 0.04;
+  });
+
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      {/* Small pier towards the river */}
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={i} position={[0.6 + i * 0.35, 0.08, 0]}>
+          <boxGeometry args={[0.32, 0.08, 1]} />
+          <meshStandardMaterial color="#8a6440" flatShading />
+        </mesh>
+      ))}
+      <mesh position={[0.4, 0.3, 0.6]}>
+        <boxGeometry args={[0.35, 0.5, 0.35]} />
+        <meshStandardMaterial color="#6b4a2f" flatShading />
+      </mesh>
+      <mesh ref={bobber} position={[2.4, 0.05, 0.2]}>
+        <sphereGeometry args={[0.08, 6, 5]} />
+        <meshStandardMaterial color="#e5534b" />
+      </mesh>
+      <Burst
+        trigger={splash}
+        color="#9fd8ff"
+        count={Math.min(12, particles)}
+        position={[2.4, 0.1, 0.2]}
+        speed={2}
+        size={0.1}
+      />
+    </group>
+  );
+}

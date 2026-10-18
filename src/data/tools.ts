@@ -219,4 +219,6 @@ export const SHOP_OFFERS: ShopOffer[] = [
   { item: 'flour', price: 10 },
   { item: 'raw_beef', price: 28 },
   { item: 'apple', price: 4 },
+  { item: 'bait', price: 3 },
+  { item: 'feather', price: 4 },
 ];

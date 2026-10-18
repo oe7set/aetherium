@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0] – Phase 3 „Handwerk"
+
+### Hinzugefügt
+
+- **Schmieden** (Skill): 8 Barrensorten (Bronze bis Runit, Silber, Gold), Werkzeuge, Waffen, Rüstungen,
+  Pfeilspitzen und Schmuck (Ringe/Amulette mit Boni). Geschmiedete Äxte/Spitzhacken werden per „Benutzen" zum Werkzeug.
+- **Angeln** (Skill): 11 Fische von Garnelen bis Quantenaal mit Köder/Federn, Schätze (Flaschenpost),
+  alter Stiefel, **Schrödingers Fisch** (kollabiert beim Öffnen). Alle Fische kochbar.
+- **Dynamischer Markt**: Verkaufen drückt den Preis (exakt integriert), Erholung über ~15 min,
+  zufällige Nachfrage-Trends und Crashs. Markt-Tab mit Kursen.
+- **Erfolge**: 130+ (generierte Meilensteine + Meme-Erfolge, teils geheim), jeder mit dauerhaftem Bonus.
+- **Modifikator-System** (`engine/modifiers.ts`): Boni aus Erfolgen, Buffs, Lagerfeuer, Intelligenz.
+- **Glücks-Events** (Meteoritenschauer, Heureka!, Fischschwarm …) als zeitlich begrenzte Buffs.
+- Engine-Umbau: `advance()` steppt beliebig viele „Runner" (Aktion, später Kampf/Helfer) und Zeit-Effekte
+  (Feuer, Buffs, Markt) ereignisgenau – live und offline identisch.
+- 3D: Schmiede mit glühender Esse und Funken, Angelsteg mit Pose und Spritzern.
+- Spielstand v2 mit Migration.
+
 ## [0.2.0] – Phase 2 „3D-Welt"
 
 ### Hinzugefügt

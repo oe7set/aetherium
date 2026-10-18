@@ -1,6 +1,10 @@
-import { getItem } from '../data';
+import { getItem, getTool } from '../data';
+import { addBuff } from './buffs';
+import { invalidateMods } from './modifiers';
+import { skillLevel } from './skills';
 import type { Emit } from './events';
-import { addItem, itemCount, removeItem } from './inventory';
+import { gainItem } from './actions';
+import { itemCount, removeItem } from './inventory';
 import { randInt, type Rng } from './rng';
 import { earnGold } from './shop';
 import { addStat, type GameState } from './state';
@@ -20,7 +24,24 @@ export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit):
   switch (effect.type) {
     case 'intelligence':
       s.intelligence += effect.amount;
+      invalidateMods(s);
       emit({ type: 'intelligence', amount: effect.amount });
+      break;
+    case 'tool': {
+      if (!s.ownedTools.includes(effect.tool)) s.ownedTools.push(effect.tool);
+      const tool = getTool(effect.tool);
+      const current = s.equippedTools[tool.skill];
+      if (
+        skillLevel(s, tool.skill) >= tool.levelReq &&
+        (!current || getTool(current).tier < tool.tier)
+      ) {
+        s.equippedTools[tool.skill] = effect.tool;
+      }
+      emit({ type: 'toolUnlocked', tool: effect.tool });
+      break;
+    }
+    case 'buff':
+      addBuff(s, effect.buff, emit);
       break;
     case 'gold':
       earnGold(s, randInt(rng, effect.min, effect.max), emit);
@@ -34,12 +55,7 @@ export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit):
         if (!entry) break;
         const min = entry.min ?? 1;
         const rolled = randInt(rng, min, entry.max ?? min);
-        if (addItem(s, entry.item, rolled)) {
-          if (entry.rare) emit({ type: 'rareDrop', item: entry.item, qty: rolled });
-          emit({ type: 'itemGained', item: entry.item, qty: rolled });
-        } else {
-          emit({ type: 'itemLost', item: entry.item, qty: rolled });
-        }
+        gainItem(s, entry.item, rolled, emit, entry.rare);
       }
       break;
     }

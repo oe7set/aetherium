@@ -1,10 +1,19 @@
-import { actionsForSkill, getSkill, getTool } from '../../data';
+import { actionsForSkill, getSkill, getTool, type ActionDef } from '../../data';
 import { levelProgress } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 import { ActionCard } from './ActionCard';
+
+function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
+  const groups = new Map<string, ActionDef[]>();
+  for (const a of actions) {
+    const key = a.category ?? '';
+    groups.set(key, [...(groups.get(key) ?? []), a]);
+  }
+  return [...groups.entries()];
+}
 
 export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
   const skill = getSkill(skillId);
@@ -50,11 +59,22 @@ export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () =>
             : t('action.allUnlocked')}
         </span>
       </div>
-      <div className="action-list">
-        {actions.map((a) => (
-          <ActionCard key={a.id} def={a} />
-        ))}
-      </div>
+      {groupByCategory(actions).map(([category, list]) => (
+        <section key={category || 'all'}>
+          {category && <h4 className="group-title">{category}</h4>}
+          <div className="action-list">
+            {/* Unlocked actions plus the next two locked ones: a visible goal without clutter. */}
+            {list
+              .filter(
+                (a, i) =>
+                  a.levelReq <= p.level || list.findIndex((x) => x.levelReq > p.level) + 2 > i,
+              )
+              .map((a) => (
+                <ActionCard key={a.id} def={a} />
+              ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import Decimal from 'break_eternity.js';
-import { ACTION_MAP, ITEM_MAP, TOOL_MAP } from '../data';
+import { ACHIEVEMENT_MAP, ACTION_MAP, BUFF_MAP, ITEM_MAP, TOOL_MAP } from '../data';
 import { defaultSettings, newGame, SAVE_VERSION, type GameState } from './state';
 
 /** Shape stored in localStorage / export strings. */
@@ -21,6 +21,14 @@ export const MIGRATIONS: Record<number, Migration> = {
     ...data,
     gold: String(data.gold ?? 0),
     inventorySlots: data.inventorySlots ?? 20,
+  }),
+  // 1 → 2 (Phase 3): market, achievements and buffs.
+  1: (data) => ({
+    ...data,
+    market: data.market ?? { mults: {}, trend: null, nextTrend: 120 },
+    achievements: data.achievements ?? [],
+    buffs: data.buffs ?? [],
+    nextLucky: data.nextLucky ?? 240,
   }),
 };
 
@@ -133,6 +141,45 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     intelligence: Math.max(0, num(data.intelligence, 0)),
     stats: numberRecord(data.stats),
     settings: settings as GameState['settings'],
+    market: hydrateMarket(data.market, base.market),
+    nextLucky: Math.max(1, num(data.nextLucky, base.nextLucky)),
+    achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
+    buffs: Array.isArray(data.buffs)
+      ? data.buffs.filter(
+          (b): b is { id: string; remaining: number } =>
+            isRecord(b) &&
+            typeof b.id === 'string' &&
+            BUFF_MAP.has(b.id) &&
+            typeof b.remaining === 'number',
+        )
+      : [],
+  };
+}
+
+function stringArray(v: unknown): string[] {
+  return Array.isArray(v)
+    ? Array.from(new Set(v.filter((x): x is string => typeof x === 'string')))
+    : [];
+}
+
+function hydrateMarket(v: unknown, fallback: GameState['market']): GameState['market'] {
+  if (!isRecord(v)) return fallback;
+  const mults = Object.fromEntries(
+    Object.entries(numberRecord(v.mults)).filter(([id, m]) => ITEM_MAP.has(id) && m > 0),
+  );
+  const t = v.trend;
+  const trend =
+    isRecord(t) &&
+    typeof t.item === 'string' &&
+    ITEM_MAP.has(t.item) &&
+    typeof t.mult === 'number' &&
+    typeof t.remaining === 'number'
+      ? { item: t.item, mult: t.mult, remaining: t.remaining }
+      : null;
+  return {
+    mults,
+    trend,
+    nextTrend: typeof v.nextTrend === 'number' ? v.nextTrend : fallback.nextTrend,
   };
 }
 

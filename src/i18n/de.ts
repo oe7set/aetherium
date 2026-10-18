@@ -67,6 +67,7 @@ export const de = {
   'inv.buySlot': 'Platz kaufen ({price} Gold)',
   'inv.maxSlots': 'Maximale Plätze erreicht',
   'inv.segment.items': 'Taschen',
+  'inv.segment.market': 'Markt',
   'inv.segment.shop': 'Krämer',
   'inv.segment.tools': 'Werkzeuge',
 
@@ -78,6 +79,7 @@ export const de = {
   'cat.consumable': 'Benutzbar',
   'cat.resource': 'Ressourcen',
   'cat.junk': 'Krempel',
+  'cat.gear': 'Ausrüstung',
 
   'rarity.common': 'Gewöhnlich',
   'rarity.uncommon': 'Ungewöhnlich',
@@ -111,6 +113,7 @@ export const de = {
   'menu.save': 'Spielstand',
   'menu.about': 'Über',
   'menu.debug': 'Debug',
+  'menu.achievements': 'Erfolge',
   'menu.numberFormat': 'Zahlenformat',
   'menu.format.short': 'Kurz (1,5 Mio.)',
   'menu.format.scientific': 'Wissenschaftlich (1,5e6)',
@@ -137,7 +140,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 2 „3D-Welt“',
+  'menu.version': 'Version {version} · Phase 3 „Handwerk“',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 

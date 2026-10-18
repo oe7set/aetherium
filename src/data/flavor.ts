@@ -188,11 +188,53 @@ export const ACTION_START_LINES: Record<string, string[]> = {
     'Du stapelst Holz und zündest es an. Prometheus nickt dir zu.',
     'Feuermachen gestartet. Bitte Abstand zur Augenbraue halten.',
   ],
+  fishing: [
+    'Du wirfst die Leine aus. Irgendwo kichert ein Fisch.',
+    'Angeln gestartet. Geduld ist eine Tugend. Köder auch.',
+    'Du setzt dich ans Ufer. Zen-Modus: aktiviert.',
+  ],
+  smithing: [
+    'Der Hammer saust auf den Amboss. Klong! Klong! Physik!',
+    'Schmieden gestartet. Es wird heiß. Und laut.',
+    'Du entfachst die Esse. Hephaistos schaut neidisch.',
+  ],
   cooking: [
     'Du stellst die Pfanne aufs Feuer. Gordon wäre … neutral.',
     'Kochen gestartet. Es duftet nach Erfolg und leicht nach Rauch.',
   ],
 };
+
+export const ACHIEVEMENT_LINES: string[] = [
+  'Erfolg freigeschaltet: {item}! Ein Pokal mehr für den virtuellen Kaminsims.',
+  'Achievement: {item}! Dein zukünftiges Ich ist stolz. Dein vergangenes Ich ist verwirrt.',
+  '🏆 {item}! Die Akademie der Belanglosigkeiten gratuliert.',
+  '{item} – freigeschaltet. Bitte nicht auf den Lebenslauf schreiben. Oder doch.',
+  'Neuer Erfolg: {item}. Peer-Review: bestanden (ausnahmsweise).',
+];
+
+export const TREND_UP_LINES: string[] = [
+  'Marktgeschrei: Alle wollen plötzlich {item}! Preis ×{qty}.',
+  'Breaking News: {item} ist der neue heiße Scheiß. Preis ×{qty}.',
+  'Ein Influencer-Barde hat {item} besungen. Nachfrage explodiert (×{qty}).',
+  'Der König hat {item} zum Hofmode erklärt. Preis ×{qty}.',
+];
+
+export const TREND_DOWN_LINES: string[] = [
+  'Marktcrash bei {item}! Irgendein Gnom hat den Markt geflutet. Preis ×{qty}.',
+  '{item} ist out. Vollkommen out. Preis ×{qty}.',
+  'Gerücht: {item} verursacht Warzen. Preis ×{qty}.',
+];
+
+export const LUCKY_LINES: string[] = [
+  'Glücksereignis: {item}!',
+  'Das Universum würfelt zu deinen Gunsten: {item}!',
+  'Plötzlich: {item}! Nutze es, solange es anhält.',
+];
+
+export const TOOL_UNLOCK_LINES: string[] = [
+  'Selbst geschmiedet, doppelt gefreut: {item} ist jetzt dein Werkzeug!',
+  '{item} übernommen. DIY-Level: Zwerg.',
+];
 
 export const RANDOM_CHATTER: string[] = [
   'Ein Eichhörnchen beobachtet dich vorwurfsvoll.',
@@ -252,6 +294,11 @@ export const FLAVOR_POOLS: Record<string, string[]> = {
   OFFLINE_LINES,
   IDLE_LINES,
   RANDOM_CHATTER,
+  ACHIEVEMENT_LINES,
+  TREND_UP_LINES,
+  TREND_DOWN_LINES,
+  LUCKY_LINES,
+  TOOL_UNLOCK_LINES,
   ...Object.fromEntries(
     Object.entries(ACTION_START_LINES).map(([k, v]) => [`ACTION_START_${k}`, v]),
   ),

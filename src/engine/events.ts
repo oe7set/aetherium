@@ -17,7 +17,12 @@ export type GameEvent =
   | { type: 'fireLit' }
   | { type: 'fireOut' }
   | { type: 'gold'; amount: number }
-  | { type: 'intelligence'; amount: number };
+  | { type: 'intelligence'; amount: number }
+  | { type: 'achievement'; id: string }
+  | { type: 'buffStarted'; id: string }
+  | { type: 'buffExpired'; id: string }
+  | { type: 'marketTrend'; item: string; mult: number }
+  | { type: 'toolUnlocked'; tool: string };
 
 export type Emit = (event: GameEvent) => void;
 

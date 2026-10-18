@@ -6,11 +6,13 @@ import { t, type MessageKey } from '../../i18n';
 import { useGame, type InventorySegment } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ItemDetail } from './ItemDetail';
+import { MarketPanel } from './MarketPanel';
 import { ShopPanel } from './ShopPanel';
 import { ToolsPanel } from './ToolsPanel';
 
 type SortKey = 'category' | 'name' | 'qty' | 'value';
 const CATEGORY_ORDER: ItemCategory[] = [
+  'gear',
   'log',
   'ore',
   'gem',
@@ -24,7 +26,7 @@ const CATEGORY_ORDER: ItemCategory[] = [
 function Segments() {
   const seg = useGame((s) => s.ui.inventorySegment);
   const setUi = useGame((s) => s.setUi);
-  const segs: InventorySegment[] = ['items', 'shop', 'tools'];
+  const segs: InventorySegment[] = ['items', 'market', 'shop', 'tools'];
   return (
     <div className="segments" role="tablist">
       {segs.map((s) => (
@@ -175,6 +177,7 @@ export function InventoryPanel() {
     <div className="panel">
       <Segments />
       {seg === 'items' && <ItemsGrid />}
+      {seg === 'market' && <MarketPanel />}
       {seg === 'shop' && <ShopPanel />}
       {seg === 'tools' && <ToolsPanel />}
     </div>

@@ -10,7 +10,7 @@ export type ToolId = string;
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'peer_reviewed';
 
 export type ItemCategory =
-  'log' | 'ore' | 'gem' | 'raw_food' | 'food' | 'consumable' | 'resource' | 'junk';
+  'log' | 'ore' | 'gem' | 'raw_food' | 'food' | 'consumable' | 'resource' | 'gear' | 'junk';
 
 export interface SkillDef {
   id: SkillId;
@@ -33,8 +33,18 @@ export interface ComingSoonSkill {
   teaser: string;
 }
 
+/**
+ * Flat, data-driven modifier map. Values are additive fractions (0.05 = +5 %).
+ * Keys: 'xp', 'xp.<skill>', 'speed', 'speed.<skill>', 'double', 'double.<skill>', 'rare', 'gold',
+ * 'burn', 'fireDuration', 'offlineHours', 'research', 'helperSpeed', 'combat.accuracy',
+ * 'combat.damage', 'combat.defence', 'combat.hp', 'combat.loot', 'wisdom'.
+ */
+export type ModifierSet = Partial<Record<string, number>>;
+
 export type ConsumeEffect =
   | { type: 'intelligence'; amount: number }
+  | { type: 'tool'; tool: ToolId }
+  | { type: 'buff'; buff: string }
   | { type: 'loot'; table: LootEntry[]; rolls: number }
   | { type: 'gold'; min: number; max: number };
 
@@ -49,6 +59,56 @@ export interface ItemDef {
   rarity?: Rarity;
   /** If set, the item can be used/opened from the inventory. */
   consume?: ConsumeEffect;
+  /** Hit points restored when eaten in combat. */
+  heal?: number;
+  /** Equippable gear (Phase 4). */
+  equip?: EquipDef;
+}
+
+export type EquipSlot = 'weapon' | 'shield' | 'head' | 'body' | 'legs' | 'ring' | 'amulet' | 'ammo';
+export type CombatStyle = 'melee' | 'ranged' | 'magic';
+
+export interface EquipDef {
+  slot: EquipSlot;
+  /** Skill level needed to wear it (e.g. defence 20, ranged 30). */
+  req?: { skill: SkillId; level: number };
+  /** Weapon style; only meaningful for the weapon slot. */
+  style?: CombatStyle;
+  /** Attack interval in seconds (weapons). */
+  speed?: number;
+  attack?: number;
+  strength?: number;
+  defence?: number;
+  /** Extra modifiers while equipped. */
+  mods?: ModifierSet;
+}
+
+export interface AchievementCondition {
+  type: 'stat' | 'level' | 'totalLevel' | 'item' | 'gold' | 'achievements';
+  /** Stat key, skill id or item id depending on type. */
+  key?: string;
+  gte: number;
+}
+
+export interface AchievementDef {
+  id: string;
+  name: string;
+  desc: string;
+  icon: string;
+  condition: AchievementCondition;
+  reward: ModifierSet;
+  /** Hidden until unlocked (surprise memes). */
+  secret?: boolean;
+}
+
+export interface BuffDef {
+  id: string;
+  name: string;
+  icon: string;
+  /** Duration in seconds. */
+  duration: number;
+  mods: ModifierSet;
+  desc: string;
 }
 
 export interface ItemStack {
@@ -92,6 +152,8 @@ export interface ActionDef {
   fuelSeconds?: number;
   burn?: BurnDef;
   desc?: string;
+  /** Sub-group shown in the skill view (e.g. „Barren", „Waffen"). */
+  category?: string;
 }
 
 export interface ToolDef {

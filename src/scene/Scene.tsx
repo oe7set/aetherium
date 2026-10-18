@@ -10,7 +10,7 @@ import { Island } from './Island';
 import { STATIONS } from './layout';
 import type { QualityProfile } from './quality';
 import { DayNight } from './Sky';
-import { Campfire, Decorations, Kitchen, Mine, Tower } from './Stations';
+import { Campfire, Decorations, FishingSpot, Forge, Kitchen, Mine, Tower } from './Stations';
 import { Forest, WorkTree } from './Trees';
 
 function usePageVisible(): boolean {
@@ -85,6 +85,8 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Mine onTap={tap('mining')} particles={quality.particles} />
       <Campfire onTap={tap('firemaking')} particles={quality.particles} />
       <Kitchen onTap={tap('cooking')} particles={quality.particles} />
+      <Forge onTap={tap('smithing')} particles={quality.particles} />
+      <FishingSpot onTap={tap('fishing')} particles={quality.particles} />
       <Tower />
       <Character skill={activeSkill} />
       <LabelProjector />

@@ -17,6 +17,8 @@ export const STATIONS: StationDef[] = [
   { skill: 'mining', label: 'Mine', pos: [6.2, -3.5], workPos: [4.8, -2.2] },
   { skill: 'firemaking', label: 'Lagerfeuer', pos: [-2.2, 3], workPos: [-1.2, 2.1] },
   { skill: 'cooking', label: 'Kochstelle', pos: [4, 2.8], workPos: [3.2, 1.8] },
+  { skill: 'fishing', label: 'Angelplatz', pos: [-2.6, -5.6], workPos: [-2.6, -5.6] },
+  { skill: 'smithing', label: 'Schmiede', pos: [-6.4, 2], workPos: [-5, 1.6] },
 ];
 
 export const IDLE_POS: Vec2 = [0, 0.5];

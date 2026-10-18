@@ -28,6 +28,28 @@ function Tool({ skill }: { skill: string | null }) {
       </group>
     );
   }
+  if (skill === 'smithing') {
+    return (
+      <group position={[0, -0.55, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.03, 0.03, 0.5, 4]} />
+          <meshStandardMaterial color="#7a5536" />
+        </mesh>
+        <mesh position={[0, 0.25, 0]}>
+          <boxGeometry args={[0.22, 0.12, 0.12]} />
+          <meshStandardMaterial color="#555" metalness={0.6} />
+        </mesh>
+      </group>
+    );
+  }
+  if (skill === 'fishing') {
+    return (
+      <mesh position={[0, -0.5, 0.6]} rotation={[Math.PI / 2.6, 0, 0]}>
+        <cylinderGeometry args={[0.015, 0.03, 1.8, 4]} />
+        <meshStandardMaterial color="#c9a26b" />
+      </mesh>
+    );
+  }
   if (skill === 'cooking') {
     return (
       <mesh position={[0, -0.55, 0.2]} rotation={[Math.PI / 2, 0, 0]}>
@@ -82,7 +104,8 @@ export function Character({ skill }: { skill: string | null }) {
 
     let work = 0;
     if (!moving && current) {
-      const speed = current === 'cooking' ? 6 : current === 'firemaking' ? 3 : 7;
+      const speed =
+        current === 'cooking' ? 6 : current === 'firemaking' ? 3 : current === 'fishing' ? 1.2 : 7;
       work = Math.sin(t * speed);
     }
     if (armR.current)
