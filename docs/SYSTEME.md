@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.26.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.26.1**.
 
 ## 1. Der große Kreislauf
 
@@ -159,7 +159,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Endgame: weitere Kosmetik (Inselschmuck, Rahmen); Meisterschafts-Pool je Skill; Endlos-Riss-Rangliste
       über Export-Codes.
 - [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
-- [ ] Musik: Nachtthema auf der Insel, Bossmusik auch bei normalen Riss-Bossen.
+- [ ] Musik: Bossmusik auch bei normalen Riss-Bossen (dynamisch, sobald ein Boss lebt).
 
 **Qualität**
 

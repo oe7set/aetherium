@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.1] – Nachtmusik
+
+### Hinzugefügt
+
+- **Nachtmusik**: Wenn auf der Insel die Nacht hereinbricht, wechselt die Musik zu einem leisen, langsamen
+  Nachtthema (C-Pentatonik, 60 BPM, weich gefiltert) – und bei Sonnenaufgang wieder zurück.
+
 ## [1.26.0] – Der Montagsfürst
 
 ### Hinzugefügt

@@ -4,7 +4,7 @@ import { audioContext } from './audio';
 // oscillators per beat. Every area has its own theme; changes crossfade. Notes are scheduled a
 // fraction of a second ahead by a cheap timer, nothing runs while the tab is hidden or music is off.
 
-export type MusicTheme = 'island' | 'village' | 'hero' | 'rift' | 'boss';
+export type MusicTheme = 'island' | 'night' | 'village' | 'hero' | 'rift' | 'boss';
 
 interface ThemeDef {
   bpm: number;
@@ -42,6 +42,24 @@ const THEMES: Record<MusicTheme, ThemeDef> = {
     lead: 'sine',
     density: 0.35,
     cutoff: 1400,
+    drive: false,
+    pluck: false,
+  },
+  // The island at night: C major pentatonic, slow, soft and filtered – fireflies, not fanfares.
+  night: {
+    bpm: 60,
+    root: 60,
+    scale: [0, 2, 4, 7, 9],
+    chords: [
+      [0, 4, 7],
+      [-3, 0, 4],
+      [-8, -5, 0],
+      [-5, -1, 2],
+    ],
+    pad: 'sine',
+    lead: 'sine',
+    density: 0.18,
+    cutoff: 700,
     drive: false,
     pluck: false,
   },

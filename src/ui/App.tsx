@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
 import { AchievementToast } from './AchievementToast';
@@ -19,6 +19,7 @@ import { useRiftRun } from './rift/runStore';
 import { usePerfClass } from './perf';
 import { useAccessibility } from './a11y';
 import { setMusic, type MusicTheme } from './music';
+import { dayPhase, daylight } from '../scene/time';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
@@ -66,6 +67,12 @@ function useBackgroundMusic() {
   const tab = useGame((s) => s.ui.tab);
   const inRift = useRiftRun((s) => s.run !== null);
   const trial = useRiftRun((s) => s.run?.config.trial === true);
+  // Night on the island (in-game clock, 20 min per day): re-checked every 20 s.
+  const [night, setNight] = useState(() => daylight(dayPhase()) < 0.25);
+  useEffect(() => {
+    const id = window.setInterval(() => setNight(daylight(dayPhase()) < 0.25), 20000);
+    return () => window.clearInterval(id);
+  }, []);
   const theme: MusicTheme = trial
     ? 'boss'
     : inRift
@@ -74,7 +81,9 @@ function useBackgroundMusic() {
         ? 'village'
         : tab === 'rift'
           ? 'hero'
-          : 'island';
+          : night
+            ? 'night'
+            : 'island';
   useEffect(() => {
     setMusic({ enabled, volume, theme });
   }, [enabled, volume, theme]);
