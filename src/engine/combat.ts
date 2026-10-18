@@ -281,12 +281,20 @@ function grantCombatXp(s: GameState, damage: number, emit: Emit): void {
   addXp(s, 'hitpoints', damage * 1.33 * xpMultiplierFor(s, 'hitpoints'), emit);
 }
 
+type KillHook = (s: GameState, monster: string, rng: Rng, emit: Emit) => void;
+const killHooks: KillHook[] = [];
+/** Runs after every kill (pets, quests …). */
+export function onMonsterKilled(fn: KillHook): void {
+  killHooks.push(fn);
+}
+
 function killMonster(s: GameState, c: CombatState, m: MonsterDef, rng: Rng, emit: Emit): void {
   addResearch(s, m.level * 0.4);
   addStat(s, 'monstersKilled');
   addStat(s, `kills.${m.id}`);
   if (m.boss) addStat(s, 'bossKills');
   emit({ type: 'monsterKilled', monster: m.id });
+  for (const hook of killHooks) hook(s, m.id, rng, emit);
   earnGold(s, randInt(rng, m.gold[0], m.gold[1]), emit);
   const lootBonus = mod(s, 'combat.loot');
   for (const { entry, qty } of rollDrops(rng, m.loot, mod(s, 'rare') + lootBonus)) {

@@ -6,16 +6,20 @@ Teilchenbeschleunigern hoch. Vorbilder: RuneScape-Skilling, Melvor Idle, Cookie 
 
 **Spielen:** https://oe7set.github.io/aetherium/ (nach dem ersten Deploy von `main`)
 
-## Stand: Phase 1 – Fundament
+## Features (v1.0 – alle 7 Phasen)
 
-- 🪓 Holzfällen, ⛏️ Bergbau, 🔥 Feuermachen, 🍳 Kochen – jeweils mit Inhalten bis Level 99 (OSRS-XP-Kurve)
-- Lagerfeuer-Mechanik: Brennstoff nachlegen → +5 % XP auf alles, Kochen braucht Feuer
-- Zufallsfunde (Vogelnester, Newton-Äpfel, Edelsteine, versteinerte Mitochondrien …)
-- Inventar mit Plätzen, Sortierung, Filter, Suche; Krämer mit Zutaten, Werkzeugen und Taschen
-- Offline-Fortschritt (bis 24 h) mit „Während du weg warst …"-Zusammenfassung
-- Autosave (30 s + beim Schließen), Export/Import als Base64-Code
-- Mobiles UI mit Tab-Leiste und Bottom-Sheets, Desktop-Layout mit drei Spalten
-- Die 3D-Welt (React Three Fiber) folgt in Phase 2 – bis dahin gibt es eine antippbare 2D-Insel.
+- **22 Skills** im Old-School-Stil (OSRS-XP-Kurve, Level 99 bzw. 120 mit Prestige): Holzfällen, Bergbau, Angeln,
+  Landwirtschaft (Echtzeit + Mendel-Mutationen), Jagen, Arkanes Schürfen, Feuermachen, Kochen, Schmieden, Handwerk,
+  Alchemie, Verzauberung, Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte.
+- **3D-Low-Poly-Insel** (React Three Fiber) mit Spielfigur, antippbaren Stationen, Tag/Nacht und einer Welt, die mit
+  dem Fortschritt wächst – bis zum Teilchenbeschleuniger-Ring. Akku-Modus mit 2D-Ansicht.
+- **Kampf** mit 18 Monstern, 3 Dungeons und Phasen-Bossen wie _Der Peer Reviewer #2_; Ausrüstung bis _Peer-Reviewed_.
+- **Forschung**: Tech-Baum mit 39 Technologien, **Periodensystem-Codex** mit allen 118 Elementen, **Helfer**.
+- **Wirtschaft**: dynamischer Markt mit Angebot/Nachfrage, Krämer, Inventar mit Sortierung/Filter/Suche.
+- **Prestige** in drei Ebenen: Wiedergeburt, Paradigmenwechsel (Naturgesetze wählen), Urknall.
+- **Motivation**: 200+ Erfolge, Quests, Tages-/Wochenaufträge, Haustiere (1/5.000), Glücks-Events, Konfetti, Sounds.
+- **Offline-Fortschritt** (24 h, per Forschung/Prestige erweiterbar), Autosave, Export/Import, **PWA** (installierbar).
+- Deutsch, humorvoll, über 200 eigene Flavor-Texte.
 
 ## Steuerung
 

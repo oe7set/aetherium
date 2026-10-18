@@ -15,6 +15,7 @@ import {
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { Tip } from '../Tip';
 
 function chanceLabel(chance: number): string {
   return chance >= 0.1
@@ -121,9 +122,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
             {def.drops.map((d) => {
               const it = getItem(d.item);
               return (
-                <span key={d.item} className={`item-pill ${d.rare ? 'rare' : ''}`} title={it.desc}>
-                  {it.icon} {it.name} <small>{chanceLabel(d.chance)}</small>
-                </span>
+                <Tip key={d.item} text={it.desc}>
+                  <span className={`item-pill ${d.rare ? 'rare' : ''}`}>
+                    {it.icon} {it.name} <small>{chanceLabel(d.chance)}</small>
+                  </span>
+                </Tip>
               );
             })}
           </div>

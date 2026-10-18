@@ -15,6 +15,11 @@ import {
 import {
   advance,
   bestAvailableAction,
+  acceptQuest,
+  claimTask,
+  completeQuest,
+  ensureTasks,
+  observeCat,
   bigBang,
   buyMultiverseUpgrade,
   buyWisdomUpgrade,
@@ -61,10 +66,12 @@ import {
   type ShopResult,
 } from '../engine';
 import { t, type MessageKey } from '../i18n';
+import { playEventSounds } from '../ui/audio';
+import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
-export type TabId = 'world' | 'skills' | 'inventory' | 'research' | 'menu';
+export type TabId = 'world' | 'skills' | 'inventory' | 'quests' | 'research' | 'menu';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools';
 
 const FEED_LIMIT = 60;
@@ -121,6 +128,10 @@ export interface GameStore {
   doBigBang: () => void;
   buyTalent: (id: string) => void;
   buyMultiverse: (id: string) => void;
+  takeQuest: (id: string) => void;
+  turnInQuest: (id: string) => void;
+  claim: (taskId: string) => void;
+  peekCat: () => void;
   setCombatSetting: <K extends keyof CombatSettings>(key: K, value: CombatSettings[K]) => void;
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
@@ -172,6 +183,10 @@ export const useGame = create<GameStore>()((set, get) => {
 
   const applyEvents = (game: GameState, events: GameEvent[]): void => {
     const now = performance.now();
+    if (events.length) {
+      if (game.settings.sound) playEventSounds(events);
+      notifyInBackground(events, game.settings.notifications);
+    }
     const { feed, popups, levelUps, achievements } = translateEvents(
       events,
       defaultRng,
@@ -228,7 +243,10 @@ export const useGame = create<GameStore>()((set, get) => {
     },
 
     tick: (dt) => {
-      mutate((s, emit) => advance(s, dt, defaultRng, emit));
+      mutate((s, emit) => {
+        advance(s, dt, defaultRng, emit);
+        ensureTasks(s, Date.now());
+      });
       set({ lastTickAt: performance.now() });
       const { game } = get();
       if (game.settings.chatter && Math.random() < CHATTER_PER_SECOND * dt) {
@@ -382,6 +400,34 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s) => {
         buyMultiverseUpgrade(s, id);
       }),
+    takeQuest: (id) =>
+      mutate((s) => {
+        acceptQuest(s, id);
+      }),
+    turnInQuest: (id) =>
+      mutate((s, emit) => {
+        completeQuest(s, id, emit);
+      }),
+    claim: (taskId) =>
+      mutate((s, emit) => {
+        claimTask(s, taskId, emit);
+      }),
+    peekCat: () => {
+      let result: 'alive' | 'ghost' | null = null;
+      mutate((s) => {
+        result = observeCat(s, defaultRng);
+      });
+      if (result === 'alive')
+        get().pushFeed(
+          '🐈 Die Kiste ist offen: Die Katze lebt! Sie schnurrt dich vorwurfsvoll an.',
+          'rare',
+        );
+      if (result === 'ghost')
+        get().pushFeed(
+          '👻 Die Kiste ist offen: Eine Geisterkatze! Halb tot, halb lebendig, voll flauschig.',
+          'rare',
+        );
+    },
     setCombatSetting: (key, value) =>
       mutate((s) => {
         s.combatSettings = { ...s.combatSettings, [key]: value };

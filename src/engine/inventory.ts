@@ -17,6 +17,8 @@ export function freeSlots(s: GameState): number {
 
 /** Can all of these items be added without exceeding the slot limit? */
 export function hasRoomFor(s: GameState, items: readonly string[]): boolean {
+  // Fast path (hot during offline simulation): everything already has a stack.
+  if (items.every((i) => (s.inventory[i] ?? 0) > 0)) return true;
   const newTypes = new Set(items.filter((i) => itemCount(s, i) <= 0));
   return newTypes.size <= freeSlots(s);
 }

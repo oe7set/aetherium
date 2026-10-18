@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0] – Phase 7 „Feinschliff"
+
+### Hinzugefügt
+
+- **Haustiere**: 15 extrem seltene Begleiter (Biber Bernd 1/5.000 … Peer-Review-Papagei vom Boss) mit Boni;
+  **Schrödingers Katze** kollabiert beim ersten Hinsehen zu „lebendig“ oder „Geisterkatze“.
+- **Quests**: 13 Story-Quests mit Questgebern, Ketten, Zielen (Statistik, Abgabe, Level) und Belohnungen.
+- **Tages- und Wochenaufträge**: deterministisch pro Tag/Woche gewürfelt, skaliert mit dem Gesamtlevel.
+- Neuer Tab **Quests** (Aufträge, Quests, Haustiere); Badges an Tabs für einlösbare Aufträge und bezahlbare Forschung.
+- **Sounds**: WebAudio-Synth ohne Dateien (Level-Up-Arpeggio, seltene Funde, Treffer, Münzen …), abschaltbar.
+- **Benachrichtigungen** im Hintergrund (Level-Up, Inventar voll), optional.
+- **Juice**: Konfetti bei Level-Ups und Erfolgen, Long-Press-Tooltips (kein Hover nötig).
+- **PWA**: installierbar, Offline-Start (Service Worker cacht auch die 3D-Szene), Vollbild, Icons.
+- **Die Welt wächst**: Dorf mit bis zu 8 Häusern (Gesamtlevel), Windmühle, Laternen, Solarfeld, Wurmloch-Portal.
+- Erweiterte Statistiken, neue Erfolge (Quests, Aufträge, Haustiere, Prestige). Spielstand v6.
+
 ## [0.6.0] – Phase 6 „Prestige"
 
 ### Hinzugefügt

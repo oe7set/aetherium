@@ -3,7 +3,7 @@ import type { AchievementCondition } from '../data/types';
 import { registerAfterAdvance, registerAfterComplete } from './actions';
 import type { Emit } from './events';
 import { invalidateMods, registerModifierSource } from './modifiers';
-import { skillLevel, totalLevel } from './skills';
+import { skillLevel, takeLevelChange, totalLevel } from './skills';
 import type { GameState } from './state';
 
 registerModifierSource('achievements', (s) =>
@@ -52,13 +52,17 @@ export function checkAchievements(s: GameState, emit: Emit): string[] {
 }
 
 /**
- * Cheap pre-check: for each condition series only the lowest locked threshold matters.
- * The full check runs only when one of those is reached.
+ * Cheap pre-check: for each condition series only the lowest locked threshold matters, and its
+ * lookup key is resolved once. The full check runs only when one of those thresholds is reached.
  */
-type Frontier = { c: AchievementCondition }[];
-const frontiers = new WeakMap<GameState, { count: number; list: Frontier }>();
+interface FrontierEntry {
+  c: AchievementCondition;
+  /** Resolved stats key for 'stat' and 'item' conditions. */
+  stat?: string;
+}
+const frontiers = new WeakMap<GameState, { count: number; list: FrontierEntry[] }>();
 
-function frontier(s: GameState): Frontier {
+function frontier(s: GameState): FrontierEntry[] {
   const cached = frontiers.get(s);
   if (cached && cached.count === s.achievements.length) return cached.list;
   const unlocked = new Set(s.achievements);
@@ -69,14 +73,30 @@ function frontier(s: GameState): Frontier {
     const cur = best.get(k);
     if (!cur || a.condition.gte < cur.gte) best.set(k, a.condition);
   }
-  const list = [...best.values()].map((c) => ({ c }));
+  const list = [...best.values()].map((c) => ({
+    c,
+    stat: c.type === 'stat' ? c.key : c.type === 'item' ? `obtained.${c.key}` : undefined,
+  }));
   frontiers.set(s, { count: s.achievements.length, list });
   return list;
 }
 
+function goldValue(s: GameState): number {
+  // Avoids allocating Decimals in the hot path: layer 0 means the value is just `mag`.
+  return s.gold.layer === 0 ? s.gold.sign * s.gold.mag : Infinity;
+}
+
 export function checkAchievementsFast(s: GameState, emit: Emit): void {
-  for (const { c } of frontier(s)) {
-    if (conditionValue(s, c) >= c.gte) {
+  // Level conditions only need a look after a level-up.
+  const levels = takeLevelChange(s);
+  for (const { c, stat } of frontier(s)) {
+    let reached: boolean;
+    if (stat !== undefined) reached = (s.stats[stat] ?? 0) >= c.gte;
+    else if (c.type === 'gold') reached = goldValue(s) >= c.gte;
+    else if (c.type === 'achievements') reached = s.achievements.length >= c.gte;
+    else if (!levels) continue;
+    else reached = conditionValue(s, c) >= c.gte;
+    if (reached) {
       checkAchievements(s, emit);
       return;
     }

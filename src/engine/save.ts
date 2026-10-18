@@ -12,6 +12,7 @@ import {
   TECH_MAP,
   TOOL_MAP,
 } from '../data';
+import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
 import {
   defaultCombatSettings,
@@ -67,6 +68,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   3: (data) => ({ ...data, research: 0, techs: [], codex: [], plots: [], helpers: [] }),
   // 4 → 5 (Phase 6): prestige layers. Existing XP counts towards the first rebirth.
   4: (data) => ({ ...data, prestige: null }),
+  // 5 → 6 (Phase 7): pets, quests, daily/weekly tasks.
+  5: (data) => ({ ...data, pets: [], quests: null, tasks: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -204,6 +207,10 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
           }))
       : [],
     prestige: hydratePrestige(data.prestige, base.prestige),
+    pets: stringArray(data.pets).filter((id) => PETS.some((p) => p.id === id)),
+    catState: data.catState === 'alive' || data.catState === 'ghost' ? data.catState : 'unknown',
+    quests: hydrateQuests(data.quests),
+    tasks: hydrateTasks(data.tasks, base.tasks),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -218,6 +225,40 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydrateQuests(v: unknown): GameState['quests'] {
+  if (!isRecord(v)) return { active: {}, done: [] };
+  const active: Record<string, Record<string, number>> = {};
+  if (isRecord(v.active)) {
+    for (const [id, baseline] of Object.entries(v.active)) {
+      if (QUESTS.some((q) => q.id === id)) active[id] = numberRecord(baseline);
+    }
+  }
+  return { active, done: stringArray(v.done).filter((id) => QUESTS.some((q) => q.id === id)) };
+}
+
+function hydrateTasks(v: unknown, fallback: GameState['tasks']): GameState['tasks'] {
+  if (!isRecord(v) || !Array.isArray(v.list)) return fallback;
+  const list = v.list
+    .filter(
+      (t): t is Record<string, unknown> =>
+        isRecord(t) && typeof t.id === 'string' && typeof t.stat === 'string',
+    )
+    .map((t) => ({
+      id: t.id as string,
+      template: typeof t.template === 'string' ? t.template : '',
+      period: (t.period === 'week' ? 'week' : 'day') as 'day' | 'week',
+      stat: t.stat as string,
+      target: typeof t.target === 'number' ? t.target : 1,
+      baseline: typeof t.baseline === 'number' ? t.baseline : 0,
+      claimed: t.claimed === true,
+    }));
+  return {
+    day: typeof v.day === 'string' ? v.day : '',
+    week: typeof v.week === 'string' ? v.week : '',
+    list,
   };
 }
 

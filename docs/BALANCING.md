@@ -74,3 +74,11 @@ Der Test schlägt fehl, wenn ein Skill unter 20 h oder über 400 h bis 99 rutsch
 - Jeder Weisheitspunkt (lebenslang, Ausgeben kostet nichts vom Bonus): +4 % XP, +2 % Forschung, +2 % Gold.
 - Paradigmenwechsel ab 20 Technologien: +25 % Forschung je Wechsel, Naturgesetze mit Vor- und Nachteil.
 - Urknall ab 3 Paradigmenwechseln: Splitter = 1 + ⌊Paradigmen/3⌋ + ⌊Weisheit gesamt/500⌋.
+
+## Performance (Phase 7)
+
+- Offline-Simulation: Extremfall 24 h bei minimaler Aktionsdauer (≈ 144.000 Abschlüsse) ≈ 0,8 s auf Desktop-CPU.
+  Hot-Path-Optimierungen: Erfolgs-„Frontier" mit vorab aufgelösten Schlüsseln, Level-Bedingungen nur nach Level-Ups,
+  gecachte Tech-Freischaltungen, Dauer einmal pro Schritt, Inventar-Fast-Path, internierte Modifier-Keys.
+- 3D: Wald und Deko instanziert, Partikel gepoolt, Labels als DOM-Overlay, Render-Pause bei verstecktem Tab,
+  Schatten nur auf „Hoch", Pixel-Ratio ≤ 2. Die Szene ist ein eigener Lazy-Chunk (~260 KB gzip).

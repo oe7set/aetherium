@@ -7,6 +7,7 @@ export const de = {
   'tab.world': 'Welt',
   'tab.skills': 'Skills',
   'tab.inventory': 'Inventar',
+  'tab.quests': 'Quests',
   'tab.research': 'Forschung',
   'tab.menu': 'Menü',
 
@@ -120,8 +121,9 @@ export const de = {
   'menu.format.scientific': 'Wissenschaftlich (1,5e6)',
   'menu.format.engineering': 'Technisch (15e5 → 1,5e6)',
   'menu.nerdMode': 'Nerd-Modus (Formeln anzeigen)',
-  'menu.sound': 'Sound (folgt in Phase 7)',
+  'menu.sound': 'Soundeffekte',
   'menu.chatter': 'Zufällige Ereignistexte',
+  'menu.notifications': 'Benachrichtigungen im Hintergrund (Level-Up, Inventar voll)',
   'menu.graphics': 'Grafikqualität',
   'menu.graphics.auto': 'Automatisch',
   'menu.graphics.low': 'Niedrig',
@@ -141,7 +143,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 6 „Prestige“',
+  'menu.version': 'Version {version} · alle 7 Phasen',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 

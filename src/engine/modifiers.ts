@@ -44,9 +44,20 @@ export function mod(s: GameState, key: string): number {
 }
 
 /** Global + skill-specific value, e.g. modFor(s, 'xp', 'mining') = xp + xp.mining. */
+const composedKeys = new Map<string, Map<string, string>>();
+
+/** Interned `${key}.${skill}` strings – avoids string building in the simulation hot path. */
+function composed(key: string, skill: string): string {
+  let bySkill = composedKeys.get(key);
+  if (!bySkill) composedKeys.set(key, (bySkill = new Map()));
+  let k = bySkill.get(skill);
+  if (!k) bySkill.set(skill, (k = `${key}.${skill}`));
+  return k;
+}
+
 export function modFor(s: GameState, key: string, skill: string): number {
   const m = allMods(s);
-  return (m.get(key) ?? 0) + (m.get(`${key}.${skill}`) ?? 0);
+  return (m.get(key) ?? 0) + (m.get(composed(key, skill)) ?? 0);
 }
 
 export function invalidateMods(s: GameState): void {

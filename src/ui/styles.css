@@ -1818,3 +1818,143 @@ button.chip {
   border-color: var(--gold);
   background: #3a3220;
 }
+
+/* --- Phase 7: quests, tasks, pets, juice ------------------------------------------------------- */
+
+.task,
+.quest {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  margin-bottom: 6px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid transparent;
+}
+.task {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+.task-body {
+  display: grid;
+  gap: 4px;
+}
+.task.done {
+  border-color: var(--gold);
+}
+.task.claimed {
+  opacity: 0.5;
+}
+.quest.active {
+  border-color: #5fa543;
+}
+.quest.locked,
+.quest.done {
+  opacity: 0.55;
+}
+.quest-story {
+  margin: 0;
+  font-style: italic;
+  color: #cfd5e3;
+  font-size: 13px;
+}
+.quest-objective {
+  display: grid;
+  gap: 2px;
+}
+.quest .btn {
+  justify-self: start;
+}
+.reward {
+  color: #cdb4ff;
+}
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.pet {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  opacity: 0.6;
+}
+.pet.owned {
+  opacity: 1;
+  border: 1px solid var(--gold);
+}
+.pet-icon {
+  font-size: 36px;
+}
+.segments {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.segment {
+  white-space: nowrap;
+  padding: 0 8px;
+}
+.confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 96;
+  overflow: hidden;
+}
+.confetti span {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confetti-fall 1.8s ease-in forwards;
+}
+@keyframes confetti-fall {
+  to {
+    transform: translateY(105vh) rotate(720deg);
+    opacity: 0.2;
+  }
+}
+.tab-badge {
+  position: absolute;
+  top: 4px;
+  right: calc(50% - 22px);
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 700;
+}
+.tab {
+  position: relative;
+}
+.tip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+.tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #0d1018;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  font-style: italic;
+  z-index: 50;
+  pointer-events: none;
+  white-space: normal;
+}

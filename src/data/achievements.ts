@@ -328,6 +328,71 @@ const STAT_SERIES: StatSeries[] = [
     steps: [[100, 'Ich bin kein Arzt, aber …']],
     reward: () => ({ 'combat.hp': 0.05 }),
   },
+  {
+    key: 'questsCompleted',
+    icon: '📜',
+    desc: (n) => `Schließe ${n} Quests ab.`,
+    steps: [
+      [1, 'Questgeber-Liebling'],
+      [5, 'Abenteurerin'],
+      [13, 'Alle Ausrufezeichen weg'],
+    ],
+    reward: (i) => ({ xp: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'tasksCompleted',
+    icon: '📋',
+    desc: (n) => `Erledige ${n} Aufträge.`,
+    steps: [
+      [1, 'Pflichtbewusst'],
+      [25, 'Stammkunde'],
+      [100, 'Auftragskönigin'],
+      [500, 'Workaholic'],
+    ],
+    reward: (i) => ({ gold: 0.02 * (i + 1) }),
+  },
+  {
+    key: 'petsFound',
+    icon: '🐾',
+    desc: (n) => `Finde ${n} Haustiere.`,
+    steps: [
+      [1, 'Haustierbesitzer'],
+      [5, 'Streichelzoo'],
+      [15, 'Arche Noah'],
+    ],
+    reward: (i) => ({ rare: 0.05 * (i + 1) }),
+  },
+  {
+    key: 'rebirths',
+    icon: '🌅',
+    desc: (n) => `Werde ${n}-mal wiedergeboren.`,
+    steps: [
+      [1, 'Neuanfang'],
+      [5, 'Reinkarnations-Profi'],
+      [25, 'Samsara-Stammgast'],
+    ],
+    reward: (i) => ({ wisdom: 0.05 * (i + 1) }),
+  },
+  {
+    key: 'paradigmShifts',
+    icon: '🔄',
+    desc: (n) => `Leite ${n} Paradigmenwechsel ein.`,
+    steps: [
+      [1, 'Thomas Kuhn wäre stolz'],
+      [5, 'Wissenschaftliche Revolution'],
+    ],
+    reward: () => ({ research: 0.1 }),
+  },
+  {
+    key: 'bigBangs',
+    icon: '💥',
+    desc: (n) => `Löse ${n} Urknall(e) aus.`,
+    steps: [
+      [1, 'Es werde Licht'],
+      [3, 'Multiversums-Tourist'],
+    ],
+    reward: () => ({ xp: 0.1 }),
+  },
 ];
 
 function statAchievements(): AchievementDef[] {

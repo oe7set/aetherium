@@ -4,6 +4,7 @@ import { useGame, type TabId } from '../store/gameStore';
 import { AchievementToast } from './AchievementToast';
 import { ActiveActionBar } from './ActiveActionBar';
 import { BuffBar } from './BuffBar';
+import { Confetti } from './Confetti';
 import { BottomSheet } from './BottomSheet';
 import { Feed } from './Feed';
 import { Header } from './Header';
@@ -12,6 +13,7 @@ import { InventoryPanel } from './inventory/InventoryPanel';
 import { LevelUpBanner } from './LevelUpBanner';
 import { MenuPanel } from './menu/MenuPanel';
 import { OfflineModal } from './OfflineModal';
+import { QuestsPanel } from './quests/QuestsPanel';
 import { ResearchPanel } from './science/ResearchPanel';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
@@ -71,6 +73,7 @@ function MobileLayout() {
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
         {tab === 'skills' && <MobileSkills />}
         {tab === 'inventory' && <InventoryPanel />}
+        {tab === 'quests' && <QuestsPanel />}
         {tab === 'research' && <ResearchPanel />}
         {tab === 'menu' && <MenuPanel />}
       </BottomSheet>
@@ -102,6 +105,7 @@ function DesktopLayout() {
         <TabBar tabs={DESKTOP_CENTER_TABS} />
         <div className="center-panel">
           {center === 'skills' && <SkillView skillId={selected} />}
+          {center === 'quests' && <QuestsPanel />}
           {center === 'research' && <ResearchPanel />}
           {center === 'menu' && <MenuPanel />}
         </div>
@@ -122,6 +126,7 @@ export function App() {
       {desktop ? <DesktopLayout /> : <MobileLayout />}
       <LevelUpBanner />
       <AchievementToast />
+      <Confetti />
       <OfflineModal />
     </>
   );

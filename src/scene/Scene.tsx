@@ -7,6 +7,7 @@ import { getAction, getItem } from '../data';
 import { Arena } from './Arena';
 import { useGame } from '../store/gameStore';
 import { Character } from './Character';
+import { Growth } from './Growth';
 import { Island } from './Island';
 import { STATIONS } from './layout';
 import type { QualityProfile } from './quality';
@@ -106,6 +107,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <ResearchTower onTap={tap('research')} />
       <AcceleratorRing />
       <Obelisk />
+      <Growth />
       <Fields onTap={tap('farming')} />
       <Workbench onTap={tap('crafting')} />
       <HuntingGround onTap={tap('hunting')} />

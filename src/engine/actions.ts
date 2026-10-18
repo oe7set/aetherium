@@ -296,6 +296,9 @@ function mainActionRunner(s: GameState, rng: Rng, emit: Emit): Runner[] {
   const active = s.active;
   if (!active) return [];
   const def = getAction(active.actionId);
+  // Duration is computed once per simulation step (the factory runs every step).
+  let duration = -1;
+  const getDuration = () => (duration >= 0 ? duration : (duration = actionDuration(s, def)));
   return [
     {
       validate: () => {
@@ -310,12 +313,12 @@ function mainActionRunner(s: GameState, rng: Rng, emit: Emit): Runner[] {
         });
         return false;
       },
-      timeLeft: () => Math.max(0, actionDuration(s, def) - active.progress),
+      timeLeft: () => Math.max(0, getDuration() - active.progress),
       needsFire: () => !!def.requiresFire,
       progress: (dt) => {
         active.progress += dt;
       },
-      ready: () => active.progress >= actionDuration(s, def) - EPS,
+      ready: () => active.progress >= getDuration() - EPS,
       complete: () => {
         active.progress = 0;
         completeAction(s, def, rng, emit);

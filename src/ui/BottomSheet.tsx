@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 
 interface Props {
   open: boolean;
@@ -11,6 +11,11 @@ interface Props {
 export function BottomSheet({ open, onClose, children, label }: Props) {
   const startY = useRef<number | null>(null);
   const sheet = useRef<HTMLDivElement>(null);
+  const body = useRef<HTMLDivElement>(null);
+  // Each tab starts at the top.
+  useEffect(() => {
+    body.current?.scrollTo({ top: 0 });
+  }, [label]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     startY.current = e.clientY;
@@ -47,7 +52,9 @@ export function BottomSheet({ open, onClose, children, label }: Props) {
       >
         <span />
       </div>
-      <div className="sheet-body">{open && children}</div>
+      <div className="sheet-body" ref={body}>
+        {open && children}
+      </div>
     </div>
   );
 }

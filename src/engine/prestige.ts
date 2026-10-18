@@ -128,6 +128,10 @@ function resetRun(s: GameState): void {
     equippedTools: keepTools ? s.equippedTools : fresh.equippedTools,
     helpers: keepHelpers ? s.helpers.map((h) => ({ ...h, actionId: null, progress: 0 })) : [],
     combatSettings: s.combatSettings,
+    pets: s.pets,
+    catState: s.catState,
+    quests: s.quests,
+    tasks: s.tasks,
   };
   Object.assign(s, fresh, kept);
 

@@ -58,10 +58,18 @@ export function hasTech(s: GameState, id: string): boolean {
   return s.techs.includes(id);
 }
 
+const unlockCache = new WeakMap<GameState, { size: number; counts: Map<TechUnlock, number> }>();
+
 export function techUnlockCount(s: GameState, unlock: TechUnlock): number {
-  let n = 0;
-  for (const id of s.techs) n += (getTech(id).unlocks ?? []).filter((u) => u === unlock).length;
-  return n;
+  let cached = unlockCache.get(s);
+  if (!cached || cached.size !== s.techs.length) {
+    const counts = new Map<TechUnlock, number>();
+    for (const id of s.techs)
+      for (const u of getTech(id).unlocks ?? []) counts.set(u, (counts.get(u) ?? 0) + 1);
+    cached = { size: s.techs.length, counts };
+    unlockCache.set(s, cached);
+  }
+  return cached.counts.get(unlock) ?? 0;
 }
 
 export function techCost(id: string): number {

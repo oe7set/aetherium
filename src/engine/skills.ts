@@ -22,6 +22,22 @@ export function totalLevel(s: GameState): number {
   return Object.keys(s.skills).reduce((sum, id) => sum + skillLevel(s, id), 0);
 }
 
+/** States whose levels changed since the last achievement check (keeps the hot path cheap). */
+const levelsChanged = new WeakSet<GameState>();
+const levelsSeen = new WeakSet<GameState>();
+
+/** True once per level change (and on the first call for a state object). */
+export function takeLevelChange(s: GameState): boolean {
+  if (!levelsSeen.has(s)) {
+    levelsSeen.add(s);
+    levelsChanged.delete(s);
+    return true;
+  }
+  if (!levelsChanged.has(s)) return false;
+  levelsChanged.delete(s);
+  return true;
+}
+
 /** Adds raw XP (multipliers already applied) and emits level-ups. */
 export function addXp(s: GameState, skill: string, amount: number, emit: Emit): void {
   if (amount <= 0) return;
@@ -31,5 +47,6 @@ export function addXp(s: GameState, skill: string, amount: number, emit: Emit): 
   entry.xp += amount;
   const after = levelForXp(entry.xp, cap);
   emit({ type: 'xp', skill, amount });
+  if (after > before) levelsChanged.add(s);
   for (let lvl = before + 1; lvl <= after; lvl++) emit({ type: 'levelUp', skill, level: lvl });
 }

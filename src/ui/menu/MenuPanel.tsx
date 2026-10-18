@@ -23,7 +23,10 @@ export function MenuPanel() {
             role="tab"
             aria-selected={section === s}
             className={`segment ${section === s ? 'active' : ''}`}
-            onClick={() => setSection(s)}
+            onClick={(e) => {
+              setSection(s);
+              e.currentTarget.closest('.sheet-body, .center-panel')?.scrollTo({ top: 0 });
+            }}
           >
             {t(`menu.${s}`)}
           </button>

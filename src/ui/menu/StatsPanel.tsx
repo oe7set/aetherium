@@ -22,6 +22,24 @@ const LABELS: [string, string][] = [
   ['goldEarned', '🪙 Verdientes Gold'],
   ['goldSpent', '💸 Ausgegebenes Gold'],
   ['itemsLostFullInventory', '😭 Verlorene Items (Inventar voll)'],
+  ['monstersKilled', '⚔️ Besiegte Monster'],
+  ['bossKills', '👹 Besiegte Bosse'],
+  ['dungeonsCompleted', '🗝️ Dungeon-Durchläufe'],
+  ['deaths', '💀 Tode'],
+  ['damageDealt', '💥 Verursachter Schaden'],
+  ['damageTaken', '🩸 Erlittener Schaden'],
+  ['foodEaten', '🍗 Im Kampf gegessen'],
+  ['researchEarned', '🔬 Verdiente Forschungspunkte'],
+  ['techsResearched', '🧠 Erforschte Technologien'],
+  ['harvests', '🌾 Ernten'],
+  ['mutations', '🧬 Mutationen'],
+  ['helperTasks', '🧑‍🎓 Helfer-Aufgaben'],
+  ['questsCompleted', '📜 Quests'],
+  ['tasksCompleted', '📋 Aufträge'],
+  ['petsFound', '🐾 Haustiere'],
+  ['rebirths', '🌅 Wiedergeburten'],
+  ['paradigmShifts', '🔄 Paradigmenwechsel'],
+  ['bigBangs', '💥 Urknalle'],
 ];
 
 export function StatsPanel() {
@@ -56,7 +74,11 @@ export function StatsPanel() {
         {LABELS.map(([key, label]) => (
           <div key={key}>
             <dt>{label}</dt>
-            <dd>{key.startsWith('gold') ? num(stats[key] ?? 0) : int(stats[key] ?? 0)}</dd>
+            <dd>
+              {key.startsWith('gold') || key.startsWith('damage') || key === 'researchEarned'
+                ? num(stats[key] ?? 0)
+                : int(stats[key] ?? 0)}
+            </dd>
           </div>
         ))}
         {favorite && (

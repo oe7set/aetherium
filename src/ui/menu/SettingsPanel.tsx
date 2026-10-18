@@ -1,6 +1,7 @@
 import type { GraphicsSetting, NumberFormat } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
+import { requestNotifications } from '../notify';
 
 const FORMATS: NumberFormat[] = ['short', 'scientific', 'engineering'];
 const GRAPHICS: GraphicsSetting[] = ['auto', 'low', 'medium', 'high'];
@@ -61,6 +62,17 @@ export function SettingsPanel() {
           onChange={(e) => setSetting('chatter', e.target.checked)}
         />
         <span>{t('menu.chatter')}</span>
+      </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.notifications}
+          onChange={async (e) => {
+            const want = e.target.checked;
+            setSetting('notifications', want ? await requestNotifications() : false);
+          }}
+        />
+        <span>🔔 {t('menu.notifications')}</span>
       </label>
       <label className="toggle">
         <input

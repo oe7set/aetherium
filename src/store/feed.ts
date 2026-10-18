@@ -34,7 +34,15 @@ import {
   TREND_DOWN_LINES,
   TREND_UP_LINES,
 } from '../data/flavor';
-import { flavor, formatNumber, type GameEvent, type NumberFormat, type Rng } from '../engine';
+import {
+  flavor,
+  formatNumber,
+  PET_MAP,
+  QUEST_MAP,
+  type GameEvent,
+  type NumberFormat,
+  type Rng,
+} from '../engine';
 
 export type FeedKind = 'info' | 'level' | 'rare' | 'warn' | 'chatter' | 'gold';
 
@@ -270,6 +278,29 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         out.feed.push({ kind: 'rare', text });
         break;
       }
+      case 'petFound': {
+        const pet = PET_MAP.get(e.pet);
+        if (pet) {
+          out.feed.push({
+            kind: 'rare',
+            text: `${pet.icon} UNGLAUBLICH! Ein Haustier: ${pet.name}! ${pet.desc}`,
+          });
+          out.popups.push({ kind: 'rare', text: `🐾 ${pet.name}` });
+        }
+        break;
+      }
+      case 'questCompleted': {
+        const q = QUEST_MAP.get(e.quest);
+        if (q)
+          out.feed.push({
+            kind: 'rare',
+            text: `${q.icon} Quest abgeschlossen: ${q.name}! ${q.giver}: ${q.outro}`,
+          });
+        break;
+      }
+      case 'taskCompleted':
+        out.feed.push({ kind: 'gold', text: `📋 Auftrag erledigt! Belohnung eingesackt.` });
+        break;
       case 'intelligence':
         out.feed.push({
           kind: 'rare',

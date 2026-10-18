@@ -19,6 +19,8 @@ export interface Settings {
   graphics: GraphicsSetting;
   /** Battery saver: no 3D at all, 2D world only. */
   batteryMode: boolean;
+  /** Browser notifications while the tab is in the background. */
+  notifications: boolean;
 }
 
 export interface ActiveAction {
@@ -94,6 +96,17 @@ export interface PrestigeState {
   runStartedAt: number;
 }
 
+export interface TaskState {
+  id: string;
+  template: string;
+  period: 'day' | 'week';
+  stat: string;
+  target: number;
+  /** Stat value when the task was rolled. */
+  baseline: number;
+  claimed: boolean;
+}
+
 export interface BuffState {
   id: string;
   remaining: number;
@@ -144,9 +157,13 @@ export interface GameState {
   plots: PlotState[];
   helpers: HelperState[];
   prestige: PrestigeState;
+  pets: string[];
+  catState: 'unknown' | 'alive' | 'ghost';
+  quests: { active: Record<string, Record<string, number>>; done: string[] };
+  tasks: { day: string; week: string; list: TaskState[] };
 }
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 
 export function defaultSettings(): Settings {
   return {
@@ -156,6 +173,7 @@ export function defaultSettings(): Settings {
     chatter: true,
     graphics: 'auto',
     batteryMode: false,
+    notifications: false,
   };
 }
 
@@ -201,6 +219,10 @@ export function newGame(now: number = Date.now()): GameState {
     ],
     helpers: [],
     prestige: defaultPrestige(now),
+    pets: [],
+    catState: 'unknown',
+    quests: { active: {}, done: [] },
+    tasks: { day: '', week: '', list: [] },
   };
 }
 
@@ -252,6 +274,12 @@ export function cloneState(s: GameState): GameState {
       laws: [...s.prestige.laws],
       multiverse: { ...s.prestige.multiverse },
     },
+    pets: [...s.pets],
+    quests: {
+      active: Object.fromEntries(Object.entries(s.quests.active).map(([k, v]) => [k, { ...v }])),
+      done: [...s.quests.done],
+    },
+    tasks: { ...s.tasks, list: s.tasks.list.map((t) => ({ ...t })) },
   };
 }
 

@@ -64,29 +64,48 @@ UI / Szene ──dispatch(action)──▶ store ──▶ engine (pure) ──�
 - [x] Zahlenformate (kurz / wissenschaftlich / technisch), Einstellungen, Debug-Panel (nur Dev)
 - [x] Erste Flavor-Texte (Ladetipps, Level-Up-Sprüche, Item-Beschreibungen)
 
-### Phase 2 – 3D-Welt
+### Phase 2 – 3D-Welt ✅
 
-R3F + drei lazy geladen, Low-Poly-Insel mit Instancing, Spielfigur mit Lauf-/Arbeitsanimation,
-klickbare Bäume/Felsen/Feuer, Touch-Kamera (Drehen/Pinch), Qualitätsstufen mit Auto-Erkennung,
-Akku-Modus (3D aus), Render-Pause bei verstecktem Tab, Tag/Nacht.
+R3F-Insel (lazy), Instancing, Spielfigur mit Animationen, antippbare Stationen, Touch-Kamera,
+Qualitätsstufen mit Auto-Erkennung, Akku-Modus, Render-Pause, Tag/Nacht.
 
-### Phase 3 – Handwerk
+### Phase 3 – Handwerk ✅
 
-Schmelzen, Schmieden (Werkzeuge ersetzen Krämer-Käufe), Angeln (Schrödingers Fisch), Markt mit
-Angebot/Nachfrage, Achievements, `flavor.ts` auf ≥150 Einträge.
+Schmieden (Barren, Werkzeuge, Waffen, Rüstung, Schmuck), Angeln (Schrödingers Fisch), dynamischer Markt,
+130+ Erfolge mit Boni, Modifikator-System, Glücks-Events, Engine-Runner.
 
-### Phase 4 – Kampf
+### Phase 4 – Kampf ✅
 
-Gebiete, Monster, Ausrüstungsslots + Seltenheiten, Food heilt, Loot-Tabellen, erster Boss in 3D.
+5 Kampf-Skills, 18 Monster in 6 Gebieten, 3 Dungeons mit Phasen-Bossen (Peer Reviewer #2), Handwerk,
+8 Ausrüstungsslots, Auto-Essen, 3D-Arena.
 
-### Phase 5 – Wissenschaft & Magie
+### Phase 5 – Wissenschaft & Magie ✅
 
-Forschungspunkte + Tech-Tree, Alchemie (Periodensystem-Codex), Verzauberung, Helfer/Automatisierung.
+Tech-Baum (39 Techs), Periodensystem-Codex (118 Elemente), Alchemie, Verzauberung, Landwirtschaft mit
+Mutationen, Jagen, Arkanes Schürfen, Helfer.
 
-### Phase 6 – Prestige
+### Phase 6 – Prestige ✅
 
-Wiedergeburt (Weisheit), Paradigmenwechsel (Naturgesetze), Balancing-Pass.
+Wiedergeburt (Weisheit, Ahnen-Talente, Level 120), Paradigmenwechsel (Naturgesetze), Urknall (Multiversum),
+Balancing-Pass mit analytischem Progressionstest.
 
-### Phase 7 – Feinschliff
+### Phase 7 – Feinschliff ✅
 
-Juice, Sounds (WebAudio), Quests, Pets, Statistiken, PWA, wachsende Welt, Performance-Pass.
+Haustiere, Quests, Tages-/Wochenaufträge, WebAudio-Sounds, Benachrichtigungen, Konfetti, Long-Press-Tooltips,
+PWA, wachsende Welt, erweiterte Statistiken.
+
+## Weitere Annahmen ab Phase 3
+
+10. **Ein Modifikator-System** (`engine/modifiers.ts`) bündelt alle Boni als flache Keys (`xp.mining`, `speed` …).
+11. **Engine-Runner**: Aktion, Kampf und Helfer laufen als parallele Runner im selben ereignisgesteuerten Loop.
+12. **Tod im Kampf** kostet keine Items (keine Frust-Mechanik).
+13. **Skills hinter Forschung**: Landwirtschaft, Jagen, Alchemie, Verzauberung, Arkanes Schürfen werden über den Tech-Baum
+    freigeschaltet – so bekommt die Forschung früh einen spürbaren Zweck.
+14. **Aufträge** laufen in Echtzeit (Kalendertag/-woche), nicht in Simulationszeit.
+15. **Prestige-Bonus** hängt an der lebenslang verdienten Weisheit; Ausgeben für Talente kostet keinen Bonus.
+
+## Ideen für danach
+
+- Englische Übersetzung über `tContent`-Overlays.
+- Gilden-/Leaderboard-Light (Export-Codes vergleichen), saisonale Events.
+- Mehr 3D-Modelle (eigene glTF), Animationen pro Monster, Wetter.

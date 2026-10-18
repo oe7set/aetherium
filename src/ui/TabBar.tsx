@@ -1,10 +1,23 @@
 import { t } from '../i18n';
+import { affordableTechs, QUEST_MAP, questProgress, taskProgress } from '../engine';
 import { useGame } from '../store/gameStore';
 import { TABS } from './tabs';
 
 export function TabBar({ tabs = TABS }: { tabs?: typeof TABS }) {
   const tab = useGame((s) => s.ui.tab);
   const setUi = useGame((s) => s.setUi);
+  // Badges: claimable tasks/quests and affordable research draw attention to new goals.
+  const questBadge = useGame(
+    (s) =>
+      s.game.tasks.list.filter((tk) => !tk.claimed && taskProgress(s.game, tk) >= tk.target)
+        .length +
+      Object.keys(s.game.quests.active).filter((id) => {
+        const q = QUEST_MAP.get(id);
+        return q && questProgress(s.game, q).every((p) => p.done);
+      }).length,
+  );
+  const researchBadge = useGame((s) => affordableTechs(s.game).length);
+  const badges: Partial<Record<string, number>> = { quests: questBadge, research: researchBadge };
   return (
     <nav className="tabbar" aria-label="Navigation">
       {tabs.map((tb) => (
@@ -23,6 +36,7 @@ export function TabBar({ tabs = TABS }: { tabs?: typeof TABS }) {
             {tb.icon}
           </span>
           <span className="tab-label">{t(tb.label)}</span>
+          {(badges[tb.id] ?? 0) > 0 && <span className="tab-badge">{badges[tb.id]}</span>}
         </button>
       ))}
     </nav>
