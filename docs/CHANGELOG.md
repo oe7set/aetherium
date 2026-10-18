@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.11.0] – Musik & schönere Insel
+
+### Hinzugefügt
+
+- **Prozedurale Musik** – live im Browser erzeugt, ohne Audiodateien: ein eigenes Thema für Insel (ruhig, D-Dur),
+  Dorf (Volksmusik mit Laute), Held (geheimnisvoll, dorisch) und Ätherriss (treibend mit Bass, Arpeggio und Beat).
+  Wiederkehrende Motive mit Variationen, weiche Übergänge zwischen den Bereichen, pausiert im Hintergrund.
+  Einstellungen → 🔊 Klang: Musik an/aus und Lautstärke.
+
+### Geändert
+
+- **Insel**: Grasflecken, sattes Ufergrün am Fluss, Sandstrand am Rand und Trampelpfade von der Mitte zu jeder
+  Station; der Fluss leuchtet und endet sauber am Strand.
+- Meldungen erscheinen auf der Insel über dem Chronik-Banner statt oben (dort gehören Erfolge und Level-Ups hin).
+- Klang-Einstellungen stehen jetzt ganz oben.
+- README auf den aktuellen Stand gebracht.
+
 ## [1.10.0] – Bequemer auf dem Handy
 
 ### Geändert

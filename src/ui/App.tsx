@@ -17,6 +17,7 @@ import { VillagePanel } from './village/VillagePanel';
 import { RiftPanel } from './rift/RiftPanel';
 import { useRiftRun } from './rift/runStore';
 import { usePerfClass } from './perf';
+import { setMusic, type MusicTheme } from './music';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
@@ -53,6 +54,24 @@ function useKeyboardShortcuts() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+}
+
+/** Background music follows the area: island, village, hero menu or a running rift. */
+function useBackgroundMusic() {
+  const enabled = useGame((s) => s.game.settings.music);
+  const volume = useGame((s) => s.game.settings.musicVolume);
+  const tab = useGame((s) => s.ui.tab);
+  const inRift = useRiftRun((s) => s.run !== null);
+  const theme: MusicTheme = inRift
+    ? 'rift'
+    : tab === 'village'
+      ? 'village'
+      : tab === 'rift'
+        ? 'hero'
+        : 'island';
+  useEffect(() => {
+    setMusic({ enabled, volume, theme });
+  }, [enabled, volume, theme]);
 }
 
 function MobileSkills() {
@@ -141,6 +160,7 @@ export function App() {
   const inRift = useRiftRun((s) => s.run !== null);
   useKeyboardShortcuts();
   usePerfClass();
+  useBackgroundMusic();
   return (
     <>
       {desktop ? <DesktopLayout /> : <MobileLayout />}

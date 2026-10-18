@@ -26,6 +26,9 @@ export interface Settings {
   performance: 'auto' | 'eco' | 'smooth';
   /** Vibration feedback on rewards. */
   haptics: boolean;
+  /** Procedural background music and its volume (0–1). */
+  music: boolean;
+  musicVolume: number;
 }
 
 export interface ActiveAction {
@@ -403,6 +406,8 @@ export function defaultSettings(): Settings {
     notifications: false,
     performance: 'auto',
     haptics: true,
+    music: true,
+    musicVolume: 0.5,
   };
 }
 

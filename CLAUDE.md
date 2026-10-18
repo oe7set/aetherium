@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.10.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.11.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
@@ -51,6 +51,7 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Animationen) im Eco per CSS abschalten, 3D läuft `frameloop="demand"` mit `FrameTicker`. Neue Dauer-Animationen
   immer in die Eco-Liste in `theme.css` aufnehmen. Navigation: `ui/QuickNav.tsx`; Unterbereiche liegen im Store (`ui`).
 - Inhalte-Erweiterungen in `data/expansion.ts` (Bäume, Erze, Jagd, Arkanes, Archäologie).
+- Musik: `ui/music.ts` (prozeduraler Sequenzer, Thema je Bereich via `setMusic`).
 - UI-Nebenwirkungen (Sound `ui/audio.ts`, Benachrichtigungen `ui/notify.ts`) hängen in `applyEvents` im Store.
 - PWA über `vite-plugin-pwa` (Konfiguration in `vite.config.ts`), Icons in `public/icons/`.
 - Boni: `registerModifierSource` + `mod(s, key)`/`modFor(s, key, skill)` (Keys siehe `data/types.ts`

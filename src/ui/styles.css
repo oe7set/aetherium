@@ -2048,3 +2048,16 @@ button.chip {
   color: var(--green);
   font-weight: 700;
 }
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 2px;
+}
+.setting-row input[type='range'] {
+  flex: 1;
+  max-width: 220px;
+  accent-color: var(--aether, #5ef2ff);
+}

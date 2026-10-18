@@ -1048,6 +1048,9 @@ h4.rift-h4::before,
   /* Feed: only the newest line, a short toast that fades away; tap opens the full log. */
   .feed-compact {
     pointer-events: auto;
+    /* Above the Chronik banner – the top belongs to achievement and level-up toasts. */
+    top: auto;
+    bottom: 84px;
   }
   .feed-compact li {
     font-size: 12px;

@@ -19,6 +19,11 @@ function audio(): AudioContext | null {
   return ctx;
 }
 
+/** Shared context for the music module (null until the browser allows audio). */
+export function audioContext(): AudioContext | null {
+  return audio();
+}
+
 /** Call from a user gesture once so iOS allows sound. */
 export function unlockAudio(): void {
   audio();

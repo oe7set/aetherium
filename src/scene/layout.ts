@@ -40,12 +40,12 @@ export const ISLAND_RADIUS = 11;
 
 /** River: a gentle S-curve across the island, sampled as points. */
 export const RIVER_POINTS: Vec2[] = [
-  [-1.5, -12],
+  [-1.5, -10.9],
   [-0.4, -7],
   [1.2, -3],
   [0.4, 0.5],
   [2.6, 5],
-  [3.4, 12],
+  [3.3, 10.9],
 ];
 
 export function stationFor(skill: string | null): StationDef | undefined {

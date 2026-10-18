@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.10.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.11.0**.
 
 ## 1. Der große Kreislauf
 
@@ -116,6 +116,12 @@
 - Weitere Wege: Schnellzugriff 🧭 (Header, Taste K), antippbare Header-Chips, Chronik-„Los", Meldungs-Hinweis →
   Ereignis-Log, Untätig-Leiste → Skills.
 
+**Atmosphäre**
+
+- Musik `ui/music.ts` (Sequenzer, Themen je Bereich, gesteuert über `useBackgroundMusic` in `App.tsx`),
+  Soundeffekte `ui/audio.ts` (gleicher AudioContext). Inselboden: vertexgefärbte Scheibe in `scene/Island.tsx`
+  (Pfade folgen automatisch `STATIONS`).
+
 ## 5. Offene Punkte / was noch fehlt
 
 Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und werden hier gestrichen.
@@ -128,7 +134,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.
 - [ ] Endgame (Phase 13): Meisterschaft pro Aktion, Endlos-Riss, Titel und Kosmetik.
 - [ ] Prestige-Naturgesetze, die auch im Dorf und im Riss wirken (Phase 11).
-- [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner, 6 Biome. Prozedurale Musik.
+- [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner.
+- [ ] Musik: eigene Themen für Wochenboss/Bosskampf und Nacht, Stinger bei Level-Up.
 
 **Qualität**
 

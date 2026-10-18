@@ -63,6 +63,17 @@ describe('Speichern & Laden', () => {
     expect(loaded.equippedTools.woodcutting).toBe('axe_stone');
     expect(loaded.settings.numberFormat).toBe('short');
   });
+
+  it('alte Einstellungen bekommen Musik mit Standardlautstärke', () => {
+    const loaded = deserialize({
+      v: SAVE_VERSION,
+      savedAt: 0,
+      data: { settings: { sound: false, numberFormat: 'scientific' } },
+    });
+    expect(loaded.settings.sound).toBe(false);
+    expect(loaded.settings.music).toBe(true);
+    expect(loaded.settings.musicVolume).toBe(0.5);
+  });
 });
 
 describe('Migrationen', () => {

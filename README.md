@@ -1,25 +1,63 @@
 # Æ AETHERIUM – Von der Steinaxt zum Teilchenbeschleuniger
 
-Ein augenzwinkerndes **Incremental-/Idle-RPG** im Browser, **mobile first**. Du beginnst als Bauer mit
-einer Steinaxt und arbeitest dich über Alchemie und Mittelalter-Handwerk bis zu Quantenphysik und
-Teilchenbeschleunigern hoch. Vorbilder: RuneScape-Skilling, Melvor Idle, Cookie Clicker, Antimatter Dimensions.
+Ein augenzwinkerndes **Incremental-/Idle-RPG** im Browser, **mobile first** und auf Deutsch. Du beginnst als
+Bauer mit einer Steinaxt auf einer kleinen 3D-Insel. Später baust du ein Dorf im Travian-Stil, schickst einen
+Helden auf Abenteuer und kämpfst dich als Survivor-Roguelike durch den Ätherriss. Alles hängt zusammen und
+greift ineinander.
 
-**Spielen:** https://oe7set.github.io/aetherium/ (nach dem ersten Deploy von `main`)
+**Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Features (v1.0 – alle 7 Phasen)
+## Was dich erwartet (v1.11)
 
-- **22 Skills** im Old-School-Stil (OSRS-XP-Kurve, Level 99 bzw. 120 mit Prestige): Holzfällen, Bergbau, Angeln,
-  Landwirtschaft (Echtzeit + Mendel-Mutationen), Jagen, Arkanes Schürfen, Feuermachen, Kochen, Schmieden, Handwerk,
-  Alchemie, Verzauberung, Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte.
-- **3D-Low-Poly-Insel** (React Three Fiber) mit Spielfigur, antippbaren Stationen, Tag/Nacht und einer Welt, die mit
-  dem Fortschritt wächst – bis zum Teilchenbeschleuniger-Ring. Akku-Modus mit 2D-Ansicht.
-- **Kampf** mit 18 Monstern, 3 Dungeons und Phasen-Bossen wie _Der Peer Reviewer #2_; Ausrüstung bis _Peer-Reviewed_.
-- **Forschung**: Tech-Baum mit 39 Technologien, **Periodensystem-Codex** mit allen 118 Elementen, **Helfer**.
-- **Wirtschaft**: dynamischer Markt mit Angebot/Nachfrage, Krämer, Inventar mit Sortierung/Filter/Suche.
-- **Prestige** in drei Ebenen: Wiedergeburt, Paradigmenwechsel (Naturgesetze wählen), Urknall.
-- **Motivation**: 200+ Erfolge, Quests, Tages-/Wochenaufträge, Haustiere (1/5.000), Glücks-Events, Konfetti, Sounds.
-- **Offline-Fortschritt** (24 h, per Forschung/Prestige erweiterbar), Autosave, Export/Import, **PWA** (installierbar).
-- Deutsch, humorvoll, über 200 eigene Flavor-Texte.
+**🏝️ Die Insel**
+
+- 18 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 250 Aktionen.
+- Sammeln: Holzfällen (20 Baumarten), Bergbau, Angeln, Landwirtschaft (Echtzeit-Beete, Mutationen), Jagen,
+  Archäologie.
+- Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes.
+- Kampf: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte gegen 21 Monster in Dungeons mit Phasen-Bossen.
+- 3D-Low-Poly-Insel (React Three Fiber) mit antippbaren Stationen, Pfaden, Strand, Fluss und Tag/Nacht.
+  Sie wächst mit dem Fortschritt bis zum Teilchenbeschleuniger-Ring.
+- Forschung mit Tech-Baum, Periodensystem-Codex (118 Elemente) und Helfern.
+- Dynamischer Markt, Krämer und Werkzeuge.
+
+**🏘️ Das Dorf (wie Travian)**
+
+- 18 Rohstofffelder, 20 Gebäude, 7 Truppentypen, Bauschleifen.
+- Raubzüge mit echter Kampfformel, Oasen annektieren, Invasionen abwehren.
+- Kulturpunkte und bis zu 5 Dörfer.
+- Weltkarte als Raster mit Lagern, Oasen, Ruinen, freien Tälern und Abenteuern, auch im Vollbild.
+- Das Dorf stärkt die Insel (Tempo, XP, Gold), die Insel versorgt das Dorf über den Hafen.
+
+**🦸 Der Held, einer für alles**
+
+- Level, 4 Attribute, 6 Ausrüstungsplätze mit 18 Gegenständen in 3 Seltenheitsstufen, Gesundheit.
+- Er wohnt im Dorf, verteidigt es, plündert mit und erobert Oasen.
+- Abenteuer auf der Karte: automatisch erkunden oder **live als Echtzeit-Dungeon** spielen.
+
+**🌀 Der Ätherriss (Survivor-Roguelike)**
+
+- 15-Minuten-Läufe gegen Horden, 20 Waffen mit Evolutionen, 6 Biome, 6 Kampfstile, 19 Meta-Talente.
+- **Wochenboss**: jede Woche eine neue Prüfung mit eigener Wochenregel und großer Belohnung.
+
+**🎁 Belohnungen und Motivation**
+
+- Tägliche Belohnung mit 7-Tage-Serie.
+- Ruhmesleiter mit 50 Stufen, Chronik als Zielkette durch alle Systeme.
+- **Sammelbuch** mit 14 Sets und Dauer-Boni, fast 300 Erfolge, Quests, Aufträge, Haustiere.
+- Prestige in drei Ebenen: Wiedergeburt, Paradigmenwechsel, Urknall. Dorf, Held und Riss bleiben dabei erhalten.
+
+**🎵 Atmosphäre**
+
+- Prozedurale Musik ohne Audiodateien: je Bereich ein eigenes Thema (Insel, Dorf, Held, Riss).
+- Soundeffekte, Konfetti, Belohnungs-Enthüllungen, Vibration.
+- Über 200 humorvolle Texte.
+
+**📱 Komfort**
+
+- Offline-Fortschritt (24 h und mehr), Autosave, Export/Import.
+- Akku-Modus mit Eco-Leistungsprofil (das Handy bleibt kühl) und 2D-Ansicht ohne 3D.
+- Schnellzugriff 🧭 zu jedem Bereich.
 
 ## Steuerung
 
@@ -28,28 +66,40 @@ Teilchenbeschleunigern hoch. Vorbilder: RuneScape-Skilling, Melvor Idle, Cookie 
 | Aktion starten       | Station auf der Insel antippen oder Skills → Starten | Klick / Skills-Liste links |
 | Aktion beschleunigen | Aktionsleiste unten antippen                         | Klick oder **Leertaste**   |
 | Aktion stoppen       | ■                                                    | **S**                      |
-| Tabs wechseln        | Tab-Leiste                                           | **1–5**                    |
-| Panel schließen      | Griff antippen/runterziehen                          | **Esc**                    |
+| Bereiche wechseln    | Tab-Leiste unten                                     | **1–6**                    |
+| Überall hinspringen  | 🧭 oben links                                        | **K** oder **/**           |
+| Fenster schließen    | ✕ oder Griff nach unten ziehen                       | **Esc**                    |
+| Riss: laufen         | Daumen-Joystick                                      | **WASD** / Pfeiltasten     |
 
 ## Entwicklung
 
 ```bash
 npm install
 npm run dev        # Dev-Server (mit Debug-Panel im Menü)
-npm test           # Vitest (Engine)
+npm test           # Vitest (Engine, Daten, Balancing-Bots)
 npm run lint       # ESLint
 npm run typecheck  # TypeScript strict
 npm run build      # Produktions-Build nach dist/
 ```
 
-Architektur und Konventionen: [`CLAUDE.md`](./CLAUDE.md), Plan: [`docs/PLAN.md`](./docs/PLAN.md),
-Balancing: [`docs/BALANCING.md`](./docs/BALANCING.md), Änderungen: [`docs/CHANGELOG.md`](./docs/CHANGELOG.md).
+Stack: TypeScript (strict), Vite, React, Zustand, React Three Fiber, break_eternity.js, vite-plugin-pwa.
+Die Spiel-Engine ist reines TypeScript ohne React und DOM. Sie ist deterministisch testbar und rechnet auch
+Offline-Fortschritt.
+
+**Dokumentation:**
+
+- [`docs/SYSTEME.md`](./docs/SYSTEME.md): wie alle Systeme zusammenhängen und was noch offen ist.
+- [`CLAUDE.md`](./CLAUDE.md): Architektur und Konventionen.
+- [`docs/CHANGELOG.md`](./docs/CHANGELOG.md): Änderungen.
+- [`docs/BALANCING.md`](./docs/BALANCING.md): Balancing.
+- [`docs/PLAN.md`](./docs/PLAN.md) und [`docs/PLAN-2.md`](./docs/PLAN-2.md): Pläne.
 
 ### Deployment
 
-Jeder Push auf `main` baut und deployt automatisch auf GitHub Pages
-(`.github/workflows/deploy.yml`). Einmalig nötig: **Settings → Pages → Source: „GitHub Actions"**.
+Jeder Push auf `main` baut und deployt automatisch auf GitHub Pages (`.github/workflows/deploy.yml`).
+Einmalig nötig: **Settings → Pages → Source: „GitHub Actions"**.
 
 ## Lizenz
 
-MIT – siehe [LICENSE](./LICENSE). Alle Inhalte sind selbst erstellt; Icons sind System-Emoji.
+MIT, siehe [LICENSE](./LICENSE). Alle Inhalte sind selbst erstellt. Icons sind System-Emoji, Musik und Klänge
+werden live im Browser erzeugt.
