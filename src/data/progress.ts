@@ -86,6 +86,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'albumItems', per: 2, label: 'Sammelbuch-Funde', icon: '📗' },
   { stat: 'collectionsDone', per: 40, label: 'Sammelbuch-Sets', icon: '📚' },
   { stat: 'weeklyWins', per: 60, label: 'Wochenbosse', icon: '🦹' },
+  { stat: 'masteryLevels', per: 3, label: 'Meisterschaftsstufen', icon: '🏅' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------

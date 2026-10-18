@@ -102,6 +102,9 @@ export function playEventSounds(events: GameEvent[]): void {
       case 'elementDiscovered':
         kinds.add('rare');
         break;
+      case 'mastery':
+        if (e.level % 10 === 0) kinds.add('rare');
+        break;
       case 'achievement':
       case 'questCompleted':
       case 'techResearched':

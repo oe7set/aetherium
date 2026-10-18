@@ -106,6 +106,16 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         out.popups.push({ kind: 'rare', text: `✨ ${item.icon} ${item.name}` });
         break;
       }
+      case 'mastery': {
+        const action = getAction(e.actionId);
+        out.feed.push({
+          kind: 'level',
+          text: `🏅 Meisterschaft ${action.icon} ${action.name}: Stufe ${e.level} – schneller und öfter doppelt.`,
+        });
+        if (e.level % 10 === 0 || e.level === 99)
+          out.popups.push({ kind: 'rare', text: `🏅 ${action.icon} Meisterschaft ${e.level}` });
+        break;
+      }
       case 'albumFound': {
         const item = getItem(e.item);
         const set = COLLECTION_MAP.get(e.set);

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.19.0] – Meisterschaft
+
+### Hinzugefügt
+
+- **Meisterschaft pro Aktion** 🏅 (Endgame-Ziel für jede einzelne Aktion): Jede Aktion steigt mit jedem
+  Abschluss auf, von Stufe 1 bis 99 (Stufe 10 nach ~800, Stufe 50 nach ~27 000, Stufe 99 nach ~123 000
+  Abschlüssen). Pro Stufe +0,2 % Tempo und +0,1 % Doppelt-Chance, auf 99 zusätzlich +5 % Doppelt.
+  Zählt rückwirkend alle bisherigen Abschlüsse und bleibt bei Wiedergeburten erhalten.
+- Abzeichen mit Fortschrittsbalken auf jeder Aktionskarte (Tooltip mit Bonus), Meldung bei jedem Aufstieg,
+  Popup und Klang alle 10 Stufen, neue Erfolge und eine Quelle für die Ruhmesleiter.
+
 ## [1.18.1] – Desktop aufgeräumt
 
 ### Behoben (Desktop)

@@ -8,6 +8,10 @@ import {
   formatDuration,
   formatPercent,
   formatSeconds,
+  MASTERY_MAX,
+  masteryDouble,
+  masteryProgress,
+  masterySpeed,
   skillLevel,
   toolSpeed,
   xpMultiplierFor,
@@ -16,6 +20,22 @@ import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { Tip } from '../Tip';
+
+/** 🏅 mastery level with a thin progress ring of the next level; tooltip shows the bonus. */
+function MasteryBadge({ value }: { value: string }) {
+  const [level = 1, fraction = 0] = value.split('|').map(Number);
+  const speed = masterySpeed(level);
+  const dbl = masteryDouble(level);
+  return (
+    <span
+      className={`mastery-badge ${level >= MASTERY_MAX ? 'max' : ''}`}
+      style={{ '--m': fraction } as React.CSSProperties}
+      title={`Meisterschaft ${level}/${MASTERY_MAX}: +${formatPercent(speed, 1)} Tempo, +${formatPercent(dbl, 1)} Doppelt-Chance. Steigt mit jedem Abschluss dieser Aktion.`}
+    >
+      🏅 {level}
+    </span>
+  );
+}
 
 function chanceLabel(chance: number): string {
   return chance >= 0.1
@@ -33,6 +53,10 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const derived = useGame((s) => {
     const g = s.game;
     return `${actionDuration(g, def)}|${actionXp(g, def)}|${burnChance(g, def)}|${toolSpeed(g, def.skill)}|${xpMultiplierFor(g, def.skill)}`;
+  });
+  const masteryKey = useGame((s) => {
+    const m = masteryProgress(s.game, def.id);
+    return `${m.level}|${m.fraction.toFixed(3)}`;
   });
   const start = useGame((s) => s.start);
   const stop = useGame((s) => s.stop);
@@ -68,6 +92,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
         <div className="action-title">
           {def.name}
           <small className="req">Lvl {def.levelReq}</small>
+          <MasteryBadge value={masteryKey} />
         </div>
         {def.desc && <small className="action-desc">{def.desc}</small>}
         <div className="action-stats">

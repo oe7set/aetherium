@@ -67,6 +67,18 @@ const STAT_SERIES: StatSeries[] = [
     reward: (i) => ({ xp: 0.01 * (i + 1) }),
   },
   {
+    key: 'masteryLevels',
+    icon: '🏅',
+    desc: (n) => `Steige insgesamt ${n} Meisterschaftsstufen auf.`,
+    steps: [
+      [10, 'Übung macht den Meister'],
+      [100, 'Routiniert'],
+      [500, 'Meister·in aller Klassen'],
+      [2000, 'Hat jede Bewegung im Schlaf drauf'],
+    ],
+    reward: (i) => ({ speed: 0.01 * (i + 1) }),
+  },
+  {
     key: 'weeklyWins',
     icon: '🦹',
     desc: (n) => `Besiege ${n} Wochenbosse.`,

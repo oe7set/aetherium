@@ -7,6 +7,7 @@ import { addItem, firstMissing, freeSlots, hasRoomFor, itemCount, removeItem } f
 import { invalidateMods, mod, modFor, registerModifierSource } from './modifiers';
 import type { Rng } from './rng';
 import { randInt } from './rng';
+import { masteryDouble, masteryLevel, masterySpeed } from './mastery';
 import { addXp, skillLevel } from './skills';
 import { addStat, type GameState } from './state';
 
@@ -39,7 +40,11 @@ export function actionDuration(s: GameState, def: ActionDef): number {
     BALANCE.LEVEL_SPEED_BONUS_CAP,
     levelsAbove * BALANCE.LEVEL_SPEED_BONUS,
   );
-  const speed = toolSpeed(s, def.skill) * (1 + levelBonus) * (1 + modFor(s, 'speed', def.skill));
+  const speed =
+    toolSpeed(s, def.skill) *
+    (1 + levelBonus) *
+    (1 + modFor(s, 'speed', def.skill)) *
+    (1 + masterySpeed(masteryLevel(s, def.id)));
   return Math.max(BALANCE.MIN_ACTION_TIME, def.baseTime / speed);
 }
 
@@ -63,7 +68,7 @@ export function actionXp(s: GameState, def: ActionDef): number {
 
 /** Chance that a completion yields double output. */
 export function doubleChance(s: GameState, def: ActionDef): number {
-  return Math.min(1, modFor(s, 'double', def.skill));
+  return Math.min(1, modFor(s, 'double', def.skill) + masteryDouble(masteryLevel(s, def.id)));
 }
 
 export type CheckResult = { ok: true } | { ok: false; reason: StopReason; missingItem?: string };
@@ -241,7 +246,13 @@ export function completeAction(
   }
 
   for (const h of completionHooks) h.fn(s, def, rng, emit, xpFactor);
+  const masteryBefore = masteryLevel(s, def.id);
   addStat(s, `action.${def.id}`);
+  const masteryAfter = masteryLevel(s, def.id);
+  if (masteryAfter > masteryBefore) {
+    addStat(s, 'masteryLevels');
+    emit({ type: 'mastery', actionId: def.id, level: masteryAfter });
+  }
   addStat(s, `skillActions.${def.skill}`);
   const stat = SKILL_STATS[def.skill];
   if (stat) addStat(s, stat);
