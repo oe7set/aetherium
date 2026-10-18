@@ -7,7 +7,15 @@ import { currentChronicle, dailyAvailable, passClaimable } from './progress';
 import { canStartRun } from './rift';
 import { affordableTechs } from './science';
 import type { GameState } from './state';
-import { activeVillage, canUpgradeBuilding, canUpgradeField } from './village';
+import { formatDuration } from './format';
+import {
+  activeVillage,
+  canUpgradeBuilding,
+  canUpgradeField,
+  invasionDefense,
+  invasionStrength,
+  invasionTarget,
+} from './village';
 import { V_BUILDINGS } from '../data/village';
 
 /**
@@ -19,7 +27,7 @@ export type AgendaTarget =
   | { area: 'chronicle' }
   | { area: 'skills' }
   | { area: 'inventory'; section: 'items' | 'album' }
-  | { area: 'village'; section: 'fields' | 'center' | 'reports' }
+  | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
   | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'quests' };
 
@@ -184,6 +192,18 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       kind: 'todo',
       target: { area: 'village', section: 'center' },
     });
+  if (s.village.protection <= 0 && s.village.invasionIn < 1800) {
+    const target = invasionTarget(s);
+    const ratio = invasionDefense(s, target).total / invasionStrength(s);
+    add({
+      id: 'invasion',
+      icon: '🌀',
+      title: `Riss-Horde naht: ${target.name}`,
+      detail: `in ${formatDuration(s.village.invasionIn)} – Verteidigung ${ratio >= 1.3 ? 'sicher' : ratio >= 0.9 ? 'knapp' : 'zu schwach'}`,
+      kind: 'todo',
+      target: { area: 'village', section: 'military' },
+    });
+  }
   if (s.village.unread > 0)
     add({
       id: 'reports',

@@ -59,7 +59,9 @@ import {
   heroStat,
   heroStrength,
   hurtHero,
+  rollHeroItem,
 } from './hero';
+import { combatLevel } from './combat';
 import { createVillage } from './villageWorld';
 
 export const V_BUILDING_MAP = new Map(V_BUILDINGS.map((b) => [b.id, b]));
@@ -904,13 +906,38 @@ export function invasionStrength(s: GameState): number {
   return Math.round((20 + Math.pow(pop, 1.15) * 2.2) * (1 + 0.06 * s.village.invasionsWon));
 }
 
+/** The rift attacks the most populous village. */
+export function invasionTarget(s: GameState): Village {
+  return s.village.villages.reduce((a, b) => (population(b) > population(a) ? b : a));
+}
+
+export interface InvasionDefense {
+  /** Troops at home incl. wall. */
+  troops: number;
+  /** Hero at home: own strength plus a share of the troops. */
+  hero: number;
+  /** Rift talents: every talent level hardens the village against the rift (+2 %, max +50 %). */
+  riftWard: number;
+  /** Island combat level: the islanders defend, too. */
+  militia: number;
+  total: number;
+}
+
+/** Everything that defends a village against a rift invasion – one formula for engine and UI. */
+export function invasionDefense(s: GameState, v: Village): InvasionDefense {
+  const troops = defenseValue(v, v.troops);
+  const hero = heroAtHome(s, v.id) ? troops * heroDefenseBonus(s) + heroDefense(s) : 0;
+  const talentLevels = Object.values(s.rift.talents).reduce((a, b) => a + b, 0);
+  const riftWard = (troops + hero) * Math.min(0.5, talentLevels * 0.02);
+  const militia = combatLevel(s) * 4;
+  return { troops, hero, riftWard, militia, total: troops + hero + riftWard + militia };
+}
+
 function invade(s: GameState, rng: Rng, emit: Emit): void {
-  const v = s.village.villages.reduce((a, b) => (population(b) > population(a) ? b : a));
+  const v = invasionTarget(s);
   const attack = invasionStrength(s) * (0.8 + rng() * 0.4);
   const heroHome = heroAtHome(s, v.id);
-  const defense =
-    defenseValue(v, v.troops) * (heroHome ? 1 + heroDefenseBonus(s) : 1) +
-    (heroHome ? heroDefense(s) : 0);
+  const defense = invasionDefense(s, v).total;
   const result = battle(attack, defense);
   if (heroHome) {
     gainHeroXp(s, Math.round(attack / 15), emit);
@@ -933,6 +960,8 @@ function invade(s: GameState, rng: Rng, emit: Emit): void {
     s.rift.essence += essence;
     s.rift.essenceTotal += essence;
     if (ITEM_MAP.has('aether')) gainItem(s, 'aether', 1 + Math.floor(attack / 300), emit);
+    // A defended village sometimes finds the horde's leader's gear.
+    if (rng() < 0.15) rollHeroItem(s, rng, s.hero.level + 2, false, 1);
   }
   const lost = V_RESOURCES.reduce((a, r) => a + plunder[r], 0);
   report(

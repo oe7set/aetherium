@@ -28,8 +28,11 @@ import {
   upgradeBuilding,
   upgradeField,
   type GameState,
+  invasionDefense,
+  invasionTarget,
+  agenda,
 } from '../src/engine';
-import { gameWith } from './helpers';
+import { gameWith, setLevel } from './helpers';
 
 const noop = () => {};
 
@@ -224,5 +227,30 @@ describe('Dorf: Expansion & Verflechtung', () => {
     s.skills.woodcutting = { xp: 1e7 };
     rebirth(s, noop);
     expect(activeVillage(s).fields[3]).toBe(4);
+  });
+});
+
+describe('Dorf: Invasionen verzahnt', () => {
+  it('Riss-Talente, Held und Inselkampf stärken die Verteidigung', () => {
+    const s = gameWith();
+    const v = invasionTarget(s);
+    const base = invasionDefense(s, v);
+    expect(base.total).toBeCloseTo(base.troops + base.hero + base.riftWard + base.militia);
+    setLevel(s, 'melee', 40);
+    setLevel(s, 'defence', 40);
+    expect(invasionDefense(s, v).militia).toBeGreaterThan(base.militia);
+    v.troops = { militia: 50 };
+    const troopsOnly = invasionDefense(s, v);
+    s.rift.talents = { t_might: 5, t_armor: 5 };
+    expect(invasionDefense(s, v).riftWard).toBeGreaterThan(troopsOnly.riftWard);
+  });
+
+  it('warnt eine halbe Stunde vorher in „Was jetzt?"', () => {
+    const s = gameWith();
+    s.village.protection = 0;
+    s.village.invasionIn = 600;
+    expect(agenda(s, Date.now()).some((i) => i.id === 'invasion')).toBe(true);
+    s.village.invasionIn = 7200;
+    expect(agenda(s, Date.now()).some((i) => i.id === 'invasion')).toBe(false);
   });
 });

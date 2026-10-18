@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { TROOPS, V_RES_INFO, V_RESOURCES, type TroopDef } from '../../data/village';
 import {
+  invasionDefense,
+  invasionStrength,
+  invasionTarget,
   annexOasis,
   HERO_CARRY,
   heroAtHome,
@@ -49,7 +52,7 @@ export function MilitaryView({ village: v }: { village: Village }) {
           <p className="small muted">Keine Truppen daheim. Die Kaserne wartet.</p>
         )}
         <p className="small muted">
-          Verteidigung gegen den Riss: <b>{Math.round(defenseValue(v, v.troops))}</b> · Angriff:{' '}
+          Truppen-Verteidigung: <b>{Math.round(defenseValue(v, v.troops))}</b> · Angriff:{' '}
           <b>{Math.round(attackValue(v, v.troops))}</b> · Tragkraft {short(carryOf(v.troops))}
         </p>
         <InvasionInfo />
@@ -150,18 +153,37 @@ export function MilitaryView({ village: v }: { village: Village }) {
 }
 
 function InvasionInfo() {
-  const vs = useGame.getState().game.village;
-  if (vs.protection > 0)
-    return (
-      <p className="small">
-        🕊️ Anfängerschutz: noch {duration(vs.protection)} keine Riss-Invasionen.
-      </p>
-    );
+  const game = useGame.getState().game;
+  const vs = game.village;
+  const target = invasionTarget(game);
+  const d = invasionDefense(game, target);
+  const threat = invasionStrength(game);
+  const ratio = d.total / threat;
+  const verdict =
+    ratio >= 1.3
+      ? { text: 'sicher', cls: 'ok' }
+      : ratio >= 0.9
+        ? { text: 'knapp', cls: 'warn' }
+        : { text: 'gefährdet', cls: 'bad' };
   return (
-    <p className="small">
-      🌀 Nächste Riss-Invasion in etwa {duration(vs.invasionIn)} · abgewehrt {vs.invasionsWon} ·
-      verloren {vs.invasionsLost}
-    </p>
+    <div className="v-invasion">
+      <p className="small">
+        {vs.protection > 0
+          ? `🕊️ Anfängerschutz: noch ${duration(vs.protection)} keine Riss-Invasionen.`
+          : `🌀 Nächste Riss-Invasion in etwa ${duration(vs.invasionIn)} – Ziel: ${target.name}.`}{' '}
+        Abgewehrt {vs.invasionsWon} · verloren {vs.invasionsLost}
+      </p>
+      <div className="v-defense">
+        <span>🛡️ Truppen & Mauer {Math.round(d.troops)}</span>
+        <span>🦸 Held {Math.round(d.hero)}</span>
+        <span>✨ Riss-Talente {Math.round(d.riftWard)}</span>
+        <span>⚔️ Inselwehr {Math.round(d.militia)}</span>
+      </div>
+      <p className={`small v-verdict ${verdict.cls}`}>
+        Verteidigung <b>{Math.round(d.total)}</b> gegen ca. <b>{Math.round(threat)}</b> –{' '}
+        <b>{verdict.text}</b>. Abwehr bringt Riss-Essenz, Äther und manchmal Heldenausrüstung.
+      </p>
+    </div>
   );
 }
 

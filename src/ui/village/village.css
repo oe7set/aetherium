@@ -904,3 +904,31 @@
     letter-spacing: -0.02em;
   }
 }
+
+/* Invasion defence breakdown */
+.v-invasion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.v-defense {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.v-defense span {
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--line);
+  font-size: 0.72rem;
+}
+.v-verdict.ok b:last-of-type {
+  color: var(--green);
+}
+.v-verdict.warn b:last-of-type {
+  color: var(--gold);
+}
+.v-verdict.bad b:last-of-type {
+  color: var(--red);
+}

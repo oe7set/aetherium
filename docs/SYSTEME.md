@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.14.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.15.0**.
 
 ## 1. Der große Kreislauf
 
@@ -67,6 +67,12 @@
 - Der Held wohnt in einem Dorf (`hero.home`) und kann umziehen.
 - Ist er zu Hause, verteidigt er das Dorf, läuft bei Raubzügen mit (trägt dann 200 Beute) und annektiert Oasen.
 - Oasen geben +25 % auf einen Rohstoff.
+
+**Riss → Dorf (Invasionen)**
+
+- Alle 2–4 h greift eine Riss-Horde das bevölkerungsreichste Dorf an (`invasionDefense` in `engine/village.ts`):
+  Truppen + Mauer, Held daheim, Riss-Talente (+2 %/Stufe, max. +50 %), Inselwehr (Kampfstufe × 4).
+  Abwehr → Essenz, Äther, 15 % Heldenausrüstung; Vorwarnung 30 min vorher in „Was jetzt?".
 
 **Dorf → Riss**
 
@@ -141,7 +147,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 - [ ] Wochenboss ausbauen: eigener Boss-Gegner mit Spezialangriffen statt des Biom-Bosses, HUD-Hinweis im Lauf.
 - [ ] Weitere Questreihen (z. B. Forschung ↔ Riss-Waffen, Archäologie ↔ Weltkarte-Ruinen).
-- [ ] Invasionen stärker verzahnen: Verteidigung mit Held und Riss-Talenten, Belohnung für gewonnene Abwehr.
 - [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.
 - [ ] Endgame (Phase 13): Meisterschaft pro Aktion, Endlos-Riss, Titel und Kosmetik.
 - [ ] Prestige-Naturgesetze, die auch im Dorf und im Riss wirken (Phase 11).

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.15.0] – Gemeinsam gegen den Riss
+
+### Geändert
+
+- **Riss-Invasionen verzahnt**: Die Verteidigung setzt sich jetzt sichtbar zusammen aus Truppen & Mauer, Held
+  (falls daheim), **Riss-Talenten** (+2 % je Talentstufe, max. +50 % – wer den Riss kennt, hält ihn auf) und der
+  **Inselwehr** (Kampfstufe der Insel). Militär zeigt die Aufschlüsselung, die erwartete Horde und eine
+  Einschätzung (sicher / knapp / gefährdet).
+- Eine erfolgreiche Abwehr bringt zusätzlich zu Essenz und Äther mit 15 % Chance Heldenausrüstung.
+- **Vorwarnung**: eine halbe Stunde vor der Horde erscheint sie in „Was jetzt?" mit Ziel und Einschätzung.
+
 ## [1.14.0] – Das Band der Welten
 
 ### Hinzugefügt
