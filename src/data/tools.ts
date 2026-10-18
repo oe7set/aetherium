@@ -1,0 +1,42 @@
+import type { ShopOffer, ToolDef } from './types';
+
+const AXES: ToolDef[] = [
+  { id: 'axe_stone', name: 'Steinaxt', icon: '🪓', skill: 'woodcutting', tier: 0, levelReq: 1, speed: 1, price: 0, desc: 'Ein Stein an einem Stock. Innovation pur – vor 2 Mio. Jahren.' },
+  { id: 'axe_bronze', name: 'Bronzeaxt', icon: '🪓', skill: 'woodcutting', tier: 1, levelReq: 1, speed: 1.15, price: 60, desc: 'Die Bronzezeit hat angerufen. Sie will dich zurück.' },
+  { id: 'axe_iron', name: 'Eisenaxt', icon: '🪓', skill: 'woodcutting', tier: 2, levelReq: 10, speed: 1.3, price: 400, desc: 'Rostet nur, wenn du sie im Regen liegen lässt. Also immer.' },
+  { id: 'axe_steel', name: 'Stahlaxt', icon: '🪓', skill: 'woodcutting', tier: 3, levelReq: 20, speed: 1.5, price: 2_000, desc: 'Kohlenstoff macht den Unterschied. Wie im echten Leben.' },
+  { id: 'axe_mithril', name: 'Mithrilaxt', icon: '🪓', skill: 'woodcutting', tier: 4, levelReq: 30, speed: 1.75, price: 10_000, desc: 'Federleicht. Bäume fallen aus Respekt.' },
+  { id: 'axe_adamant', name: 'Adamantaxt', icon: '🪓', skill: 'woodcutting', tier: 5, levelReq: 41, speed: 2.05, price: 45_000, desc: 'Grün und gnadenlos.' },
+  { id: 'axe_rune', name: 'Runenaxt', icon: '🪓', skill: 'woodcutting', tier: 6, levelReq: 55, speed: 2.4, price: 200_000, desc: 'Mit eingravierter Bedienungsanleitung. Niemand liest sie.' },
+  { id: 'axe_dragon', name: 'Drachenaxt', icon: '🪓', skill: 'woodcutting', tier: 7, levelReq: 70, speed: 2.85, price: 1_500_000, desc: 'Ein Drache wurde dafür nicht verletzt. Er war sehr kooperativ.' },
+  { id: 'axe_quantum', name: 'Quantenaxt', icon: '⚛️', skill: 'woodcutting', tier: 8, levelReq: 85, speed: 3.4, price: 25_000_000, desc: 'Gleichzeitig scharf und stumpf, bis du zuschlägst.' },
+];
+
+const PICKAXES: ToolDef[] = [
+  { id: 'pick_stone', name: 'Steinspitzhacke', icon: '⛏️', skill: 'mining', tier: 0, levelReq: 1, speed: 1, price: 0, desc: 'Stein gegen Stein. Wer gewinnt? Niemand.' },
+  { id: 'pick_bronze', name: 'Bronzespitzhacke', icon: '⛏️', skill: 'mining', tier: 1, levelReq: 1, speed: 1.15, price: 60, desc: 'Ein Anfang. Ein metallischer Anfang.' },
+  { id: 'pick_iron', name: 'Eisenspitzhacke', icon: '⛏️', skill: 'mining', tier: 2, levelReq: 10, speed: 1.3, price: 400, desc: 'Schwer, ehrlich, effektiv.' },
+  { id: 'pick_steel', name: 'Stahlspitzhacke', icon: '⛏️', skill: 'mining', tier: 3, levelReq: 20, speed: 1.5, price: 2_000, desc: 'Funkenflug inklusive.' },
+  { id: 'pick_mithril', name: 'Mithrilspitzhacke', icon: '⛏️', skill: 'mining', tier: 4, levelReq: 30, speed: 1.75, price: 10_000, desc: 'Zwerge würden dafür töten. Bitte nicht herumzeigen.' },
+  { id: 'pick_adamant', name: 'Adamantspitzhacke', icon: '⛏️', skill: 'mining', tier: 5, levelReq: 41, speed: 2.05, price: 45_000, desc: 'Durchdringt Fels wie eine gute Frage einen Vortrag.' },
+  { id: 'pick_rune', name: 'Runenspitzhacke', icon: '⛏️', skill: 'mining', tier: 6, levelReq: 55, speed: 2.4, price: 200_000, desc: 'Für Leute, die es ernst meinen.' },
+  { id: 'pick_dragon', name: 'Drachenspitzhacke', icon: '⛏️', skill: 'mining', tier: 7, levelReq: 70, speed: 2.85, price: 1_500_000, desc: 'Heiß. Im wörtlichen Sinn.' },
+  { id: 'pick_quantum', name: 'Quantenspitzhacke', icon: '⚛️', skill: 'mining', tier: 8, levelReq: 85, speed: 3.4, price: 25_000_000, desc: 'Tunnelt durch Fels. Heisenberg weiß nicht genau, wo sie ist.' },
+];
+
+export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES];
+
+/** The tool every new game starts with, per skill. */
+export const STARTER_TOOLS: Record<string, string> = {
+  woodcutting: 'axe_stone',
+  mining: 'pick_stone',
+};
+
+/** What the general store (Krämer) sells. Phase 3 replaces this with a dynamic market. */
+export const SHOP_OFFERS: ShopOffer[] = [
+  { item: 'potato', price: 6 },
+  { item: 'raw_chicken', price: 14 },
+  { item: 'flour', price: 10 },
+  { item: 'raw_beef', price: 28 },
+  { item: 'apple', price: 4 },
+];
