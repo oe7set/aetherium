@@ -46,18 +46,20 @@ export type GameEvent =
   | { type: 'colonyStarted' }
   | { type: 'colonySetupDone' }
   | { type: 'colonyRoll'; roll: number; gained: number }
-  | { type: 'colonyRobber'; by: number; victim: number | null; res: string | null; lost: number }
+  | { type: 'colonyRobber'; by: string; victim: string | null; res: string | null; lost: number }
   | {
       type: 'colonyBuilt';
-      player: number;
+      /** Persona id ('you' for the player). */
+      player: string;
       kind: 'road' | 'settlement' | 'city' | 'building';
       id?: string;
+      setup?: boolean;
     }
   | { type: 'colonyDevCard'; card: string }
   | { type: 'colonyDevPlayed'; card: string }
-  | { type: 'colonyOffer'; from: number }
-  | { type: 'colonyQuip'; player: number }
-  | { type: 'colonyFinished'; winner: number; place: number }
+  | { type: 'colonyOffer'; from: string }
+  | { type: 'colonyQuip'; player: string; line: number }
+  | { type: 'colonyFinished'; winner: string; place: number }
   | { type: 'colonyClaimed'; fame: number; place: number };
 
 export type Emit = (event: GameEvent) => void;

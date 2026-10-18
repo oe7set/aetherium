@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0] – Phase 9 „Neu-Aetherium" (Kolonie)
+
+### Hinzugefügt
+
+- **Kolonie**: eigenständiges Brettspiel im Catan-Stil auf 19 Hexfeldern mit 9 Häfen, Zahlenchips (6/8 nie
+  benachbart), Räuber, Entwicklungskarten (Ritter, Straßenbau, Erfindung, Monopol, Siegpunkte), längster Straße und
+  größter Rittermacht. Sieg bei 10 Siegpunkten.
+- **Drei KI-Rivalen** aus fünf Persönlichkeiten (Städtebauerin, Händler-Gnome, Expansions-Professor, Ritterin,
+  Alchemist) mit eigenen Strategien, Sprüchen und Handelsangeboten an dich.
+- Würfelwurf alle 30 s als Zeiteffekt – läuft auch offline weiter; „Würfeln!" für schnelleres Spiel (5 s Abklingzeit).
+- **Siedler-Gebäude** (Sägewerk, Mühle, Bäckerei, Schmelzhütte, Weberei, Akademie, Hafenkontor, Lagerhaus, Wachturm):
+  wandeln Rohstoffe in Inselwaren um und geben Boni auf der Heimatinsel.
+- **Schiffsverkehr**: Inselwaren zu Kolonie-Rohstoffen verschiffen oder Rohstoffe für Gold verkaufen.
+- **Ruhm** nach jeder Partie (Platz + Siegpunkte): dauerhafter XP-/Gold-Bonus und sechs Kolonie-Talente, darunter der
+  **Verwalter**, der automatisch aufbaut, baut, tauscht und neue Partien startet.
+- Neue Items (Kolonie-Bretter, -Tuch, Kolonistenbrot, Kolonie-Schatztruhe), 12 Kolonie-Erfolge, Würfel-/Bau-Sounds.
+- Desktop: Brett und Steuerung nebeneinander, die 3D-Bühne macht während der Kolonie Platz.
+
+### Geändert
+
+- Tab-Leiste: neuer Tab **Kolonie**; **Quests** sind jetzt im Bereich **Mehr** (vormals Menü).
+- Spielstand-Version 7 (Migration für alte Stände).
+- Desktop: rechte Spalte läuft bei vielen Inventar-Reitern nicht mehr über.
+
 ## [1.1.0] – Phase 8 „Aether-Glanz" (Look-Overhaul)
 
 ### Hinzugefügt

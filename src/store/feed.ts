@@ -35,6 +35,14 @@ import {
   TREND_UP_LINES,
 } from '../data/flavor';
 import {
+  COLONY_BUILDINGS,
+  DEV_INFO,
+  PERSONAS,
+  RESOURCE_INFO,
+  type DevCard,
+  type Resource,
+} from '../data/colony';
+import {
   flavor,
   formatNumber,
   PET_MAP,
@@ -43,6 +51,17 @@ import {
   type NumberFormat,
   type Rng,
 } from '../engine';
+
+function personaName(id: string): string {
+  if (id === 'you') return 'Du';
+  const p = PERSONAS.find((x) => x.id === id);
+  return p ? `${p.icon} ${p.name}` : id;
+}
+
+function quip(id: string, line: number): string {
+  const quips = PERSONAS.find((x) => x.id === id)?.quips ?? [];
+  return quips[line % Math.max(1, quips.length)] ?? '…';
+}
 
 export type FeedKind = 'info' | 'level' | 'rare' | 'warn' | 'chatter' | 'gold';
 
@@ -300,6 +319,86 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
       }
       case 'taskCompleted':
         out.feed.push({ kind: 'gold', text: `📋 Auftrag erledigt! Belohnung eingesackt.` });
+        break;
+      case 'colonyStarted':
+        out.feed.push({
+          kind: 'info',
+          text: '⛵ Neue Partie in Neu-Aetherium! Die Rivalen packen ihre Siedler aus.',
+        });
+        break;
+      case 'colonySetupDone':
+        out.feed.push({ kind: 'info', text: '🏘️ Aufbau abgeschlossen – ab jetzt wird gewürfelt.' });
+        break;
+      case 'colonyRoll':
+        if (e.roll !== 7 && e.gained > 0)
+          out.feed.push({
+            kind: 'info',
+            text: `🎲 Kolonie: ${e.roll} – du erhältst ${e.gained} Rohstoff${e.gained === 1 ? '' : 'e'}.`,
+          });
+        break;
+      case 'colonyRobber': {
+        const by = personaName(e.by);
+        const victim = e.victim === 'you' ? 'dir' : e.victim ? personaName(e.victim) : null;
+        const res = e.res ? (RESOURCE_INFO[e.res as Resource]?.icon ?? '') : '';
+        let text = `🥷 ${by} versetzt den Räuber`;
+        if (victim) text += ` und klaut ${victim} ${res}`;
+        if (e.lost > 0) text += ` – du wirfst ${e.lost} Karten ab!`;
+        out.feed.push({
+          kind: e.victim === 'you' || e.lost > 0 ? 'warn' : 'info',
+          text: `${text}.`,
+        });
+        break;
+      }
+      case 'colonyBuilt':
+        if (e.setup) break;
+        if (e.player === 'you') {
+          if (e.kind === 'building') {
+            const b = COLONY_BUILDINGS.find((x) => x.id === e.id);
+            out.feed.push({
+              kind: 'gold',
+              text: `🏭 ${b?.icon ?? ''} ${b?.name ?? 'Gebäude'} errichtet – die Waren rollen!`,
+            });
+          } else if (e.kind !== 'road')
+            out.feed.push({
+              kind: 'gold',
+              text: `${e.kind === 'city' ? '🏰 Stadt' : '🏠 Siedlung'} gebaut! +1 Siegpunkt.`,
+            });
+        } else if (e.kind === 'city' || e.kind === 'settlement') {
+          out.feed.push({
+            kind: 'chatter',
+            text: `${personaName(e.player)} baut eine ${e.kind === 'city' ? 'Stadt' : 'Siedlung'}.`,
+          });
+        }
+        break;
+      case 'colonyDevCard':
+        out.feed.push({
+          kind: e.card === 'victory' ? 'rare' : 'info',
+          text: `🃏 Gezogen: ${DEV_INFO[e.card as DevCard]?.name ?? e.card}${e.card === 'victory' ? ' – heimlich +1 Siegpunkt!' : ''}`,
+        });
+        break;
+      case 'colonyOffer':
+        out.feed.push({
+          kind: 'chatter',
+          text: `🤝 ${personaName(e.from)} hat ein Handelsangebot für dich.`,
+        });
+        break;
+      case 'colonyQuip':
+        out.feed.push({
+          kind: 'chatter',
+          text: `${personaName(e.player)}: „${quip(e.player, e.line)}"`,
+        });
+        break;
+      case 'colonyFinished':
+        out.feed.push({
+          kind: e.place === 1 ? 'rare' : 'info',
+          text:
+            e.place === 1
+              ? '🏆 Du gewinnst die Partie in Neu-Aetherium!'
+              : `🏁 ${personaName(e.winner)} gewinnt die Partie. Du wirst ${e.place}.`,
+        });
+        break;
+      case 'colonyClaimed':
+        out.feed.push({ kind: 'gold', text: `🌟 +${e.fame} Ruhm für Platz ${e.place}.` });
         break;
       case 'intelligence':
         out.feed.push({

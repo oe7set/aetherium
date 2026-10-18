@@ -13,7 +13,7 @@ import { InventoryPanel } from './inventory/InventoryPanel';
 import { LevelUpBanner } from './LevelUpBanner';
 import { MenuPanel } from './menu/MenuPanel';
 import { OfflineModal } from './OfflineModal';
-import { QuestsPanel } from './quests/QuestsPanel';
+import { ColonyPanel } from './colony/ColonyPanel';
 import { ResearchPanel } from './science/ResearchPanel';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
@@ -74,7 +74,7 @@ function MobileLayout() {
       <BottomSheet open={tab !== 'world'} onClose={() => setUi({ tab: 'world' })} label={label}>
         {tab === 'skills' && <MobileSkills />}
         {tab === 'inventory' && <InventoryPanel />}
-        {tab === 'quests' && <QuestsPanel />}
+        {tab === 'colony' && <ColonyPanel />}
         {tab === 'research' && <ResearchPanel />}
         {tab === 'menu' && <MenuPanel />}
       </BottomSheet>
@@ -98,15 +98,18 @@ function DesktopLayout() {
         <SkillList />
       </aside>
       <main className="col-center">
-        <div className="stage">
-          <World />
-          <BuffBar />
-        </div>
+        {/* The colony board needs the room: it replaces the 3D stage while open. */}
+        {center !== 'colony' && (
+          <div className="stage">
+            <World />
+            <BuffBar />
+          </div>
+        )}
         <ActiveActionBar />
         <TabBar tabs={DESKTOP_CENTER_TABS} />
         <div className="center-panel">
           {center === 'skills' && <SkillView skillId={selected} />}
-          {center === 'quests' && <QuestsPanel />}
+          {center === 'colony' && <ColonyPanel />}
           {center === 'research' && <ResearchPanel />}
           {center === 'menu' && <MenuPanel />}
         </div>

@@ -64,6 +64,8 @@ import {
   type ProgressSummary,
   type Settings,
   type ShopResult,
+  type ColonyResult,
+  type Rng,
 } from '../engine';
 import { t, type MessageKey } from '../i18n';
 import { playEventSounds } from '../ui/audio';
@@ -71,7 +73,9 @@ import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
-export type TabId = 'world' | 'skills' | 'inventory' | 'quests' | 'research' | 'menu';
+export type TabId = 'world' | 'skills' | 'inventory' | 'colony' | 'research' | 'menu';
+export type MenuSection =
+  'empire' | 'quests' | 'prestige' | 'achievements' | 'stats' | 'settings' | 'save' | 'debug';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools';
 
 const FEED_LIMIT = 60;
@@ -87,6 +91,7 @@ export interface UiState {
   skillDetail: boolean;
   inventorySegment: InventorySegment;
   selectedItem: string | null;
+  menuSection: MenuSection;
 }
 
 export interface GameStore {
@@ -136,6 +141,10 @@ export interface GameStore {
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
+  /** Runs a colony action; a failed result becomes a warning line in the feed. */
+  colony: (
+    fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => ColonyResult | void,
+  ) => boolean;
   /** World tap on a station: start the best doable action of that skill, else open the skill. */
   tapStation: (skill: string) => void;
   dismissOffline: () => void;
@@ -240,6 +249,7 @@ export const useGame = create<GameStore>()((set, get) => {
       skillDetail: false,
       inventorySegment: 'items',
       selectedItem: null,
+      menuSection: 'empire',
     },
 
     tick: (dt) => {
@@ -453,6 +463,18 @@ export const useGame = create<GameStore>()((set, get) => {
       const best = bestAvailableAction(get().game, skill);
       if (best) get().start(best.id);
       else get().openSkill(skill);
+    },
+    colony: (fn) => {
+      let result: ColonyResult | void = undefined;
+      mutate((s, emit) => {
+        result = fn(s, emit, defaultRng);
+      });
+      const r = result as ColonyResult | void;
+      if (r && !r.ok) {
+        get().pushFeed(`❌ ${t(`colonyFail.${r.reason}` as MessageKey)}`, 'warn');
+        return false;
+      }
+      return true;
     },
     openSkill: (skill) =>
       set({ ui: { ...get().ui, tab: 'skills', selectedSkill: skill, skillDetail: true } }),

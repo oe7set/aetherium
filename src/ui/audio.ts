@@ -73,6 +73,12 @@ export const SOUNDS = {
   hurt: () => tone(90, 0, 0.18, 'square', 0.05),
   bad: () => tone(200, 0, 0.2, 'sawtooth', 0.04),
   coin: () => [988, 1319].forEach((f, i) => tone(f, i * 0.05, 0.12, 'square', 0.025)),
+  dice: () => {
+    noise(0, 0.05, 0.05);
+    noise(0.07, 0.05, 0.04);
+    noise(0.15, 0.04, 0.03);
+  },
+  build: () => [392, 523].forEach((f, i) => tone(f, i * 0.07, 0.15, 'triangle', 0.05)),
   prestige: () =>
     [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.12, 0.6, 'sine', 0.06)),
 };
@@ -110,6 +116,18 @@ export function playEventSounds(events: GameEvent[]): void {
         break;
       case 'prestige':
         kinds.add('prestige');
+        break;
+      case 'colonyRoll':
+        kinds.add('dice');
+        break;
+      case 'colonyBuilt':
+        if (e.player === 'you' && !e.setup) kinds.add('build');
+        break;
+      case 'colonyRobber':
+        if (e.victim === 'you' || e.lost > 0) kinds.add('bad');
+        break;
+      case 'colonyFinished':
+        kinds.add(e.place === 1 ? 'achievement' : 'rare');
         break;
       default:
         break;

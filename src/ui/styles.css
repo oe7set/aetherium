@@ -1303,8 +1303,13 @@ textarea.input {
   .col-right {
     border-left: 1px solid var(--line);
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-content: start;
     gap: 12px;
+  }
+  .col-right .segments {
+    overflow-x: auto;
+    scrollbar-width: none;
   }
   .col-center {
     display: flex;

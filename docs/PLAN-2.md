@@ -197,9 +197,9 @@ Doku (CHANGELOG, CLAUDE.md), CI grün, Browser-Test (Playwright-Screenshots).
 
 | Phase | Schwerpunkt                                               | Status    |
 | ----- | --------------------------------------------------------- | --------- |
-| 8     | Look-Overhaul, Design-System, Startbildschirm, Reichsbuch | in Arbeit |
-| 9     | Kolonie (Catan-Kern, KI, Siedler-Ketten, Ruhm)            | geplant   |
-| 10    | Ätherriss (Survivor-Arena, Waffen, Evolutionen, Meta)     | geplant   |
+| 8     | Look-Overhaul, Design-System, Startbildschirm, Reichsbuch | fertig    |
+| 9     | Kolonie (Catan-Kern, KI, Siedler-Ketten, Ruhm)            | fertig    |
+| 10    | Ätherriss (Survivor-Arena, Waffen, Evolutionen, Meta)     | in Arbeit |
 | 11    | Zusammenspiel & Querschnitts-Quests                       | geplant   |
 | 12    | Content & Juice                                           | geplant   |
 | 13    | Endgame                                                   | geplant   |

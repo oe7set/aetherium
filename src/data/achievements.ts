@@ -44,6 +44,50 @@ const fmt = (n: number) => n.toLocaleString('de-DE');
 
 const STAT_SERIES: StatSeries[] = [
   {
+    key: 'colonyWins',
+    icon: '🏆',
+    desc: (n) => `Gewinne ${n} Partie(n) in Neu-Aetherium.`,
+    steps: [
+      [1, 'Siedler des Jahres'],
+      [5, 'Herr·in der Hexfelder'],
+      [25, 'Catan? Kenn ich nicht.'],
+      [100, 'Unbesiegbare Kolonialmacht'],
+    ],
+    reward: (i) => ({ xp: 0.01 * (i + 1), gold: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'colonyRolls',
+    icon: '🎲',
+    desc: (n) => `Erlebe ${n} Würfelwürfe in der Kolonie.`,
+    steps: [
+      [10, 'Würfelglück'],
+      [500, 'Sieben, schon wieder!'],
+      [5000, 'Statistik-Professor·in'],
+    ],
+    reward: (i) => ({ research: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'colonyGoods',
+    icon: '🏭',
+    desc: (n) => `Produziere ${n} Waren in Siedler-Gebäuden.`,
+    steps: [
+      [10, 'Erste Lieferung'],
+      [250, 'Produktionskette'],
+      [2500, 'Wirtschaftswunder'],
+    ],
+    reward: (i) => ({ 'xp.crafting': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'colonyTrades',
+    icon: '🤝',
+    desc: (n) => `Tausche ${n}-mal in der Kolonie.`,
+    steps: [
+      [1, 'Hab Schaf, suche Lehm'],
+      [100, 'Gnomen-Freund'],
+    ],
+    reward: (i) => ({ gold: 0.01 * (i + 1) }),
+  },
+  {
     key: 'treesFelled',
     icon: '🌳',
     desc: (n) => `Fälle ${n} Bäume.`,

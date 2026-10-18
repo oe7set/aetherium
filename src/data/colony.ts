@@ -173,7 +173,7 @@ export const PERSONAS: AiPersona[] = [
     id: 'alchemist',
     name: 'Alchemist Ansgar',
     icon: '⚗️',
-    color: '#4ad9b0',
+    color: '#ff7ac8',
     style: 'city',
     quips: ['Erz zu Gold, Gold zu Städten.', 'Die Formel stimmt fast.', 'Blubber.'],
   },

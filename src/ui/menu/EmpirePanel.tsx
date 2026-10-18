@@ -1,6 +1,9 @@
 import { ACHIEVEMENTS, ELEMENTS, getAction, getMonster, SKILLS, TECHS } from '../../data';
 import {
   affordableTechs,
+  colonyAttention,
+  PLAYER_INDEX,
+  victoryPoints,
   combatLevel,
   conditionValue,
   levelCap,
@@ -11,6 +14,7 @@ import {
   totalLevel,
   wisdomGain,
 } from '../../engine';
+import { WIN_POINTS } from '../../data/colony';
 import { useGame, type TabId } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
@@ -96,6 +100,19 @@ export function EmpirePanel() {
             📊 Gesamtlevel {total(game)} · ⚔️ Kampf {combatLevel(game)}
           </small>
         </button>
+        <button className="empire-card" onClick={() => setUi({ tab: 'colony' })}>
+          <span className="empire-card-icon">🏘️</span>
+          <strong>Kolonie</strong>
+          <small>
+            {game.colony.match
+              ? `Partie läuft · ${victoryPoints(game.colony.match, PLAYER_INDEX)}/${WIN_POINTS} Siegpunkte`
+              : 'Keine Partie – starte eine!'}
+          </small>
+          <small className="muted">
+            🌟 {game.colony.fame} Ruhm · 🏆 {game.colony.wins} Siege
+          </small>
+          {colonyAttention(game) > 0 && <span className="empire-badge">wartet auf dich</span>}
+        </button>
         <button className="empire-card" onClick={() => setUi({ tab: 'research' })}>
           <span className="empire-card-icon">🔬</span>
           <strong>Forschung</strong>
@@ -109,7 +126,10 @@ export function EmpirePanel() {
             <span className="empire-badge">{affordableTechs(game).length} bezahlbar</span>
           )}
         </button>
-        <button className="empire-card" onClick={() => setUi({ tab: 'quests' })}>
+        <button
+          className="empire-card"
+          onClick={() => setUi({ tab: 'menu', menuSection: 'quests' })}
+        >
           <span className="empire-card-icon">📜</span>
           <strong>Aufträge & Quests</strong>
           <small>
@@ -119,7 +139,10 @@ export function EmpirePanel() {
             <span className="empire-badge">{claimableTasks + readyQuests} abholbereit</span>
           )}
         </button>
-        <button className="empire-card" onClick={() => setUi({ tab: 'menu' })}>
+        <button
+          className="empire-card"
+          onClick={() => setUi({ tab: 'menu', menuSection: 'prestige' })}
+        >
           <span className="empire-card-icon">🌅</span>
           <strong>Prestige</strong>
           <small>

@@ -170,7 +170,7 @@ function placeSetupPiece(s: GameState, pi: number, vertex: number, road: number,
   if (second) grantSetupResources(m, pi, vertex);
   m.setupQueue.shift();
   m.setupVertex = null;
-  emit({ type: 'colonyBuilt', player: pi, kind: 'settlement' });
+  emit({ type: 'colonyBuilt', player: m.players[pi]!.persona, kind: 'settlement', setup: true });
 }
 
 /** Player setup: first tap places the settlement, second tap its road. */
@@ -270,7 +270,7 @@ function checkWin(s: GameState, emit: Emit): boolean {
   m.phase = 'finished';
   m.winner = winner;
   m.offers = [];
-  emit({ type: 'colonyFinished', winner, place: playerPlace(m) });
+  emit({ type: 'colonyFinished', winner: m.players[winner]!.persona, place: playerPlace(m) });
   return true;
 }
 
@@ -297,7 +297,13 @@ export function rollDice(s: GameState, rng: Rng, emit: Emit): void {
       robberTarget(m, leaderAgainst(m, thief), thief),
       rng,
     );
-    emit({ type: 'colonyRobber', by: thief, victim, res, lost: lost[PLAYER_INDEX] ?? 0 });
+    emit({
+      type: 'colonyRobber',
+      by: m.players[thief]!.persona,
+      victim: victim === null ? null : m.players[victim]!.persona,
+      res,
+      lost: lost[PLAYER_INDEX] ?? 0,
+    });
   } else {
     const gains = produce(m, roll);
     const mine = gains[PLAYER_INDEX]!;
@@ -312,8 +318,9 @@ export function rollDice(s: GameState, rng: Rng, emit: Emit): void {
     const actions = aiTurn(m, pi, rng);
     for (const a of actions)
       if (a.kind === 'settlement' || a.kind === 'city')
-        emit({ type: 'colonyBuilt', player: pi, kind: a.kind });
-    if (actions.length && rng() < 0.15) emit({ type: 'colonyQuip', player: pi });
+        emit({ type: 'colonyBuilt', player: m.players[pi]!.persona, kind: a.kind });
+    if (actions.length && rng() < 0.15)
+      emit({ type: 'colonyQuip', player: m.players[pi]!.persona, line: m.rolls });
     if (checkWin(s, emit)) return;
   }
   if (hasSteward(s)) stewardTurn(s, emit);
@@ -350,7 +357,7 @@ function updateOffers(s: GameState, rng: Rng, emit: Emit): void {
   const offer = aiOffer(m, pi, talentLevel(s, 'diplomat') + (trader ? 1 : 0));
   if (!offer || m.offers.some((o) => o.from === pi)) return;
   m.offers.push({ id: s.colony.nextOfferId++, from: pi, ...offer, expires: OFFER_ROLLS });
-  emit({ type: 'colonyOffer', from: pi });
+  emit({ type: 'colonyOffer', from: m.players[pi]!.persona });
 }
 
 registerTimeEffect('colony', {
@@ -392,7 +399,7 @@ export function playerBuildRoad(s: GameState, edge: number, emit: Emit): ColonyR
   if (!buildRoad(m, PLAYER_INDEX, edge, free)) return fail('illegal');
   if (free) m.freeRoads--;
   updateAwards(m);
-  emit({ type: 'colonyBuilt', player: PLAYER_INDEX, kind: 'road' });
+  emit({ type: 'colonyBuilt', player: 'you', kind: 'road' });
   checkWin(s, emit);
   return OK;
 }
@@ -404,7 +411,7 @@ export function playerBuildSettlement(s: GameState, vertex: number, emit: Emit):
   if (!buildSettlement(m, PLAYER_INDEX, vertex)) return fail('illegal');
   updateAwards(m);
   addStat(s, 'colonySettlements');
-  emit({ type: 'colonyBuilt', player: PLAYER_INDEX, kind: 'settlement' });
+  emit({ type: 'colonyBuilt', player: 'you', kind: 'settlement' });
   checkWin(s, emit);
   return OK;
 }
@@ -415,7 +422,7 @@ export function playerBuildCity(s: GameState, vertex: number, emit: Emit): Colon
   if (!canAfford(m.players[PLAYER_INDEX]!, COSTS.city)) return fail('resources');
   if (!buildCity(m, PLAYER_INDEX, vertex)) return fail('illegal');
   addStat(s, 'colonyCities');
-  emit({ type: 'colonyBuilt', player: PLAYER_INDEX, kind: 'city' });
+  emit({ type: 'colonyBuilt', player: 'you', kind: 'city' });
   checkWin(s, emit);
   return OK;
 }
@@ -476,7 +483,13 @@ export function placeRobber(s: GameState, hex: number, rng: Rng, emit: Emit): Co
   if (hex === m.robber || hex < 0 || hex >= m.terrain.length) return fail('illegal');
   m.robberMode = false;
   const { victim, res } = moveRobber(m, PLAYER_INDEX, hex, rng);
-  emit({ type: 'colonyRobber', by: PLAYER_INDEX, victim, res, lost: 0 });
+  emit({
+    type: 'colonyRobber',
+    by: 'you',
+    victim: victim === null ? null : m.players[victim]!.persona,
+    res,
+    lost: 0,
+  });
   return OK;
 }
 
@@ -545,7 +558,7 @@ export function buildBuilding(s: GameState, vertex: number, id: string, emit: Em
   (m.buildings[vertex] ??= []).push(id);
   addStat(s, 'colonyBuildings');
   invalidateMods(s);
-  emit({ type: 'colonyBuilt', player: PLAYER_INDEX, kind: 'building', id });
+  emit({ type: 'colonyBuilt', player: 'you', kind: 'building', id });
   return OK;
 }
 
@@ -645,7 +658,13 @@ function stewardTurn(s: GameState, emit: Emit): void {
         robberTarget(m, leaderAgainst(m, PLAYER_INDEX), PLAYER_INDEX),
         () => 0.5,
       );
-      emit({ type: 'colonyRobber', by: PLAYER_INDEX, victim, res, lost: 0 });
+      emit({
+        type: 'colonyRobber',
+        by: 'you',
+        victim: victim === null ? null : m.players[victim]!.persona,
+        res,
+        lost: 0,
+      });
     }
   }
 }
@@ -661,4 +680,26 @@ export function colonySummary(m: ColonyMatch) {
     longestRoad: m.longestRoad === i,
     largestArmy: m.largestArmy === i,
   }));
+}
+
+/** Minimum seconds between manual rolls (so the pace stays a board game, not a slot machine). */
+export const MANUAL_ROLL_COOLDOWN = 5;
+
+/** "Würfeln!": rolls early once the cooldown since the last roll has passed. */
+export function rollNow(s: GameState, rng: Rng, emit: Emit): ColonyResult {
+  const m = running(s);
+  if (!m) return fail('notRunning');
+  if (rollInterval(s) - s.colony.nextRoll < MANUAL_ROLL_COOLDOWN) return fail('tooSoon');
+  s.colony.nextRoll = rollInterval(s);
+  rollDice(s, rng, emit);
+  return OK;
+}
+
+/** Badge count for the tab bar: things in the colony waiting for the player. */
+export function colonyAttention(s: GameState): number {
+  const m = s.colony.match;
+  if (!m) return 0;
+  if (m.phase === 'finished') return 1;
+  if (m.phase === 'setup') return m.setupQueue[0] === PLAYER_INDEX ? 1 : 0;
+  return m.offers.length + (m.robberMode ? 1 : 0) + (m.freeRoads > 0 ? 1 : 0);
 }
