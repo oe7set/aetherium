@@ -155,12 +155,15 @@ function ItemsGrid() {
           Sammle Holz, Erz oder Fisch – alles landet hier und zählt fürs Sammelbuch.
         </EmptyState>
       )}
-      {selected && inventory[selected] !== undefined && <ItemDetail itemId={selected} />}
+      {selected && inventory[selected] !== undefined && (
+        <ItemDetail itemId={selected} onClose={() => setUi({ selectedItem: null })} />
+      )}
       <div className="item-grid">
         {entries.map(({ def, qty }) => (
           <button
             key={def.id}
             className={`item-slot rarity-${def.rarity ?? 'common'} ${selected === def.id ? 'selected' : ''}`}
+            data-touch-keep
             onClick={() => setUi({ selectedItem: selected === def.id ? null : def.id })}
             title={def.name}
           >

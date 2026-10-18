@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.31.0] – Antipp-Karten
+
+- Antipp-Karten: Felder und Gebäude im Dorf öffnen unten eine Karte mit Produktion, Kosten, Bauzeit, „Genug Rohstoffe in …" und Ausbau-Knopf – kein Scrollen mehr unter den Ring.
+- Inventar: Item antippen zeigt Wert, wofür es verwendet wird und woher es kommt (antippbar → Skill), dazu Benutzen, **Alle benutzen** (z. B. alle Vogelnester auf einmal, Meldungen zusammengefasst), Kampfproviant wählen und Verkaufen.
+- Unterreiter am Handy in einer wischbaren Zeile – spart eine ganze Zeile Höhe; der aktive Reiter rutscht automatisch ins Bild.
+
 ## [1.30.0] – Meisterschaft, Rahmen & Karawane
 
 - Meisterschafts-Pool je Skill: der Durchschnitt der Aktions-Meisterschaften schaltet bei 10/25/50/95 % skillweite Boni frei (XP, Tempo, doppelte Ausbeute). Anzeige im Skill.

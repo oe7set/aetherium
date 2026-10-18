@@ -11,7 +11,9 @@ import {
   equipTool,
   slotPrice,
   sellItem,
+  consumeAll,
   consumeItem,
+  type GameEvent,
 } from '../src/engine';
 import { gameWith, setLevel } from './helpers';
 
@@ -71,6 +73,18 @@ describe('Benutzbare Items', () => {
     expect(s.inventory.bird_nest).toBeUndefined();
     const total = Object.values(s.inventory).reduce((a, b) => a + b, 0);
     expect(total).toBeGreaterThanOrEqual(50);
+  });
+
+  it('Alle benutzen: ganzer Stapel, zusammengefasste Meldungen', () => {
+    const s = gameWith({ inventory: { bird_nest: 40 } });
+    const events: GameEvent[] = [];
+    expect(consumeAll(s, 'bird_nest', createRng(5), (e) => events.push(e))).toBe(40);
+    expect(s.inventory.bird_nest).toBeUndefined();
+    const consumed = events.filter((e) => e.type === 'itemConsumed');
+    expect(consumed).toEqual([{ type: 'itemConsumed', item: 'bird_nest', qty: 40 }]);
+    const gained = events.filter((e) => e.type === 'itemGained').map((e) => e.item);
+    expect(new Set(gained).size).toBe(gained.length);
+    expect(consumeAll(s, 'log_oak', createRng(1), () => {})).toBe(0);
   });
 
   it('nicht benutzbare Items werden abgelehnt', () => {

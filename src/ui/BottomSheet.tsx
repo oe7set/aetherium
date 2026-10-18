@@ -16,6 +16,32 @@ export function BottomSheet({ open, onClose, children, label }: Props) {
   useEffect(() => {
     body.current?.scrollTo({ top: 0 });
   }, [label]);
+  // Sub-tabs sit in one swipeable row: keep the active one in view whenever it changes.
+  useEffect(() => {
+    const el = body.current;
+    if (!el) return;
+    const reveal = () => {
+      for (const seg of el.querySelectorAll<HTMLElement>('.segments .segment.active')) {
+        const row = seg.parentElement;
+        if (!row || row.scrollWidth <= row.clientWidth) continue;
+        const left = seg.offsetLeft - row.offsetLeft;
+        if (left < row.scrollLeft || left + seg.offsetWidth > row.scrollLeft + row.clientWidth)
+          row.scrollTo({
+            left: left - (row.clientWidth - seg.offsetWidth) / 2,
+            behavior: 'smooth',
+          });
+      }
+    };
+    reveal();
+    const mo = new MutationObserver(reveal);
+    mo.observe(el, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: true,
+    });
+    return () => mo.disconnect();
+  }, []);
 
   const onPointerDown = (e: React.PointerEvent) => {
     startY.current = e.clientY;

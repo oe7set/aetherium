@@ -58,6 +58,7 @@ import {
   startAction,
   stopAction,
   summaryHasContent,
+  consumeAll,
   consumeItem,
   xpForLevel,
   type GameEvent,
@@ -158,6 +159,7 @@ export interface GameStore {
   equipTool: (toolId: string) => void;
   buySlot: () => void;
   use: (item: string) => void;
+  consumeStack: (item: string) => void;
   fight: (kind: 'monster' | 'dungeon', target: string) => void;
   flee: () => void;
   equip: (item: string) => void;
@@ -410,6 +412,10 @@ export const useGame = create<GameStore>()((set, get) => {
     use: (item) =>
       mutate((s, emit) => {
         consumeItem(s, item, defaultRng, emit);
+      }),
+    consumeStack: (item) =>
+      mutate((s, emit) => {
+        consumeAll(s, item, defaultRng, emit);
       }),
 
     fight: (kind, target) =>

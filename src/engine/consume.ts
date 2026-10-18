@@ -3,7 +3,7 @@ import { addBuff } from './buffs';
 import { addResearch } from './science';
 import { invalidateMods } from './modifiers';
 import { skillLevel } from './skills';
-import type { Emit } from './events';
+import type { Emit, GameEvent } from './events';
 import { gainItem } from './actions';
 import { itemCount, removeItem } from './inventory';
 import { randInt, type Rng } from './rng';
@@ -65,4 +65,33 @@ export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit):
     }
   }
   return { ok: true };
+}
+
+/** Consumables where using a whole stack makes sense (buffs only refresh, tools unlock once). */
+export function canUseAll(itemId: string): boolean {
+  const type = getItem(itemId).consume?.type;
+  return type === 'intelligence' || type === 'research' || type === 'gold' || type === 'loot';
+}
+
+/**
+ * Uses up to `max` of an item at once. Events are merged (one "+120 Gold", one line per looted
+ * item) so opening 300 bird nests does not flood the feed. Returns how many were used.
+ */
+export function consumeAll(s: GameState, itemId: string, rng: Rng, emit: Emit, max = 1000): number {
+  if (!canUseAll(itemId)) return 0;
+  const merged = new Map<string, GameEvent>();
+  const collect: Emit = (e) => {
+    const key = 'item' in e ? `${e.type}:${e.item}` : e.type;
+    const prev = merged.get(key);
+    if (prev && 'qty' in prev && 'qty' in e) prev.qty += e.qty;
+    else if (prev && 'amount' in prev && 'amount' in e) prev.amount += e.amount;
+    else if (!prev) merged.set(key, { ...e });
+  };
+  let used = 0;
+  while (used < max && itemCount(s, itemId) > 0) {
+    if (!consumeItem(s, itemId, rng, collect).ok) break;
+    used++;
+  }
+  for (const e of merged.values()) emit(e);
+  return used;
 }

@@ -185,6 +185,24 @@ export function netCrop(s: GameState, v: Village): number {
   return production(s, v).crop - upkeep(s, v);
 }
 
+/**
+ * Seconds until the village can pay `cost` from its own production (0 = now,
+ * Infinity = never: storage too small or no income for a missing resource).
+ */
+export function affordIn(s: GameState, v: Village, cost: VCost): number {
+  const prod = production(s, v);
+  let worst = 0;
+  for (const r of V_RESOURCES) {
+    const missing = cost[r] - v.res[r];
+    if (missing <= 0) continue;
+    if (cost[r] > capFor(v, r)) return Infinity;
+    const rate = r === 'crop' ? netCrop(s, v) : prod[r];
+    if (rate <= 0) return Infinity;
+    worst = Math.max(worst, (missing / rate) * 3600);
+  }
+  return worst;
+}
+
 export function canPay(v: Village, cost: VCost): boolean {
   return V_RESOURCES.every((r) => v.res[r] >= cost[r]);
 }

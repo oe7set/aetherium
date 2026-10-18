@@ -1031,18 +1031,25 @@ h4.rift-h4::before,
     font-size: 0.95rem;
   }
 
-  /* All sub-tabs visible at once: they wrap instead of hiding behind the edge. */
-  .segments {
-    flex-wrap: wrap;
-    overflow: visible;
+  /* Sub-tabs: one swipeable row (saves a whole row of height); the active tab scrolls into
+     view (BottomSheet), the cut-off last tab hints at more. Long-press on a tab lists all. */
+  .sheet .segments {
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 3px;
     padding: 3px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
   }
-  .segment {
-    flex: 1 1 auto;
+  .sheet .segments::-webkit-scrollbar {
+    display: none;
+  }
+  .sheet .segment {
+    flex: 0 0 auto;
     min-height: 34px;
-    padding: 0 8px;
+    padding: 0 10px;
     font-size: 0.7812rem;
+    scroll-snap-align: start;
   }
 
   /* Feed: only the newest line, a short toast that fades away; tap opens the full log. */
@@ -1679,4 +1686,101 @@ h4.rift-h4::before,
 }
 .mastery-pool small {
   font-size: 0.75rem;
+}
+
+/* --- Antipp-Karte (TouchCard) -------------------------------------------------------------- */
+.touch-card {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--tabbar-h) + var(--active-h, 0px) + var(--safe-bottom, 0px) + 8px);
+  z-index: 85;
+  max-height: min(60dvh, 520px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #1a1f36;
+  border: 1px solid rgba(160, 128, 255, 0.45);
+  box-shadow: 0 -8px 34px rgba(0, 0, 0, 0.55);
+  animation: touch-card-in 0.18s ease-out;
+}
+.touch-card-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 1rem;
+}
+.touch-card .v-detail-head {
+  padding-right: 34px;
+}
+.touch-card .v-detail-head > .btn-ghost {
+  display: none;
+}
+@keyframes touch-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@media (min-width: 1024px) {
+  .touch-card {
+    left: auto;
+    right: 24px;
+    bottom: 24px;
+    width: 420px;
+  }
+}
+.afford-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.afford-hint.never {
+  color: #ff9a7a;
+}
+
+@media (max-width: 1023px) {
+  /* The cover above the sticky sub-tab row: a shadow is not clipped by the row's own overflow. */
+  .sheet .segments::before {
+    display: none;
+  }
+  .sheet .segments {
+    box-shadow:
+      0 -10px 0 8px #151a33,
+      0 6px 12px -6px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Item tap card */
+.touch-card.item-detail .item-detail-head {
+  padding-right: 34px;
+}
+.item-recipes {
+  display: grid;
+  gap: 4px;
+}
+.item-recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.item-recipe-list .chip-btn {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+.item-recipe-list .chip-btn.locked {
+  opacity: 0.55;
+}
+.item-actions .btn {
+  flex: 1 1 auto;
 }

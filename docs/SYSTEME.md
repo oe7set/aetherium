@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.30.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.31.0**.
 
 ## 1. Der große Kreislauf
 
@@ -152,6 +152,11 @@ Haustiere ↔ Held, Expansion)
 - **Kontext-Kopfzeile** (`ui/HeaderStats.tsx`): im Dorf Holz/Lehm/Eisen/Getreide/Einwohner (Füllbalken = Lager),
   beim Held Stufe/Gesundheit/Essenz, sonst Gold/Forschung/Gesamtlevel/Feuer. Antippen öffnet ein Detail
   (Produktion/h, Verbrauch, Netto, Zeit bis voll/leer). Am Handy ersetzt sie die Rohstoffleiste im Dorf.
+- **Antipp-Karten** (`ui/TouchCard.tsx`): Details und Aktionen schweben unten über der Tab-Leiste statt unter dem
+  Inhalt – Dorf-Felder/Gebäude (mit „Genug Rohstoffe in …" über `affordIn`), Inventar-Items (Verwendet für /
+  Entsteht durch, Benutzen, **Alle benutzen** = `consumeAll` mit zusammengefassten Meldungen, Kampfproviant,
+  Verkaufen). Antippbare Ziele tragen `data-touch-keep`, damit ein Tipp die Karte wechselt statt schließt.
+- Unterreiter am Handy: eine wischbare Zeile; der aktive Reiter scrollt automatisch ins Bild (`BottomSheet`).
 - **Tab-Leiste**: aktiven Tab nochmal tippen → zurück zum Kern des Bereichs (`TAB_HOME` in `ui/tabShortcuts.ts`,
   z. B. Inventar → Taschen, Welt → „Was jetzt?") und nach oben; lange drücken → Schnellmenü aller Unterbereiche.
 - **App** (Einstellungen): Vollbild, Seite neu laden, nach Update suchen (`ui/appUpdate.ts`). Der Service Worker

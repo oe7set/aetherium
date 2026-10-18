@@ -12,7 +12,8 @@ import {
 } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
-import { CostView } from './CostView';
+import { TouchCard } from '../TouchCard';
+import { AffordHint, CostView } from './CostView';
 import { duration } from './vui';
 
 /** Ring positions for the 18 fields (inner ring 7, outer ring 11), in percent. */
@@ -50,6 +51,7 @@ export function FieldsView({ village: v, onCenter }: { village: Village; onCente
               key={i}
               className={`v-field res-${res} ${selected === i ? 'selected' : ''} ${ready ? 'ready' : ''} ${building ? 'building' : ''}`}
               style={{ left: `${x}%`, top: `${y}%` }}
+              data-touch-keep
               onClick={() => setSelected(i === selected ? null : i)}
               aria-label={`${V_RES_INFO[res].field} Stufe ${lvl}`}
             >
@@ -63,12 +65,12 @@ export function FieldsView({ village: v, onCenter }: { village: Village; onCente
       {selected !== null && (
         <FieldDetail village={v} index={selected} onClose={() => setSelected(null)} />
       )}
-      {selected === null && (
+      {
         <p className="muted small center">
           Tippe auf ein Feld zum Ausbauen. Leuchtende Felder kannst du sofort ausbauen. Getreide
           versorgt Einwohner und Truppen.
         </p>
-      )}
+      }
     </div>
   );
 }
@@ -92,7 +94,7 @@ function FieldDetail({
   const prodNow = (FIELD_PROD[level] ?? 0) * PROD_SPEED;
   const prodNext = (FIELD_PROD[Math.min(FIELD_PROD.length - 1, next)] ?? 0) * PROD_SPEED;
   return (
-    <div className="v-detail glass">
+    <TouchCard onClose={onClose} className="v-detail">
       <div className="v-detail-head">
         <span className="v-detail-icon">{V_RES_INFO[res].fieldIcon}</span>
         <div>
@@ -123,6 +125,7 @@ function FieldDetail({
             <CostView cost={fieldCost(v, index, next)} village={v} />
             <span className="muted small">⏱ {duration(fieldTime(v, index, next))}</span>
           </div>
+          <AffordHint cost={fieldCost(v, index, next)} village={v} />
           <button
             className="btn btn-primary"
             disabled={!check.ok}
@@ -134,6 +137,6 @@ function FieldDetail({
           </button>
         </>
       )}
-    </div>
+    </TouchCard>
   );
 }

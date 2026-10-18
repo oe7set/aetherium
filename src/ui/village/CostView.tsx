@@ -1,6 +1,7 @@
 import { V_RES_INFO, V_RESOURCES, type VCost } from '../../data/village';
-import type { Village } from '../../engine';
-import { short } from './vui';
+import { affordIn, type Village } from '../../engine';
+import { useGame } from '../../store/gameStore';
+import { duration, short } from './vui';
 
 /** Cost line; missing resources are highlighted. */
 export function CostView({
@@ -24,6 +25,19 @@ export function CostView({
           </span>
         );
       })}
+    </span>
+  );
+}
+
+/** "Affordable in …" from the village's own production – so waiting has a clear end. */
+export function AffordHint({ cost, village }: { cost: VCost; village: Village }) {
+  const secs = affordIn(useGame.getState().game, village, cost);
+  if (secs <= 0) return null;
+  return (
+    <span className={`afford-hint ${secs === Infinity ? 'never' : ''}`}>
+      {secs === Infinity
+        ? '⚠️ Lager zu klein oder keine Produktion – Lager/Kornspeicher ausbauen'
+        : `⏳ Genug Rohstoffe in ${duration(secs)}`}
     </span>
   );
 }

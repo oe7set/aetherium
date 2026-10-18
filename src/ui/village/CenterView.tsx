@@ -26,7 +26,8 @@ import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ResearchPanel, TrainPanel } from './MilitaryView';
 import type { VillageSegment } from './VillagePanel';
-import { CostView } from './CostView';
+import { TouchCard } from '../TouchCard';
+import { AffordHint, CostView } from './CostView';
 import { duration } from './vui';
 
 /**
@@ -103,6 +104,7 @@ export function CenterView({
               key={b.id}
               className={`v-bld ${lvl ? `built ${tierClass(lvl)}` : available ? 'site' : 'locked'} ${ready ? 'ready' : ''} ${selected === b.id ? 'selected' : ''} ${building ? 'building' : ''} ${b.id === 'main' ? 'main' : ''}`}
               style={{ left: `${b.pos[0]}%`, top: `${b.pos[1]}%` }}
+              data-touch-keep
               onClick={() => setSelected(selected === b.id ? null : b.id)}
               title={b.name}
             >
@@ -117,24 +119,26 @@ export function CenterView({
         })}
         <button
           className={`v-wall-btn ${selected === 'wall' ? 'selected' : ''}`}
+          data-touch-keep
           onClick={() => setSelected('wall')}
         >
           🧱 Mauer {wall}
         </button>
       </div>
-      {selected ? (
+      {selected && (
         <BuildingDetail
           village={v}
           def={V_BUILDING_MAP.get(selected)!}
           onClose={() => setSelected(null)}
           onSegment={onSegment}
         />
-      ) : (
+      )}
+      {
         <p className="muted small center">
           Tippe auf ein Gebäude. 🏗️ = Bauplatz bereit, grün = jetzt ausbaubar, gedämpft =
           Voraussetzungen fehlen. Mit den Einwohnern wachsen auch die Wohnhäuser.
         </p>
-      )}
+      }
     </div>
   );
 }
@@ -191,7 +195,7 @@ function BuildingDetail({
   const max = next > def.maxLevel;
   const check = canUpgradeBuilding(game, v, def.id);
   return (
-    <div className="v-detail glass">
+    <TouchCard onClose={onClose} className="v-detail">
       <div className="v-detail-head">
         <span className="v-detail-icon">{def.icon}</span>
         <div>
@@ -236,6 +240,7 @@ function BuildingDetail({
             <CostView cost={buildingCost(def.id, next)} village={v} />
             <span className="muted small">⏱ {duration(buildingTime(v, def.id, next))}</span>
           </div>
+          <AffordHint cost={buildingCost(def.id, next)} village={v} />
           <button
             className="btn btn-primary"
             disabled={!check.ok}
@@ -272,7 +277,7 @@ function BuildingDetail({
           Ab Stufe 10: Siedler ({TROOPS.find((x) => x.id === 'settler')?.icon}) für neue Dörfer.
         </p>
       )}
-    </div>
+    </TouchCard>
   );
 }
 
