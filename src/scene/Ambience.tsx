@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ISLAND_RADIUS, scatter } from './layout';
-import { HORIZON } from './Life';
+import { HORIZON } from './horizon';
 import { dayPhase, daylight } from './time';
 
 /** Animated ocean: vertex waves + depth gradient + glinting highlights. One draw call. */

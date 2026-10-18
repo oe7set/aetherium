@@ -2,10 +2,8 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ISLAND_RADIUS, scatter } from './layout';
+import { HORIZON } from './horizon';
 import { dayPhase, daylight } from './time';
-
-/** Current horizon colour, shared with the ocean so the sea fades into the sky. */
-export const HORIZON = new THREE.Color('#bfe3ff');
 
 /**
  * Sky dome: vertical gradient (zenith → horizon) with a sun glow and a moon, both following the
