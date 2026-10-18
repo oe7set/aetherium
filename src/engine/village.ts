@@ -280,6 +280,28 @@ export function canUpgradeField(s: GameState, v: Village, index: number): VResul
   return OK;
 }
 
+/**
+ * The field worth upgrading next: the lowest planned level among upgradable fields, preferring the
+ * resource the village has least income of (crop when net crop is low). -1 if none can be built.
+ */
+export function bestFieldToUpgrade(s: GameState, v: Village): number {
+  const prod = production(s, v);
+  const net = netCrop(s, v);
+  let best = -1;
+  let bestScore = Infinity;
+  v.fields.forEach((_, i) => {
+    if (!canUpgradeField(s, v, i).ok) return;
+    const res = fieldType(v, i);
+    const income = res === 'crop' ? net : prod[res];
+    const score = plannedLevel(v, 'field', String(i)) * 1e6 + income;
+    if (score < bestScore) {
+      bestScore = score;
+      best = i;
+    }
+  });
+  return best;
+}
+
 export function upgradeField(s: GameState, villageId: number, index: number): VResult {
   const v = getVillage(s, villageId);
   if (!v) return fail('illegal');

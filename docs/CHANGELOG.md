@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.33.0] – Stationskarten & Komfort
+
+- Insel: Station antippen öffnet eine Karte mit den besten Aktionen (antippen = starten oder stoppen), der nächsten Freischaltung und dem Weg in den Skill – statt sofort irgendetwas zu starten.
+- Dorf: „Bestes Feld ausbauen" mit einem Tipp – nimmt das niedrigste Feld, bei Gleichstand den Rohstoff mit der geringsten Produktion (Getreide nach Verbrauch).
+- Inventar: „Plunder verkaufen" räumt allen Ramsch auf einmal weg.
+
 ## [1.32.0] – Lebendige Insel
 
 - Welt-Seite: oben eine Statusleiste für Dorf (Baumeister frei oder Restzeit), Held (zu Hause, unterwegs, Abenteuer wartet), Riss (Essenz, Wochenboss offen) und Tagesbonus – antippen springt hin. Darunter „Weiter mit": die letzten Aktionen mit einem Tipp neu starten.

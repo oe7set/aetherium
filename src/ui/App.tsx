@@ -1,5 +1,6 @@
 import { UpdateBanner } from './UpdateBanner';
 import { WorldHud } from './WorldHud';
+import { StationCard } from './StationCard';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
@@ -110,7 +111,10 @@ function useBackgroundMusic() {
  * One history entry stands for "something is open"; closing in the UI consumes it again.
  */
 function useBackButton(enabled: boolean) {
-  const open = useGame((s) => s.ui.tab !== 'world' || s.ui.agenda || s.ui.quickNav || s.dailyOpen);
+  const open = useGame(
+    (s) =>
+      s.ui.tab !== 'world' || s.ui.agenda || s.ui.quickNav || !!s.ui.stationCard || s.dailyOpen,
+  );
   const pushed = useRef(false);
   useEffect(() => {
     if (!enabled) return;
@@ -129,12 +133,19 @@ function useBackButton(enabled: boolean) {
       pushed.current = false;
       const { ui, setUi, dailyOpen, setDailyOpen } = useGame.getState();
       if (dailyOpen) setDailyOpen(false);
+      else if (ui.stationCard) setUi({ stationCard: null });
       else if (ui.agenda || ui.quickNav) setUi({ agenda: false, quickNav: false });
       else if (ui.tab === 'skills' && ui.skillDetail) setUi({ skillDetail: false });
       else setUi({ tab: 'world' });
       // Still something open (e.g. skill detail → list)? Keep one entry for the next back.
       const after = useGame.getState();
-      if (after.ui.tab !== 'world' || after.ui.agenda || after.ui.quickNav || after.dailyOpen) {
+      if (
+        after.ui.tab !== 'world' ||
+        after.ui.agenda ||
+        after.ui.quickNav ||
+        !!after.ui.stationCard ||
+        after.dailyOpen
+      ) {
         window.history.pushState({ aetherium: true }, '');
         pushed.current = true;
       }
@@ -247,6 +258,7 @@ export function App() {
       <AgendaPanel />
       <RewardReveal />
       <UpdateBanner />
+      <StationCard />
       {inRift && (
         <Suspense
           fallback={<div className="rift-overlay rift-loading">🌀 Der Riss öffnet sich …</div>}

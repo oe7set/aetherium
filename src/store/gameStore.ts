@@ -15,7 +15,6 @@ import {
 } from '../data/flavor';
 import {
   advance,
-  bestAvailableAction,
   acceptQuest,
   claimTask,
   completeQuest,
@@ -59,6 +58,7 @@ import {
   stopAction,
   summaryHasContent,
   consumeAll,
+  formatNumber,
   consumeItem,
   xpForLevel,
   type GameEvent,
@@ -128,6 +128,8 @@ export interface UiState {
   heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
+  /** Island station tapped: its action card (skill id). */
+  stationCard: string | null;
   questSegment: QuestSegment;
   /** "Was jetzt?" overlay. */
   agenda: boolean;
@@ -154,6 +156,8 @@ export interface GameStore {
   stop: () => void;
   click: () => void;
   sell: (item: string, qty: number) => void;
+  /** Sells whole stacks at once (e.g. all junk) with a single feed line. */
+  sellStacks: (items: string[]) => void;
   buy: (item: string, qty: number) => void;
   buyTool: (toolId: string) => void;
   equipTool: (toolId: string) => void;
@@ -209,7 +213,7 @@ export interface GameStore {
   village: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
   ) => boolean;
-  /** World tap on a station: start the best doable action of that skill, else open the skill. */
+  /** World tap on a station: opens its action card (combat, research, farming open their panel). */
   tapStation: (skill: string) => void;
   dismissOffline: () => void;
   dismissLevelUp: () => void;
@@ -332,6 +336,7 @@ export const useGame = create<GameStore>()((set, get) => {
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,
+      stationCard: null,
       questSegment: 'tasks',
       agenda: false,
     },
@@ -380,6 +385,20 @@ export const useGame = create<GameStore>()((set, get) => {
       });
       const def = getItem(item);
       shopFeedback(res, `💰 ${flavor(defaultRng, SELL_LINES, { item: def.name, qty: amount })}`);
+    },
+    sellStacks: (items) => {
+      const before = get().game.gold;
+      let sold = 0;
+      mutate((s, emit) => {
+        for (const id of items) {
+          const qty = s.inventory[id] ?? 0;
+          if (qty > 0 && sellItem(s, id, qty, emit).ok) sold += qty;
+        }
+      });
+      if (sold > 0)
+        get().pushFeed(
+          `🗑️ ${sold} Teile Plunder verkauft (+${formatNumber(get().game.gold.sub(before), get().game.settings.numberFormat)} Gold). Platz geschaffen!`,
+        );
     },
     buy: (item, qty) => {
       let res: ShopResult = { ok: false, reason: 'unknown' };
@@ -548,9 +567,7 @@ export const useGame = create<GameStore>()((set, get) => {
         get().openSkill('farming');
         return;
       }
-      const best = bestAvailableAction(get().game, skill);
-      if (best) get().start(best.id);
-      else get().openSkill(skill);
+      get().setUi({ stationCard: skill });
     },
     riftPrepare: (hero, biome, endless = false) => {
       let cfg: RunConfig | null = null;

@@ -92,6 +92,12 @@ function ItemsGrid() {
     0,
   );
   const emptySlots = Math.max(0, slots - used);
+  const sellStacks = useGame((s) => s.sellStacks);
+  const junk = Object.keys(inventory).filter((id) => ITEM_MAP.get(id)?.category === 'junk');
+  const junkValue = junk.reduce(
+    (sum, id) => sum + (ITEM_MAP.get(id)?.sellPrice ?? 0) * (inventory[id] ?? 0),
+    0,
+  );
 
   return (
     <div className="inventory">
@@ -101,6 +107,11 @@ function ItemsGrid() {
         </span>
         <span className="muted">{t('inv.totalValue', { gold: num(totalValue) })}</span>
       </div>
+      {junk.length > 0 && (
+        <button className="btn btn-wide junk-btn" onClick={() => sellStacks(junk)}>
+          🗑️ Plunder verkaufen ({junk.length} Stapel, ~{num(junkValue)} Gold)
+        </button>
+      )}
       <div className="inv-controls">
         <input
           type="search"

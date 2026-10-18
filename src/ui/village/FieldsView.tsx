@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FIELD_PROD, PROD_SPEED, V_RES_INFO } from '../../data/village';
 import {
+  bestFieldToUpgrade,
   canUpgradeField,
   fieldCost,
   fieldMax,
@@ -65,13 +66,29 @@ export function FieldsView({ village: v, onCenter }: { village: Village; onCente
       {selected !== null && (
         <FieldDetail village={v} index={selected} onClose={() => setSelected(null)} />
       )}
-      {
-        <p className="muted small center">
-          Tippe auf ein Feld zum Ausbauen. Leuchtende Felder kannst du sofort ausbauen. Getreide
-          versorgt Einwohner und Truppen.
-        </p>
-      }
+      <QuickUpgrade village={v} />
+      <p className="muted small center">
+        Tippe auf ein Feld zum Ausbauen. Leuchtende Felder kannst du sofort ausbauen. Getreide
+        versorgt Einwohner und Truppen.
+      </p>
     </div>
+  );
+}
+
+/** One tap: upgrade the lowest field (the resource with least income first). */
+function QuickUpgrade({ village: v }: { village: Village }) {
+  const act = useGame((s) => s.village);
+  const best = bestFieldToUpgrade(useGame.getState().game, v);
+  if (best < 0) return null;
+  const res = fieldType(v, best);
+  return (
+    <button
+      className="btn btn-primary btn-wide"
+      onClick={() => act((s) => upgradeField(s, v.id, best))}
+    >
+      ⬆️ Bestes Feld ausbauen: {V_RES_INFO[res].fieldIcon} {V_RES_INFO[res].field}{' '}
+      {plannedLevel(v, 'field', String(best)) + 1}
+    </button>
   );
 }
 

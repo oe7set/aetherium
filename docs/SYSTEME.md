@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.32.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.33.0**.
 
 ## 1. Der große Kreislauf
 
@@ -156,6 +156,10 @@ Haustiere ↔ Held, Expansion)
   Inhalt – Dorf-Felder/Gebäude (mit „Genug Rohstoffe in …" über `affordIn`), Inventar-Items (Verwendet für /
   Entsteht durch, Benutzen, **Alle benutzen** = `consumeAll` mit zusammengefassten Meldungen, Kampfproviant,
   Verkaufen). Antippbare Ziele tragen `data-touch-keep`, damit ein Tipp die Karte wechselt statt schließt.
+- Insel-Stationen antippen öffnet die **Stationskarte** (`ui/StationCard.tsx`, `ui.stationCard`): die besten machbaren
+  Aktionen zum Starten/Stoppen, die nächste Freischaltung und der Weg in den Skill (Kampf/Forschung/Beete wie bisher).
+- Komfort: „Bestes Feld ausbauen" (`bestFieldToUpgrade`: niedrigste Stufe, bei Gleichstand der schwächste
+  Rohstoff, Getreide netto), „Plunder verkaufen" im Inventar (`sellStacks`, eine Meldung).
 - Unterreiter am Handy: eine wischbare Zeile; der aktive Reiter scrollt automatisch ins Bild (`BottomSheet`).
 - **Tab-Leiste**: aktiven Tab nochmal tippen → zurück zum Kern des Bereichs (`TAB_HOME` in `ui/tabShortcuts.ts`,
   z. B. Inventar → Taschen, Welt → „Was jetzt?") und nach oben; lange drücken → Schnellmenü aller Unterbereiche.

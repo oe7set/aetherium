@@ -31,6 +31,10 @@ import {
   invasionDefense,
   invasionTarget,
   agenda,
+  affordIn,
+  bestFieldToUpgrade,
+  fieldType,
+  netCrop,
 } from '../src/engine';
 import { gameWith, setLevel } from './helpers';
 
@@ -46,6 +50,35 @@ function rich(s: GameState): void {
 function finishAll(s: GameState, seconds = 3600 * 6): void {
   advance(s, seconds, createRng(1), noop);
 }
+
+describe('Dorf: Komfort', () => {
+  it('bestes Feld = niedrigste Stufe, bei Gleichstand die schwächste Produktion', () => {
+    const s = gameWith();
+    const v = activeVillage(s);
+    rich(s);
+    v.fields = v.fields.map(() => 3);
+    v.fields[5] = 1;
+    expect(bestFieldToUpgrade(s, v)).toBe(5);
+    v.fields[5] = 3;
+    // All equal: the resource with the least income wins (crop counts net of upkeep).
+    const prod = production(s, v);
+    const income = { ...prod, crop: netCrop(s, v) };
+    const weakest = (Object.keys(income) as (keyof typeof income)[]).sort(
+      (a, b) => income[a] - income[b],
+    )[0];
+    expect(fieldType(v, bestFieldToUpgrade(s, v))).toBe(weakest);
+  });
+
+  it('affordIn: 0 wenn bezahlbar, Restzeit aus der Produktion, unendlich wenn das Lager zu klein ist', () => {
+    const s = gameWith();
+    const v = activeVillage(s);
+    v.res = { wood: 0, clay: 0, iron: 0, crop: 0 };
+    expect(affordIn(s, v, { wood: 0, clay: 0, iron: 0, crop: 0 })).toBe(0);
+    const prod = production(s, v);
+    expect(affordIn(s, v, { wood: prod.wood, clay: 0, iron: 0, crop: 0 })).toBeCloseTo(3600, 0);
+    expect(affordIn(s, v, { wood: storageCap(v) + 1, clay: 0, iron: 0, crop: 0 })).toBe(Infinity);
+  });
+});
 
 describe('Dorf: Wirtschaft', () => {
   it('startet mit Hauptgebäude, 18 Feldern und produziert auch offline', () => {
