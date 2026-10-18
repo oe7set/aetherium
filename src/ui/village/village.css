@@ -752,3 +752,32 @@
     height: min(72vh, 680px);
   }
 }
+
+/* Map on phones: fills the sheet; ⛶ opens it over the whole screen. */
+@media (max-width: 1023px) {
+  .sheet .v-map {
+    height: max(300px, calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--active-h) - 230px));
+  }
+}
+.v-map-wrap.full {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  background: var(--bg, #0b0d18);
+}
+.v-map-wrap.full .v-map {
+  flex: 1;
+  height: auto;
+  border-radius: 0;
+  border: none;
+}
+.v-map-wrap.full .v-detail {
+  max-height: 42dvh;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+  margin: 0;
+}

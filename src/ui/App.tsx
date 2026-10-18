@@ -71,13 +71,14 @@ function MobileSkills() {
 function MobileLayout() {
   const tab = useGame((s) => s.ui.tab);
   const setUi = useGame((s) => s.setUi);
-  const label = t(`tab.${tab}` as MessageKey);
+  const label = `${TABS.find((tb) => tb.id === tab)?.icon ?? ''} ${t(`tab.${tab}` as MessageKey)}`;
+  const idle = useGame((s) => !s.game.active && !s.game.combat);
   return (
-    <div className="layout-mobile">
+    <div className={`layout-mobile${idle ? ' is-idle' : ''}`}>
       <Header />
       <div className="stage">
         <World />
-        <Feed limit={2} compact />
+        {tab === 'world' && <Feed limit={1} compact />}
         <BuffBar />
         <div className="stage-goal">
           <ChronicleBanner compact />

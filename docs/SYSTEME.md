@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.9.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.10.0**.
 
 ## 1. Der große Kreislauf
 
@@ -110,7 +110,13 @@
 - Erhalten bleiben: Dorf, Held, Riss, Belohnungs-Schicht samt Sammelbuch, Erfolge.
 - Neue State-Felder dort bewusst einordnen!
 
-## 4. Offene Punkte / was noch fehlt
+## 4. Bedienung (Handy)
+
+- Tab-Leiste (6 Bereiche) → Fenster in voller Höhe mit Titel und ✕ → Unterreiter (umbrechend, alle sichtbar).
+- Weitere Wege: Schnellzugriff 🧭 (Header, Taste K), antippbare Header-Chips, Chronik-„Los", Meldungs-Hinweis →
+  Ereignis-Log, Untätig-Leiste → Skills.
+
+## 5. Offene Punkte / was noch fehlt
 
 Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und werden hier gestrichen.
 
@@ -128,6 +134,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 - [ ] Englisch (`tContent`-Overlays), Barrierefreiheit (Farbenblind-Modi, Schriftgröße).
 - [ ] Riss-Performance-Budget: ≥ 500 Gegner auf Mittelklasse (Spatial Hash und Pooling prüfen).
+- [ ] Desktop-Ansicht: Menüführung analog zum Handy prüfen (Unterreiter, Karte im Vollbild).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
 - [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
 - [ ] Balancing über alle Schleifen mit Langzeit-Bot (Insel + Dorf + Held zusammen, 7 Tage).

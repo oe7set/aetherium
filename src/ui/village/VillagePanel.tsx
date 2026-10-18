@@ -85,7 +85,7 @@ export function VillagePanel() {
           </button>
         ))}
       </div>
-      <BuildQueue village={v} />
+      {seg !== 'map' && <BuildQueue village={v} compact={seg !== 'fields' && seg !== 'center'} />}
       {seg === 'fields' && <FieldsView village={v} onCenter={() => setSeg('center')} />}
       {seg === 'center' && <CenterView village={v} onSegment={setSeg} />}
       {seg === 'map' && <WorldMap village={v} />}
@@ -140,10 +140,11 @@ function ResourceBar({ village: v }: { village: Village }) {
   );
 }
 
-function BuildQueue({ village: v }: { village: Village }) {
+function BuildQueue({ village: v, compact }: { village: Village; compact: boolean }) {
   const act = useGame((s) => s.village);
   const game = useGame.getState().game;
   const lanes = (['field', 'center'] as const).filter((l) => v.queue[l].length);
+  if (!lanes.length && compact) return null;
   if (!lanes.length)
     return (
       <div className="v-queue idle">

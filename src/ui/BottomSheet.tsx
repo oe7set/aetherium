@@ -47,10 +47,17 @@ export function BottomSheet({ open, onClose, children, label }: Props) {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        aria-label="Schließen"
-        role="button"
       >
-        <span />
+        <span className="sheet-grip" />
+        <strong className="sheet-title">{label}</strong>
+        <button
+          className="sheet-close"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onClose}
+          aria-label="Schließen"
+        >
+          ✕
+        </button>
       </div>
       <div className="sheet-body" ref={body}>
         {open && children}

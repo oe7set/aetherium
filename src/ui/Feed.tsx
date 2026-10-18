@@ -3,6 +3,7 @@ import { useGame } from '../store/gameStore';
 
 export function Feed({ limit, compact = false }: { limit?: number; compact?: boolean }) {
   const feed = useGame((s) => s.feed);
+  const setUi = useGame((s) => s.setUi);
   const entries = limit ? feed.slice(0, limit) : feed;
   return (
     <section
@@ -13,7 +14,11 @@ export function Feed({ limit, compact = false }: { limit?: number; compact?: boo
       {!compact && <h3 className="panel-title">{t('feed.title')}</h3>}
       <ul>
         {entries.map((e) => (
-          <li key={e.id} className={`feed-${e.kind}`}>
+          <li
+            key={e.id}
+            className={`feed-${e.kind}`}
+            onClick={compact ? () => setUi({ tab: 'menu', menuSection: 'log' }) : undefined}
+          >
             {e.text}
           </li>
         ))}

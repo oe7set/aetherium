@@ -976,3 +976,133 @@ h4.rift-h4::before,
   color: var(--gold);
   vertical-align: middle;
 }
+
+/* --- Handy-Führung: volle Höhe, alles sichtbar, Meldungen als kurze Hinweise ------------------ */
+@media (max-width: 1023px) {
+  /* The sheet takes the whole room between header and action bar. */
+  .sheet {
+    top: calc(var(--header-h) + 4px);
+    /* Opaque: island labels must not shine through the menus. */
+    background: linear-gradient(180deg, #181c36, #0e1122);
+  }
+  /* Closed: fully out of sight (no title peeking through the translucent tab bar). */
+  .sheet:not(.open) {
+    visibility: hidden;
+    transition:
+      transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+      visibility 0s linear 0.28s;
+  }
+  .layout-mobile.is-idle {
+    --active-h: 46px;
+  }
+  .sheet-handle {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    height: 40px;
+    padding: 0 6px 0 14px;
+  }
+  .sheet-grip {
+    position: absolute;
+    left: 50%;
+    top: 5px;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--aether-2), var(--aether));
+    opacity: 0.8;
+  }
+  .sheet-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    padding-top: 6px;
+  }
+  .sheet-close {
+    width: 34px;
+    height: 34px;
+    margin-top: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  /* All sub-tabs visible at once: they wrap instead of hiding behind the edge. */
+  .segments {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 3px;
+    padding: 3px;
+  }
+  .segment {
+    flex: 1 1 auto;
+    min-height: 34px;
+    padding: 0 8px;
+    font-size: 12.5px;
+  }
+
+  /* Feed: only the newest line, a short toast that fades away; tap opens the full log. */
+  .feed-compact {
+    pointer-events: auto;
+  }
+  .feed-compact li {
+    font-size: 12px;
+    padding: 5px 9px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    animation: feed-toast 5.5s ease forwards;
+    cursor: pointer;
+  }
+  @keyframes feed-toast {
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    6%,
+    80% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-4px);
+      visibility: hidden;
+    }
+  }
+
+  /* Idle bar: one slim tap target to the skills. */
+  .active-bar.idle {
+    min-height: var(--active-h);
+    padding: 4px 10px;
+  }
+  .active-idle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--line-strong);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--muted);
+    font-size: 13px;
+    text-align: left;
+  }
+  .active-idle .active-icon {
+    font-size: 20px;
+  }
+  .active-idle .active-text {
+    flex: 1;
+  }
+  .active-go {
+    color: var(--aether);
+    font-weight: 700;
+  }
+}

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.10.0] – Bequemer auf dem Handy
+
+### Geändert
+
+- **Menüs nutzen die volle Höhe** und haben eine Titelleiste mit ✕; geschlossen verschwinden sie vollständig.
+  Das Fenster ist undurchsichtig, Insel-Beschriftungen scheinen nicht mehr durch.
+- **Alle Unterreiter sichtbar**: statt seitlich zu scrollen brechen sie in eine zweite Zeile um – mit Symbolen
+  (Inventar, Mehr-Menü).
+- **Meldungen klauen nicht mehr das Bild**: nur noch die neueste Zeile als kurzer Hinweis, der nach ein paar
+  Sekunden verblasst, und nur auf der Insel. Antippen öffnet den neuen Bereich **Mehr → 📜 Ereignisse**.
+- **Schmale Untätig-Leiste**, die direkt zu den Skills führt.
+- **Dorf-Karte**: füllt das Fenster, ⛶ öffnet sie im Vollbild; der Baumeister-Hinweis erscheint nur noch bei
+  Feldern und Dorfzentrum. Kartenknöpfe wählen kein Feld mehr versehentlich aus.
+
 ## [1.9.0] – Der Wochenboss
 
 ### Hinzugefügt

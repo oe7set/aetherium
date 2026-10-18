@@ -103,6 +103,7 @@ export type MenuSection =
   | 'stats'
   | 'settings'
   | 'save'
+  | 'log'
   | 'debug';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools' | 'album';
 

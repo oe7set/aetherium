@@ -1,4 +1,5 @@
 import { t } from '../../i18n';
+import { Feed } from '../Feed';
 import { useGame, type MenuSection } from '../../store/gameStore';
 import { QuestsPanel } from '../quests/QuestsPanel';
 import { ResearchPanel } from '../science/ResearchPanel';
@@ -13,6 +14,20 @@ import { StatsPanel } from './StatsPanel';
 
 type Section = MenuSection;
 
+const MENU_ICONS: Record<Section, string> = {
+  empire: '📚',
+  pass: '🏅',
+  research: '🔬',
+  quests: '📋',
+  prestige: '🌅',
+  achievements: '🏆',
+  stats: '📊',
+  log: '📜',
+  settings: '⚙️',
+  save: '💾',
+  debug: '🐞',
+};
+
 export function MenuPanel() {
   const section = useGame((s) => s.ui.menuSection);
   const setUi = useGame((s) => s.setUi);
@@ -26,6 +41,7 @@ export function MenuPanel() {
         'prestige',
         'achievements',
         'stats',
+        'log',
         'settings',
         'save',
         'debug',
@@ -38,6 +54,7 @@ export function MenuPanel() {
         'prestige',
         'achievements',
         'stats',
+        'log',
         'settings',
         'save',
       ];
@@ -55,7 +72,7 @@ export function MenuPanel() {
               e.currentTarget.closest('.sheet-body, .center-panel')?.scrollTo({ top: 0 });
             }}
           >
-            {t(`menu.${s}`)}
+            {MENU_ICONS[s]} {t(`menu.${s}`)}
           </button>
         ))}
       </div>
@@ -67,6 +84,7 @@ export function MenuPanel() {
       {section === 'prestige' && <PrestigePanel />}
       {section === 'achievements' && <AchievementsPanel />}
       {section === 'stats' && <StatsPanel />}
+      {section === 'log' && <Feed limit={60} />}
       {section === 'save' && <SavePanel />}
       {section === 'debug' && import.meta.env.DEV && <DebugPanel />}
     </div>

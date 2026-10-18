@@ -65,14 +65,18 @@ function ActionBar() {
   );
   const click = useGame((s) => s.click);
   const stop = useGame((s) => s.stop);
+  const setUi = useGame((s) => s.setUi);
   const read = useCallback(() => readActiveProgress(), []);
 
   if (!activeId) {
     return (
       <div className="active-bar idle">
         <Popups />
-        <span className="active-icon">🧍</span>
-        <span className="active-text">{t('action.idle')}</span>
+        <button className="active-idle" onClick={() => setUi({ tab: 'skills' })}>
+          <span className="active-icon">🧍</span>
+          <span className="active-text">{t('action.idle')}</span>
+          <span className="active-go">Skills ›</span>
+        </button>
       </div>
     );
   }

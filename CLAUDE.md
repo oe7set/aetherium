@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.9.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.10.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
@@ -59,7 +59,8 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Neue Inhalte = nur Daten ergänzen. Balancing-Knöpfe in `balance.ts`, Begründungen in `docs/BALANCING.md`.
 - `src/store/` – Zustand-Store (`gameStore.ts`), Loop (`loop.ts`, 10 Ticks/s, Autosave 30 s,
   visibilitychange/pagehide), `persistence.ts` (localStorage-Key `aetherium.save`).
-- `src/ui/` – React-Overlay. Mobile: Tab-Leiste + `BottomSheet`; Desktop (≥1024 px): 3 Spalten.
+- `src/ui/` – React-Overlay. Mobile: Tab-Leiste + `BottomSheet` (volle Höhe, Titel + ✕; Handy-Regeln am Ende von
+  `theme.css`; Feed nur als verblassender Hinweis auf der Insel, Log unter Mehr → Ereignisse); Desktop (≥1024 px): 3 Spalten.
   Fortschrittsbalken der aktiven Aktion laufen per rAF (`LiveProgressBar`), nicht über React-Renders.
 - `src/scene/` – R3F-Insel, lazy über `src/ui/World.tsx` (fällt auf 2D-`WorldView` zurück: Akku-Modus,
   kein WebGL, Fehler). Liest State nur in `useFrame` via `useGame.getState()`; Animationen reagieren auf

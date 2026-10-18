@@ -36,6 +36,7 @@ export function WorldMap({ village: v }: { village: Village }) {
   const pointers = useRef(new Map<number, { x: number; y: number; sx: number; sy: number }>());
   const pinch = useRef<{ dist: number; zoom: number } | null>(null);
   const [selected, setSelected] = useState<[number, number] | null>([v.x, v.y]);
+  const [full, setFull] = useState(false);
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
 
@@ -130,7 +131,7 @@ export function WorldMap({ village: v }: { village: Village }) {
   };
 
   return (
-    <div className="v-map-wrap">
+    <div className={`v-map-wrap${full ? ' full' : ''}`}>
       <div
         ref={wrapRef}
         className="v-map"
@@ -141,12 +142,22 @@ export function WorldMap({ village: v }: { village: Village }) {
         onWheel={(e) => zoom(e.deltaY < 0 ? 1.1 : 0.9)}
       >
         <canvas ref={canvasRef} className="v-map-canvas" />
-        <div className="v-map-tools">
+        <div
+          className="v-map-tools"
+          onPointerDown={(e) => e.stopPropagation()}
+          onPointerUp={(e) => e.stopPropagation()}
+        >
           <button onClick={() => zoom(1.25)} aria-label="Hineinzoomen">
             ＋
           </button>
           <button onClick={() => zoom(0.8)} aria-label="Herauszoomen">
             －
+          </button>
+          <button
+            onClick={() => setFull(!full)}
+            aria-label={full ? 'Vollbild verlassen' : 'Vollbild'}
+          >
+            {full ? '✕' : '⛶'}
           </button>
           <button
             onClick={() => {
