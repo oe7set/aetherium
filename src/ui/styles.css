@@ -1778,3 +1778,43 @@ button.chip {
   left: 80%;
   top: 22%;
 }
+
+/* --- Phase 6: prestige ------------------------------------------------------------------------- */
+
+.prestige-card {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #2a2440, var(--panel));
+  border: 1px solid var(--purple);
+}
+.prestige-card h3 {
+  margin-bottom: 6px;
+}
+.prestige-card.cosmic {
+  background: radial-gradient(circle at 20% 0%, #3a1f5c, #10131c 70%);
+  border-color: #ff5ec4;
+}
+.law-list {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0;
+}
+.law {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: left;
+  cursor: pointer;
+}
+.law span:last-child {
+  display: grid;
+}
+.law.on {
+  border-color: var(--gold);
+  background: #3a3220;
+}

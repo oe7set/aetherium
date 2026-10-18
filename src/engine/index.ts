@@ -11,6 +11,7 @@ export * from './flavor';
 export * from './format';
 export * from './inventory';
 export * from './offline';
+export * from './prestige';
 export * from './rng';
 export * from './save';
 export * from './science';

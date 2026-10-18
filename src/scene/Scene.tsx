@@ -17,6 +17,7 @@ import {
   Fields,
   Helpers,
   HuntingGround,
+  Obelisk,
   ResearchTower,
   Workbench,
 } from './Science';
@@ -104,6 +105,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Arena onTap={tap('combat')} particles={quality.particles} />
       <ResearchTower onTap={tap('research')} />
       <AcceleratorRing />
+      <Obelisk />
       <Fields onTap={tap('farming')} />
       <Workbench onTap={tap('crafting')} />
       <HuntingGround onTap={tap('hunting')} />

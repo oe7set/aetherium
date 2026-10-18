@@ -7,8 +7,15 @@ export function skillXp(s: GameState, skill: string): number {
   return s.skills[skill]?.xp ?? 0;
 }
 
+/** Level cap: 99, or 120 with the „Transzendenz" prestige talent. */
+export function levelCap(s: GameState): number {
+  return (s.prestige?.upgrades.transcendence ?? 0) > 0
+    ? BALANCE.XP_TABLE_MAX_LEVEL
+    : BALANCE.MAX_LEVEL;
+}
+
 export function skillLevel(s: GameState, skill: string): number {
-  return levelForXp(skillXp(s, skill), BALANCE.MAX_LEVEL);
+  return levelForXp(skillXp(s, skill), levelCap(s));
 }
 
 export function totalLevel(s: GameState): number {
@@ -19,9 +26,10 @@ export function totalLevel(s: GameState): number {
 export function addXp(s: GameState, skill: string, amount: number, emit: Emit): void {
   if (amount <= 0) return;
   const entry = (s.skills[skill] ??= { xp: 0 });
-  const before = levelForXp(entry.xp);
+  const cap = levelCap(s);
+  const before = levelForXp(entry.xp, cap);
   entry.xp += amount;
-  const after = levelForXp(entry.xp);
+  const after = levelForXp(entry.xp, cap);
   emit({ type: 'xp', skill, amount });
   for (let lvl = before + 1; lvl <= after; lvl++) emit({ type: 'levelUp', skill, level: lvl });
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.0] – Phase 6 „Prestige"
+
+### Hinzugefügt
+
+- **Wiedergeburt**: Skills/Inventar/Gold zurück, dafür **Weisheit** (+4 % XP, +2 % Forschung, +2 % Gold pro Punkt).
+  **Ahnen-Talente**: Vorwissen (Start-Level), Erbstücke (Werkzeuge behalten), Startkapital, Tascheninflation,
+  Treue Helfer, Tiefschlaf (+Offline), Flinke Finger, Glücksstern und **Transzendenz (Level-Cap 120)**.
+- **Paradigmenwechsel** (Thomas Kuhn): setzt den Tech-Baum zurück, +25 % Forschung je Wechsel, wählbare
+  **Naturgesetze** mit Vor- und Nachteilen (Schwache Gravitation, Schnelles Licht, Exotherme Welt …).
+- **Urknall**: Multiversum-Splitter für Meta-Upgrades (zweites Naturgesetz, kosmische Inflation,
+  kosmisches Gedächtnis, Dunkle Energie, Ewiger Codex).
+- Prestige-Ansicht im Menü mit Bestätigung per Doppeltipp; Weisheit im Header; Ahnen-Obelisk in 3D wächst mit.
+- **Balancing-Pass**: analytischer Progressionstest, Angelruten als Werkzeuge, Jagd-XP angepasst
+  (alle Sammel-Skills ~30–55 h bis 99). Spielstand v5.
+
 ## [0.5.0] – Phase 5 „Wissenschaft & Magie"
 
 ### Hinzugefügt

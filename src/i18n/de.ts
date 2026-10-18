@@ -114,6 +114,7 @@ export const de = {
   'menu.about': 'Über',
   'menu.debug': 'Debug',
   'menu.achievements': 'Erfolge',
+  'menu.prestige': 'Prestige',
   'menu.numberFormat': 'Zahlenformat',
   'menu.format.short': 'Kurz (1,5 Mio.)',
   'menu.format.scientific': 'Wissenschaftlich (1,5e6)',
@@ -140,7 +141,7 @@ export const de = {
   'menu.resetConfirm':
     'Wirklich alles löschen? Das ist kein Prestige, das ist Vernichtung. Tippe nochmal zum Bestätigen.',
   'menu.lastSave': 'Zuletzt gespeichert: {time}',
-  'menu.version': 'Version {version} · Phase 5 „Wissenschaft & Magie“',
+  'menu.version': 'Version {version} · Phase 6 „Prestige“',
   'menu.shortcuts':
     'Tastatur: 1–5 Tabs · Leertaste = Aktion beschleunigen · S = Stopp · Esc = Schließen',
 

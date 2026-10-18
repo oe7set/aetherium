@@ -204,12 +204,115 @@ const PICKAXES: ToolDef[] = [
   },
 ];
 
-export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES];
+const RODS: ToolDef[] = [
+  {
+    id: 'rod_stick',
+    name: 'Stock mit Schnur',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 0,
+    levelReq: 1,
+    speed: 1,
+    price: 0,
+    desc: 'Ein Stock. Eine Schnur. Hoffnung.',
+  },
+  {
+    id: 'rod_bamboo',
+    name: 'Bambusrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 1,
+    levelReq: 1,
+    speed: 1.15,
+    price: 60,
+    desc: 'Biegsam und optimistisch.',
+  },
+  {
+    id: 'rod_oak',
+    name: 'Eichenrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 2,
+    levelReq: 10,
+    speed: 1.3,
+    price: 400,
+    desc: 'Solide. Die Fische respektieren das.',
+  },
+  {
+    id: 'rod_carbon',
+    name: 'Kohlefaserrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 3,
+    levelReq: 20,
+    speed: 1.5,
+    price: 2_000,
+    desc: 'Leicht wie eine Feder, teuer wie ein Pferd.',
+  },
+  {
+    id: 'rod_mithril',
+    name: 'Mithrilrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 4,
+    levelReq: 30,
+    speed: 1.75,
+    price: 10_000,
+    desc: 'Glänzt unter Wasser. Lockt neugierige Fische.',
+  },
+  {
+    id: 'rod_enchanted',
+    name: 'Verzauberte Rute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 5,
+    levelReq: 41,
+    speed: 2.05,
+    price: 45_000,
+    desc: 'Flüstert den Fischen Versprechungen zu.',
+  },
+  {
+    id: 'rod_rune',
+    name: 'Runenrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 6,
+    levelReq: 55,
+    speed: 2.4,
+    price: 200_000,
+    desc: 'Mit eingebautem Fischradar (Rune).',
+  },
+  {
+    id: 'rod_dragon',
+    name: 'Drachenrute',
+    icon: '🎣',
+    skill: 'fishing',
+    tier: 7,
+    levelReq: 70,
+    speed: 2.85,
+    price: 1_500_000,
+    desc: 'Kocht den Fisch beim Fang vor. Fast.',
+  },
+  {
+    id: 'rod_quantum',
+    name: 'Quantenangel',
+    icon: '⚛️',
+    skill: 'fishing',
+    tier: 8,
+    levelReq: 85,
+    speed: 3.4,
+    price: 25_000_000,
+    desc: 'Fängt den Fisch, bevor er anbeißt. Kausalität ist optional.',
+  },
+];
+
+export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES, ...RODS];
 
 /** The tool every new game starts with, per skill. */
 export const STARTER_TOOLS: Record<string, string> = {
   woodcutting: 'axe_stone',
   mining: 'pick_stone',
+  fishing: 'rod_stick',
 };
 
 /** What the general store (Krämer) sells. Phase 3 replaces this with a dynamic market. */

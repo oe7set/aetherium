@@ -15,6 +15,7 @@ export function Header() {
   const hasResearch = useGame((s) => s.game.research > 0 || s.game.techs.length > 0);
   const canResearch = useGame((s) => affordableTechs(s.game).length > 0);
   const setUi = useGame((s) => s.setUi);
+  const wisdom = useGame((s) => s.game.prestige.wisdomTotal);
   const fireFraction = fire / BALANCE.FIRE_MAX_SECONDS;
 
   return (
@@ -35,6 +36,11 @@ export function Header() {
           >
             🔬 <b>{research}</b>
           </button>
+        )}
+        {wisdom > 0 && (
+          <span className="chip" title="Weisheit (gesamt)">
+            🦉 <b>{wisdom}</b>
+          </span>
         )}
         <span className="chip" title={t('header.totalLevel')}>
           📊 <b>{total}</b>

@@ -15,6 +15,11 @@ import {
 import {
   advance,
   bestAvailableAction,
+  bigBang,
+  buyMultiverseUpgrade,
+  buyWisdomUpgrade,
+  paradigmShift,
+  rebirth,
   assignHelper,
   dismissHelper,
   harvest,
@@ -111,6 +116,11 @@ export interface GameStore {
   hire: (type: string) => void;
   assign: (helper: number, actionId: string | null) => void;
   dismissHelperAt: (helper: number) => void;
+  doRebirth: () => void;
+  doParadigmShift: (laws: string[]) => void;
+  doBigBang: () => void;
+  buyTalent: (id: string) => void;
+  buyMultiverse: (id: string) => void;
   setCombatSetting: <K extends keyof CombatSettings>(key: K, value: CombatSettings[K]) => void;
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
@@ -345,6 +355,32 @@ export const useGame = create<GameStore>()((set, get) => {
     dismissHelperAt: (helper) =>
       mutate((s) => {
         dismissHelper(s, helper);
+      }),
+    doRebirth: () => {
+      mutate((s, emit) => {
+        rebirth(s, emit);
+      });
+      get().save();
+    },
+    doParadigmShift: (laws) => {
+      mutate((s, emit) => {
+        paradigmShift(s, laws, emit);
+      });
+      get().save();
+    },
+    doBigBang: () => {
+      mutate((s, emit) => {
+        bigBang(s, emit);
+      });
+      get().save();
+    },
+    buyTalent: (id) =>
+      mutate((s) => {
+        buyWisdomUpgrade(s, id);
+      }),
+    buyMultiverse: (id) =>
+      mutate((s) => {
+        buyMultiverseUpgrade(s, id);
       }),
     setCombatSetting: (key, value) =>
       mutate((s) => {

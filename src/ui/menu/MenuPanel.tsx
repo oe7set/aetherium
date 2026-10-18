@@ -2,17 +2,18 @@ import { useState } from 'react';
 import { t } from '../../i18n';
 import { AchievementsPanel } from './AchievementsPanel';
 import { DebugPanel } from './DebugPanel';
+import { PrestigePanel } from './PrestigePanel';
 import { SavePanel } from './SavePanel';
 import { SettingsPanel } from './SettingsPanel';
 import { StatsPanel } from './StatsPanel';
 
-type Section = 'settings' | 'achievements' | 'stats' | 'save' | 'debug';
+type Section = 'prestige' | 'settings' | 'achievements' | 'stats' | 'save' | 'debug';
 
 export function MenuPanel() {
   const [section, setSection] = useState<Section>('achievements');
   const sections: Section[] = import.meta.env.DEV
-    ? ['achievements', 'stats', 'settings', 'save', 'debug']
-    : ['achievements', 'stats', 'settings', 'save'];
+    ? ['prestige', 'achievements', 'stats', 'settings', 'save', 'debug']
+    : ['prestige', 'achievements', 'stats', 'settings', 'save'];
   return (
     <div className="panel">
       <div className="segments" role="tablist">
@@ -29,6 +30,7 @@ export function MenuPanel() {
         ))}
       </div>
       {section === 'settings' && <SettingsPanel />}
+      {section === 'prestige' && <PrestigePanel />}
       {section === 'achievements' && <AchievementsPanel />}
       {section === 'stats' && <StatsPanel />}
       {section === 'save' && <SavePanel />}

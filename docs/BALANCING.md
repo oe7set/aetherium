@@ -52,3 +52,25 @@ Gedeckelt auf 24 h, identische Simulation wie live (getestet).
 - XP: 4 pro Schadenspunkt auf Waffenstil (oder Verteidigung), 1,33 auf Lebenspunkte.
 - LP-Skala wie OSRS (Start 10, Max 99); Essen heilt 2–30 LP. Auto-Essen standardmäßig bei 50 %.
 - Tod: Kampf stoppt, volle LP, kein Itemverlust (keine Frust-Mechanik, Spec §8).
+
+## Progressionskurve (Balancing-Pass Phase 6)
+
+Analytisch berechnet in `tests/balance.test.ts` (beste Aktion + bestes Werkzeug je Level, ohne Klicks/Buffs/Prestige):
+
+| Skill                            | Level 10 | Level 50 | Level 99 |
+| -------------------------------- | -------- | -------- | -------- |
+| Holzfällen                       | ~5 min   | ~1,2 h   | ~29 h    |
+| Bergbau                          | ~4 min   | ~1,3 h   | ~35 h    |
+| Angeln (mit Ruten)               | ~3 min   | ~1,0 h   | ~50 h    |
+| Jagen (XP ×2,8, keine Werkzeuge) | ~2 min   | ~1,0 h   | ~54 h    |
+
+Angeln bekam Angelruten als Werkzeuge, Jagen einen XP-Faktor, damit kein Sammel-Skill mehr als ~2× länger dauert.
+Der Test schlägt fehl, wenn ein Skill unter 20 h oder über 400 h bis 99 rutscht.
+
+## Prestige
+
+- Wiedergeburt ab Gesamtlevel 250. Weisheit = ⌊√(Lauf-XP / 20.000) · (1 + Inflation)⌋.
+  Beispiel: alle 22 Skills auf 40 → ~5 Weisheit; alles auf 99 → ~120 Weisheit.
+- Jeder Weisheitspunkt (lebenslang, Ausgeben kostet nichts vom Bonus): +4 % XP, +2 % Forschung, +2 % Gold.
+- Paradigmenwechsel ab 20 Technologien: +25 % Forschung je Wechsel, Naturgesetze mit Vor- und Nachteil.
+- Urknall ab 3 Paradigmenwechseln: Splitter = 1 + ⌊Paradigmen/3⌋ + ⌊Weisheit gesamt/500⌋.

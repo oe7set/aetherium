@@ -222,3 +222,32 @@ export function Helpers() {
     </group>
   );
 }
+
+/** Ahnen-Obelisk: appears after the first rebirth and grows with every prestige. */
+export function Obelisk() {
+  const rebirths = useGame(
+    (s) => s.game.prestige.rebirths + s.game.prestige.paradigms * 3 + s.game.prestige.bigBangs * 10,
+  );
+  const gem = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (gem.current) {
+      gem.current.rotation.y += 0.01;
+      gem.current.position.y =
+        2.2 + Math.min(3, rebirths * 0.15) + Math.sin(performance.now() / 500) * 0.1;
+    }
+  });
+  if (rebirths <= 0) return null;
+  const height = 1.6 + Math.min(3, rebirths * 0.15);
+  return (
+    <group position={[1.4, 0, -2.2]}>
+      <mesh position={[0, height / 2, 0]} castShadow>
+        <boxGeometry args={[0.45, height, 0.45]} />
+        <meshStandardMaterial color="#d8d2c4" flatShading />
+      </mesh>
+      <mesh ref={gem} position={[0, height + 0.5, 0]}>
+        <octahedronGeometry args={[0.3, 0]} />
+        <meshStandardMaterial color="#b085f5" emissive="#b085f5" emissiveIntensity={1.8} />
+      </mesh>
+    </group>
+  );
+}

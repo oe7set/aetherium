@@ -12,6 +12,7 @@ import {
   TECH_MAP,
   TOOL_MAP,
 } from '../data';
+import { LAWS } from '../data/prestige';
 import {
   defaultCombatSettings,
   defaultSettings,
@@ -20,6 +21,7 @@ import {
   type CombatSettings,
   type CombatState,
   type GameState,
+  type PrestigeState,
 } from './state';
 
 /** Shape stored in localStorage / export strings. */
@@ -63,6 +65,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   },
   // 3 → 4 (Phase 5): research, tech tree, codex, farming plots, helpers.
   3: (data) => ({ ...data, research: 0, techs: [], codex: [], plots: [], helpers: [] }),
+  // 4 → 5 (Phase 6): prestige layers. Existing XP counts towards the first rebirth.
+  4: (data) => ({ ...data, prestige: null }),
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -199,6 +203,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             done: num(h.done, 0),
           }))
       : [],
+    prestige: hydratePrestige(data.prestige, base.prestige),
     combatSettings: {
       ...defaultCombatSettings(),
       ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
@@ -213,6 +218,24 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
             typeof b.remaining === 'number',
         )
       : [],
+  };
+}
+
+function hydratePrestige(v: unknown, fallback: PrestigeState): PrestigeState {
+  if (!isRecord(v)) return fallback;
+  const n = (x: unknown, d = 0) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  return {
+    wisdom: Math.max(0, n(v.wisdom)),
+    wisdomTotal: Math.max(0, n(v.wisdomTotal)),
+    rebirths: n(v.rebirths),
+    upgrades: numberRecord(v.upgrades),
+    paradigms: n(v.paradigms),
+    laws: stringArray(v.laws).filter((id) => LAWS.some((l) => l.id === id)),
+    bigBangs: n(v.bigBangs),
+    shards: n(v.shards),
+    multiverse: numberRecord(v.multiverse),
+    runBaseXp: n(v.runBaseXp, fallback.runBaseXp),
+    runStartedAt: n(v.runStartedAt, fallback.runStartedAt),
   };
 }
 

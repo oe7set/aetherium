@@ -38,7 +38,8 @@ export type GameEvent =
   | { type: 'elementDiscovered'; symbol: string }
   | { type: 'harvested'; plot: number; item: string; qty: number; mutated?: string }
   | { type: 'helperStopped'; helper: number; actionId: string; reason: StopReason }
-  | { type: 'research'; amount: number };
+  | { type: 'research'; amount: number }
+  | { type: 'prestige'; layer: 'rebirth' | 'paradigm' | 'bigbang'; gain: number };
 
 export type Emit = (event: GameEvent) => void;
 

@@ -41,6 +41,7 @@ export const SKILLS: SkillDef[] = [
     icon: '🎣',
     color: '#4aa3d8',
     group: 'gathering',
+    usesTools: true,
     desc: 'Geduld, Köder und ein Hauch Quantenmechanik. Schrödingers Fisch beißt manchmal an. Oder auch nicht.',
   },
   {

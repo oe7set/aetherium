@@ -1,5 +1,5 @@
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
-import { levelProgress, skillUnlocked } from '../../engine';
+import { levelCap, levelProgress, skillUnlocked } from '../../engine';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
@@ -62,7 +62,8 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
   const xp = useGame((s) => s.game.skills[skillId]?.xp ?? 0);
   const toolId = useGame((s) => s.game.equippedTools[skillId]);
   const { int } = useFmt();
-  const p = levelProgress(xp);
+  const cap = useGame((s) => levelCap(s.game));
+  const p = levelProgress(xp, cap);
   const actions = actionsForSkill(skillId);
   const next = actions.find((a) => a.levelReq > p.level);
   const tool = skill.usesTools && toolId ? getTool(toolId) : null;

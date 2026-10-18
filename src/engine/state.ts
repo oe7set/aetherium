@@ -76,6 +76,24 @@ export interface HelperState {
   done: number;
 }
 
+export interface PrestigeState {
+  /** Unspent wisdom (currency for Ahnen-Talente). */
+  wisdom: number;
+  /** Lifetime wisdom; drives the global multiplier. */
+  wisdomTotal: number;
+  rebirths: number;
+  upgrades: Record<string, number>;
+  paradigms: number;
+  /** Active natural laws. */
+  laws: string[];
+  bigBangs: number;
+  shards: number;
+  multiverse: Record<string, number>;
+  /** Total XP at the start of the current run (excluded from wisdom gain). */
+  runBaseXp: number;
+  runStartedAt: number;
+}
+
 export interface BuffState {
   id: string;
   remaining: number;
@@ -125,9 +143,10 @@ export interface GameState {
   codex: string[];
   plots: PlotState[];
   helpers: HelperState[];
+  prestige: PrestigeState;
 }
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 export function defaultSettings(): Settings {
   return {
@@ -181,6 +200,23 @@ export function newGame(now: number = Date.now()): GameState {
       { seed: null, elapsed: 0 },
     ],
     helpers: [],
+    prestige: defaultPrestige(now),
+  };
+}
+
+export function defaultPrestige(now: number = Date.now()): PrestigeState {
+  return {
+    wisdom: 0,
+    wisdomTotal: 0,
+    rebirths: 0,
+    upgrades: {},
+    paradigms: 0,
+    laws: [],
+    bigBangs: 0,
+    shards: 0,
+    multiverse: {},
+    runBaseXp: xpForLevel(10),
+    runStartedAt: now,
   };
 }
 
@@ -210,6 +246,12 @@ export function cloneState(s: GameState): GameState {
     codex: [...s.codex],
     plots: s.plots.map((p) => ({ ...p })),
     helpers: s.helpers.map((h) => ({ ...h })),
+    prestige: {
+      ...s.prestige,
+      upgrades: { ...s.prestige.upgrades },
+      laws: [...s.prestige.laws],
+      multiverse: { ...s.prestige.multiverse },
+    },
   };
 }
 

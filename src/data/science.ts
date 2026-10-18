@@ -1190,6 +1190,9 @@ export const SCIENCE_ITEMS: ItemDef[] = [
 
 // --- Actions ------------------------------------------------------------------------------------------------
 
+/** Hunting has no tools, so its XP is scaled up to keep the 1–99 curve in line with other gathering skills. */
+const HUNT_XP_SCALE = 2.8;
+
 const hunt = (
   id: string,
   name: string,
@@ -1206,7 +1209,7 @@ const hunt = (
   icon,
   levelReq: level,
   baseTime: time,
-  xp,
+  xp: Math.round(xp * HUNT_XP_SCALE),
   inputs: [],
   outputs,
   drops: loot,

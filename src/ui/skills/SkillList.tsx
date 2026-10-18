@@ -1,5 +1,5 @@
 import { COMING_SOON_SKILLS, getAction, SKILLS } from '../../data';
-import { levelProgress, skillUnlocked } from '../../engine';
+import { levelCap, levelProgress, skillUnlocked } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
@@ -17,7 +17,8 @@ function SkillRow({ id }: { id: string }) {
   const unlocked = useGame((s) => skillUnlocked(s.game, id));
   const openSkill = useGame((s) => s.openSkill);
   const skill = SKILLS.find((s) => s.id === id)!;
-  const p = levelProgress(xp);
+  const cap = useGame((s) => levelCap(s.game));
+  const p = levelProgress(xp, cap);
   return (
     <button
       className={`skill-row ${selected ? 'selected' : ''} ${isActive ? 'running' : ''} ${unlocked ? '' : 'locked'}`}

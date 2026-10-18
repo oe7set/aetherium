@@ -260,6 +260,16 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           text: `🧑‍🎓 Ein Helfer hat aufgehört: ${getAction(e.actionId).name} – ${e.reason === 'noInputs' ? 'Material fehlt' : e.reason === 'inventoryFull' ? 'Inventar voll' : e.reason === 'noFire' ? 'kein Feuer' : 'geht nicht'}.`,
         });
         break;
+      case 'prestige': {
+        const text =
+          e.layer === 'rebirth'
+            ? `🌅 Wiedergeburt! +${e.gain} Weisheit. Du beginnst von vorn – aber klüger. Viel klüger.`
+            : e.layer === 'paradigm'
+              ? `🔄 Paradigmenwechsel Nr. ${e.gain}! Thomas Kuhn nickt. Die Naturgesetze sind jetzt … anders.`
+              : `💥 URKNALL! +${e.gain} Multiversum-Splitter. Ein neues Universum entsteht. Diesmal mit besserem Design.`;
+        out.feed.push({ kind: 'rare', text });
+        break;
+      }
       case 'intelligence':
         out.feed.push({
           kind: 'rare',
