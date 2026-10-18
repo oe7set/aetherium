@@ -6,6 +6,7 @@ import { labelElements } from './labels';
 import { getAction, getItem } from '../data';
 import { Clouds, Fireflies, Ocean } from './Ambience';
 import { Arena } from './Arena';
+import { Birds, DistantIslands, JumpingFish, Sailboat, SkyDome } from './Life';
 import { useGame } from '../store/gameStore';
 import { Character } from './Character';
 import { Growth } from './Growth';
@@ -120,8 +121,13 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <FrameTicker fps={visible ? sceneFps(perf, covered) : 0} />
       <CameraRig />
       <DayNight shadows={quality.shadows} shadowMapSize={quality.shadowMapSize} />
+      <SkyDome />
       <Island />
       <Ocean />
+      <DistantIslands />
+      {quality.level !== 'low' && <Birds count={quality.level === 'high' ? 9 : 6} />}
+      <Sailboat />
+      {quality.level !== 'low' && <JumpingFish />}
       <Clouds count={quality.level === 'low' ? 3 : 7} />
       <Fireflies count={quality.particles} />
       <Forest count={quality.trees} />

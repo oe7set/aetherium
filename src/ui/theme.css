@@ -1784,3 +1784,68 @@ h4.rift-h4::before,
 .item-actions .btn {
   flex: 1 1 auto;
 }
+
+/* --- Insel-HUD: Status aller Systeme + „Weiter mit" --------------------------------------- */
+.world-hud {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 6;
+  display: grid;
+  gap: 6px;
+  pointer-events: none;
+}
+.world-hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.world-hud-row.recent small {
+  font-size: 0.6875rem;
+  color: rgba(230, 236, 255, 0.75);
+  text-shadow: 0 1px 2px #000;
+}
+.hud-pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(14, 18, 36, 0.72);
+  color: var(--text);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.hud-pill small {
+  font-size: 0.6875rem;
+  color: #ffb3d1;
+}
+.hud-pill.glow {
+  border-color: rgba(126, 224, 138, 0.8);
+  box-shadow: 0 0 12px rgba(126, 224, 138, 0.45);
+}
+.hud-pill.gift {
+  border-color: rgba(255, 209, 102, 0.9);
+  box-shadow: 0 0 12px rgba(255, 209, 102, 0.5);
+}
+.hud-pill.boss {
+  border-color: rgba(255, 94, 196, 0.6);
+}
+.hud-pill.action {
+  max-width: 46vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(40, 32, 90, 0.78);
+}
+.hud-pill:disabled {
+  opacity: 0.5;
+}
+.perf-eco .hud-pill {
+  box-shadow: none;
+}

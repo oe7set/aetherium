@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ISLAND_RADIUS, scatter } from './layout';
+import { HORIZON } from './Life';
 import { dayPhase, daylight } from './time';
 
 /** Animated ocean: vertex waves + depth gradient + glinting highlights. One draw call. */
@@ -12,9 +13,10 @@ export function Ocean() {
         uniforms: {
           uTime: { value: 0 },
           uDay: { value: 1 },
-          uDeep: { value: new THREE.Color('#0b2f5c') },
+          uDeep: { value: new THREE.Color('#0b4a86') },
           uShallow: { value: new THREE.Color('#1f8fc4') },
           uIsland: { value: ISLAND_RADIUS },
+          uHorizon: { value: new THREE.Color() },
         },
         vertexShader: /* glsl */ `
           uniform float uTime;
@@ -35,6 +37,7 @@ export function Ocean() {
           uniform vec3 uDeep;
           uniform vec3 uShallow;
           uniform float uIsland;
+          uniform vec3 uHorizon;
           varying vec2 vPos;
           varying float vWave;
           void main() {
@@ -45,7 +48,10 @@ export function Ocean() {
             float glint = pow(max(0.0, vWave * 4.0 + 0.2), 3.0) * 0.35;
             col += vec3(foam * 0.6) + vec3(glint);
             col *= 0.35 + 0.65 * uDay;
+            // Far water fades into the sky – no hard edge, a real horizon.
+            col = mix(col, uHorizon, smoothstep(uIsland + 4.0, 46.0, d) * 0.75);
             gl_FragColor = vec4(col, 1.0);
+            #include <colorspace_fragment>
           }
         `,
       }),
@@ -54,6 +60,7 @@ export function Ocean() {
   useFrame(() => {
     material.uniforms.uTime!.value = performance.now() / 1000;
     material.uniforms.uDay!.value = daylight(dayPhase());
+    (material.uniforms.uHorizon!.value as THREE.Color).copy(HORIZON);
   });
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.15, 0]} material={material}>

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.32.0] – Lebendige Insel
+
+- Welt-Seite: oben eine Statusleiste für Dorf (Baumeister frei oder Restzeit), Held (zu Hause, unterwegs, Abenteuer wartet), Riss (Essenz, Wochenboss offen) und Tagesbonus – antippen springt hin. Darunter „Weiter mit": die letzten Aktionen mit einem Tipp neu starten.
+- Schönere, belebte Insel: helles Meer, das am Horizont in den Himmel übergeht, Himmelskuppel mit Sonne und Mond, Inseln am Horizont, ein Vogelschwarm, ein Segelboot und springende Fische.
+- Farbfehler behoben: Meer und Himmel waren durch eine fehlende Farbraum-Umrechnung viel zu dunkel.
+
 ## [1.31.0] – Antipp-Karten
 
 - Antipp-Karten: Felder und Gebäude im Dorf öffnen unten eine Karte mit Produktion, Kosten, Bauzeit, „Genug Rohstoffe in …" und Ausbau-Knopf – kein Scrollen mehr unter den Ring.

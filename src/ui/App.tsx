@@ -1,4 +1,5 @@
 import { UpdateBanner } from './UpdateBanner';
+import { WorldHud } from './WorldHud';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { t, type MessageKey } from '../i18n';
 import { useGame, type TabId } from '../store/gameStore';
@@ -166,6 +167,7 @@ function MobileLayout() {
       <Header />
       <div className="stage">
         <World />
+        {tab === 'world' && <WorldHud />}
         {tab === 'world' && <Feed limit={1} compact />}
         <BuffBar />
         <div className="stage-goal">

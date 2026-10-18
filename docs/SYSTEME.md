@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.31.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.32.0**.
 
 ## 1. Der große Kreislauf
 
@@ -164,6 +164,13 @@ Haustiere ↔ Held, Expansion)
   alle 30 min wird nach einem neuen Deploy gesucht.
 
 **Atmosphäre**
+
+- Insel-HUD (`ui/WorldHud.tsx`): oben auf der Welt-Seite Status von Dorf (Baumeister frei / Restzeit), Held, Riss
+  (Essenz, Wochenboss offen) und Tagesbonus, darunter „Weiter mit" – die letzten gestarteten Aktionen (pro Gerät in
+  `localStorage` `aetherium.recent`) zum Neustarten mit einem Tipp.
+- Belebte Szene (`scene/Life.tsx`): Himmelskuppel mit Verlauf, Sonne und Mond (`SkyDome`, teilt die Horizontfarbe
+  `HORIZON` mit dem Meer), Inseln am Horizont, Vogelschwarm (tagsüber), Segelboot, springende Fische.
+  Eigene Shader brauchen `#include <colorspace_fragment>`, sonst sind die Farben zu dunkel.
 
 - Musik `ui/music.ts` (Sequenzer, Themen je Bereich, gesteuert über `useBackgroundMusic` in `App.tsx`),
   Soundeffekte `ui/audio.ts` (gleicher AudioContext). Inselboden: vertexgefärbte Scheibe in `scene/Island.tsx`
