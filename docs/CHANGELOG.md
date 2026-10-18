@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.1] – Desktop aufgeräumt
+
+### Behoben (Desktop)
+
+- Unterreiter brechen auch am Desktop um, statt seitlich abgeschnitten zu werden (Inventar-Spalte, Mehr-Menü).
+- Die Untätig-Leiste ist am Desktop schlank und gestylt wie am Handy.
+
 ## [1.18.0] – Für alle Augen
 
 ### Hinzugefügt

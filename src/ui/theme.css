@@ -1340,3 +1340,41 @@ h4.rift-h4::before,
 .high-contrast .btn {
   border-color: rgba(240, 245, 255, 0.6);
 }
+
+/* --- Shared by phone and desktop: wrapping sub-tabs, slim idle bar ------------------------- */
+.segments {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.segment {
+  flex: 1 1 auto;
+}
+.active-idle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+}
+.active-idle .active-icon {
+  font-size: 1.25rem;
+}
+.active-idle .active-text {
+  flex: 1;
+}
+.active-go {
+  color: var(--aether);
+  font-weight: 700;
+}
+.layout-desktop .active-bar.idle {
+  min-height: 0;
+  padding: 6px 10px;
+}

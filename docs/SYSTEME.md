@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.18.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.18.1**.
 
 ## 1. Der große Kreislauf
 
@@ -158,7 +158,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 - [ ] Englisch (`tContent`-Overlays); Farbenblind-Paletten für Rarität und Ressourcenbalken.
 - [ ] Riss-Performance-Budget: ≥ 500 Gegner auf Mittelklasse (Spatial Hash und Pooling prüfen).
-- [ ] Desktop-Ansicht: Menüführung analog zum Handy prüfen (Unterreiter, Karte im Vollbild).
 - [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
 - [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
 - [ ] Balancing über alle Schleifen mit Langzeit-Bot (Insel + Dorf + Held zusammen, 7 Tage).
