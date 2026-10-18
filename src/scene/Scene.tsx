@@ -12,6 +12,8 @@ import { Growth } from './Growth';
 import { Island } from './Island';
 import { STATIONS } from './layout';
 import type { QualityProfile } from './quality';
+import { sceneFps, usePerfMode } from '../ui/perf';
+import { useIsDesktop } from '../ui/hooks';
 import { DayNight } from './Sky';
 import { Campfire, Decorations, FishingSpot, Forge, Kitchen, Mine } from './Stations';
 import {
@@ -67,8 +69,23 @@ function LabelProjector() {
  * The 3D island (Phase 2). Reads game state only; all interaction goes through store actions.
  * Lazy-loaded so the first paint does not wait for three.js.
  */
+/** Renders on demand at a capped frame rate – the island never needs 60 FPS behind a menu. */
+function FrameTicker({ fps }: { fps: number }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    if (fps <= 0) return;
+    invalidate();
+    const id = window.setInterval(() => invalidate(), 1000 / fps);
+    return () => window.clearInterval(id);
+  }, [fps, invalidate]);
+  return null;
+}
+
 export default function WorldScene({ quality }: { quality: QualityProfile }) {
   const visible = usePageVisible();
+  const perf = usePerfMode();
+  const desktop = useIsDesktop();
+  const covered = useGame((s) => !desktop && s.ui.tab !== 'world');
   const activeSkill = useGame((s) => {
     if (s.game.combat) {
       const w = s.game.equipment.weapon;
@@ -87,12 +104,16 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
   return (
     <Canvas
       className="scene-canvas"
-      frameloop={visible ? 'always' : 'never'}
-      dpr={[1, quality.dpr]}
-      shadows={quality.shadows}
-      gl={{ antialias: quality.antialias, powerPreference: 'high-performance' }}
+      frameloop={visible ? 'demand' : 'never'}
+      dpr={[1, perf === 'eco' ? Math.min(1.5, quality.dpr) : quality.dpr]}
+      shadows={quality.shadows && perf === 'smooth'}
+      gl={{
+        antialias: quality.antialias,
+        powerPreference: perf === 'eco' ? 'low-power' : 'high-performance',
+      }}
       camera={{ position: [13, 12, 15], fov: 45, near: 0.5, far: 200 }}
     >
+      <FrameTicker fps={visible ? sceneFps(perf, covered) : 0} />
       <CameraRig />
       <DayNight shadows={quality.shadows} shadowMapSize={quality.shadowMapSize} />
       <Island />

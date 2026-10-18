@@ -16,6 +16,7 @@ import { OfflineModal } from './OfflineModal';
 import { VillagePanel } from './village/VillagePanel';
 import { RiftPanel } from './rift/RiftPanel';
 import { useRiftRun } from './rift/runStore';
+import { usePerfClass } from './perf';
 import { SkillList } from './skills/SkillList';
 import { SkillView } from './skills/SkillView';
 import { TabBar } from './TabBar';
@@ -137,6 +138,7 @@ export function App() {
   const desktop = useIsDesktop();
   const inRift = useRiftRun((s) => s.run !== null);
   useKeyboardShortcuts();
+  usePerfClass();
   return (
     <>
       {desktop ? <DesktopLayout /> : <MobileLayout />}

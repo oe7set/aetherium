@@ -47,7 +47,8 @@ export function WorldMap({ village: v }: { village: Village }) {
     let last = 0;
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
-      if (now - last < 33) return;
+      // Eco: 15 fps is plenty for marching dots; smooth: 30 fps.
+      if (now - last < (document.documentElement.classList.contains('perf-eco') ? 66 : 33)) return;
       last = now;
       const rect = wrapRef.current!.getBoundingClientRect();
       const dpr = Math.min(2, window.devicePixelRatio || 1);

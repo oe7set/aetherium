@@ -3,7 +3,7 @@
 
 export const BALANCE = {
   /** Simulation ticks per second for the live loop. */
-  TICKS_PER_SECOND: 10,
+  TICKS_PER_SECOND: 5,
   /** Highest regular level (prestige will raise this to 120 later). */
   MAX_LEVEL: 99,
   /** XP table is generated up to this level so prestige content can reuse it. */

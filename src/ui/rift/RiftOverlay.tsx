@@ -74,7 +74,13 @@ export default function RiftOverlay() {
     };
     resize();
     window.addEventListener('resize', resize);
+    const eco = document.documentElement.classList.contains('perf-eco');
     const frame = (now: number) => {
+      // Eco caps the arena at ~40 fps (high-refresh phones would otherwise render 90–120).
+      if (eco && now - last < 24) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       const dt = Math.min(0.1, (now - last) / 1000);
       last = now;
       const input: RiftInput = { x: 0, y: 0 };

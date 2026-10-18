@@ -270,7 +270,7 @@ export const useGame = create<GameStore>()((set, get) => {
     const best = Math.max(0, ...lines.map((l) => l.rarity));
     if (get().game.settings.sound) (best >= 2 ? SOUNDS.achievement : SOUNDS.rare)();
     try {
-      navigator.vibrate?.(best >= 2 ? [30, 40, 60] : 25);
+      if (get().game.settings.haptics) navigator.vibrate?.(best >= 2 ? [30, 40, 60] : 25);
     } catch {
       /* not supported */
     }

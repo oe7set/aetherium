@@ -740,3 +740,35 @@ body.reduce-motion *::after {
   transform: scale(0.95);
   transition: transform 0.06s;
 }
+
+/* --- Eco power profile: cool phones ---------------------------------------------------------
+   The animated nebula behind blurred glass panels forces the GPU to recompute every blur on every
+   frame. In eco mode the background is static, glass becomes solid and endless decoration stops. */
+.perf-eco body::before,
+.perf-eco body::after {
+  animation: none !important;
+}
+.perf-eco * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.perf-eco {
+  --panel: rgba(26, 31, 56, 0.96);
+  --panel-2: rgba(38, 45, 78, 0.96);
+}
+.perf-eco .rift-portal,
+.perf-eco .rift-portal span,
+.perf-eco .hero-portrait::after,
+.perf-eco .essence-orb,
+.perf-eco .chronicle.done,
+.perf-eco .chip-gift,
+.perf-eco .v-field-crane,
+.perf-eco .daily-day.today,
+.perf-eco .reward-rays,
+.perf-eco .colony-intro-art,
+.perf-eco .rarity-legendary,
+.perf-eco .rarity-peer_reviewed,
+.perf-eco .rarity-peer_reviewed::before,
+.perf-eco .vp-bar span {
+  animation: none !important;
+}

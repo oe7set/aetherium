@@ -46,10 +46,18 @@ export function LiveProgressBar({
 
   useEffect(() => {
     let raf = 0;
-    const loop = () => {
-      const f = Math.max(0, Math.min(1, readRef.current()));
-      if (fill.current) fill.current.style.transform = `scaleX(${f})`;
+    let shown = -1;
+    let lastAt = 0;
+    const eco = document.documentElement.classList.contains('perf-eco');
+    const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
+      // Eco: ~30 updates/s are visually identical for a bar; skip unchanged values entirely.
+      if (eco && now - lastAt < 32) return;
+      lastAt = now;
+      const f = Math.round(Math.max(0, Math.min(1, readRef.current())) * 500) / 500;
+      if (f === shown || !fill.current) return;
+      shown = f;
+      fill.current.style.transform = `scaleX(${f})`;
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);

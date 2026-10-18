@@ -22,6 +22,10 @@ export interface Settings {
   batteryMode: boolean;
   /** Browser notifications while the tab is in the background. */
   notifications: boolean;
+  /** Power profile: eco caps frame rates and turns off costly effects (cool phones). */
+  performance: 'auto' | 'eco' | 'smooth';
+  /** Vibration feedback on rewards. */
+  haptics: boolean;
 }
 
 export interface ActiveAction {
@@ -382,6 +386,8 @@ export function defaultSettings(): Settings {
     graphics: 'auto',
     batteryMode: false,
     notifications: false,
+    performance: 'auto',
+    haptics: true,
   };
 }
 

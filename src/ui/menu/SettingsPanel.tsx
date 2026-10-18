@@ -39,6 +39,26 @@ export function SettingsPanel() {
           ))}
         </select>
       </label>
+      <label className="field">
+        <span>⚡ Leistung & Akku</span>
+        <select
+          className="input"
+          value={settings.performance}
+          onChange={(e) => setSetting('performance', e.target.value as typeof settings.performance)}
+        >
+          <option value="auto">Automatisch (Handy = Eco)</option>
+          <option value="eco">Eco – kühl & sparsam (30 FPS, weniger Effekte)</option>
+          <option value="smooth">Flüssig – 60 FPS, alle Effekte</option>
+        </select>
+      </label>
+      <label className="toggle">
+        <input
+          type="checkbox"
+          checked={settings.haptics}
+          onChange={(e) => setSetting('haptics', e.target.checked)}
+        />
+        <span>📳 Vibration bei Belohnungen</span>
+      </label>
       <label className="toggle">
         <input
           type="checkbox"
