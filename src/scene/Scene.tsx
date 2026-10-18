@@ -21,6 +21,7 @@ import {
   Fields,
   Helpers,
   HuntingGround,
+  DigSite,
   Obelisk,
   ResearchTower,
   Workbench,
@@ -136,6 +137,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Fields onTap={tap('farming')} />
       <Workbench onTap={tap('crafting')} />
       <HuntingGround onTap={tap('hunting')} />
+      <DigSite onTap={tap('archaeology')} />
       <Helpers />
       <Character skill={activeSkill} />
       <LabelProjector />

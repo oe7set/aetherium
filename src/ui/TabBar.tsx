@@ -2,6 +2,7 @@ import { t } from '../i18n';
 import {
   affordableTechs,
   villageAttention,
+  collectionsClaimable,
   heroAttention,
   QUEST_MAP,
   questProgress,
@@ -26,10 +27,12 @@ export function TabBar({ tabs = TABS }: { tabs?: typeof TABS }) {
   const researchBadge = useGame((s) => affordableTechs(s.game).length);
   const villageBadge = useGame((s) => villageAttention(s.game));
   const heroBadge = useGame((s) => heroAttention(s.game));
+  const albumBadge = useGame((s) => collectionsClaimable(s.game).length);
   const badges: Partial<Record<string, number>> = {
     menu: questBadge + researchBadge,
     village: villageBadge,
     rift: heroBadge,
+    inventory: albumBadge,
   };
   return (
     <nav className="tabbar" aria-label="Navigation">

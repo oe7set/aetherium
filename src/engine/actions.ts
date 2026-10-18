@@ -1,4 +1,5 @@
 import { ACTIONS, getAction, getTool, SKILL_MAP } from '../data';
+import { COLLECTION_BY_ITEM } from '../data/collections';
 import { BALANCE } from '../data/balance';
 import type { ActionDef, LootEntry } from '../data/types';
 import type { Emit, GameEvent, StopReason } from './events';
@@ -159,7 +160,16 @@ export function gainItem(
   emit: Emit,
   rare = false,
 ): boolean {
+  const known = s.progress.found.includes(item);
   if (addItem(s, item, qty)) {
+    if (!known) {
+      const set = COLLECTION_BY_ITEM.get(item);
+      if (set) {
+        const found = new Set(s.progress.found);
+        const have = set.items.filter((i) => found.has(i)).length;
+        emit({ type: 'albumFound', item, set: set.id, have, total: set.items.length });
+      }
+    }
     if (rare) emit({ type: 'rareDrop', item, qty });
     emit({ type: 'itemGained', item, qty });
     addStat(s, `obtained.${item}`, qty);

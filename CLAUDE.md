@@ -7,6 +7,9 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.7.0, Phase 9 = Dorf + Held, plus Motivations-Schicht). Als Nächstes:
 Phase 11 Zusammenspiel. Siehe `docs/CHANGELOG.md`.
 
+**Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
+eintragen, Erledigtes streichen, Neues Offenes ergänzen).
+
 ## Befehle
 
 `npm run dev` · `npm test` · `npm run lint` · `npm run typecheck` · `npm run format` · `npm run build`
@@ -26,6 +29,7 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `registerAvailabilityCheck` (Tech-Sperren). Kampf = `engine/combat.ts`, Forschung/Beete/Helfer = `engine/science.ts`,
   Prestige = `engine/prestige.ts` (`resetRun` legt fest, was bei Resets erhalten bleibt – neue State-Felder dort
   bewusst einordnen!). Level-Cap: `levelCap(s)`. Haustiere/Quests/Aufträge = `engine/meta.ts`.
+  Sammelbuch = `engine/collections.ts` (`addItem` merkt Funde in `progress.found`; Sets geben Dauer-Boni).
 - Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,
   Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung
   `engine/villageWorld.ts`, Inhalte `data/village.ts` (Tempo über `SPEED`). Mehrere Dörfer in `s.village.villages`.

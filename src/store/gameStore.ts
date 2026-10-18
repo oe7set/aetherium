@@ -4,6 +4,7 @@ import { getAction, getItem, getTool, HELPER_MAP, type EquipSlot } from '../data
 
 const getHelperName = (type: string) => HELPER_MAP.get(type)?.name ?? type;
 import { BALANCE } from '../data/balance';
+import { COLLECTION_MAP } from '../data/collections';
 import {
   RANDOM_CHATTER,
   WELCOME_LINES,
@@ -69,6 +70,7 @@ import {
   claimDaily,
   claimPassTier,
   claimChronicle,
+  claimCollection,
   currentChronicle,
   type HeroResult,
   type AdventureReward,
@@ -99,7 +101,7 @@ export type MenuSection =
   | 'settings'
   | 'save'
   | 'debug';
-export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools';
+export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools' | 'album';
 
 const FEED_LIMIT = 60;
 const POPUP_LIMIT = 8;
@@ -179,6 +181,7 @@ export interface GameStore {
   claimDaily: () => void;
   claimPass: (tier: number) => void;
   claimChronicle: () => void;
+  claimCollection: (id: string) => void;
   dismissReward: () => void;
   setDailyOpen: (open: boolean) => void;
   /** Runs a hero action; failures become warnings (heroFail.*). */
@@ -569,6 +572,14 @@ export const useGame = create<GameStore>()((set, get) => {
         lines = claimChronicle(s, defaultRng, emit);
       });
       if (lines && step) showReward(`Chronik: ${step.step.title}`, step.step.icon, lines);
+    },
+    claimCollection: (id) => {
+      const def = COLLECTION_MAP.get(id);
+      let lines: RewardLine[] | null = null;
+      mutate((s, emit) => {
+        lines = claimCollection(s, id, defaultRng, emit);
+      });
+      if (lines && def) showReward(`Sammelbuch: ${def.name}`, def.icon, lines);
     },
     dismissReward: () => set({ reward: null }),
     setDailyOpen: (open) => set({ dailyOpen: open }),

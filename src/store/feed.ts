@@ -34,6 +34,7 @@ import {
   TREND_DOWN_LINES,
   TREND_UP_LINES,
 } from '../data/flavor';
+import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
 import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
 import {
@@ -103,6 +104,22 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           text: `${item.icon} ${flavor(rng, pool, { item: item.name })}`,
         });
         out.popups.push({ kind: 'rare', text: `✨ ${item.icon} ${item.name}` });
+        break;
+      }
+      case 'albumFound': {
+        const item = getItem(e.item);
+        const set = COLLECTION_MAP.get(e.set);
+        const full = e.have >= e.total;
+        out.feed.push({
+          kind: 'rare',
+          text: full
+            ? `📗 Set „${set?.name}“ vollständig! Im Sammelbuch abschließen für einen Dauerbonus.`
+            : `📗 Neu im Sammelbuch: ${item.icon} ${item.name} (${set?.name} ${e.have}/${e.total})`,
+        });
+        out.popups.push({
+          kind: 'rare',
+          text: full ? `📗 ${set?.icon} Set komplett!` : `📗 ${item.icon} ${e.have}/${e.total}`,
+        });
         break;
       }
       case 'itemLost': {

@@ -67,6 +67,29 @@ const STAT_SERIES: StatSeries[] = [
     reward: (i) => ({ xp: 0.01 * (i + 1) }),
   },
   {
+    key: 'albumItems',
+    icon: '📗',
+    desc: (n) => `Finde ${n} verschiedene Gegenstände.`,
+    steps: [
+      [25, 'Sammler·in'],
+      [75, 'Kurator·in'],
+      [150, 'Museumsdirektion'],
+      [250, 'Hat alles. Wirklich alles.'],
+    ],
+    reward: (i) => ({ rare: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'collectionsDone',
+    icon: '📚',
+    desc: (n) => `Schließe ${n} Sammelbuch-Sets ab.`,
+    steps: [
+      [1, 'Erstes Set'],
+      [5, 'Regal voll'],
+      [14, 'Das komplette Album'],
+    ],
+    reward: (i) => ({ gold: 0.02 * (i + 1) }),
+  },
+  {
     key: 'riftWins',
     icon: '🧑‍⚖️',
     desc: (n) => `Besiege den Prüfer ${n}-mal.`,

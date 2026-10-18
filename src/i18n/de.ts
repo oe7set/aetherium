@@ -226,6 +226,7 @@ export const de = {
   'equipFail.space': 'Kein Platz im Inventar zum Ablegen.',
   'equipFail.notEnough': 'Das hast du gar nicht.',
   'inv.segment.gear': 'Ausrüstung',
+  'inv.segment.album': 'Sammelbuch',
   'combat.stop.noAmmo': 'Keine Pfeile mehr!',
   'combat.stop.noRunes': 'Keine Runen mehr!',
   'combat.stop.died': 'Du bist gestorben.',

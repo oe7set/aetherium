@@ -24,6 +24,7 @@ export const STATIONS: StationDef[] = [
   { skill: 'crafting', label: 'Werkbank', pos: [-4.6, 4.6], workPos: [-3.8, 3.9] },
   { skill: 'hunting', label: 'Jagdgrund', pos: [-8.6, -0.6], workPos: [-7.4, -0.4] },
   { skill: 'research', label: 'Forschungsturm', pos: [4.2, -8], workPos: [3.4, -6.4] },
+  { skill: 'archaeology', label: 'Grabung', pos: [7.6, 0.6], workPos: [6.4, 0.9] },
 ];
 
 /** Skills that share a station. */

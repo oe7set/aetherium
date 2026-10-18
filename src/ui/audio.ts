@@ -92,6 +92,7 @@ export function playEventSounds(events: GameEvent[]): void {
         kinds.add('levelUp');
         break;
       case 'rareDrop':
+      case 'albumFound':
       case 'petFound':
       case 'elementDiscovered':
         kinds.add('rare');

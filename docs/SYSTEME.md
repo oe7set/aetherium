@@ -1,0 +1,132 @@
+# Systeme, Zusammenhänge & offene Punkte
+
+> **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
+> Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.8.0**.
+
+## 1. Der große Kreislauf
+
+```
+            Gold, XP, Items                          Rohstoffe, Truppen
+  ┌──────────────────────────┐            ┌──────────────────────────────┐
+  │  INSEL (18 Skills)       │◀──Boni────▶│  DORF (Travian-Stil)         │
+  │  Holz, Erz, Fisch, Essen │  Hafen     │  18 Felder, 20 Gebäude,      │
+  │  Schmieden, Forschung …  │  Brot      │  7 Truppen, Weltkarte, 5 Dörfer│
+  └────────────┬─────────────┘            └──────────────┬───────────────┘
+               │ Riss-Beute (Äther,                       │ Schmiede/Mauer → Riss-Stärke
+               │ Truhen, Kristalle)                       │ Held wohnt im Dorf, annektiert Oasen
+               ▼                                          ▼
+          ┌──────────────────────────────────────────────────────┐
+          │  DER HELD (einer für alles)                          │
+          │  Level, 4 Attribute, 6 Ausrüstungsplätze, Gesundheit │
+          │  Abenteuer auf der Karte = Echtzeit-Dungeons          │
+          └──────────────────────────┬───────────────────────────┘
+                                     ▼
+          ┌──────────────────────────────────────────────────────┐
+          │  ÄTHERRISS (Survivor-Roguelike) – Essenz → Talente   │
+          └──────────────────────────────────────────────────────┘
+  Darüber: Belohnungs-Schicht (Tagesbonus, Ruhmesleiter, Chronik, Sammelbuch, Erfolge, Quests)
+  Darunter: Prestige (Wiedergeburt/Paradigma/Urknall) – setzt die Insel zurück, alles andere bleibt.
+```
+
+## 2. Systeme im Einzelnen
+
+| System                      | Daten                                                               | Engine                                       | UI                             |
+| --------------------------- | ------------------------------------------------------------------- | -------------------------------------------- | ------------------------------ |
+| Insel-Skills & Aktionen     | `data/skills.ts`, `actions.ts`, `expansion.ts`, je Skill eine Datei | `engine/actions.ts` (`advance`)              | `ui/skills/`, `scene/` (3D)    |
+| Kampf & Dungeons (Insel)    | `data/combat.ts`                                                    | `engine/combat.ts`                           | `ui/combat/`                   |
+| Forschung, Beete, Helfer    | `data/science.ts`                                                   | `engine/science.ts`                          | `ui/science/`                  |
+| Markt, Krämer, Werkzeuge    | `data/tools.ts`, `data/balance.ts`                                  | `engine/shop.ts`, `market.ts`                | `ui/inventory/`                |
+| Dorf & Weltkarte            | `data/village.ts`                                                   | `engine/village.ts`, `villageWorld.ts`       | `ui/village/`                  |
+| Held & Abenteuer            | `data/hero.ts`                                                      | `engine/hero.ts`                             | `ui/rift/HeroView.tsx`         |
+| Ätherriss                   | `data/rift.ts`                                                      | `rift/sim.ts` (Simulation), `engine/rift.ts` | `ui/rift/`                     |
+| Belohnungs-Schicht          | `data/progress.ts`                                                  | `engine/progress.ts`                         | `ui/rewards/`                  |
+| Sammelbuch                  | `data/collections.ts`                                               | `engine/collections.ts`                      | `ui/inventory/CollectionPanel` |
+| Haustiere, Quests, Aufträge | `data/meta.ts`                                                      | `engine/meta.ts`                             | `ui/quests/`                   |
+| Erfolge                     | `data/achievements.ts`                                              | `engine/achievements.ts`                     | `ui/menu/`                     |
+| Prestige                    | `data/prestige.ts`                                                  | `engine/prestige.ts` (`resetRun`)            | `ui/menu/`                     |
+
+## 3. Verbindungen (wer gibt wem was?)
+
+**Insel → Dorf**
+
+- Hafen: Insel-Items (Holzarten, Granit, Erz, Getreide) werden gegen Dorf-Rohstoffe getauscht (`HARBOR_IMPORTS`).
+- Belohnungen (`applyReward.resources`) füllen das aktive Dorf.
+- Rückweg: Der Hafen verkauft Dorf-Rohstoffe gegen Gold (`HARBOR_GOLD_PER_100`).
+
+**Dorf → Insel**
+
+- Modifikator-Quelle `'village'`: Bevölkerung über 20 bringt XP und Gold. Sägewerk, Ziegelei, Gießerei und
+  Mühle geben Tempo auf Holz, Bergbau, Schmieden und Farmen. Die Bäckerei gibt Koch-XP, die Bibliothek
+  Forschung, Schmiede und Mauer Kampfwerte.
+- Die Dorfbäckerei liefert `village_bread` (Essen für den Inselkampf).
+
+**Dorf ↔ Held**
+
+- Der Held wohnt in einem Dorf (`hero.home`) und kann umziehen.
+- Ist er zu Hause, verteidigt er das Dorf, läuft bei Raubzügen mit (trägt dann 200 Beute) und annektiert Oasen.
+- Oasen geben +25 % auf einen Rohstoff.
+
+**Dorf → Riss**
+
+- `villageRiftBonus`: Die Schmiede gibt Riss-Macht, die Mauer Rüstung.
+- Abenteuer bringen Tribut (Rohstoffe) ins Dorf.
+
+**Held ↔ Riss**
+
+- Derselbe Held kämpft im Riss.
+- `runStats` rechnet ein: Level, Attribute, Ausrüstung (`heroBonus`) und die Dorf-Boni.
+- Riss-Läufe geben Helden-XP und kosten Gesundheit.
+- Abenteuer sind Riss-Dungeons: Boss in der Mitte, Wächter am Ende.
+
+**Riss → Insel**
+
+- Beute aus dem Riss: Äther, Manakristalle, Leerensplitter, Dungeon-Truhen.
+- Abenteuer bringen Insel-Items und Essenz.
+
+**Alles → Belohnungs-Schicht**
+
+- Die Ruhmesleiter zählt Statistiken aus allen Systemen (`PASS_SOURCES`).
+- Die Chronik führt mit 25 Schritten quer durch alle Systeme (`go` springt hin).
+- Der Tagesbonus wächst mit `rewardScale` (Gesamtlevel, Heldenlevel, Bevölkerung).
+
+**Alles → Sammelbuch**
+
+- Jedes erhaltene Item zählt (`addItem` → `progress.found`).
+- 14 Sets reichen von Insel und Riss-Beute bis zu Relikten.
+- Ein volles Set bringt eine einmalige Belohnung plus einen Dauer-Bonus (Modifikator-Quelle `'collections'`).
+
+**Prestige**
+
+- `resetRun` setzt Skills, Gold und Inventar zurück.
+- Erhalten bleiben: Dorf, Held, Riss, Belohnungs-Schicht samt Sammelbuch, Erfolge.
+- Neue State-Felder dort bewusst einordnen!
+
+## 4. Offene Punkte / was noch fehlt
+
+Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und werden hier gestrichen.
+
+**Gameplay & Inhalt**
+
+- [ ] Wöchentlicher Riss-Boss (Event mit Rangliste gegen eigene Bestzeit, besondere Belohnung).
+- [ ] Querschnitts-Quests: Ketten, die Insel, Dorf, Held und Riss verbinden (PLAN-2 Phase 11).
+- [ ] Invasionen stärker verzahnen: Verteidigung mit Held und Riss-Talenten, Belohnung für gewonnene Abwehr.
+- [ ] Werkzeuge für Archäologie (Spaten, Pinsel) wie Axt und Spitzhacke.
+- [ ] Endgame (Phase 13): Meisterschaft pro Aktion, Endlos-Riss, Titel und Kosmetik.
+- [ ] Prestige-Naturgesetze, die auch im Dorf und im Riss wirken (Phase 11).
+- [ ] Mehr Riss-Inhalt (Phase 12): 30+ Waffen, 40 Gegner, 6 Biome. Prozedurale Musik.
+
+**Qualität**
+
+- [ ] Englisch (`tContent`-Overlays), Barrierefreiheit (Farbenblind-Modi, Schriftgröße).
+- [ ] Riss-Performance-Budget: ≥ 500 Gegner auf Mittelklasse (Spatial Hash und Pooling prüfen).
+- [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
+- [ ] Live-Dungeon im Browser durchspielen (bisher nur Simulation und Tests).
+- [ ] Balancing über alle Schleifen mit Langzeit-Bot (Insel + Dorf + Held zusammen, 7 Tage).
+
+**Bekannte Schwächen**
+
+- Die 3D-Insel hat noch keine eigenen Stationen für Alchemie, Verzauberung und Arkanes: Sie teilen sich den
+  Forschungsturm.
+- Der 2D-Fallback (`WorldView`) hat keine Jagd-Station.
+- `progress.found` ist eine Liste: Die Suche ist linear, bei ~300 Items unkritisch.

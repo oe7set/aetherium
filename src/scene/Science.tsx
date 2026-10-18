@@ -3,6 +3,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CROP_MAP, getAction } from '../data';
 import { useGame } from '../store/gameStore';
+import { useCounterPulse } from './hooks';
 import { stationFor } from './layout';
 
 type TapHandler = (e: ThreeEvent<MouseEvent>) => void;
@@ -158,6 +159,77 @@ export function HuntingGround({ onTap }: { onTap: TapHandler }) {
       <mesh position={[0.8, 0.15, 0.4]}>
         <sphereGeometry args={[0.18, 6, 5]} />
         <meshStandardMaterial color="#c9b79c" flatShading />
+      </mesh>
+    </group>
+  );
+}
+
+/** Grabungsstätte: Absperrband, Erdhügel und eine Urne, die bei jedem Fund kurz aufleuchtet. */
+export function DigSite({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('archaeology')!;
+  const urn = useRef<THREE.Mesh>(null);
+  const glow = useRef<THREE.MeshStandardMaterial>(null);
+  const found = useRef(-10);
+  useCounterPulse(
+    (s) => s.skills.archaeology?.xp ?? 0,
+    () => {
+      found.current = performance.now() / 1000;
+    },
+  );
+  useFrame(() => {
+    const age = performance.now() / 1000 - found.current;
+    const k = age < 1.2 ? 1 - age / 1.2 : 0;
+    if (urn.current) urn.current.position.y = 0.32 + k * 0.35;
+    if (glow.current) glow.current.emissiveIntensity = k * 1.6;
+  });
+  const posts: [number, number][] = [
+    [-0.9, -0.9],
+    [0.9, -0.9],
+    [0.9, 0.9],
+    [-0.9, 0.9],
+  ];
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <circleGeometry args={[0.95, 10]} />
+        <meshStandardMaterial color="#6b4a2c" />
+      </mesh>
+      <mesh position={[0.55, 0.12, 0.35]} castShadow>
+        <coneGeometry args={[0.38, 0.3, 7]} />
+        <meshStandardMaterial color="#8a6440" flatShading />
+      </mesh>
+      {posts.map(([x, z], i) => (
+        <mesh key={i} position={[x, 0.25, z]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.5, 5]} />
+          <meshStandardMaterial color="#d9c8a0" />
+        </mesh>
+      ))}
+      {posts.map(([x, z], i) => {
+        const [nx, nz] = posts[(i + 1) % posts.length]!;
+        return (
+          <mesh
+            key={`t${i}`}
+            position={[(x + nx) / 2, 0.42, (z + nz) / 2]}
+            rotation={[0, x === nx ? 0 : Math.PI / 2, 0]}
+          >
+            <boxGeometry args={[0.02, 0.05, 1.8]} />
+            <meshStandardMaterial color="#ffcc33" />
+          </mesh>
+        );
+      })}
+      <mesh ref={urn} position={[-0.2, 0.32, -0.1]} castShadow>
+        <sphereGeometry args={[0.2, 8, 6]} />
+        <meshStandardMaterial
+          ref={glow}
+          color="#c0703a"
+          emissive="#ffd166"
+          emissiveIntensity={0}
+          flatShading
+        />
+      </mesh>
+      <mesh position={[0.2, 0.3, -0.45]} rotation={[0.3, 0, 0.6]}>
+        <boxGeometry args={[0.05, 0.6, 0.05]} />
+        <meshStandardMaterial color="#5a3b22" />
       </mesh>
     </group>
   );

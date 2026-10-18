@@ -83,6 +83,8 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'achievementsUnlocked', per: 10, label: 'Erfolge', icon: '🏆' },
   { stat: 'techsResearched', per: 10, label: 'Forschung', icon: '🔬' },
   { stat: 'tasksCompleted', per: 15, label: 'Aufträge', icon: '📋' },
+  { stat: 'albumItems', per: 2, label: 'Sammelbuch-Funde', icon: '📗' },
+  { stat: 'collectionsDone', per: 40, label: 'Sammelbuch-Sets', icon: '📚' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------

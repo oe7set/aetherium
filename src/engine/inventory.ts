@@ -28,6 +28,10 @@ export function addItem(s: GameState, item: string, qty: number): boolean {
   if (qty <= 0) return true;
   if (itemCount(s, item) <= 0 && freeSlots(s) <= 0) return false;
   s.inventory[item] = itemCount(s, item) + qty;
+  if (!s.progress.found.includes(item)) {
+    s.progress.found = [...s.progress.found, item];
+    s.stats.albumItems = s.progress.found.length;
+  }
   return true;
 }
 

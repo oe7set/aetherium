@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SKILLS } from '../data';
-import { heroAttention, passClaimable, skillLevel, villageAttention } from '../engine';
+import {
+  collectionsClaimable,
+  heroAttention,
+  passClaimable,
+  skillLevel,
+  villageAttention,
+} from '../engine';
 import { useGame, type UiState } from '../store/gameStore';
 
 interface Dest {
@@ -84,6 +90,14 @@ export function QuickNav() {
         group: 'Insel',
         keywords: 'gear waffen rüstung',
         ui: inv('gear'),
+      },
+      {
+        icon: '📗',
+        label: 'Sammelbuch',
+        group: 'Insel',
+        keywords: 'sammlung sets album relikte',
+        ui: inv('album'),
+        badge: collectionsClaimable(g).length,
       },
       {
         icon: '📈',

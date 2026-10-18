@@ -1783,6 +1783,14 @@ button.chip {
   left: 80%;
   top: 22%;
 }
+.st-dig {
+  left: 90%;
+  top: 52%;
+}
+.character.st-dig {
+  left: 84%;
+  top: 54%;
+}
 
 /* --- Phase 6: prestige ------------------------------------------------------------------------- */
 
@@ -1962,4 +1970,81 @@ button.chip {
   z-index: 50;
   pointer-events: none;
   white-space: normal;
+}
+
+/* --- Sammelbuch -------------------------------------------------------------------------------- */
+.album {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.album-set {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+}
+.album-set.ready {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255, 209, 102, 0.4);
+}
+.album-set.claimed {
+  border-color: rgba(94, 242, 255, 0.45);
+}
+.album-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+.album-icon {
+  font-size: 1.8rem;
+}
+.album-title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.album-title small {
+  font-size: 0.72rem;
+}
+.album-count {
+  font-family: var(--font-display);
+  color: var(--gold);
+}
+.album-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.album-slot {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed var(--line);
+}
+.album-slot.found {
+  border-style: solid;
+  border-color: rgba(255, 209, 102, 0.45);
+  background: radial-gradient(circle, rgba(255, 209, 102, 0.18), rgba(0, 0, 0, 0.3));
+}
+.album-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.album-btn {
+  padding: 6px 12px;
+  min-height: 0;
+}
+.album-done {
+  color: var(--green);
+  font-weight: 700;
 }

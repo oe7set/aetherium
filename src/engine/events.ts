@@ -11,6 +11,8 @@ export type GameEvent =
   | { type: 'itemConsumed'; item: string; qty: number }
   | { type: 'itemLost'; item: string; qty: number }
   | { type: 'rareDrop'; item: string; qty: number }
+  /** First time an item that belongs to a Sammelbuch set was obtained. */
+  | { type: 'albumFound'; item: string; set: string; have: number; total: number }
   | { type: 'levelUp'; skill: SkillId; level: number }
   | { type: 'burnt'; item: string }
   | { type: 'actionComplete'; actionId: string }

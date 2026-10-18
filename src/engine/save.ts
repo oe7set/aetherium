@@ -12,6 +12,7 @@ import {
   TECH_MAP,
   TOOL_MAP,
 } from '../data';
+import { COLLECTION_MAP } from '../data/collections';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
 import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
@@ -92,6 +93,24 @@ export const MIGRATIONS: Record<number, Migration> = {
   9: (data) => ({ ...data, hero: null }),
   // 10 → 11: daily rewards, Ruhmesleiter, Chronik.
   10: (data) => ({ ...data, progress: null }),
+  // 11 → 12: Sammelbuch – everything currently owned counts as found.
+  11: (data) => {
+    const progress = isRecord(data.progress) ? data.progress : {};
+    const owned = [
+      ...(isRecord(data.inventory) ? Object.keys(data.inventory) : []),
+      ...(isRecord(data.stats)
+        ? Object.keys(data.stats)
+            .filter((k) => k.startsWith('obtained.'))
+            .map((k) => k.slice('obtained.'.length))
+        : []),
+      ...(isRecord(data.equipment)
+        ? Object.values(data.equipment).filter((x): x is string => typeof x === 'string')
+        : []),
+    ];
+    const found = [...new Set(owned)];
+    const stats = isRecord(data.stats) ? { ...data.stats, albumItems: found.length } : data.stats;
+    return { ...data, stats, progress: { ...progress, found, sets: [] } };
+  },
 };
 
 export const EXPORT_PREFIX = 'AETH1:';
@@ -266,6 +285,8 @@ function hydrateProgress(v: unknown, fallback: GameState['progress']): GameState
       : [],
     chronicle: Math.max(0, num(v.chronicle, 0)),
     avatars: stringArray(v.avatars),
+    found: stringArray(v.found).filter((id) => ITEM_MAP.has(id)),
+    sets: stringArray(v.sets).filter((id) => COLLECTION_MAP.has(id)),
   };
 }
 

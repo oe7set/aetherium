@@ -291,6 +291,10 @@ export interface ProgressState {
   /** Index of the current Chronik step. */
   chronicle: number;
   avatars: string[];
+  /** Sammelbuch: every item id ever obtained. */
+  found: string[];
+  /** Claimed Sammelbuch sets. */
+  sets: string[];
 }
 
 export interface RiftBest {
@@ -375,7 +379,7 @@ export interface GameState {
   rift: RiftState;
 }
 
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 export function defaultSettings(): Settings {
   return {
@@ -446,6 +450,8 @@ export function newGame(now: number = Date.now()): GameState {
       passClaimed: [],
       chronicle: 0,
       avatars: [],
+      found: [],
+      sets: [],
     },
     rift: defaultRift(),
   };

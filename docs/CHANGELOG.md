@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.8.0] – Sammelbuch & Grabungsstätte
+
+### Hinzugefügt
+
+- **Sammelbuch** 📗 (Inventar → Sammelbuch, auch im Schnellzugriff): 14 Sets von Relikten über Edelsteine, Hölzer,
+  Erze, Fische und Tränke bis zum Kuriositätenkabinett. Jeder Gegenstand zählt, sobald er einmal in der Tasche war –
+  auch über Wiedergeburten hinweg. Volle Sets bringen eine Belohnung und einen **dauerhaften Bonus**; neue Funde und
+  komplette Sets melden sich mit Popup und Klang, der Inventar-Tab zeigt ein Abzeichen.
+- Neue Erfolge (Funde, Sets) und zwei neue Quellen für die Ruhmesleiter.
+- **Grabungsstätte** auf der 3D-Insel (und im 2D-Modus) für Archäologie – die Urne hüpft und leuchtet bei jedem Fund.
+- `docs/SYSTEME.md`: Landkarte aller Systeme, ihrer Verbindungen und der offenen Punkte.
+
+### Technik
+
+- Spielstand-Version 12: vorhandene und bereits einmal erhaltene Gegenstände zählen beim Update sofort als gefunden.
+
 ## [1.7.0] – Kühler, größer, übersichtlicher
 
 ### Hinzugefügt
