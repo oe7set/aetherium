@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.70.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.71.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss), Masterplan 3.0 (`docs/PLAN-3.md`) und 4.0 (`docs/PLAN-4.md`: Bogenbau, Viehzucht, Rissläufer/Relikte,
 Flüche/Schreine/Tagesriss, Zunftaufträge) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 

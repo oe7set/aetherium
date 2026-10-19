@@ -499,3 +499,24 @@ export function Course({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Erfinden: a workshop with a spinning cog on its front. */
+export function InventorShop({ onTap }: { onTap: TapHandler }) {
+  const cog = useRef<THREE.Mesh>(null);
+  const active = useActive('invention');
+  useFrame((_, dt) => {
+    if (cog.current) cog.current.rotation.z += dt * (active.current ? 3 : 0.4);
+  });
+  return (
+    <Workshop skill="invention" roof="#7a8a96" onTap={onTap}>
+      <mesh ref={cog} position={[0, 0.5, 0.05]}>
+        <torusGeometry args={[0.2, 0.06, 6, 8]} />
+        <meshStandardMaterial color="#c9a227" metalness={0.5} roughness={0.4} />
+      </mesh>
+      <mesh position={[0.45, 0.2, 0]}>
+        <boxGeometry args={[0.3, 0.4, 0.3]} />
+        <meshStandardMaterial color="#6b6f8a" />
+      </mesh>
+    </Workshop>
+  );
+}

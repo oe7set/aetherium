@@ -204,6 +204,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Taue drehen, Segel nähen, Schiffe bauen – und zu fernen Inseln segeln: Perlen, Gewürze, Obsidian, Drachenschuppen, Sternenstaub. Größere Schiffe fahren schneller und weiter; Handelsfahrten bringen Gold und Dorf-Rohstoffe. Kartografie verkürzt jede Fahrt.',
   },
   {
+    id: 'invention',
+    name: 'Erfinden',
+    icon: '⚙️',
+    color: '#b8c4cc',
+    group: 'processing',
+    desc: 'Alte Ausrüstung zerlegen, Schrott sortieren, Bauteile sammeln – und daraus Erfindungen bauen: selbstschärfende Äxte, Zielfernrohre, Runenresonatoren, Uhrwerk-Gehilfen. Jede Erfindung hat fünf Stufen mit Dauer-Boni.',
+  },
+  {
     id: 'agility',
     name: 'Gewandtheit',
     icon: '🏃',

@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.70.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.71.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,13 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Erfinden** (Phase 32, `data/invention.ts`, `engine/invention.ts`, `ui/skills/InventionPanel.tsx`): Schrott
+(alte Stiefel, Verbranntes, Tonscherben, Nägel) → Schrauben; Runen → Zauberteile; Meteoriten → uralte Teile.
+`disassemble` zerlegt Ausrüstung aus dem Inventar (nie angelegte Teile) nach Preis/Art/Seltenheit
+(`disassembleYield`), XP je Bauteil. 11 Erfindungen × 5 Stufen in `s.inventions` (bleiben über Prestige, Kosten
+verdoppeln sich), Modifier-Quelle `inventions` (Werkzeugtempo, doppelte Ausbeute, Kampf, Runen sparen, Seefahrt,
+Sternkunde, Helfer, Riss). Erfinderwerkstatt auf der Insel, Zähler `itemsDisassembled`, `inventionsBuilt`.
 
 **Gewandtheit** (Phase 31, `data/agility.ts`, `engine/agility.ts`): 8 Parcours ohne Zutaten mit Sturzrisiko
 (`ActionDef.fall`, Action-Gate wie Diebeskunst: Betäubung, LP, 10 % XP; `fallChance` sinkt über 30 Stufen auf 3 %).

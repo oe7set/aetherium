@@ -39,6 +39,7 @@ import { FAMILIAR_MAP } from '../data/summoning';
 import { UTILITY_MAP } from '../data/magic';
 import { RELIC_MAP } from '../data/riftwalker';
 import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
+import { INVENTION_MAP } from '../data/invention';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -303,6 +304,14 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: 'warn',
             text: `🐾 ${f.icon} ${f.name} ist in die Geisterwelt zurückgekehrt.`,
           });
+        break;
+      }
+      case 'invented': {
+        const d = INVENTION_MAP.get(e.invention);
+        out.feed.push({
+          kind: 'rare',
+          text: `⚙️ ${d?.icon ?? ''} ${d?.name ?? e.invention} ${e.level === 1 ? 'erfunden' : `auf Stufe ${e.level} verbessert`}!`,
+        });
         break;
       }
       case 'fell':

@@ -149,6 +149,8 @@ function resetRun(s: GameState): void {
     guilds: s.guilds,
     // Studied constellations stay in the sky.
     stars: s.stars,
+    // Inventions are machines on the island – they stay.
+    inventions: s.inventions,
   };
   Object.assign(s, fresh, kept);
 

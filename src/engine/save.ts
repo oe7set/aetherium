@@ -21,6 +21,7 @@ import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { GUILD_MAP } from '../data/guilds';
 import { CONSTELLATION_MAP, CONSTELLATION_MAX_RANK } from '../data/astronomy';
+import { INVENTION_MAP, INVENTION_MAX } from '../data/invention';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -273,6 +274,11 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     rift: hydrateRift(data.rift, base.rift),
     guilds: hydrateGuilds(data.guilds, base.guilds),
     stars: hydrateStars(data.stars),
+    inventions: Object.fromEntries(
+      Object.entries(numberRecord(data.inventions))
+        .filter(([id]) => INVENTION_MAP.has(id))
+        .map(([id, l]) => [id, Math.max(0, Math.min(INVENTION_MAX, Math.floor(l)))]),
+    ),
     hero: hydrateHero(data.hero, base.hero),
     progress: hydrateProgress(data.progress, base.progress),
     combatSettings: hydrateCombatSettings(data.combatSettings),

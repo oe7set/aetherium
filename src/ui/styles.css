@@ -2249,6 +2249,14 @@ button.chip {
   left: 40%;
   top: 42%;
 }
+.st-inv {
+  left: 72%;
+  top: 46%;
+}
+.character.st-inv {
+  left: 68%;
+  top: 48%;
+}
 .st-agi {
   left: 30%;
   top: 28%;

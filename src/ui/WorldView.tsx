@@ -36,6 +36,7 @@ const STATIONS: Station[] = [
   { skill: 'thieving', label: 'Markt', icon: '🗝️', className: 'st-thief' },
   { skill: 'construction', label: 'Bauplatz', icon: '🔨', className: 'st-build' },
   { skill: 'cartography', label: 'Karten', icon: '🧭', className: 'st-map' },
+  { skill: 'invention', label: 'Erfinder', icon: '⚙️', className: 'st-inv' },
   { skill: 'agility', label: 'Parcours', icon: '🏃', className: 'st-agi' },
   { skill: 'astronomy', label: 'Sterne', icon: '🔭', className: 'st-astro' },
   { skill: 'sailing', label: 'Hafen', icon: '⚓', className: 'st-sail' },

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.71.0] – Erfinden
+
+- **Neuer Skill Erfinden** ⚙️ (Phase 32): Alte Ausrüstung **zerlegen** (Schrauben, Präzisionsteile, Zauberteile, uralte Teile – je nach Art und Seltenheit), Schrott wie alte Stiefel und Verbranntes endlich verwerten, Runen und Meteoriten zu besonderen Bauteilen verarbeiten.
+- **Elf Erfindungen** mit je fünf Stufen: Selbstschärfende Axt, Bohrspitzhacke, Glücksköder, Dampfblasebalg, Klingenschärfer, Zielfernrohr, Runenresonator, Kreiselkompass, Sternenlinse, Uhrwerk-Gehilfe und Ätherkern – Dauer-Boni, die auch nach jeder Wiedergeburt bleiben.
+- Erfinderwerkstatt mit drehendem Zahnrad auf der Insel.
+
 ## [1.70.0] – Gewandtheit
 
 - **Neuer Skill Gewandtheit** 🏃 (Phase 31): Acht Parcours – Strandlauf, Baumkronenpfad, Flusssprünge, Dorfdächer, Klippen, Takelage der Hafenschiffe, Lavastein-Hüpfen und Ätherbrücken. Wer stürzt, verliert kurz Zeit und ein paar LP; das Risiko sinkt mit der Stufe.

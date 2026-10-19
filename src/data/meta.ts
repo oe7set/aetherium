@@ -942,6 +942,13 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
   },
   { id: 'maps', label: 'Zeichne {n} Karten', stat: 'mapsDrawn', base: 30, icon: '🧭' },
   {
+    id: 'disassemble',
+    label: 'Zerlege {n} Gegenstände',
+    stat: 'itemsDisassembled',
+    base: 15,
+    icon: '⚙️',
+  },
+  {
     id: 'laps',
     label: 'Laufe {n} Parcours-Runden',
     stat: 'lapsRun',

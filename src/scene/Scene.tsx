@@ -45,6 +45,7 @@ import {
   Dock,
   Telescope,
   Course,
+  InventorShop,
   MarketStalls,
   SummonCircle,
 } from './Workshops';
@@ -222,6 +223,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Dock onTap={tap('sailing')} />
       <Telescope onTap={tap('astronomy')} />
       <Course onTap={tap('agility')} />
+      <InventorShop onTap={tap('invention')} />
       <IslandBuildings />
       <IslandDecor />
       <Helpers />

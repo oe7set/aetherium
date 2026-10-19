@@ -11,6 +11,7 @@ import { HUSBANDRY_ACTIONS } from './husbandry';
 import { SAILING_ACTIONS } from './sailing';
 import { ASTRO_ACTIONS } from './astronomy';
 import { AGILITY_ACTIONS } from './agility';
+import { INVENTION_ACTIONS } from './invention';
 import { MAGIC_ACTIONS } from './magic';
 import { EXPANSION_ACTIONS } from './expansion';
 import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
@@ -535,5 +536,6 @@ export const ACTIONS: ActionDef[] = [
   ...SAILING_ACTIONS,
   ...ASTRO_ACTIONS,
   ...AGILITY_ACTIONS,
+  ...INVENTION_ACTIONS,
   ...MAGIC_ACTIONS,
 ];
