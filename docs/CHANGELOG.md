@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.50.0] – Juwelierkunst & Sets
+
+- Neuer Skill **Juwelierkunst** 💎 (Phase 13): Flusskiesel sieben, Geoden knacken (Geoden findest du jetzt beim Bergbau), Steine veredeln. Sechs neue Edelsteine – Quarz, Opal, Jade, Topas, Onyx und Ätherstein – und 16 Ringe und Amulette: für Nahkampf, Fernkampf, Magie, Leben, Gold, XP, Bergbau, Kochen/Brauen, Landwirtschaft/Jagd/Angeln. Eigene Werkstatt auf der Insel.
+- **Ausrüstungs-Sets** mit Bonus: Metall-Garnituren (ab 3 Teilen mehr Verteidigung, mit allen 6 mehr Nahkampfschaden und Leben), Lederjäger (Fernkampf), Seidenmagier (Magie), Drachenjäger. Die Ausrüstungsansicht zeigt Fortschritt und aktive Boni.
+- Neue oberste Metallstufe **Ätherit** 🟣 (Bergbau 92): komplette Rüstung, Waffen und Ätheritpfeile.
+- **Boss-Unikate**: Rotstift-Klinge (Peer Reviewer), Drachenfeuerbogen (Ältester Drache), Stab des Standardmodells, Eiswurm-Schuppenmantel und Yeti-Fäustlinge – mit besonderen Effekten.
+- Neues Sammelbuch-Set „Schatulle des Juweliers"; Juwelierarbeiten zählen für Aufträge und Ruhmesleiter.
+
 ## [1.49.0] – Magie 2.0: Element-Runen
 
 - **Magie 2.0** (Phase 12): 24 Zauber – sechs Elemente (Arkan, Feuer, Frost, Blitz, Schatten, Leere) mit je vier Stufen (Stoß, Bolzen, Explosion, Welle). Feuer macht mehr Schaden, Frost friert ein, Blitz trifft sicherer, Schatten heilt, Leere ist roh und gewaltig.

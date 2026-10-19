@@ -163,6 +163,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Knochen vergraben, Asche verstreuen, Wasser segnen. Jede Stufe: mehr Verteidigung im Kampf, mehr Lebenskraft im Riss und eine wehrhaftere Dorfgemeinschaft.',
   },
   {
+    id: 'jewelcrafting',
+    name: 'Juwelierkunst',
+    icon: '💎',
+    color: '#5fd3e6',
+    group: 'processing',
+    desc: 'Kiesel sieben, Geoden knacken, Steine veredeln – und daraus Ringe und Amulette für jeden Kampfstil und viele Skills schmieden.',
+  },
+  {
     id: 'brewing',
     name: 'Brauen',
     icon: '🍺',

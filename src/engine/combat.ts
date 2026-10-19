@@ -1,5 +1,6 @@
 import { DUNGEON_MAP, getItem, getMonster, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
+import { SET_OF, type GearSetDef } from '../data/sets';
 import {
   DODGE_ENERGY,
   ELEMENT_RESIST,
@@ -46,6 +47,22 @@ export const RESPAWN_SECONDS = 1.5;
 /** Seconds per regenerated hit point. */
 export const HP_REGEN_SECONDS = 10;
 const UNARMED: EquipDef = { slot: 'weapon', style: 'melee', speed: 2.4, attack: 0, strength: 0 };
+
+/** Pieces of each gear set currently worn. */
+export function setProgress(s: GameState): { set: GearSetDef; count: number }[] {
+  const counts = new Map<GearSetDef, number>();
+  for (const id of Object.values(s.equipment)) {
+    const set = id ? SET_OF.get(id) : undefined;
+    if (set) counts.set(set, (counts.get(set) ?? 0) + 1);
+  }
+  return [...counts].map(([set, count]) => ({ set, count }));
+}
+
+registerModifierSource('sets', (s) =>
+  setProgress(s).flatMap(({ set, count }) =>
+    set.tiers.filter((t) => count >= t.count).map((t) => t.mods),
+  ),
+);
 
 registerModifierSource('equipment', (s) =>
   Object.entries(s.equipment)

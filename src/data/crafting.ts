@@ -97,6 +97,7 @@ const ARROWS: {
   { metal: 'mithril', name: 'Mithrilpfeile', level: 45, xp: 112, strength: 22, price: 20 },
   { metal: 'adamant', name: 'Adamantpfeile', level: 60, xp: 150, strength: 31, price: 45 },
   { metal: 'rune', name: 'Runitpfeile', level: 75, xp: 187, strength: 49, price: 110 },
+  { metal: 'aetherite', name: 'Ätheritpfeile', level: 90, xp: 230, strength: 64, price: 260 },
 ];
 
 const STAFFS: {

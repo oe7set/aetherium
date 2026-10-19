@@ -89,6 +89,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'masteryLevels', per: 3, label: 'Meisterschaftsstufen', icon: '🏅' },
   { stat: 'ritesPerformed', per: 1 / 25, label: 'Andachten', icon: '🙏' },
   { stat: 'drinksBrewed', per: 1 / 20, label: 'Gebraute Getränke', icon: '🍺' },
+  { stat: 'jewelsCrafted', per: 1 / 20, label: 'Juwelierarbeiten', icon: '💎' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getItem, getSkill, type EquipDef, type EquipSlot, type ModifierSet } from '../../data';
-import { canWear, playerStats } from '../../engine';
+import { canWear, playerStats, setProgress } from '../../engine';
+import { SET_OF } from '../../data/sets';
 import { useGame } from '../../store/gameStore';
 import { ItemIcon } from '../ItemIcon';
 import { describeMods } from '../modText';
@@ -153,6 +154,21 @@ export function GearPanel() {
               <small>✨ {describeMods(mods)}</small>
             </p>
           )}
+          {setProgress(game).map(({ set, count }) => (
+            <div key={set.id} className="gear-set">
+              <strong>
+                {set.icon} {set.name}{' '}
+                <small className="muted">
+                  {count}/{set.pieces.length}
+                </small>
+              </strong>
+              {set.tiers.map((t) => (
+                <small key={t.count} className={count >= t.count ? 'set-on' : 'muted'}>
+                  {count >= t.count ? '✓' : '○'} ab {t.count}: {describeMods(t.mods)}
+                </small>
+              ))}
+            </div>
+          ))}
           <button className="btn small" onClick={equipBest}>
             ✨ Beste Rüstung anlegen
           </button>
@@ -195,6 +211,7 @@ export function GearPanel() {
                 </strong>
                 <small className="muted">
                   {SLOT_LABEL.get(eq.slot)} · ×{inventory[id] ?? 0}
+                  {SET_OF.has(id) && ` · Set: ${SET_OF.get(id)!.name}`}
                 </small>
                 <EquipInfo itemId={id} />
                 {eq.slot !== 'ammo' && (

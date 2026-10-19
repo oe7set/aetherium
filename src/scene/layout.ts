@@ -30,6 +30,7 @@ export const STATIONS: StationDef[] = [
   { skill: 'arcane', label: 'Ätherquelle', pos: [-0.8, 9.6], workPos: [-0.4, 8.4] },
   { skill: 'faith', label: 'Schrein', pos: [-7.1, 6.6], workPos: [-6.2, 5.8] },
   { skill: 'brewing', label: 'Brauerei', pos: [8.4, 3.1], workPos: [7.2, 2.7] },
+  { skill: 'jewelcrafting', label: 'Juwelier', pos: [3.6, -1.2], workPos: [3.2, 0] },
 ];
 
 /** Skills that share a station. */

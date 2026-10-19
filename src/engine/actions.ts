@@ -202,6 +202,7 @@ const SKILL_STATS: Record<string, string> = {
   fishing: 'fishCaught',
   faith: 'ritesPerformed',
   brewing: 'drinksBrewed',
+  jewelcrafting: 'jewelsCrafted',
 };
 
 /**

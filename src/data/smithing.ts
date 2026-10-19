@@ -107,6 +107,19 @@ const METALS: Metal[] = [
     pick: 'pick_rune',
     color: '#3fb7d9',
   },
+  {
+    key: 'aetherite',
+    name: 'Ätherit',
+    level: 92,
+    ores: [
+      { item: 'ore_aetherite', qty: 1 },
+      { item: 'coal', qty: 8 },
+    ],
+    barXp: 115,
+    barPrice: 800,
+    power: 17,
+    color: '#b07cff',
+  },
 ];
 
 /** Precious metal bars (no gear, used for jewellery and enchanting later). */

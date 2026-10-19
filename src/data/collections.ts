@@ -47,6 +47,16 @@ export const COLLECTIONS: CollectionDef[] = [
     reward: { gold: 2500 },
   },
   {
+    id: 'jewels',
+    name: 'Schatulle des Juweliers',
+    icon: '💍',
+    desc: 'Sechs Steine, ein Traum: die neue Edelstein-Familie.',
+    items: ['gem_quartz', 'gem_opal', 'gem_jade', 'gem_topaz', 'gem_onyx', 'gem_aether'],
+    bonus: { 'xp.jewelcrafting': 0.1, gold: 0.03 },
+    bonusText: '+10 % Juwelier-XP, +3 % Gold',
+    reward: { gold: 6000 },
+  },
+  {
     id: 'woods',
     name: 'Klassische Hölzer',
     icon: '🪵',

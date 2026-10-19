@@ -1,3 +1,4 @@
+import { UNIQUE_DROPS } from './sets';
 import type { CombatStyle, ItemDef, LootEntry } from './types';
 
 export interface BossPhase {
@@ -594,6 +595,12 @@ export const MONSTERS: MonsterDef[] = [
     desc: 'Erklärt fast alles. Außer Gravitation. Und warum du hier bist.',
   },
 ];
+
+// Boss uniques (data/sets.ts) join the regular loot tables.
+for (const m of MONSTERS) {
+  const unique = UNIQUE_DROPS[m.id];
+  if (unique) m.loot.push(unique);
+}
 
 export const AREAS: AreaDef[] = [
   {

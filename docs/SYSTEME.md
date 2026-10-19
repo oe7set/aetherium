@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.49.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.50.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,14 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Juwelierkunst** (Phase 13, `data/jewelcrafting.ts`): Kiesel sieben (Quarz + Funde), Geoden knacken (Geoden fallen
+beim Bergbau über `gems()`), Steine veredeln (Topas, Onyx, Ätherstein ← Äther vom Arkanen), 16 Ringe/Amulette aus
+Barren + Steinen für alle Kampfstile und Sammel-Skills. Zähler `jewelsCrafted` (Aufträge, Ruhmesleiter), Sammelbuch
+„Schatulle des Juweliers", Station „Juwelier" (`scene/Workshops.tsx`, generische Werkstatt für neue Skills).
+**Sets & Unikate** (`data/sets.ts`): Metall-Garnituren (3/6 Teile), Lederjäger, Seidenmagier, Drachenjäger –
+Modifier-Quelle `sets` über `setProgress`; Boss-Unikate über `UNIQUE_DROPS` (in `data/combat.ts` an die Beute gehängt).
+**Ätherit**: oberste Metallstufe (Bergbau 92, Schmieden 92+, Ätheritpfeile).
 
 **Magie 2.0** (Phase 12, `data/spells.ts` + `data/runes.ts`): 24 Zauber = 6 Elemente × 4 Stufen (Stoß, Bolzen,
 Explosion, Welle), erzeugt aus `SEEDS` (alte IDs bleiben). Kosten `cost[]`: 1 Grundrune + Element-Runen

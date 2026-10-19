@@ -1,6 +1,7 @@
 import { CRAFTING_ACTIONS } from './crafting';
 import { DEVOTION_ACTIONS } from './devotion';
 import { RUNE_ACTIONS } from './runes';
+import { JEWEL_ACTIONS } from './jewelcrafting';
 import { EXPANSION_ACTIONS } from './expansion';
 import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
 import { SCIENCE_ACTIONS } from './science';
@@ -139,6 +140,8 @@ const gems = (mult: number): LootEntry[] => [
   { item: 'gem_emerald', chance: 0.002 * mult, rare: true },
   { item: 'gem_ruby', chance: 0.001 * mult, rare: true },
   { item: 'gem_diamond', chance: 0.0004 * mult, rare: true },
+  // Geodes feed Juwelierkunst (cracked open for gems).
+  { item: 'geode', chance: 0.015 * mult },
 ];
 
 const MINING: ActionDef[] = [
@@ -250,6 +253,19 @@ const MINING: ActionDef[] = [
     inputs: [],
     outputs: [{ item: 'ore_runite', qty: 1 }],
     drops: [...gems(2.5)],
+  },
+  {
+    id: 'mine_aetherite',
+    skill: 'mining',
+    name: 'Ätherit abbauen',
+    icon: '🟣',
+    levelReq: 92,
+    baseTime: 10,
+    xp: 360,
+    inputs: [],
+    outputs: [{ item: 'ore_aetherite', qty: 1 }],
+    drops: [...gems(3), { item: 'gem_aether', chance: 1 / 250, rare: true }],
+    desc: 'Erz, in dem der Äther schläft. Bitte leise hacken.',
   },
   {
     id: 'mine_uranium',
@@ -499,4 +515,5 @@ export const ACTIONS: ActionDef[] = [
   ...EXPANSION_ACTIONS,
   ...DEVOTION_ACTIONS,
   ...RUNE_ACTIONS,
+  ...JEWEL_ACTIONS,
 ];

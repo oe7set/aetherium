@@ -2213,6 +2213,14 @@ button.chip {
   left: 82%;
   top: 60%;
 }
+.st-jewel {
+  left: 66%;
+  top: 46%;
+}
+.character.st-jewel {
+  left: 62%;
+  top: 48%;
+}
 
 /* --- Combat: spell book and special attack ----------------------------------------------------- */
 
@@ -2462,4 +2470,14 @@ button.chip {
 }
 .spell small .warn {
   color: #ff7b7b;
+}
+.gear-set {
+  display: grid;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.gear-set .set-on {
+  color: #7be495;
 }

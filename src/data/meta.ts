@@ -811,4 +811,11 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
   { id: 'harvest', label: 'Ernte {n}-mal', stat: 'harvests', base: 8, icon: '🌾' },
   { id: 'rites', label: 'Vollziehe {n} Andachten', stat: 'ritesPerformed', base: 40, icon: '🙏' },
   { id: 'brew', label: 'Braue {n} Getränke', stat: 'drinksBrewed', base: 30, icon: '🍺' },
+  {
+    id: 'jewels',
+    label: 'Fertige {n} Juwelierarbeiten',
+    stat: 'jewelsCrafted',
+    base: 30,
+    icon: '💎',
+  },
 ];

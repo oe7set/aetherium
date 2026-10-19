@@ -7,6 +7,8 @@ import type { ItemDef } from './types';
 import { VILLAGE_ITEMS } from './village';
 import { DEVOTION_ITEMS } from './devotion';
 import { RUNE_ITEMS } from './runes';
+import { JEWEL_ITEMS } from './jewelcrafting';
+import { UNIQUE_ITEMS } from './sets';
 import { EXPANSION_ITEMS } from './expansion';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
@@ -160,6 +162,16 @@ const ORES: ItemDef[] = [
     category: 'ore',
     sellPrice: 130,
     desc: 'Respawnt nur, wenn niemand hinsieht.',
+  },
+  {
+    id: 'ore_aetherite',
+    name: 'Ätheriterz',
+    icon: '🟣',
+    art: { kind: 'ore', color: '#b07cff' },
+    category: 'ore',
+    sellPrice: 260,
+    rarity: 'rare',
+    desc: 'Leuchtet im Dunkeln und manchmal auch im Hellen.',
   },
   {
     id: 'ore_uranium',
@@ -471,4 +483,6 @@ export const ITEMS: ItemDef[] = [
   ...EXPANSION_ITEMS,
   ...DEVOTION_ITEMS,
   ...RUNE_ITEMS,
+  ...JEWEL_ITEMS,
+  ...UNIQUE_ITEMS,
 ];
