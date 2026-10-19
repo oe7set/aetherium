@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.51.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.52.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,12 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Beschwörung** (Phase 15, `data/summoning.ts`, `engine/summoning.ts`): Talismane (`charmDrops` je Monsterstufe an
+jedes Nicht-Boss-Monster gehängt) + Seelensplitter (Aktion, Ektoplasma, Krämer) + Zutat = Beutel (`consume: familiar`).
+`s.familiar` (ein Vertrauter, Zeiteffekt `familiar`, auch offline; gleicher Vertrauter verlängert). Modifier-Quelle
+`familiar`; Kampf-Vertraute (`strike`) schlagen in `playerAttack` bei 50 % der Angriffe zu; `rift.*`-Boni wirken im
+Riss. Anzeige in der Buff-Leiste; Beschwörungskreis auf der Insel. Zähler `pouchesMade`.
 
 **Kopfgeldjagd** (Phase 14, `data/slayer.ts`, `engine/slayer.ts`, `ui/combat/SlayerView.tsx`): Auftrag (12–35 Kills)
 aus `slayerCandidates` (passend zur Kampfstufe, keine Bosse, ohne Sperren); Kill-Hook gibt Kopfgeld-XP (1,2 × LP),

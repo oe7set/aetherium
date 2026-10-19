@@ -410,6 +410,7 @@ export const SHOP_OFFERS: ShopOffer[] = [
   { item: 'rune_basic', price: 6 },
   { item: 'rune_fire', price: 12 },
   { item: 'rune_frost', price: 14 },
+  { item: 'spirit_shard', price: 8 },
   { item: 'seed_potato', price: 3 },
   { item: 'seed_wheat', price: 8 },
   { item: 'seed_apple', price: 40 },

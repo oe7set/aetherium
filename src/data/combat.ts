@@ -1,4 +1,5 @@
 import { UNIQUE_DROPS } from './sets';
+import { charmDrops } from './summoning';
 import type { CombatStyle, ItemDef, LootEntry } from './types';
 
 export interface BossPhase {
@@ -712,6 +713,8 @@ export const MONSTERS: MonsterDef[] = [
 for (const m of MONSTERS) {
   const unique = UNIQUE_DROPS[m.id];
   if (unique) m.loot.push(unique);
+  // Beschwörung: charms drop from every regular monster.
+  if (!m.boss) m.loot.push(...charmDrops(m.level));
 }
 
 export const AREAS: AreaDef[] = [

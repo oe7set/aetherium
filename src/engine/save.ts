@@ -14,6 +14,7 @@ import {
 } from '../data';
 import { SPELL_MAP } from '../data/spells';
 import { PRAYER_MAP } from '../data/prayers';
+import { FAMILIAR_MAP } from '../data/summoning';
 import { COLLECTION_MAP } from '../data/collections';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
@@ -269,6 +270,14 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     prayer: hydratePrayer(data.prayer, base.prayer),
     loadouts: hydrateLoadouts(data.loadouts),
     slayer: hydrateSlayer(data.slayer, base.slayer),
+    familiar:
+      isRecord(data.familiar) &&
+      typeof data.familiar.id === 'string' &&
+      FAMILIAR_MAP.has(data.familiar.id) &&
+      typeof data.familiar.remaining === 'number' &&
+      data.familiar.remaining > 0
+        ? { id: data.familiar.id, remaining: data.familiar.remaining }
+        : null,
     achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
     buffs: Array.isArray(data.buffs)
       ? data.buffs.filter(

@@ -2225,6 +2225,14 @@ button.chip {
   left: 86%;
   top: 74%;
 }
+.st-summon {
+  left: 32%;
+  top: 24%;
+}
+.character.st-summon {
+  left: 36%;
+  top: 28%;
+}
 .character.st-jewel {
   left: 62%;
   top: 48%;

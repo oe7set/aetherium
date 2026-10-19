@@ -35,6 +35,7 @@ import {
   TREND_UP_LINES,
 } from '../data/flavor';
 import { SPECIALS } from '../data/spells';
+import { FAMILIAR_MAP } from '../data/summoning';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
 import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
@@ -281,6 +282,24 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         });
         out.popups.push({ kind: 'rare', text: `🎯 +${e.points}` });
         break;
+      case 'familiarSummoned': {
+        const f = FAMILIAR_MAP.get(e.familiar);
+        if (f)
+          out.feed.push({
+            kind: 'rare',
+            text: `🐾 ${f.icon} ${f.name} begleitet dich jetzt (${f.minutes} Min).`,
+          });
+        break;
+      }
+      case 'familiarLeft': {
+        const f = FAMILIAR_MAP.get(e.familiar);
+        if (f)
+          out.feed.push({
+            kind: 'warn',
+            text: `🐾 ${f.icon} ${f.name} ist in die Geisterwelt zurückgekehrt.`,
+          });
+        break;
+      }
       case 'prayerEmpty':
         out.feed.push({
           kind: 'warn',

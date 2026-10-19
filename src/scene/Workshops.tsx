@@ -109,3 +109,41 @@ export function BountyBoard({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Beschwörung: a glowing summoning circle with a floating spirit orb. */
+export function SummonCircle({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('summoning')!;
+  const orb = useRef<THREE.Mesh>(null);
+  const ring = useRef<THREE.Mesh>(null);
+  const active = useActive('summoning');
+  useFrame((_, dt) => {
+    const t = performance.now() / 1000;
+    if (orb.current) orb.current.position.y = 1.1 + Math.sin(t * 2) * 0.15;
+    if (ring.current) ring.current.rotation.z += dt * (active.current ? 2 : 0.4);
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.1, 24]} />
+        <meshStandardMaterial color="#3a2a55" />
+      </mesh>
+      <mesh ref={ring} position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.8, 0.95, 6]} />
+        <meshStandardMaterial color="#b98cff" emissive="#9b6bff" emissiveIntensity={1.4} />
+      </mesh>
+      {[0, 1, 2, 3, 4].map((i) => {
+        const a = (i / 5) * Math.PI * 2;
+        return (
+          <mesh key={i} position={[Math.cos(a) * 1.05, 0.25, Math.sin(a) * 1.05]}>
+            <cylinderGeometry args={[0.06, 0.08, 0.5, 6]} />
+            <meshStandardMaterial color="#d7cbe8" />
+          </mesh>
+        );
+      })}
+      <mesh ref={orb} position={[0, 1.1, 0]}>
+        <sphereGeometry args={[0.22, 14, 10]} />
+        <meshStandardMaterial color="#e2d1ff" emissive="#b98cff" emissiveIntensity={1.8} />
+      </mesh>
+    </group>
+  );
+}

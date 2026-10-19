@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
 import {
+  dismissFamiliar,
   faithBonus,
+  formatDuration,
   hasMasteryPool,
   levelCap,
   levelProgress,
@@ -15,6 +17,7 @@ import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
 import { SlayerView } from '../combat/SlayerView';
+import { FAMILIAR_MAP } from '../../data/summoning';
 import { FarmingView } from '../science/FarmingView';
 import { ActionCard } from './ActionCard';
 
@@ -68,6 +71,31 @@ function FaithFact() {
   return (
     <span className="fact">
       🙏 Segen: +{def} % Verteidigung · +{hp} % Riss-LP · +{village} % Dorfabwehr
+    </span>
+  );
+}
+
+/** Beschwörung: who is at your side right now. */
+function FamiliarFact() {
+  const fam = useGame((s) =>
+    s.game.familiar ? `${s.game.familiar.id}:${Math.ceil(s.game.familiar.remaining)}` : '',
+  );
+  const dismiss = useGame((s) => s.combatAct);
+  const [id = '', secs = '0'] = fam.split(':');
+  const f = FAMILIAR_MAP.get(id);
+  if (!f)
+    return (
+      <span className="fact">
+        🐾 Kein Vertrauter – fertige einen Beutel und öffne ihn im Inventar.
+      </span>
+    );
+  return (
+    <span className="fact">
+      🐾 {f.icon} {f.name} · noch {formatDuration(Number(secs))}
+      {f.strike ? ` · Zusatztreffer bis ${f.strike}` : ''}{' '}
+      <button className="btn small btn-ghost" onClick={() => dismiss((s) => dismissFamiliar(s))}>
+        Entlassen
+      </button>
     </span>
   );
 }
@@ -184,6 +212,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
           </span>
         )}
         {skillId === 'faith' && <FaithFact />}
+        {skillId === 'summoning' && <FamiliarFact />}
         <span className="fact">
           {next
             ? t('action.nextUnlock', { name: next.name, level: next.levelReq })

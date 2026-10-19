@@ -36,6 +36,7 @@ import { randInt, type Rng } from './rng';
 import { addResearch } from './science';
 import { consumeItem } from './consume';
 import { maxPrayer, protectsFrom } from './prayer';
+import { activeFamiliar } from './summoning';
 import { monsterStyle } from '../data/prayers';
 import { BUFF_MAP } from '../data';
 import { earnGold } from './shop';
@@ -599,6 +600,12 @@ function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void 
   // Read before paying: the last arrow of a stack still carries its element.
   const ammoElement = s.equipment.ammo ? getItem(s.equipment.ammo).equip?.element : undefined;
   const spell = payShot(s, rng, st.style);
+  // Beschwörung: a fighting familiar strikes along on half of your attacks.
+  const fam = activeFamiliar(s);
+  if (fam?.strike && rng() < 0.5) {
+    landHit(s, c, m, randInt(rng, 1, fam.strike), rng, emit);
+    if (c.monsterHp <= 0) return;
+  }
   if (rng() >= playerHitChance(s, m, c.phase)) {
     gainEnergy(s, c, SPECIAL_GAIN_MISS);
     emit({ type: 'hit', target: 'monster', damage: 0 });

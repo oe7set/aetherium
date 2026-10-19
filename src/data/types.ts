@@ -55,7 +55,9 @@ export type ConsumeEffect =
   | { type: 'loot'; table: LootEntry[]; rolls: number }
   | { type: 'gold'; min: number; max: number }
   /** Restores prayer points (Gebete im Kampf). */
-  | { type: 'prayer'; amount: number };
+  | { type: 'prayer'; amount: number }
+  /** Summons a familiar (Beschwörung). */
+  | { type: 'familiar'; familiar: string };
 
 export interface ItemDef {
   id: ItemId;

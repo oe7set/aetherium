@@ -825,4 +825,11 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
     base: 2,
     icon: '🎯',
   },
+  {
+    id: 'pouches',
+    label: 'Fertige {n} Beschwörungsbeutel',
+    stat: 'pouchesMade',
+    base: 15,
+    icon: '🐾',
+  },
 ];

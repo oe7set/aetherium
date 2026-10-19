@@ -91,6 +91,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'drinksBrewed', per: 1 / 20, label: 'Gebraute Getränke', icon: '🍺' },
   { stat: 'jewelsCrafted', per: 1 / 20, label: 'Juwelierarbeiten', icon: '💎' },
   { stat: 'slayerTasks', per: 1, label: 'Kopfgeld-Aufträge', icon: '🎯' },
+  { stat: 'pouchesMade', per: 1 / 10, label: 'Beschwörungsbeutel', icon: '🐾' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------

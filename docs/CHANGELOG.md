@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.52.0] – Beschwörung
+
+- Neuer Skill **Beschwörung** 🐾 (Phase 15): Monster lassen jetzt Talismane fallen (Gold, Grün, Purpur, Blau – je nach Stärke). Mit Seelensplittern und einer Zutat werden daraus Beschwörungsbeutel; öffnen ruft einen Vertrauten für 30–60 Minuten – auch offline.
+- 11 Vertraute: Kampfhelfer, die bei jedem zweiten Angriff zusätzlich zuschlagen (Geisterwolf, Kampfeber, Eisentitan, Phönix), Sammelhelfer (Waldgeist, Riesenmaulwurf, Fischotter, Glutkobold), die Weise Eule (+XP, Forschung), das Heil-Einhorn und der Goldkäfer (mehr Gold und Beute). Kampf-Vertraute stärken auch deinen Helden im Riss.
+- Der aktive Vertraute steht in der Buff-Leiste; Seelensplitter gibt's beim Krämer, aus Ektoplasma oder selbst gefangen. Beschwörungskreis auf der Insel.
+
 ## [1.51.0] – Kopfgeldjagd
 
 - Neuer Skill **Kopfgeldjagd** 🎯 (Phase 14): Hol dir am Kopfgeldbrett neben der Arena einen Auftrag („Besiege 23 Wölfe"), jeder Kill am Ziel gibt Kopfgeld-XP. Erfüllte Aufträge bringen Punkte und Gold, jeder 10. Auftrag in Serie das Fünffache.

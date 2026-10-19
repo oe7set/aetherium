@@ -131,6 +131,7 @@ function resetRun(s: GameState): void {
     loadouts: s.loadouts,
     // Contracts and points belong to the hunter, not the run.
     slayer: s.slayer,
+    familiar: s.familiar,
     pets: s.pets,
     catState: s.catState,
     quests: s.quests,

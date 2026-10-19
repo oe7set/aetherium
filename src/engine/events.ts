@@ -41,6 +41,8 @@ export type GameEvent =
     }
   | { type: 'windup'; monster: string }
   | { type: 'prayerEmpty' }
+  | { type: 'familiarSummoned'; familiar: string }
+  | { type: 'familiarLeft'; familiar: string }
   | { type: 'slayerTask'; monster: string; count: number }
   | { type: 'slayerTaskDone'; monster: string; points: number; streak: number }
   | { type: 'dodged'; monster: string }

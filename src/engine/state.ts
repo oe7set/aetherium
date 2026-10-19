@@ -432,6 +432,8 @@ export interface GameState {
   loadouts: Loadout[];
   /** Kopfgeldjagd: current contract, points, streak, blocked monsters. */
   slayer: SlayerState;
+  /** Beschwörung: the familiar at your side and its remaining seconds. */
+  familiar: { id: string; remaining: number } | null;
   /** Research points (currency for the tech tree). */
   research: number;
   techs: string[];
@@ -511,6 +513,7 @@ export function newGame(now: number = Date.now()): GameState {
     prayer: { points: 12, active: [] },
     loadouts: defaultLoadouts(),
     slayer: { task: null, points: 0, streak: 0, done: 0, blocked: [] },
+    familiar: null,
     research: 0,
     techs: [],
     codex: [],
@@ -625,6 +628,7 @@ export function cloneState(s: GameState): GameState {
     combatSettings: { ...s.combatSettings },
     prayer: { ...s.prayer, active: [...s.prayer.active] },
     loadouts: s.loadouts.map((l) => ({ ...l, gear: { ...l.gear } })),
+    familiar: s.familiar ? { ...s.familiar } : null,
     slayer: {
       ...s.slayer,
       task: s.slayer.task ? { ...s.slayer.task } : null,

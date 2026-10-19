@@ -203,6 +203,7 @@ const SKILL_STATS: Record<string, string> = {
   faith: 'ritesPerformed',
   brewing: 'drinksBrewed',
   jewelcrafting: 'jewelsCrafted',
+  summoning: 'pouchesMade',
 };
 
 /**

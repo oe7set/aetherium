@@ -179,6 +179,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Kiesel sieben, Geoden knacken, Steine veredeln – und daraus Ringe und Amulette für jeden Kampfstil und viele Skills schmieden.',
   },
   {
+    id: 'summoning',
+    name: 'Beschwörung',
+    icon: '🐾',
+    color: '#9b6bff',
+    group: 'science',
+    desc: 'Talismane aus Kämpfen + Seelensplitter = Beschwörungsbeutel. Vertraute kämpfen mit, beschleunigen Sammel-Skills oder tragen Beute – auch offline.',
+  },
+  {
     id: 'brewing',
     name: 'Brauen',
     icon: '🍺',
