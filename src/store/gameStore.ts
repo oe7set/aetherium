@@ -134,6 +134,8 @@ export interface UiState {
   heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
+  /** Action card to scroll to and highlight in the skill view (recipe jumps). */
+  focusAction: string | null;
   questSegment: QuestSegment;
   /** "Was jetzt?" overlay. */
   agenda: boolean;
@@ -192,6 +194,8 @@ export interface GameStore {
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setUi: (patch: Partial<UiState>) => void;
   openSkill: (skill: string) => void;
+  /** Opens the skill of an action and scrolls to its card. */
+  jumpToAction: (actionId: string) => void;
   /** Packs provisions and returns the config for a new rift run (null if locked). */
   riftPrepare: (hero: string, biome: string, endless?: boolean) => RunConfig | null;
   /** Books the rewards of a finished rift run. */
@@ -344,6 +348,7 @@ export const useGame = create<GameStore>()((set, get) => {
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,
+      focusAction: null,
       questSegment: 'tasks',
       agenda: false,
     },
@@ -721,6 +726,17 @@ export const useGame = create<GameStore>()((set, get) => {
     },
     openSkill: (skill) =>
       set({ ui: { ...get().ui, tab: 'skills', selectedSkill: skill, skillDetail: true } }),
+    jumpToAction: (actionId) =>
+      set({
+        ui: {
+          ...get().ui,
+          tab: 'skills',
+          selectedSkill: getAction(actionId).skill,
+          skillDetail: true,
+          selectedItem: null,
+          focusAction: actionId,
+        },
+      }),
     dismissOffline: () => set({ offlineSummary: null }),
     dismissLevelUp: () => set({ levelUp: null }),
     dismissAchievement: () => set({ achievementToast: null }),

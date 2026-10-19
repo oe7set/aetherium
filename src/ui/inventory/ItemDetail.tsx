@@ -1,4 +1,5 @@
-import { ACTIONS, getItem, getSkill, type ActionDef } from '../../data';
+import { getItem, getSkill, type ActionDef } from '../../data';
+import { MADE_BY, USED_IN } from '../recipes';
 import { canUseAll, marketMult, saleRevenue, skillLevel, trendMult, unitPrice } from '../../engine';
 import { EquipInfo } from './EquipInfo';
 import { t, type MessageKey } from '../../i18n';
@@ -6,16 +7,8 @@ import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { TouchCard } from '../TouchCard';
 
-/** Where an item comes from and what it is good for (recipes), built once. */
-const USED_IN = new Map<string, ActionDef[]>();
-const MADE_BY = new Map<string, ActionDef[]>();
-for (const a of ACTIONS) {
-  for (const i of a.inputs) USED_IN.set(i.item, [...(USED_IN.get(i.item) ?? []), a]);
-  for (const o of a.outputs) MADE_BY.set(o.item, [...(MADE_BY.get(o.item) ?? []), a]);
-}
-
 function RecipeChips({ label, list }: { label: string; list: ActionDef[] }) {
-  const openSkill = useGame((s) => s.openSkill);
+  const jump = useGame((s) => s.jumpToAction);
   const game = useGame.getState().game;
   if (!list.length) return null;
   const shown = [...list].sort((a, b) => a.levelReq - b.levelReq).slice(0, 6);
@@ -29,7 +22,7 @@ function RecipeChips({ label, list }: { label: string; list: ActionDef[] }) {
             <button
               key={a.id}
               className={`chip-btn ${ok ? '' : 'locked'}`}
-              onClick={() => openSkill(a.skill)}
+              onClick={() => jump(a.id)}
               title={`${getSkill(a.skill).name} Level ${a.levelReq}`}
             >
               {getSkill(a.skill).icon} {a.name}

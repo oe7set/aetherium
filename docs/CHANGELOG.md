@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.38.0] – Rezept-Sprung
+
+- Rezept-Sprung: In jeder Aktion sind die benötigten Zutaten antippbar (↪) – das Spiel springt zur Aktion, die sie herstellt (z. B. Schmieden → Kupfererz → Bergbau „Kupfer abbauen") und lässt die Karte kurz aufleuchten. Was man nur kaufen kann (🏪), führt zum Krämer. Auch im Inventar springen „Verwendet für"/„Entsteht durch" direkt zur Aktion.
+- Handy: Die Insel sitzt jetzt über der Bildmitte (Drehpunkt höher, flacherer Blick) – frei von Chronik-Leiste und Meldungen, Hügel am Horizont bleiben sichtbar.
+
 ## [1.37.0] – Berge am Horizont
 
 - 3D-Welt: Im Hintergrund liegt jetzt eine Landschaft – grüne Hügel rund um die Bucht und dahinter blaugraue Berge mit Schneekappen, die im Dunst am Horizont verschwimmen. Tag und Nacht färben sie mit.

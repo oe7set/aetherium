@@ -1900,3 +1900,26 @@ h4.rift-h4::before,
 .agenda-box .claim-all {
   margin: 0 0 8px;
 }
+
+/* Recipe jumps: ingredient pills are links, the target card flashes. */
+button.item-pill.link {
+  border: 1px solid rgba(124, 92, 255, 0.45);
+  color: inherit;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+button.item-pill.link .pill-go {
+  opacity: 0.8;
+}
+.action-card.flash {
+  animation: card-flash 1.6s ease-out;
+}
+@keyframes card-flash {
+  0%,
+  40% {
+    box-shadow:
+      0 0 0 2px var(--gold),
+      0 0 22px rgba(255, 209, 102, 0.55);
+  }
+}

@@ -19,7 +19,49 @@ import {
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { itemSource } from '../recipes';
 import { Tip } from '../Tip';
+
+/** An ingredient: tap jumps to the action that makes it (or the shop that sells it). */
+function IngredientPill({
+  item,
+  ok,
+  label,
+  have,
+}: {
+  item: string;
+  ok: boolean;
+  label: string;
+  have: string;
+}) {
+  const jump = useGame((s) => s.jumpToAction);
+  const setUi = useGame((s) => s.setUi);
+  const source = itemSource(useGame.getState().game, item);
+  if (!source)
+    return (
+      <span className={`item-pill ${ok ? '' : 'missing'}`}>
+        {label} <small>({have})</small>
+      </span>
+    );
+  const go = () =>
+    source.kind === 'action'
+      ? jump(source.action.id)
+      : setUi({ tab: 'inventory', inventorySegment: 'shop' });
+  return (
+    <button
+      className={`item-pill link ${ok ? '' : 'missing'}`}
+      onClick={go}
+      title={
+        source.kind === 'action'
+          ? `Herstellen: ${source.action.name} (Lv ${source.action.levelReq})`
+          : 'Beim Krämer kaufen'
+      }
+    >
+      {label} <small>({have})</small>{' '}
+      <span className="pill-go">{source.kind === 'shop' ? '🏪' : '↪'}</span>
+    </button>
+  );
+}
 
 /** 🏅 mastery level with a thin progress ring of the next level; tooltip shows the bonus. */
 function MasteryBadge({ value }: { value: string }) {
@@ -86,7 +128,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   }
 
   return (
-    <div className={`action-card ${isActive ? 'active' : ''}`}>
+    <div className={`action-card ${isActive ? 'active' : ''}`} data-action={def.id}>
       <span className="action-icon">{def.icon}</span>
       <div className="action-body">
         <div className="action-title">
@@ -120,9 +162,13 @@ export function ActionCard({ def }: { def: ActionDef }) {
               const it = getItem(i.item);
               const ok = (have[idx] ?? 0) >= i.qty;
               return (
-                <span key={i.item} className={`item-pill ${ok ? '' : 'missing'}`}>
-                  {it.icon} {i.qty}× {it.name} <small>({int(have[idx] ?? 0)})</small>
-                </span>
+                <IngredientPill
+                  key={i.item}
+                  item={i.item}
+                  ok={ok}
+                  label={`${it.icon} ${i.qty}× ${it.name}`}
+                  have={int(have[idx] ?? 0)}
+                />
               );
             })}
             {Number.isFinite(times) && (

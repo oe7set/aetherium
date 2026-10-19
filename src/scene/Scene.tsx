@@ -53,13 +53,17 @@ function CameraRig() {
   const aspect = size.width / Math.max(1, size.height);
   useEffect(() => {
     const portrait = aspect < 0.8;
-    const distance = portrait ? 39 : aspect < 1.3 ? 30 : 23;
+    const distance = portrait ? 37 : aspect < 1.3 ? 30 : 23;
     camera.fov = portrait ? 52 : 45;
-    camera.position.set(0.18, 0.64, 0.745).normalize().multiplyScalar(distance);
+    // Phones look a bit flatter so the horizon stays in view even with the island above centre.
+    if (portrait) camera.position.set(0.2, 0.53, 0.824);
+    else camera.position.set(0.18, 0.64, 0.745);
+    camera.position.normalize().multiplyScalar(distance);
     camera.lookAt(0, 0.5, 0);
-    // Shift the view up by a fraction of its height: more sky and horizon, island lower.
-    const shift = portrait ? 0.14 : 0.1;
-    camera.setViewOffset(size.width, size.height, 0, -shift * size.height, size.width, size.height);
+    // Lens shift as a fraction of the height: positive = island higher (phones: above the middle,
+    // clear of the Chronik banner), negative = more sky.
+    const shift = portrait ? 0.07 : -0.1;
+    camera.setViewOffset(size.width, size.height, 0, shift * size.height, size.width, size.height);
     camera.updateProjectionMatrix();
   }, [aspect, camera, size.width, size.height]);
   return null;

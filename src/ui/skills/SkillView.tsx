@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
 import {
   hasMasteryPool,
@@ -117,6 +118,22 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
   const actions = actionsForSkill(skillId);
   const next = actions.find((a) => a.levelReq > p.level);
   const tool = skill.usesTools && toolId ? getTool(toolId) : null;
+  // Recipe jump: scroll to the requested action card and let it flash once.
+  const focus = useGame((s) => s.ui.focusAction);
+  const setUi = useGame((s) => s.setUi);
+  useEffect(() => {
+    if (!focus) return;
+    const id = window.requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLElement>(`[data-action="${focus}"]`);
+      if (el) {
+        el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        el.classList.add('flash');
+        window.setTimeout(() => el.classList.remove('flash'), 1800);
+      }
+      setUi({ focusAction: null });
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [focus, skillId, setUi]);
 
   return (
     <div className="skill-view">

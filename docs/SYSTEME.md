@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.37.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.38.0**.
 
 ## 1. Der große Kreislauf
 
@@ -166,6 +166,9 @@ Haustiere ↔ Held, Expansion)
   fertige Aufträge – eine Enthüllung).
 - Skill-Ansicht am Handy kompakt: Zurück-Pfeil neben dem festen Skill-Kopf, Beschreibungen gekürzt, Funde nur als
   Symbol + Chance (Name im Tooltip).
+- **Rezept-Sprung** (`ui/recipes.ts`: `USED_IN`, `MADE_BY`, `itemSource`): benötigte Zutaten in Aktionskarten und die
+  Rezept-Chips im Inventar springen zur herstellenden Aktion (`jumpToAction`, `ui.focusAction` → Karte scrollt ins
+  Bild und blinkt) oder zum Krämer, wenn man es nur kaufen kann.
 - Unterreiter am Handy: eine wischbare Zeile; der aktive Reiter scrollt automatisch ins Bild (`BottomSheet`).
 - **Tab-Leiste**: aktiven Tab nochmal tippen → zurück zum Kern des Bereichs (`TAB_HOME` in `ui/tabShortcuts.ts`,
   z. B. Inventar → Taschen, Welt → „Was jetzt?") und nach oben; lange drücken → Schnellmenü aller Unterbereiche.
