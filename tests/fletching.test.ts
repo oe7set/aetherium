@@ -58,3 +58,13 @@ describe('Bogenbau', () => {
     expect(playerStats(s).maxHit).toBeLessThan(hit);
   });
 });
+
+describe('Bolzen verzaubern', () => {
+  it('Magie macht aus Topasbolzen Glutbolzen', () => {
+    const s = gameWith({ inventory: { bolt_topaz: 10, rune_fire: 5 } });
+    setLevel(s, 'magic', 45);
+    startAction(s, 'ench_bolt_ember', () => {});
+    advance(s, 5, createRng(1), () => {});
+    expect(s.inventory.bolt_ember).toBe(10);
+  });
+});

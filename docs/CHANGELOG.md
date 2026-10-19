@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.75.0] – Sonderaufträge & Zauberbolzen
+
+- **Zunft-Sonderaufträge** ⚡ (Phase 36): Ab Rang 5 bei einer Zunft kommen eilige Sonderaufträge – doppelte Mengen, nur zwei Stunden Zeit, dafür 2,5-faches Gold, dreifacher Ruf und ein seltenes Extra (Prägestein, Schutzrune, uralte Teile oder Schatztruhen).
+- **Bolzen verzaubern** (Magie): Topas-, Saphir-, Rubin- und Onyxbolzen werden mit Element-Runen zu Glut-, Frostsplitter-, Gewitter- und Seelenbolzen – stärker und mit größeren Effekten.
+
 ## [1.74.0] – Riss: Rangliste, Relikt-Sets, Schreine
 
 - **Tagesriss-Rangliste** 📅 (Phase 35): Der Rekord-Code enthält jetzt auch deine Bestzeit im Tagesriss. Tausche Codes mit Freunden – unter der Tagesriss-Karte siehst du, wer heute am längsten überlebt hat (alle laufen denselben Seed).

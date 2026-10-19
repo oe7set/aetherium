@@ -1,7 +1,7 @@
 {
   "name": "aetherium",
   "private": true,
-  "version": "1.74.0",
+  "version": "1.75.0",
   "description": "AETHERIUM – Von der Steinaxt zum Teilchenbeschleuniger. Ein 3D-Incremental-RPG im Browser, mobile first.",
   "type": "module",
   "license": "MIT",

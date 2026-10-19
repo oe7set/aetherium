@@ -845,6 +845,10 @@ function hydrateGuilds(v: unknown, fallback: GameState['guilds']): GameState['gu
         gold: num(o.gold),
         rep: num(o.rep),
         left: Math.max(0, num(o.left)),
+        special:
+          isRecord(o.special) && typeof o.special.item === 'string' && ITEM_MAP.has(o.special.item)
+            ? { item: o.special.item, qty: Math.max(1, num(o.special.qty, 1)) }
+            : undefined,
       });
     }
   return {

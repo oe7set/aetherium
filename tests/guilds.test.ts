@@ -54,3 +54,23 @@ describe('Verbindungen', () => {
     expect(skillLinks('fletching').from.some((l) => l.skill === 'jewelcrafting')).toBe(true);
   });
 });
+
+describe('Sonderaufträge', () => {
+  it('ab Rang 5 kommen eilige Sonderaufträge mit Extra-Belohnung', () => {
+    const s = gameWith();
+    for (const g of ['smiths', 'kitchen', 'arcane', 'explorers']) s.guilds.rep[g] = 600;
+    let special = null;
+    for (let i = 0; i < 40 && !special; i++) {
+      s.guilds.orders = [];
+      fillOrders(s, createRng(i));
+      special = s.guilds.orders.find((o) => o.special) ?? null;
+    }
+    expect(special).not.toBeNull();
+    expect(special!.left).toBeLessThan(GUILD.duration);
+    for (const l of special!.lines) s.inventory[l.item] = l.qty;
+    const extra = special!.special!.item;
+    const before = s.inventory[extra] ?? 0;
+    expect(deliverOrder(s, special!.id, createRng(1), () => {})).toBe(true);
+    expect(s.inventory[extra]).toBeGreaterThan(before);
+  });
+});

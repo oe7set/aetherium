@@ -14,7 +14,7 @@ import { SUMMON_ITEMS } from './summoning';
 import { THIEVING_ITEMS } from './thieving';
 import { CONSTRUCTION_ITEMS } from './construction';
 import { CARTO_ITEMS } from './cartography';
-import { FLETCH_ITEMS } from './fletching';
+import { ENCHANTED_BOLT_ITEMS, FLETCH_ITEMS } from './fletching';
 import { HUSBANDRY_ITEMS } from './husbandry';
 import { SAILING_ITEMS } from './sailing';
 import { ASTRO_ITEMS } from './astronomy';
@@ -505,6 +505,7 @@ export const ITEMS: ItemDef[] = [
   ...CONSTRUCTION_ITEMS,
   ...CARTO_ITEMS,
   ...FLETCH_ITEMS,
+  ...ENCHANTED_BOLT_ITEMS,
   ...HUSBANDRY_ITEMS,
   ...SAILING_ITEMS,
   ...ASTRO_ITEMS,

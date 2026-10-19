@@ -34,7 +34,8 @@ export function GuildBoard() {
       <p className="small muted">
         Die Zünfte der Insel bestellen Waren aus mehreren Skills. Liefern bringt Gold, XP für die
         herstellenden Skills und Ruf – ab Rang {GUILD.extraSlotRank} kommt ein zusätzlicher Auftrag,
-        ab Rang 5 ein Münzbeutel pro Lieferung. Neue Aufträge kommen alle paar Minuten.
+        ab Rang 5 ein Münzbeutel pro Lieferung und eilige ⚡ Sonderaufträge mit seltenen Extras.
+        Neue Aufträge kommen alle paar Minuten.
       </p>
       <div className="guild-ranks">
         {GUILDS.map((g) => {
@@ -58,10 +59,13 @@ export function GuildBoard() {
         const g = GUILD_MAP.get(o.guild)!;
         const ready = canDeliver(game, o);
         return (
-          <div key={o.id} className={`guild-order glass ${ready ? 'ready' : ''}`}>
+          <div
+            key={o.id}
+            className={`guild-order glass ${ready ? 'ready' : ''} ${o.special ? 'special' : ''}`}
+          >
             <div className="guild-order-head">
               <span>{g.icon}</span>
-              <strong>{g.name}</strong>
+              <strong>{o.special ? `⚡ Sonderauftrag: ${g.name}` : g.name}</strong>
               <small className="muted">noch {formatDuration(o.left)}</small>
             </div>
             <ul>
@@ -87,6 +91,8 @@ export function GuildBoard() {
             <div className="guild-order-foot">
               <span>
                 🪙 {int(o.gold)} · ⭐ +{o.rep} Ruf
+                {o.special &&
+                  ` · ${getItem(o.special.item).icon} ${o.special.qty}× ${getItem(o.special.item).name}`}
               </span>
               <button
                 className="btn btn-ghost"

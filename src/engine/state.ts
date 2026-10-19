@@ -537,6 +537,8 @@ export interface GuildOrder {
   rep: number;
   /** Seconds until the order leaves the board. */
   left: number;
+  /** Sonderauftrag (rank 5+): bigger, faster, with a rare extra. */
+  special?: { item: string; qty: number };
 }
 
 export interface GuildState {
@@ -792,7 +794,11 @@ export function cloneState(s: GameState): GameState {
     guilds: {
       ...s.guilds,
       rep: { ...s.guilds.rep },
-      orders: s.guilds.orders.map((o) => ({ ...o, lines: o.lines.map((l) => ({ ...l })) })),
+      orders: s.guilds.orders.map((o) => ({
+        ...o,
+        lines: o.lines.map((l) => ({ ...l })),
+        special: o.special ? { ...o.special } : undefined,
+      })),
     },
   };
 }

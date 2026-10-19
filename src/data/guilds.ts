@@ -81,3 +81,20 @@ export const GUILD_RANKS = [
 
 /** Extra reward on every completed order from rank 5. */
 export const GUILD_MASTER_BONUS: RewardDef = { items: [{ item: 'coin_pouch', qty: 1 }] };
+
+/** Sonderaufträge: from rank 5 a guild sometimes posts a rush order – double amounts, two hours,
+ * 2,5× gold, triple reputation and one rare extra. */
+export const GUILD_SPECIAL = {
+  rank: 5,
+  chance: 0.3,
+  duration: 2 * 3600,
+  qtyMult: 2,
+  goldMult: 2.5,
+  repMult: 3,
+  extras: [
+    { item: 'imprint_stone', qty: 1 },
+    { item: 'protect_rune', qty: 1 },
+    { item: 'part_ancient', qty: 2 },
+    { item: 'dungeon_chest', qty: 2 },
+  ],
+};

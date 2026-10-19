@@ -496,3 +496,102 @@ export const FLETCH_ACTIONS: ActionDef[] = [
 
 /** Passive per level: a fletcher knows their bow – a little ranged accuracy and ammo saving. */
 export const FLETCH_PER_LEVEL = { accuracy: 0.001, ammoSave: 0.001 };
+
+interface EnchantedBolt {
+  id: string;
+  name: string;
+  icon: string;
+  base: string;
+  rune: { item: string; qty: number };
+  level: number;
+  xp: number;
+  strength: number;
+  element: SpellElement;
+  mods: ModifierSet;
+  price: number;
+  desc: string;
+}
+
+/** Magie: gem bolts soaked in runes – stronger than their base and with a bigger effect. */
+const ENCHANTED_BOLTS: EnchantedBolt[] = [
+  {
+    id: 'bolt_ember',
+    name: 'Glutbolzen',
+    icon: '🔥',
+    base: 'bolt_topaz',
+    rune: { item: 'rune_fire', qty: 5 },
+    level: 45,
+    xp: 90,
+    strength: 32,
+    element: 'fire',
+    mods: { 'combat.damage.ranged': 0.05 },
+    price: 30,
+    desc: 'Brennen sich durch jede Rüstung. Element Feuer, +5 % Fernkampfschaden.',
+  },
+  {
+    id: 'bolt_shard',
+    name: 'Frostsplitterbolzen',
+    icon: '🧊',
+    base: 'bolt_sapphire',
+    rune: { item: 'rune_frost', qty: 5 },
+    level: 58,
+    xp: 130,
+    strength: 40,
+    element: 'frost',
+    mods: { 'combat.accuracy.ranged': 0.05 },
+    price: 55,
+    desc: 'Splittern beim Aufprall. Element Frost, +5 % Treffsicherheit.',
+  },
+  {
+    id: 'bolt_storm',
+    name: 'Gewitterbolzen',
+    icon: '⚡',
+    base: 'bolt_ruby',
+    rune: { item: 'rune_storm', qty: 5 },
+    level: 70,
+    xp: 180,
+    strength: 52,
+    element: 'lightning',
+    mods: { 'combat.damage.ranged': 0.1 },
+    price: 120,
+    desc: 'Knistern im Köcher. Element Blitz, +10 % Fernkampfschaden.',
+  },
+  {
+    id: 'bolt_soul',
+    name: 'Seelenbolzen',
+    icon: '👻',
+    base: 'bolt_onyx',
+    rune: { item: 'rune_soul', qty: 2 },
+    level: 85,
+    xp: 300,
+    strength: 76,
+    element: 'shadow',
+    mods: { 'combat.damage.ranged': 0.1, 'combat.crit': 0.03 },
+    price: 600,
+    desc: 'Finden ihr Ziel auch hinter Ecken. Element Schatten (heilt), +10 % Schaden, +3 % Krit.',
+  },
+];
+
+export const ENCHANTED_BOLT_ITEMS: ItemDef[] = ENCHANTED_BOLTS.map((b) => ({
+  id: b.id,
+  name: b.name,
+  icon: b.icon,
+  category: 'gear',
+  sellPrice: b.price,
+  rarity: 'rare',
+  desc: `${b.desc} Munition für Armbrüste, Stärke +${b.strength}.`,
+  equip: { slot: 'ammo', strength: b.strength, ammoType: 'bolt', element: b.element, mods: b.mods },
+}));
+
+export const ENCHANTED_BOLT_ACTIONS: ActionDef[] = ENCHANTED_BOLTS.map((b) => ({
+  id: `ench_${b.id}`,
+  skill: 'magic',
+  category: 'Bolzen verzaubern',
+  name: `10 ${b.name}`,
+  icon: b.icon,
+  levelReq: b.level,
+  baseTime: 3.5,
+  xp: b.xp,
+  inputs: [{ item: b.base, qty: 10 }, b.rune],
+  outputs: [{ item: b.id, qty: 10 }],
+}));

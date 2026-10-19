@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.74.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.75.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,11 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Sonderaufträge & Zauberbolzen** (Phase 36): Ab Rang 5 einer Zunft sind 30 % der neuen Aufträge eilige
+Sonderaufträge (`GuildOrder.special`: doppelte Mengen, 2 h, Gold ×2,5, Ruf ×3, Extra: Prägestein, Schutzrune,
+uralte Teile oder Schatztruhen). Magie verzaubert Edelsteinbolzen mit Element-Runen zu Glut-, Frostsplitter-,
+Gewitter- und Seelenbolzen (stärker, Element + Boni).
 
 **Riss-Ausbau** (Phase 35): Rekord-Codes (`engine/rivals.ts`) tragen jetzt die Tagesriss-Bestzeit (alte 6er-Codes
 bleiben gültig), `rankDaily` sortiert nur Zeiten von heute; Tagesriss-Karte zeigt die Rangliste. 5 Relikt-Sets
@@ -391,7 +396,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Gameplay & Inhalt**
 
 - [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
-- [ ] Zünfte: Sonderaufträge mit Zeitdruck und seltenen Belohnungen ab Rang 5; Bolzen verzaubern (Magie).
 
 **Qualität**
 

@@ -2781,3 +2781,7 @@ button.chip {
   font-weight: 600;
   padding: 6px 0;
 }
+.guild-order.special {
+  border-color: rgba(255, 209, 102, 0.8);
+  background: linear-gradient(160deg, rgba(255, 209, 102, 0.12), transparent);
+}

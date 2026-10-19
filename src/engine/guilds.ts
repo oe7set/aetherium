@@ -1,7 +1,7 @@
 import { ACTIONS, getItem, ITEM_MAP } from '../data';
-import { GUILD, GUILD_MAP, GUILD_MASTER_BONUS, GUILDS } from '../data/guilds';
+import { GUILD, GUILD_MAP, GUILD_MASTER_BONUS, GUILD_SPECIAL, GUILDS } from '../data/guilds';
 import type { ActionDef } from '../data/types';
-import { actionUnlocked, registerTimeEffect } from './actions';
+import { actionUnlocked, gainItem, registerTimeEffect } from './actions';
 import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
 import { applyReward } from './progress';
@@ -64,15 +64,26 @@ export function rollOrder(s: GameState, rng: Rng): GuildOrder | null {
     lines.push({ item: out.item, qty, skill: a.skill, xp });
   }
   if (!lines.length) return null;
+  const special = rank >= GUILD_SPECIAL.rank && rng() < GUILD_SPECIAL.chance;
+  if (special)
+    for (const l of lines) {
+      l.qty *= GUILD_SPECIAL.qtyMult;
+      l.xp *= GUILD_SPECIAL.qtyMult;
+    }
   const value = lines.reduce((sum, l) => sum + l.qty * getItem(l.item).sellPrice, 0);
   const bonus = 1 + GUILD.rankBonus * rank;
+  const gold = Math.max(50, Math.round(value * GUILD.goldMult * bonus));
+  const rep = 10 + 5 * lines.length;
+  if (!special) return { id: s.guilds.seq++, guild: g.id, lines, gold, rep, left: GUILD.duration };
+  const extras = GUILD_SPECIAL.extras.filter((e) => ITEM_MAP.has(e.item));
   return {
     id: s.guilds.seq++,
     guild: g.id,
     lines,
-    gold: Math.max(50, Math.round(value * GUILD.goldMult * bonus)),
-    rep: 10 + 5 * lines.length,
-    left: GUILD.duration,
+    gold: Math.round(gold * GUILD_SPECIAL.goldMult),
+    rep: rep * GUILD_SPECIAL.repMult,
+    left: GUILD_SPECIAL.duration,
+    special: { ...extras[Math.floor(rng() * extras.length)]! },
   };
 }
 
@@ -94,6 +105,7 @@ export function deliverOrder(s: GameState, id: number, rng: Rng, emit: Emit): bo
   if (!o || !canDeliver(s, o)) return false;
   for (const l of o.lines) removeItem(s, l.item, l.qty);
   earnGold(s, o.gold, emit);
+  if (o.special) gainItem(s, o.special.item, o.special.qty, emit, true);
   for (const l of o.lines) addXp(s, l.skill, l.xp, emit);
   const before = guildRank(s, o.guild);
   s.guilds.rep = { ...s.guilds.rep, [o.guild]: guildRep(s, o.guild) + o.rep };
