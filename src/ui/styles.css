@@ -2249,6 +2249,14 @@ button.chip {
   left: 40%;
   top: 42%;
 }
+.st-astro {
+  left: 54%;
+  top: 14%;
+}
+.character.st-astro {
+  left: 50%;
+  top: 18%;
+}
 .st-sail {
   left: 90%;
   top: 30%;
@@ -2731,4 +2739,16 @@ button.chip {
 }
 .guild-order-foot > span {
   margin-right: auto;
+}
+
+/* Sternkunde (Phase 30) */
+.night-banner {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 209, 102, 0.12);
+  font-size: 0.85rem;
+}
+.night-banner.on {
+  background: rgba(124, 92, 255, 0.22);
 }

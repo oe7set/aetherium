@@ -18,6 +18,7 @@ import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
 import { SlayerView } from '../combat/SlayerView';
 import { SkillLinks } from './SkillLinks';
+import { StarsPanel } from './StarsPanel';
 import { RiftwalkerSkillView } from '../rift/RelicsView';
 import { FAMILIAR_MAP } from '../../data/summoning';
 import { FarmingView } from '../science/FarmingView';
@@ -225,6 +226,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
       </div>
       <SkillLinks skillId={skillId} />
       {skillId === 'construction' && <BuildingsPanel />}
+      {skillId === 'astronomy' && <StarsPanel />}
       <MasteryPool skillId={skillId} />
       {groupByCategory(actions).map(([category, list]) => (
         <section key={category || 'all'}>

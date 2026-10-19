@@ -36,6 +36,7 @@ export const STATIONS: StationDef[] = [
   { skill: 'thieving', label: 'Marktstände', pos: [2.4, -5.4], workPos: [2.2, -4.4] },
   { skill: 'construction', label: 'Bauplatz', pos: [-3.4, -2.4], workPos: [-2.6, -1.6] },
   { skill: 'cartography', label: 'Kartenzelt', pos: [4.8, 4.8], workPos: [4.2, 4.0] },
+  { skill: 'astronomy', label: 'Sternwarte', pos: [1.3, -7.3], workPos: [1.0, -6.4] },
   { skill: 'sailing', label: 'Hafen', pos: [8.7, -4.1], workPos: [7.8, -3.6] },
   { skill: 'husbandry', label: 'Weide', pos: [0.4, 7.4], workPos: [0.2, 6.4] },
   { skill: 'fletching', label: 'Bogner', pos: [-5.0, -0.2], workPos: [-4.0, 0.2] },

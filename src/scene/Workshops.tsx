@@ -421,3 +421,38 @@ export function Dock({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Sternkunde: a brass telescope on a tripod that sweeps the sky while you watch. */
+export function Telescope({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('astronomy')!;
+  const tube = useRef<THREE.Group>(null);
+  const active = useActive('astronomy');
+  useFrame(({ clock }) => {
+    if (tube.current)
+      tube.current.rotation.y = Math.sin(clock.elapsedTime * (active.current ? 0.8 : 0.2)) * 0.8;
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.06, 0]}>
+        <cylinderGeometry args={[0.7, 0.8, 0.12, 12]} />
+        <meshStandardMaterial color="#6b6f8a" flatShading />
+      </mesh>
+      {[0, 2.1, 4.2].map((a) => (
+        <mesh
+          key={a}
+          position={[Math.cos(a) * 0.18, 0.4, Math.sin(a) * 0.18]}
+          rotation={[Math.sin(a) * 0.25, 0, Math.cos(a) * 0.25]}
+        >
+          <cylinderGeometry args={[0.025, 0.025, 0.7, 6]} />
+          <meshStandardMaterial color="#5b4030" />
+        </mesh>
+      ))}
+      <group ref={tube} position={[0, 0.78, 0]}>
+        <mesh rotation={[0, 0, -0.7]}>
+          <cylinderGeometry args={[0.07, 0.11, 0.8, 10]} />
+          <meshStandardMaterial color="#c9a227" metalness={0.6} roughness={0.35} />
+        </mesh>
+      </group>
+    </group>
+  );
+}

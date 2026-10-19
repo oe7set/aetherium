@@ -17,6 +17,7 @@ import { CARTO_ITEMS } from './cartography';
 import { FLETCH_ITEMS } from './fletching';
 import { HUSBANDRY_ITEMS } from './husbandry';
 import { SAILING_ITEMS } from './sailing';
+import { ASTRO_ITEMS } from './astronomy';
 import { MAGIC_ITEMS } from './magic';
 import { EXPANSION_ITEMS } from './expansion';
 
@@ -502,5 +503,6 @@ export const ITEMS: ItemDef[] = [
   ...FLETCH_ITEMS,
   ...HUSBANDRY_ITEMS,
   ...SAILING_ITEMS,
+  ...ASTRO_ITEMS,
   ...MAGIC_ITEMS,
 ];

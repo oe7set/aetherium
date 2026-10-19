@@ -476,6 +476,8 @@ export interface GameState {
   rift: RiftState;
   /** Zunftaufträge (Phase 26). */
   guilds: GuildState;
+  /** Sternkunde: constellation ranks and the ones shining right now. */
+  stars: { ranks: Record<string, number>; active: string[] };
 }
 
 export interface GuildOrderLine {
@@ -599,6 +601,7 @@ export function newGame(now: number = Date.now()): GameState {
     },
     rift: defaultRift(),
     guilds: { rep: {}, orders: [], seq: 1, done: 0, refill: 5 },
+    stars: { ranks: {}, active: [] },
   };
 }
 
@@ -729,6 +732,7 @@ export function cloneState(s: GameState): GameState {
       curses: [...s.rift.curses],
       daily: { ...s.rift.daily },
     },
+    stars: { ranks: { ...s.stars.ranks }, active: [...s.stars.active] },
     guilds: {
       ...s.guilds,
       rep: { ...s.guilds.rep },

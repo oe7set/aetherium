@@ -147,6 +147,8 @@ function resetRun(s: GameState): void {
     progress: s.progress,
     // Guild reputation and open orders belong to the player.
     guilds: s.guilds,
+    // Studied constellations stay in the sky.
+    stars: s.stars,
   };
   Object.assign(s, fresh, kept);
 

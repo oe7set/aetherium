@@ -1,5 +1,6 @@
 import Decimal from 'break_eternity.js';
 import { describe, expect, it } from 'vitest';
+import { SKILLS } from '../src/data';
 import {
   bigBang,
   buyMultiverseUpgrade,
@@ -123,7 +124,8 @@ describe('Paradigmenwechsel & Urknall', () => {
     expect(s.prestige.wisdomTotal).toBe(0);
     expect(s.prestige.upgrades).toEqual({});
     expect(s.codex).toEqual([]);
-    expect(totalLevel(s)).toBeLessThan(40);
+    // Back to the start: every skill at level 1 (hitpoints at 10).
+    expect(totalLevel(s)).toBeLessThan(SKILLS.length + 15);
     s.prestige.shards = 10;
     expect(buyMultiverseUpgrade(s, 'second_law')).toBe(true);
     expect(buyMultiverseUpgrade(s, 'dark_energy')).toBe(true);

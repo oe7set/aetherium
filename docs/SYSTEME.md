@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.68.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.69.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Sternkunde** (Phase 30, `data/astronomy.ts`, `engine/astronomy.ts`, `engine/time.ts`): Tag/Nacht-Zyklus lebt jetzt
+in der Engine (`dayPhase`/`isNight`, `scene/time.ts` re-exportiert). `simNow(s)` = `lastUpdate` + in `advance`
+simulierte Sekunden – offline laufen Tage und Nächte richtig durch. Beobachten (7 Himmelsregionen) → Sternenstaub,
+Mondsteine, Meteoriten; nachts ×2 Staub und XP (Completion-Hook). 9 Sternbilder × 5 Ränge in `s.stars` (bleibt
+über Prestige): Kosten Sternenstaub (verdoppelt sich), ab Rang 4 Meteoriten; nur `constellationSlots` (1 + Stufe/20,
+max 5) leuchten gleichzeitig (Modifier-Quelle `constellations`). Meteoriten + Mithril → Sternenmetall (Schmieden).
+Sternenstaub auch vom Sternenatoll (Seefahrt). Sternwarte auf der Insel, Zähler `starsWatched`.
 
 **Seefahrt** (Phase 29, `data/sailing.ts`, `engine/sailing.ts`): Schiffe sind die Werkzeuge des Skills (`SHIP_TOOLS`,
 Floß als Start, Bausätze aus der Werft mit `consume: tool`, auch im Werkzeugladen). Takelage: Taue (Wolle,

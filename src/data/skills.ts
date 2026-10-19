@@ -204,6 +204,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Taue drehen, Segel nähen, Schiffe bauen – und zu fernen Inseln segeln: Perlen, Gewürze, Obsidian, Drachenschuppen, Sternenstaub. Größere Schiffe fahren schneller und weiter; Handelsfahrten bringen Gold und Dorf-Rohstoffe. Kartografie verkürzt jede Fahrt.',
   },
   {
+    id: 'astronomy',
+    name: 'Sternkunde',
+    icon: '🔭',
+    color: '#8fa8ff',
+    group: 'science',
+    desc: 'Den Himmel beobachten und Sternenstaub sammeln – nachts doppelt so viel. Mit Sternenstaub Sternbilder erforschen: Jedes gibt in fünf Rängen Dauer-Boni, aber nur wenige leuchten gleichzeitig (mehr Plätze mit steigender Stufe).',
+  },
+  {
     id: 'riftwalker',
     name: 'Rissläufer',
     icon: '🌀',

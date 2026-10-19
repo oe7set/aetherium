@@ -942,6 +942,13 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
   },
   { id: 'maps', label: 'Zeichne {n} Karten', stat: 'mapsDrawn', base: 30, icon: '🧭' },
   {
+    id: 'stars',
+    label: 'Beobachte {n}-mal den Himmel',
+    stat: 'starsWatched',
+    base: 40,
+    icon: '🔭',
+  },
+  {
     id: 'voyages',
     label: 'Segle {n}-mal hinaus',
     stat: 'voyagesMade',

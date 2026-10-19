@@ -43,6 +43,7 @@ import {
   FletcherHut,
   Pasture,
   Dock,
+  Telescope,
   MarketStalls,
   SummonCircle,
 } from './Workshops';
@@ -218,6 +219,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <FletcherHut onTap={tap('fletching')} />
       <Pasture onTap={tap('husbandry')} />
       <Dock onTap={tap('sailing')} />
+      <Telescope onTap={tap('astronomy')} />
       <IslandBuildings />
       <IslandDecor />
       <Helpers />

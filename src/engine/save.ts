@@ -20,6 +20,7 @@ import { UTILITY_MAP } from '../data/magic';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { GUILD_MAP } from '../data/guilds';
+import { CONSTELLATION_MAP, CONSTELLATION_MAX_RANK } from '../data/astronomy';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -271,6 +272,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     village: hydrateVillage(data.village, base.village),
     rift: hydrateRift(data.rift, base.rift),
     guilds: hydrateGuilds(data.guilds, base.guilds),
+    stars: hydrateStars(data.stars),
     hero: hydrateHero(data.hero, base.hero),
     progress: hydrateProgress(data.progress, base.progress),
     combatSettings: hydrateCombatSettings(data.combatSettings),
@@ -844,4 +846,15 @@ function hydrateGuilds(v: unknown, fallback: GameState['guilds']): GameState['gu
     done: num(v.done),
     refill: Math.max(0, num(v.refill, fallback.refill)),
   };
+}
+
+function hydrateStars(v: unknown): GameState['stars'] {
+  if (!isRecord(v)) return { ranks: {}, active: [] };
+  const ranks = Object.fromEntries(
+    Object.entries(numberRecord(v.ranks))
+      .filter(([id]) => CONSTELLATION_MAP.has(id))
+      .map(([id, r]) => [id, Math.max(0, Math.min(CONSTELLATION_MAX_RANK, Math.floor(r)))]),
+  );
+  const active = stringArray(v.active).filter((id) => (ranks[id] ?? 0) > 0);
+  return { ranks, active: [...new Set(active)].slice(0, 5) };
 }

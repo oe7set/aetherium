@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.69.0] – Sternkunde
+
+- **Neuer Skill Sternkunde** 🔭 (Phase 30): Den Himmel beobachten – vom Abendhimmel bis zum Rand des Alls – und Sternenstaub, Mondsteine und Meteoriten sammeln. **Nachts gibt es doppelt so viel Staub und XP** (die Nacht der Insel zählt jetzt auch offline richtig).
+- **Neun Sternbilder** mit je fünf Rängen: Holzfäller, Spitzhacke, Fisch, Amboss, Krieger, Eule, Waage, Kompass, Drache. Jedes gibt Dauer-Boni, aber nur wenige leuchten gleichzeitig (1 Platz, +1 alle 20 Stufen) – wähle, was gerade zählt.
+- Meteoriten + Mithril → **Sternenmetall** (Schmieden); Sternenstaub gibt es auch vom Sternenatoll (Seefahrt).
+- Sternwarte mit Messing-Teleskop auf der Insel.
+
 ## [1.68.0] – Seefahrt
 
 - **Neuer Skill Seefahrt** ⚓ (Phase 29): Taue drehen, Segel nähen, in der Werft **sieben Schiffe** bauen – vom Floß über Kogge und Fregatte bis zum Ätherschiff. Jedes größere Schiff fährt schneller und erreicht fernere Inseln.

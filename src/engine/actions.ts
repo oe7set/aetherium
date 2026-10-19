@@ -225,6 +225,7 @@ const SKILL_STATS: Record<string, string> = {
   fletching: 'bowsFletched',
   husbandry: 'animalsTended',
   sailing: 'voyagesMade',
+  astronomy: 'starsWatched',
 };
 
 /**
@@ -395,7 +396,16 @@ registerTimeEffect('fire', {
  * Advances the simulation by `dt` seconds. Event-driven: jumps from event to event,
  * so the live tick, offline progress and the debug fast-forward share the exact same code path.
  */
+/** Seconds simulated so far in the running `advance` call (for the day/night clock). */
+let simElapsed = 0;
+
+/** Wall-clock time the simulation is at right now: offline runs walk through days and nights. */
+export function simNow(s: GameState): number {
+  return s.lastUpdate + simElapsed * 1000;
+}
+
 export function advance(s: GameState, dt: number, rng: Rng, emit: Emit): void {
+  const outerElapsed = simElapsed;
   let remaining = Math.max(0, dt);
   let steps = 0;
   // Boundary hooks also run at the start so state changes made outside advance (selling,
@@ -430,8 +440,10 @@ export function advance(s: GameState, dt: number, rng: Rng, emit: Emit): void {
     }
     for (const { effect } of timeEffects) effect.apply(s, step, emit, rng);
     remaining -= step;
+    simElapsed += step;
   }
   for (const h of afterAdvanceHooks) h.fn(s, emit);
+  simElapsed = outerElapsed;
 }
 
 /** A tap on the active action: pushes progress forward. Returns true if the tap counted. */
