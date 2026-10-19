@@ -195,6 +195,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Sehnen drehen, Langbögen und Armbrüste bauen, Bolzen mit Edelsteinspitzen veredeln, Köcher nähen. Armbrüste verschießen nur Bolzen. Jede Stufe: etwas mehr Treffsicherheit im Fernkampf und Munition sparen.',
   },
   {
+    id: 'husbandry',
+    name: 'Viehzucht',
+    icon: '🐄',
+    color: '#e8c07a',
+    group: 'gathering',
+    desc: 'Hühner, Schafe, Kühe, Bienen, Ziegen, Alpakas: mit Feldfrüchten füttern, Eier, Wolle, Milch und Honig ernten, Käse reifen lassen. Große Tiere brauchen den Stall (Baukunst). Jede Stufe: fleißigeres Dorf.',
+  },
+  {
     id: 'construction',
     name: 'Baukunst',
     icon: '🔨',

@@ -533,6 +533,45 @@ export const ISLAND_BUILDINGS: IslandBuildingDef[] = [
     ],
   },
   {
+    id: 'barn',
+    name: 'Stall',
+    icon: '🛖',
+    roof: '#a0522d',
+    pos: [-1.2, 5.6],
+    desc: 'Platz für Kühe, Ziegen, Alpakas und Ätherschafe – und fleißigere Tiere.',
+    levels: [
+      {
+        level: 10,
+        cost: [
+          { item: 'plank_oak', qty: 25 },
+          { item: 'nails', qty: 30 },
+        ],
+        xp: 400,
+        mods: { 'speed.husbandry': 0.05 },
+      },
+      {
+        level: 35,
+        cost: [
+          { item: 'plank_maple', qty: 30 },
+          { item: 'stone_block', qty: 20 },
+          { item: 'wool', qty: 20 },
+        ],
+        xp: 2200,
+        mods: { 'speed.husbandry': 0.1, 'double.husbandry': 0.05 },
+      },
+      {
+        level: 60,
+        cost: [
+          { item: 'plank_yew', qty: 30 },
+          { item: 'furn_wardrobe', qty: 1 },
+          { item: 'cheese', qty: 25 },
+        ],
+        xp: 6000,
+        mods: { 'speed.husbandry': 0.15, 'double.husbandry': 0.1 },
+      },
+    ],
+  },
+  {
     id: 'harbor',
     name: 'Handelskontor',
     icon: '⚓',

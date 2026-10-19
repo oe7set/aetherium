@@ -2249,6 +2249,14 @@ button.chip {
   left: 40%;
   top: 42%;
 }
+.st-herd {
+  left: 46%;
+  top: 84%;
+}
+.character.st-herd {
+  left: 50%;
+  top: 80%;
+}
 .st-fletch {
   left: 9%;
   top: 58%;

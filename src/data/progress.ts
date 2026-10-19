@@ -95,6 +95,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'thefts', per: 1 / 30, label: 'Diebstähle', icon: '🗝️' },
   { stat: 'buildingsBuilt', per: 2, label: 'Inselbauten', icon: '🔨' },
   { stat: 'mapsDrawn', per: 1 / 20, label: 'Gezeichnete Karten', icon: '🧭' },
+  { stat: 'animalsTended', per: 1 / 30, label: 'Versorgte Tiere', icon: '🐄' },
   { stat: 'bowsFletched', per: 1 / 30, label: 'Bogenbau-Werke', icon: '🪶' },
 ];
 

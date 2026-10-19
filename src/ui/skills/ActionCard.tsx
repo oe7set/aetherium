@@ -1,8 +1,10 @@
 import { getItem, ITEM_MAP, type ActionDef } from '../../data';
+import { ISLAND_BUILDING_MAP } from '../../data/construction';
 import { BALANCE } from '../../data/balance';
 import {
   actionDuration,
   actionXp,
+  buildingMissing,
   burnChance,
   craftableTimes,
   formatDuration,
@@ -99,6 +101,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const level = useGame((s) => skillLevel(s.game, def.skill));
   const isActive = useGame((s) => s.game.active?.actionId === def.id);
   const fireLit = useGame((s) => s.game.fire > 0);
+  const noBuilding = useGame((s) => buildingMissing(s.game, def));
   const nerd = useGame((s) => s.game.settings.nerdMode);
   const haveKey = useGame((s) => def.inputs.map((i) => s.game.inventory[i.item] ?? 0).join(','));
   const derived = useGame((s) => {
@@ -168,6 +171,12 @@ export function ActionCard({ def }: { def: ActionDef }) {
           )}
           {def.fuelSeconds && (
             <span>🪵 {t('action.fuel', { seconds: formatDuration(def.fuelSeconds) })}</span>
+          )}
+          {noBuilding && def.requiresBuilding && (
+            <span className="warn">
+              🔒 Braucht {ISLAND_BUILDING_MAP.get(def.requiresBuilding.id)?.name} Stufe{' '}
+              {def.requiresBuilding.level} (Baukunst)
+            </span>
           )}
           {def.requiresFire && !fireLit && (
             <span className="warn">⚠️ {t('action.requiresFire')}</span>

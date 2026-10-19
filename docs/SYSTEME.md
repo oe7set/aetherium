@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.61.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.62.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Viehzucht** (Phase 23, `data/husbandry.ts`, `engine/husbandry.ts`): 7 Tiere fressen Feldfrüchte (Weizen,
+Kartoffeln, Äpfel, Kräuter, Alraune + Manakristall) → Eier (+Federn), Wolle, Milch (+Rindsleder), Honig (+Bienenwachs),
+Ziegenmilch, Alpaka- und Ätherwolle; Molkerei → Käse/Ziegenkäse (Essen). Liefert an Kochen (Omelett, Käsebrot,
+Honigkuchen), Brauen (Honigmet → Kräutermet ×2), Handwerk (Wollkleidung für Magier: Treffsicherheit, Schaden,
+Runen sparen) und Bogenbau (Sehnen aus Wolle + Wachs). Große Tiere brauchen den **Stall** (neuer Inselbau,
+`ActionDef.requiresBuilding` → Availability-Check `buildingMissing` in `engine/construction.ts`, Hinweis in der
+Aktionskarte). Passiv je Stufe `village.prod` +0,2 %. Weide auf der Insel, Zähler `animalsTended`.
 
 **Bogenbau** (Phase 22, `data/fletching.ts`, `engine/fletching.ts`): Sehnen (Rindsleder, Spinnenseide) →
 Langbögen (Holz ×3, langsamer, +6 % Treffsicherheit) und Armbrüste (Barren + Holz, 3,0 s, +10 % Fernkampfschaden).

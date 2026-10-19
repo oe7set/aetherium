@@ -1,10 +1,11 @@
 import { ISLAND_BUILDING_MAP, ISLAND_BUILDINGS, type BuildingLevel } from '../data/construction';
+import type { ActionDef } from '../data/types';
 import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
 import { invalidateMods, registerModifierSource } from './modifiers';
 import { addXp, skillLevel } from './skills';
 import { addStat, type GameState } from './state';
-import { xpMultiplierFor } from './actions';
+import { registerAvailabilityCheck, xpMultiplierFor } from './actions';
 
 /** Baukunst: island buildings with three levels each; bonuses stay through every prestige. */
 
@@ -47,3 +48,11 @@ registerModifierSource('buildings', (s) =>
     return lvl > 0 ? [b.levels[lvl - 1]!.mods] : [];
   }),
 );
+
+/** Actions that need an island building (Viehzucht: cows need the Stall). */
+export function buildingMissing(s: GameState, def: ActionDef): boolean {
+  const req = def.requiresBuilding;
+  return !!req && buildingLevelOf(s, req.id) < req.level;
+}
+
+registerAvailabilityCheck((s, def) => !buildingMissing(s, def));

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.0] – Viehzucht
+
+- **Neuer Skill Viehzucht** 🐄 (Phase 23): Hühner, Schafe, Kühe, Bienen, Ziegen, Alpakas und Ätherschafe fressen deine Feldfrüchte und liefern Eier, Federn, Wolle, Milch, Honig, Bienenwachs und edle Wolle. In der Molkerei reifen Käse und Ziegenkäse.
+- **Neuer Inselbau Stall** (Baukunst): ab Stufe 1 Kühe, ab Stufe 2 Ziegen und Alpakas, ab Stufe 3 Ätherschafe – plus schnellere, ergiebigere Tiere. Gesperrte Tiere sagen, was fehlt.
+- **Vernetzt**: Kochen (Omelett, Käsebrot, Honigkuchen), Brauen (Honigmet – doppelte Ausbeute Kräutermet), Handwerk (**Wollkleidung für Magier** mit Zauberschaden und Runen-Sparen), Bogenbau (Sehnen aus Wolle und Wachs). Jede Viehzucht-Stufe macht das Dorf fleißiger.
+- Weide mit Schaf auf der Insel.
+
 ## [1.61.0] – Bogenbau
 
 - **Neuer Skill Bogenbau** 🪶 (Phase 22): Sehnen aus Rindsleder oder Spinnenseide, **Langbögen** (treffsicherer) und **Armbrüste** (langsam, aber +10 % Schaden) aus Holz und Barren.

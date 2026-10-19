@@ -332,3 +332,49 @@ export function FletcherHut({ onTap }: { onTap: TapHandler }) {
     </Workshop>
   );
 }
+
+/** Viehzucht: a fenced pasture with a sheep that wanders faster while you tend the animals. */
+export function Pasture({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('husbandry')!;
+  const sheep = useRef<THREE.Group>(null);
+  const active = useActive('husbandry');
+  useFrame(({ clock }) => {
+    if (!sheep.current) return;
+    const t = clock.elapsedTime * (active.current ? 1.2 : 0.3);
+    sheep.current.position.x = Math.sin(t) * 0.45;
+    sheep.current.rotation.y = Math.cos(t) > 0 ? 0 : Math.PI;
+  });
+  const posts = [-0.9, -0.3, 0.3, 0.9];
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.1, 16]} />
+        <meshStandardMaterial color="#7fbf5a" />
+      </mesh>
+      {posts.map((x) => (
+        <mesh key={x} position={[x, 0.2, -0.8]}>
+          <boxGeometry args={[0.06, 0.4, 0.06]} />
+          <meshStandardMaterial color="#8b6b4a" />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.3, -0.8]}>
+        <boxGeometry args={[1.9, 0.05, 0.04]} />
+        <meshStandardMaterial color="#8b6b4a" />
+      </mesh>
+      <group ref={sheep} position={[0, 0, 0.1]}>
+        <mesh position={[0, 0.28, 0]} castShadow>
+          <sphereGeometry args={[0.22, 10, 8]} />
+          <meshStandardMaterial color="#f4f1ea" flatShading />
+        </mesh>
+        <mesh position={[0.22, 0.3, 0]}>
+          <sphereGeometry args={[0.1, 8, 6]} />
+          <meshStandardMaterial color="#3b3330" />
+        </mesh>
+      </group>
+      <mesh position={[-0.5, 0.18, 0.5]}>
+        <cylinderGeometry args={[0.18, 0.2, 0.12, 10]} />
+        <meshStandardMaterial color="#c9a227" />
+      </mesh>
+    </group>
+  );
+}

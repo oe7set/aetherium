@@ -218,6 +218,7 @@ const SKILL_STATS: Record<string, string> = {
   construction: 'constructionActions',
   cartography: 'mapsDrawn',
   fletching: 'bowsFletched',
+  husbandry: 'animalsTended',
 };
 
 /**

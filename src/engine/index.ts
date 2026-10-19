@@ -38,3 +38,4 @@ export * from './thieving';
 export * from './construction';
 import './cartography';
 import './fletching';
+import './husbandry';

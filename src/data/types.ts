@@ -193,6 +193,8 @@ export interface ActionDef {
   elements?: string[];
   /** Tech that must be researched before the action is available. */
   requiresTech?: string;
+  /** Island building (Baukunst) that must stand at this level (e.g. the Stall for cows). */
+  requiresBuilding?: { id: string; level: number };
 }
 
 export interface ToolDef {

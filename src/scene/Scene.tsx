@@ -41,6 +41,7 @@ import {
   JewelBench,
   MapTent,
   FletcherHut,
+  Pasture,
   MarketStalls,
   SummonCircle,
 } from './Workshops';
@@ -214,6 +215,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <BuildSite onTap={tap('construction')} />
       <MapTent onTap={tap('cartography')} />
       <FletcherHut onTap={tap('fletching')} />
+      <Pasture onTap={tap('husbandry')} />
       <IslandBuildings />
       <IslandDecor />
       <Helpers />
