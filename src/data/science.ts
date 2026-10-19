@@ -708,6 +708,110 @@ export const ELEMENTS: ElementDef[] = ELEMENT_LIST.split(',').map((entry, i) => 
   return { z: i + 1, symbol, name, ...gridPosition(i + 1) };
 });
 
+/** Chemical groups of the periodic table; a complete group grants its own lasting bonus. */
+export interface ElementGroupDef {
+  id: string;
+  name: string;
+  color: string;
+  symbols: string[];
+  mods: ModifierSet;
+  bonus: string;
+}
+
+const sym = (list: string) => list.split(' ');
+
+export const ELEMENT_GROUPS: ElementGroupDef[] = [
+  {
+    id: 'alkali',
+    name: 'Alkalimetalle',
+    color: '#ff8a65',
+    symbols: sym('Li Na K Rb Cs Fr'),
+    mods: { gold: 0.08 },
+    bonus: '+8 % Verkaufspreis – reaktive Salze verkaufen sich explosiv',
+  },
+  {
+    id: 'alkaline',
+    name: 'Erdalkalimetalle',
+    color: '#ffc46b',
+    symbols: sym('Be Mg Ca Sr Ba Ra'),
+    mods: { 'speed.mining': 0.1 },
+    bonus: '+10 % Bergbau-Tempo – du weißt jetzt, wo es glitzert',
+  },
+  {
+    id: 'transition',
+    name: 'Übergangsmetalle',
+    color: '#e8a0a8',
+    symbols: sym(
+      'Sc Ti V Cr Mn Fe Co Ni Cu Zn Y Zr Nb Mo Tc Ru Rh Pd Ag Cd Hf Ta W Re Os Ir Pt Au Hg Rf Db Sg Bh Hs Mt Ds Rg Cn',
+    ),
+    mods: { 'speed.smithing': 0.1, 'double.smithing': 0.05 },
+    bonus: '+10 % Schmiede-Tempo, +5 % doppelte Barren',
+  },
+  {
+    id: 'post',
+    name: 'Metalle',
+    color: '#b6c2d6',
+    symbols: sym('Al Ga In Sn Tl Pb Bi Po Nh Fl Mc Lv'),
+    mods: { 'combat.damage': 0.06 },
+    bonus: '+6 % Schaden im Kampf – Blei ist schwer',
+  },
+  {
+    id: 'metalloid',
+    name: 'Halbmetalle',
+    color: '#9fd89a',
+    symbols: sym('B Si Ge As Sb Te'),
+    mods: { 'speed.crafting': 0.1 },
+    bonus: '+10 % Handwerk-Tempo – Silicium-Präzision',
+  },
+  {
+    id: 'nonmetal',
+    name: 'Nichtmetalle',
+    color: '#7fe0c0',
+    symbols: sym('H C N O P S Se'),
+    mods: { 'xp.farming': 0.1, 'speed.cooking': 0.1 },
+    bonus: '+10 % Landwirtschaft-XP, +10 % Koch-Tempo – Dünger und Maillard verstanden',
+  },
+  {
+    id: 'halogen',
+    name: 'Halogene',
+    color: '#f2e46b',
+    symbols: sym('F Cl Br I At Ts'),
+    mods: { 'double.alchemy': 0.1 },
+    bonus: '+10 % doppelte Ausbeute in der Alchemie',
+  },
+  {
+    id: 'noble',
+    name: 'Edelgase',
+    color: '#b79cff',
+    symbols: sym('He Ne Ar Kr Xe Rn Og'),
+    mods: { research: 0.15 },
+    bonus: '+15 % Forschung – Neonröhren im Labor',
+  },
+  {
+    id: 'lanthanide',
+    name: 'Lanthanoide',
+    color: '#ff9cd5',
+    symbols: sym('La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu'),
+    mods: { 'village.prod': 0.06 },
+    bonus: '+6 % Dorfproduktion – Seltene Erden für bessere Werkzeuge',
+  },
+  {
+    id: 'actinide',
+    name: 'Actinoide',
+    color: '#8ef06a',
+    symbols: sym('Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr'),
+    mods: { 'rift.might': 0.1 },
+    bonus: '+10 % Schaden im Riss – strahlende Persönlichkeit',
+  },
+];
+
+/** Bonus for the complete table on top of all groups. */
+export const CODEX_COMPLETE_MODS: ModifierSet = { xp: 0.1 };
+
+export const ELEMENT_GROUP_OF = new Map(
+  ELEMENT_GROUPS.flatMap((g) => g.symbols.map((symbol) => [symbol, g] as const)),
+);
+
 // --- Items --------------------------------------------------------------------------------------------------
 
 const POTION_DEFS: {

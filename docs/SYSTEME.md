@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.39.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.40.0**.
 
 ## 1. Der große Kreislauf
 
@@ -53,6 +53,12 @@
 das Ritual macht „Göttlicher Funke" (+1 Intelligenz). Brauen macht aus Äpfeln, Weizen, Kartoffeln und Kräutern
 Getränke: Kampfproviant (`heal`), Buffs, Handelsware und – über den Inselhafen – Getreide fürs Dorf. Stationen
 Schrein/Brauerei auf der Insel; Zähler `ritesPerformed`/`drinksBrewed` für Aufträge und Ruhmesleiter.
+
+**Periodensystem** (`ELEMENT_GROUPS` in `data/science.ts`, `elementGroupProgress` in `engine/science.ts`): 10 chemische
+Gruppen; jede vollständige Gruppe gibt einen passenden Bonus (Alkalimetalle → Verkaufspreis, Erdalkali → Bergbau,
+Übergangsmetalle → Schmieden, Metalle → Kampfschaden, Halbmetalle → Handwerk, Nichtmetalle → Landwirtschaft/Kochen,
+Halogene → Alchemie, Edelgase → Forschung, Lanthanoide → Dorfproduktion, Actinoide → Riss-Schaden), das ganze System
++10 % XP. Kodex-Ansicht: Zellen in Gruppenfarben, Gruppenliste filtert, Quellen springen zur Analyse.
 
 ## 3. Verbindungen (wer gibt wem was?)
 

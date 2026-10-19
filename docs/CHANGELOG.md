@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.40.0] – Periodensystem mit Sinn
+
+- Periodensystem mit Sinn: Die 118 Elemente sind in 10 chemische Gruppen eingefärbt (Alkalimetalle, Edelgase, Halogene …). Jede vollständige Gruppe gibt einen passenden Dauerbonus – z. B. Edelgase +15 % Forschung, Übergangsmetalle schnelleres Schmieden, Actinoide mehr Schaden im Riss, Lanthanoide mehr Dorfproduktion. Das ganze System gibt zusätzlich +10 % XP.
+- Kodex-Ansicht: ganze Tabelle passt aufs Handy, Gruppenliste mit Fortschritt und Bonus (antippen hebt die Gruppe hervor), Element antippen zeigt Gruppe und Quellen – mit Sprung direkt zur passenden Analyse.
+
 ## [1.39.0] – Glaube & Brauen
 
 - Neuer Skill **Glaube** 🙏 (Schrein auf der Insel): Knochen vergraben, Aschenandacht, Ektoplasma opfern, Drachenknochen weihen, Wasser segnen, Kerzen weihen, Göttliches Ritual. Jede Stufe gibt dauerhaft mehr Verteidigung im Kampf, mehr Lebenspunkte im Riss und bessere Dorfabwehr. Weihwasser und geweihte Kerzen sind Buffs, der „Göttliche Funke" gibt +1 Intelligenz.

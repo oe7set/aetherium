@@ -9,6 +9,7 @@ import {
   SKILL_MAP,
   TECH_MAP,
   TECHS,
+  type ModifierSet,
   type TechUnlock,
 } from '../data';
 import {
@@ -22,6 +23,7 @@ import {
   registerRunnerFactory,
   registerTimeEffect,
 } from './actions';
+import { CODEX_COMPLETE_MODS, ELEMENT_GROUPS, type ElementGroupDef } from '../data/science';
 import type { Emit } from './events';
 import { itemCount, removeItem } from './inventory';
 import { invalidateMods, mod, modFor, registerModifierSource } from './modifiers';
@@ -115,9 +117,29 @@ export function affordableTechs(s: GameState): string[] {
 
 // --- Periodic table codex -----------------------------------------------------------------------
 
-registerModifierSource('codex', (s) =>
-  s.codex.length ? [{ research: s.codex.length * 0.004, xp: s.codex.length * 0.001 }] : [],
-);
+export interface ElementGroupProgress {
+  group: ElementGroupDef;
+  found: number;
+  done: boolean;
+}
+
+/** How far each chemical group of the codex is; a complete group grants its bonus. */
+export function elementGroupProgress(s: GameState): ElementGroupProgress[] {
+  const known = new Set(s.codex);
+  return ELEMENT_GROUPS.map((group) => {
+    const found = group.symbols.filter((x) => known.has(x)).length;
+    return { group, found, done: found >= group.symbols.length };
+  });
+}
+
+registerModifierSource('codex', (s) => {
+  if (!s.codex.length) return [];
+  const out: ModifierSet[] = [{ research: s.codex.length * 0.004, xp: s.codex.length * 0.001 }];
+  const groups = elementGroupProgress(s);
+  for (const g of groups) if (g.done) out.push(g.group.mods);
+  if (groups.every((g) => g.done)) out.push(CODEX_COMPLETE_MODS);
+  return out;
+});
 
 registerCompletionHook('codex', (s, def, rng, emit) => {
   if (!def.elements) return;

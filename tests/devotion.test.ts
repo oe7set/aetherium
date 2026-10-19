@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { getAction, getItem } from '../src/data';
+import { ELEMENTS, getAction, getItem } from '../src/data';
+import { ELEMENT_GROUPS } from '../src/data/science';
 import {
   activeVillage,
   canPerform,
   completeAction,
   consumeItem,
   createRng,
+  elementGroupProgress,
   faithBonus,
   harborImport,
   invalidateMods,
@@ -67,5 +69,27 @@ describe('Brauen', () => {
     const r = harborImport(s, v.id, 'crop', 20);
     expect(r.ok).toBe(true);
     expect(v.res.crop).toBeGreaterThan(crop);
+  });
+});
+
+describe('Periodensystem: Elementgruppen', () => {
+  it('die Gruppen decken alle 118 Elemente genau einmal ab', () => {
+    const all = ELEMENT_GROUPS.flatMap((g) => g.symbols);
+    expect(all).toHaveLength(118);
+    expect(new Set(all).size).toBe(118);
+    for (const e of ELEMENTS) expect(all).toContain(e.symbol);
+  });
+
+  it('eine vollständige Gruppe gibt ihren Bonus', () => {
+    const s = gameWith();
+    const noble = ELEMENT_GROUPS.find((g) => g.id === 'noble')!;
+    s.codex = noble.symbols.slice(0, -1);
+    invalidateMods(s);
+    const before = mod(s, 'research');
+    expect(elementGroupProgress(s).find((g) => g.group.id === 'noble')?.done).toBe(false);
+    s.codex = [...noble.symbols];
+    invalidateMods(s);
+    expect(elementGroupProgress(s).find((g) => g.group.id === 'noble')?.done).toBe(true);
+    expect(mod(s, 'research')).toBeCloseTo(before + 0.004 + 0.15, 5);
   });
 });

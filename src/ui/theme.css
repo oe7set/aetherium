@@ -1923,3 +1923,126 @@ button.item-pill.link .pill-go {
       0 0 22px rgba(255, 209, 102, 0.55);
   }
 }
+
+/* --- Periodensystem ------------------------------------------------------------------------ */
+.codex-head {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.codex-head small {
+  font-size: 0.75rem;
+}
+.element {
+  border-color: color-mix(in srgb, var(--gc) 45%, transparent);
+  background: color-mix(in srgb, var(--gc) 8%, #161a25);
+}
+.element.known {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--gc) 75%, #1a1f33),
+    color-mix(in srgb, var(--gc) 40%, #1a1f33)
+  );
+  border-color: var(--gc);
+  color: #10131f;
+}
+.element.dim {
+  opacity: 0.25;
+}
+.codex-detail {
+  border-left: 4px solid var(--gc, var(--line));
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+.codex-group-tag {
+  color: var(--gc);
+  font-weight: 600;
+}
+.codex-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.codex-sources .chip-btn {
+  font-size: 0.75rem;
+}
+.codex-sources .chip-btn.locked {
+  opacity: 0.6;
+}
+.codex-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 6px;
+}
+.codex-group {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+}
+.codex-group.active {
+  border-color: var(--gc);
+}
+.codex-group.done {
+  background: color-mix(in srgb, var(--gc) 12%, var(--panel));
+  border-color: color-mix(in srgb, var(--gc) 60%, transparent);
+}
+.codex-group-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.codex-group-name small {
+  margin-left: auto;
+  color: var(--muted);
+  font-weight: 400;
+}
+.codex-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gc);
+}
+.codex-bonus {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.codex-bonus.on {
+  color: var(--text);
+}
+/* The whole table fits the width – no sideways scrolling on phones. */
+.periodic {
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+  width: 100%;
+  max-width: 720px;
+}
+.periodic .element {
+  aspect-ratio: 1;
+  min-width: 0;
+}
+.periodic-scroll {
+  overflow: visible;
+}
+@media (max-width: 600px) {
+  .periodic {
+    gap: 1px;
+  }
+  .periodic .element {
+    border-radius: 3px;
+  }
+  .periodic .element small {
+    display: none;
+  }
+  .periodic .element b {
+    font-size: 0.5625rem;
+  }
+}
