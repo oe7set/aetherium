@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.69.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.70.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,12 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Gewandtheit** (Phase 31, `data/agility.ts`, `engine/agility.ts`): 8 Parcours ohne Zutaten mit Sturzrisiko
+(`ActionDef.fall`, Action-Gate wie Diebeskunst: Betäubung, LP, 10 % XP; `fallChance` sinkt über 30 Stufen auf 3 %).
+Gewandtheitsmarken (Funde) → Läufer-Set (6 Teile, keine Rüstung, `speed`-Boni, Set-Bonus `set_runner`). Passiv je
+Stufe: `speed` +0,08 % (alle Aktionen), `hero.travel` +0,3 %, `rift.speed` +0,2 %. Parcours auf der Insel, Zähler
+`lapsRun`.
 
 **Sternkunde** (Phase 30, `data/astronomy.ts`, `engine/astronomy.ts`, `engine/time.ts`): Tag/Nacht-Zyklus lebt jetzt
 in der Engine (`dayPhase`/`isNight`, `scene/time.ts` re-exportiert). `simNow(s)` = `lastUpdate` + in `advance`

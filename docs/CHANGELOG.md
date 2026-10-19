@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.70.0] – Gewandtheit
+
+- **Neuer Skill Gewandtheit** 🏃 (Phase 31): Acht Parcours – Strandlauf, Baumkronenpfad, Flusssprünge, Dorfdächer, Klippen, Takelage der Hafenschiffe, Lavastein-Hüpfen und Ätherbrücken. Wer stürzt, verliert kurz Zeit und ein paar LP; das Risiko sinkt mit der Stufe.
+- **Gewandtheitsmarken** liegen auf dem Parcours herum und werden gegen das **Läufer-Set** getauscht (federleicht, macht alles schneller, Set-Bonus ab 3 und 6 Teilen).
+- Jede Gewandtheits-Stufe: alle Aktionen etwas schneller, kürzere Heldenreisen, flinkerer Held im Riss.
+
 ## [1.69.0] – Sternkunde
 
 - **Neuer Skill Sternkunde** 🔭 (Phase 30): Den Himmel beobachten – vom Abendhimmel bis zum Rand des Alls – und Sternenstaub, Mondsteine und Meteoriten sammeln. **Nachts gibt es doppelt so viel Staub und XP** (die Nacht der Insel zählt jetzt auch offline richtig).

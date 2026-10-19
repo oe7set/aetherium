@@ -456,3 +456,46 @@ export function Telescope({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Gewandtheit: hurdles, a balance beam and a climbing frame; a flag waves while you run. */
+export function Course({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('agility')!;
+  const flag = useRef<THREE.Mesh>(null);
+  const active = useActive('agility');
+  useFrame(({ clock }) => {
+    if (flag.current)
+      flag.current.rotation.y = Math.sin(clock.elapsedTime * (active.current ? 8 : 2)) * 0.4;
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      {[-0.6, 0, 0.6].map((x) => (
+        <group key={x} position={[x, 0, -0.3]}>
+          <mesh position={[-0.22, 0.18, 0]}>
+            <boxGeometry args={[0.05, 0.36, 0.05]} />
+            <meshStandardMaterial color="#e8e2d0" />
+          </mesh>
+          <mesh position={[0.22, 0.18, 0]}>
+            <boxGeometry args={[0.05, 0.36, 0.05]} />
+            <meshStandardMaterial color="#e8e2d0" />
+          </mesh>
+          <mesh position={[0, 0.34, 0]}>
+            <boxGeometry args={[0.5, 0.05, 0.05]} />
+            <meshStandardMaterial color="#ff9f43" />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0, 0.25, 0.45]}>
+        <boxGeometry args={[1.4, 0.06, 0.1]} />
+        <meshStandardMaterial color="#8b6b4a" />
+      </mesh>
+      <mesh position={[0.9, 0.5, 0.2]}>
+        <cylinderGeometry args={[0.025, 0.025, 1, 6]} />
+        <meshStandardMaterial color="#5b4030" />
+      </mesh>
+      <mesh ref={flag} position={[1.05, 0.88, 0.2]}>
+        <planeGeometry args={[0.3, 0.18]} />
+        <meshStandardMaterial color="#ff5d73" side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  );
+}

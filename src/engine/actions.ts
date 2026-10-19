@@ -226,6 +226,7 @@ const SKILL_STATS: Record<string, string> = {
   husbandry: 'animalsTended',
   sailing: 'voyagesMade',
   astronomy: 'starsWatched',
+  agility: 'lapsRun',
 };
 
 /**

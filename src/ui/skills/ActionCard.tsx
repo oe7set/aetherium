@@ -6,6 +6,7 @@ import {
   actionDuration,
   actionXp,
   buildingMissing,
+  fallChance,
   shipNeeded,
   shipTier,
   burnChance,
@@ -106,6 +107,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const fireLit = useGame((s) => s.game.fire > 0);
   const noBuilding = useGame((s) => buildingMissing(s.game, def));
   const shipMissing = useGame((s) => shipTier(s.game) < shipNeeded(def.id));
+  const fall = useGame((s) => (def.fall ? Math.round(fallChance(s.game, def) * 100) : 0));
   const nerd = useGame((s) => s.game.settings.nerdMode);
   const haveKey = useGame((s) => def.inputs.map((i) => s.game.inventory[i.item] ?? 0).join(','));
   const derived = useGame((s) => {
@@ -171,6 +173,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
           {def.steal && (
             <span className={caught > 0.3 ? 'warn' : ''}>
               🚨 Erwischt {formatPercent(caught)} · 🪙 {def.steal.gold[0]}–{def.steal.gold[1]}
+            </span>
+          )}
+          {def.fall && (
+            <span className={fall > 25 ? 'warn' : ''}>
+              🤕 Sturz {fall} % · −{def.fall.damage} LP
             </span>
           )}
           {def.fuelSeconds && (

@@ -45,6 +45,7 @@ export type GameEvent =
   | { type: 'utilityCast'; spell: string }
   | { type: 'islandBuilt'; building: string; level: number }
   | { type: 'caught'; actionId: string; damage: number; stun: number }
+  | { type: 'fell'; actionId: string; damage: number }
   | { type: 'familiarSummoned'; familiar: string }
   | { type: 'familiarLeft'; familiar: string }
   | { type: 'slayerTask'; monster: string; count: number }

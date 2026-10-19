@@ -43,4 +43,5 @@ import './fletching';
 import './husbandry';
 export * from './sailing';
 export * from './astronomy';
+export * from './agility';
 export * from './time';

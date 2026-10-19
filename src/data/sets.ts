@@ -1,4 +1,5 @@
 import type { ItemDef, LootEntry, ModifierSet } from './types';
+import { RUNNER_SET_PIECES } from './agility';
 
 /** Gear sets: wearing several pieces of one set gives extra bonuses (tiers by piece count). */
 export interface GearSetDef {
@@ -33,6 +34,16 @@ export const GEAR_SETS: GearSetDef[] = [
       },
     ],
   })),
+  {
+    id: 'set_runner',
+    name: 'Läufer',
+    icon: '👟',
+    pieces: RUNNER_SET_PIECES,
+    tiers: [
+      { count: 3, mods: { speed: 0.02 } },
+      { count: 6, mods: { speed: 0.03, 'xp.agility': 0.1 } },
+    ],
+  },
   {
     id: 'set_leather',
     name: 'Lederjäger',

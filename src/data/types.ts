@@ -186,6 +186,8 @@ export interface ActionDef {
   alchemy?: { item: string; mult: number };
   /** Diebeskunst: chance to get caught (at the level requirement) and what it costs. */
   steal?: { failAtReq: number; stun: number; damage: number; gold: [number, number] };
+  /** Gewandtheit: chance to fall (stun + HP, no reward). */
+  fall?: { failAtReq: number; stun: number; damage: number };
   desc?: string;
   /** Sub-group shown in the skill view (e.g. „Barren", „Waffen"). */
   category?: string;

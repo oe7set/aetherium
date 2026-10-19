@@ -305,6 +305,9 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           });
         break;
       }
+      case 'fell':
+        out.popups.push({ kind: 'bad', text: `🤕 Ausgerutscht! −${e.damage} LP` });
+        break;
       case 'caught':
         out.popups.push({ kind: 'bad', text: `🚨 Erwischt! −${e.damage} LP` });
         break;

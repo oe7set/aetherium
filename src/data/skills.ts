@@ -204,6 +204,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Taue drehen, Segel nähen, Schiffe bauen – und zu fernen Inseln segeln: Perlen, Gewürze, Obsidian, Drachenschuppen, Sternenstaub. Größere Schiffe fahren schneller und weiter; Handelsfahrten bringen Gold und Dorf-Rohstoffe. Kartografie verkürzt jede Fahrt.',
   },
   {
+    id: 'agility',
+    name: 'Gewandtheit',
+    icon: '🏃',
+    color: '#ff9f43',
+    group: 'gathering',
+    desc: 'Parcours über Strand, Baumkronen, Dächer, Klippen und Ätherbrücken. Stürze kosten Zeit und ein paar LP. Marken gibt es für das Läufer-Set. Jede Stufe: alle Aktionen etwas schneller, kürzere Heldenreisen, flinkerer Held im Riss.',
+  },
+  {
     id: 'astronomy',
     name: 'Sternkunde',
     icon: '🔭',

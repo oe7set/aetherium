@@ -2249,6 +2249,14 @@ button.chip {
   left: 40%;
   top: 42%;
 }
+.st-agi {
+  left: 30%;
+  top: 28%;
+}
+.character.st-agi {
+  left: 34%;
+  top: 30%;
+}
 .st-astro {
   left: 54%;
   top: 14%;
