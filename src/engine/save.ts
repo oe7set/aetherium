@@ -9,6 +9,7 @@ import {
   HELPER_MAP,
   ITEM_MAP,
   MONSTER_MAP,
+  SKILL_MAP,
   TECH_MAP,
   TOOL_MAP,
 } from '../data';
@@ -18,6 +19,7 @@ import { FAMILIAR_MAP } from '../data/summoning';
 import { UTILITY_MAP } from '../data/magic';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
+import { GUILD_MAP } from '../data/guilds';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -268,6 +270,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     tasks: hydrateTasks(data.tasks, base.tasks),
     village: hydrateVillage(data.village, base.village),
     rift: hydrateRift(data.rift, base.rift),
+    guilds: hydrateGuilds(data.guilds, base.guilds),
     hero: hydrateHero(data.hero, base.hero),
     progress: hydrateProgress(data.progress, base.progress),
     combatSettings: hydrateCombatSettings(data.combatSettings),
@@ -804,4 +807,41 @@ export function importSave(text: string, now: number = Date.now()): GameState {
     throw new SaveError('Das sieht nicht nach einem Aetherium-Spielstand aus.');
   }
   return deserialize(parsed, now);
+}
+
+function hydrateGuilds(v: unknown, fallback: GameState['guilds']): GameState['guilds'] {
+  if (!isRecord(v)) return { ...fallback };
+  const num = (x: unknown, d = 0) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const orders: GameState['guilds']['orders'] = [];
+  if (Array.isArray(v.orders))
+    for (const o of v.orders) {
+      if (!isRecord(o) || typeof o.guild !== 'string' || !GUILD_MAP.has(o.guild)) continue;
+      const lines = (Array.isArray(o.lines) ? o.lines : []).flatMap((l: unknown) =>
+        isRecord(l) &&
+        typeof l.item === 'string' &&
+        ITEM_MAP.has(l.item) &&
+        typeof l.skill === 'string' &&
+        SKILL_MAP.has(l.skill)
+          ? [{ item: l.item, qty: Math.max(1, num(l.qty, 1)), skill: l.skill, xp: num(l.xp) }]
+          : [],
+      );
+      if (!lines.length) continue;
+      orders.push({
+        id: num(o.id),
+        guild: o.guild,
+        lines,
+        gold: num(o.gold),
+        rep: num(o.rep),
+        left: Math.max(0, num(o.left)),
+      });
+    }
+  return {
+    rep: Object.fromEntries(
+      Object.entries(numberRecord(v.rep)).filter(([id]) => GUILD_MAP.has(id)),
+    ),
+    orders,
+    seq: Math.max(1, num(v.seq, 1), ...orders.map((o) => o.id + 1)),
+    done: num(v.done),
+    refill: Math.max(0, num(v.refill, fallback.refill)),
+  };
 }

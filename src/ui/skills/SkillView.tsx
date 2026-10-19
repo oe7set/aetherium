@@ -17,6 +17,7 @@ import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
 import { SlayerView } from '../combat/SlayerView';
+import { SkillLinks } from './SkillLinks';
 import { RiftwalkerSkillView } from '../rift/RelicsView';
 import { FAMILIAR_MAP } from '../../data/summoning';
 import { FarmingView } from '../science/FarmingView';
@@ -222,6 +223,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
             : t('action.allUnlocked')}
         </span>
       </div>
+      <SkillLinks skillId={skillId} />
       {skillId === 'construction' && <BuildingsPanel />}
       <MasteryPool skillId={skillId} />
       {groupByCategory(actions).map(([category, list]) => (

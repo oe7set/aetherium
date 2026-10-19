@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.64.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.65.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Zunftaufträge & Verbindungen** (Phase 26, `data/guilds.ts`, `engine/guilds.ts`, `ui/quests/GuildBoard.tsx`,
+`ui/recipes.ts` `skillLinks`): 4 Zünfte (Schmiede, Küche, Arkan, Entdecker) bestellen Produkte ihrer Skills
+(`rollOrder`: freigeschaltete Rezepte, ~150 s Arbeit je Zeile), 3 Plätze (+1 ab Rang 3), 8 h Laufzeit, Zeiteffekt
+`guilds` (Nachschub alle 5 Min., auch offline). Liefern: Gold (×3 Verkaufswert, +10 % je Rang), XP für den
+herstellenden Skill, Ruf → Ränge (100 Ruf), ab Rang 5 Münzbeutel. `s.guilds` bleibt über Prestige. UI: Mehr →
+Quests → Zünfte, „Was jetzt?" meldet Lieferbares. Jede Skill-Ansicht zeigt „🔗 Verbindungen" (Braucht von /
+Liefert an, aus allen Rezepten und Funden, antippbar).
 
 **Flüche, Schreine, Tagesriss** (Phase 25, `data/riftCurses.ts`, `engine/rift.ts`, `engine/daily.ts`): 6 Flüche
 (`s.rift.curses`, ab 3 Läufen) → `applyCurses` (Werte, `difficulty`, `spawnMult`, `enemySpeed`, Hunger = kein

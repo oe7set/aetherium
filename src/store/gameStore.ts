@@ -121,7 +121,7 @@ export type MenuSection =
   | 'save'
   | 'log'
   | 'debug';
-export type QuestSegment = 'tasks' | 'quests' | 'pets';
+export type QuestSegment = 'tasks' | 'guilds' | 'quests' | 'pets';
 export type InventorySegment = 'items' | 'gear' | 'market' | 'shop' | 'tools' | 'album';
 
 const FEED_LIMIT = 60;

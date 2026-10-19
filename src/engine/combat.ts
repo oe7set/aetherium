@@ -780,6 +780,7 @@ function autoPotion(s: GameState, rng: Rng, emit: Emit): void {
 
 function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {
   autoPotion(s, rng, emit);
+  autoPrayerDraught(s, rng, emit);
   const m = getMonster(c.monster);
   const st = playerStats(s);
   c.playerTimer += st.speed;

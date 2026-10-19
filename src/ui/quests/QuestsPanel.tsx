@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PETS, QUESTS, CAT_STATES } from '../../data/meta';
 import {
+  canDeliver,
   formatDuration,
   questProgress,
   questRewardText,
@@ -13,6 +14,7 @@ import { useGame, type QuestSegment } from '../../store/gameStore';
 import { useFmt, useNow } from '../hooks';
 import { describeMods } from '../modText';
 import { ProgressBar } from '../ProgressBar';
+import { GuildBoard } from './GuildBoard';
 
 type Segment = QuestSegment;
 
@@ -184,10 +186,13 @@ export function QuestsPanel() {
     (s) =>
       s.game.tasks.list.filter((t) => !t.claimed && taskProgress(s.game, t) >= t.target).length,
   );
+  const deliverable = useGame(
+    (s) => s.game.guilds.orders.filter((o) => canDeliver(s.game, o)).length,
+  );
   return (
     <div className="panel">
       <div className="segments" role="tablist">
-        {(['tasks', 'quests', 'pets'] as Segment[]).map((k) => (
+        {(['tasks', 'guilds', 'quests', 'pets'] as Segment[]).map((k) => (
           <button
             key={k}
             role="tab"
@@ -197,13 +202,16 @@ export function QuestsPanel() {
           >
             {k === 'tasks'
               ? `Aufträge${claimable ? ` (${claimable})` : ''}`
-              : k === 'quests'
-                ? 'Quests'
-                : 'Haustiere'}
+              : k === 'guilds'
+                ? `Zünfte${deliverable ? ` (${deliverable})` : ''}`
+                : k === 'quests'
+                  ? 'Quests'
+                  : 'Haustiere'}
           </button>
         ))}
       </div>
       {seg === 'tasks' && <Tasks />}
+      {seg === 'guilds' && <GuildBoard />}
       {seg === 'quests' && <Quests />}
       {seg === 'pets' && <Pets />}
     </div>

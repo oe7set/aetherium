@@ -2647,3 +2647,80 @@ button.chip {
 .magic-workshop {
   margin-top: 12px;
 }
+
+/* Verbindungen (Phase 26) */
+.skill-links {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+.skill-links summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.skill-links-row {
+  margin-top: 6px;
+}
+.skill-links-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+/* Zunftaufträge (Phase 26) */
+.guild-ranks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+}
+.guild-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+.guild-rank > span {
+  font-size: 1.4rem;
+}
+.guild-order {
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.guild-order.ready {
+  border-color: rgba(91, 227, 138, 0.7);
+}
+.guild-order-head {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.guild-order-head small {
+  margin-left: auto;
+}
+.guild-order ul {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+  display: grid;
+  gap: 3px;
+  font-size: 0.85rem;
+}
+.guild-order li.ok::before {
+  content: '✔ ';
+  color: #5be38a;
+}
+.guild-order-foot {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.guild-order-foot > span {
+  margin-right: auto;
+}

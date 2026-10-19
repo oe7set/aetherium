@@ -1,6 +1,7 @@
 import { collectionsClaimable } from './collections';
 import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
+import { canDeliver } from './guilds';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
 import { SKILLS, TOOL_MAP, toolsForSkill } from '../data';
@@ -35,7 +36,7 @@ export type AgendaTarget =
   | { area: 'inventory'; section: 'items' | 'album' | 'tools' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
-  | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'quests' };
+  | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'guilds' | 'quests' };
 
 export interface AgendaItem {
   id: string;
@@ -106,6 +107,16 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  const ready = s.guilds.orders.filter((o) => canDeliver(s, o)).length;
+  if (ready)
+    add({
+      id: 'guild-orders',
+      icon: '📜',
+      title: ready === 1 ? 'Zunftauftrag lieferbar' : `${ready} Zunftaufträge lieferbar`,
+      detail: 'Gold, XP und Ruf bei den Zünften',
+      kind: 'reward',
+      target: { area: 'menu', section: 'quests', sub: 'guilds' },
     });
   if (tasksDone > 0)
     add({

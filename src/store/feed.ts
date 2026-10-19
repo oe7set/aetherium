@@ -38,6 +38,7 @@ import { SPECIALS } from '../data/spells';
 import { FAMILIAR_MAP } from '../data/summoning';
 import { UTILITY_MAP } from '../data/magic';
 import { RELIC_MAP } from '../data/riftwalker';
+import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -307,6 +308,14 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
       case 'caught':
         out.popups.push({ kind: 'bad', text: `🚨 Erwischt! −${e.damage} LP` });
         break;
+      case 'guildOrder': {
+        const g = GUILD_MAP.get(e.guild);
+        out.feed.push({
+          kind: e.rank ? 'rare' : 'info',
+          text: `${g?.icon ?? '📜'} Auftrag für die ${g?.name ?? 'Zunft'} erledigt: +${e.gold} Gold.${e.rank ? ` Neuer Rang: ${GUILD_RANKS[e.rank]}!` : ''}`,
+        });
+        break;
+      }
       case 'islandBuilt': {
         const b = ISLAND_BUILDING_MAP.get(e.building);
         if (b)

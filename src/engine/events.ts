@@ -81,6 +81,7 @@ export type GameEvent =
     }
   | { type: 'riftEcho'; essence: number }
   | { type: 'relicFound'; relic: string }
+  | { type: 'guildOrder'; guild: string; gold: number; rank: number }
   | { type: 'heroLevel'; level: number }
   | { type: 'heroDied' }
   | { type: 'heroRevived' }

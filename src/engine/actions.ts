@@ -73,6 +73,11 @@ export function doubleChance(s: GameState, def: ActionDef): number {
 
 export type CheckResult = { ok: true } | { ok: false; reason: StopReason; missingItem?: string };
 
+/** Level reached and no tech/building lock (inputs and fire aside). */
+export function actionUnlocked(s: GameState, def: ActionDef): boolean {
+  return skillLevel(s, def.skill) >= def.levelReq && availabilityChecks.every((c) => c(s, def));
+}
+
 export function canPerform(s: GameState, def: ActionDef): CheckResult {
   for (const check of availabilityChecks)
     if (!check(s, def)) return { ok: false, reason: 'locked' };

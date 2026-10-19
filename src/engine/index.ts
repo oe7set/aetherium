@@ -30,6 +30,7 @@ export * from './village';
 export * from './villageWorld';
 export * from './weekly';
 export * from './daily';
+export * from './guilds';
 export * from './xp';
 export * from './rivals';
 export * from './prayer';

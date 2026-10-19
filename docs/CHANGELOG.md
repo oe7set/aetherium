@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.65.0] – Zunftaufträge & Verbindungen
+
+- **Zunftaufträge** 📜 (Phase 26): Schmiedezunft, Küchengilde, Arkaner Zirkel und Entdeckerbund bestellen Waren aus mehreren Skills (z. B. „Stahlbarren + Langbögen + Bretter"). Liefern bringt Gold, XP für die herstellenden Skills und **Ruf**: höhere Ränge zahlen mehr, ab Rang 3 gibt es einen Zusatzauftrag, ab Rang 5 Münzbeutel. Neue Aufträge kommen alle paar Minuten, auch offline. Zu finden unter Mehr → Quests → Zünfte; „Was jetzt?" meldet lieferbare Aufträge.
+- **Verbindungen** 🔗 in jeder Skill-Ansicht: „Braucht von …" und „Liefert an …" – automatisch aus allen Rezepten berechnet, antippbar. So sieht man auf einen Blick, wie z. B. Viehzucht Kochen, Brauen, Handwerk und Bogenbau versorgt.
+- Kampf: Der Weihtrunk wird jetzt auch beim eigenen Angriff getrunken, nicht nur wenn man getroffen wird.
+
 ## [1.64.0] – Flüche, Schreine & Tagesriss
 
 - **Flüche** 🕯️ (Phase 25, ab dem 3. Lauf): Horde, Hast, Raserei, Zerbrechlich, Hungersnot, Dunkelheit – frei kombinierbar vor jedem Lauf. Jeder Fluch macht den Riss härter, bringt aber bis zu +30 % Essenz und +50 % Relikt-Chance.

@@ -7,7 +7,7 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.64)
+## Was dich erwartet (v1.65)
 
 **🏝️ Die Insel**
 

@@ -474,6 +474,35 @@ export interface GameState {
   hero: HeroState;
   progress: ProgressState;
   rift: RiftState;
+  /** Zunftaufträge (Phase 26). */
+  guilds: GuildState;
+}
+
+export interface GuildOrderLine {
+  item: string;
+  qty: number;
+  /** Skill that makes it and the XP it pays. */
+  skill: string;
+  xp: number;
+}
+
+export interface GuildOrder {
+  id: number;
+  guild: string;
+  lines: GuildOrderLine[];
+  gold: number;
+  rep: number;
+  /** Seconds until the order leaves the board. */
+  left: number;
+}
+
+export interface GuildState {
+  rep: Record<string, number>;
+  orders: GuildOrder[];
+  seq: number;
+  done: number;
+  /** Seconds until new orders arrive on a board with free slots. */
+  refill: number;
 }
 
 export const SAVE_VERSION = 13;
@@ -569,6 +598,7 @@ export function newGame(now: number = Date.now()): GameState {
       decorHidden: [],
     },
     rift: defaultRift(),
+    guilds: { rep: {}, orders: [], seq: 1, done: 0, refill: 5 },
   };
 }
 
@@ -695,6 +725,14 @@ export function cloneState(s: GameState): GameState {
       best: { ...s.rift.best },
       evolutions: [...s.rift.evolutions],
       weekly: { ...s.rift.weekly },
+      relics: [...s.rift.relics],
+      curses: [...s.rift.curses],
+      daily: { ...s.rift.daily },
+    },
+    guilds: {
+      ...s.guilds,
+      rep: { ...s.guilds.rep },
+      orders: s.guilds.orders.map((o) => ({ ...o, lines: o.lines.map((l) => ({ ...l })) })),
     },
   };
 }

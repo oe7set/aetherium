@@ -145,6 +145,8 @@ function resetRun(s: GameState): void {
     // The hero and the motivation layer belong to the player, not to a run.
     hero: s.hero,
     progress: s.progress,
+    // Guild reputation and open orders belong to the player.
+    guilds: s.guilds,
   };
   Object.assign(s, fresh, kept);
 
