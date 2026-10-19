@@ -56,5 +56,5 @@ describe('Offline-Fortschritt', () => {
     // run per step), CI ~5 s. Guards against 3× regressions.
     expect(performance.now() - t0).toBeLessThan(10000);
     expect(summary.actionsCompleted).toBeGreaterThan(50_000);
-  });
+  }, 20000);
 });

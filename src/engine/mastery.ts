@@ -14,15 +14,27 @@ export function masteryCompletionsFor(level: number): number {
   return level <= 1 ? 0 : Math.round(5 * Math.pow(level, 2.2));
 }
 
+/** Completions needed per level (index = level), precomputed: this runs several times per action. */
+const THRESHOLDS = Array.from({ length: MASTERY_MAX + 1 }, (_, l) => masteryCompletionsFor(l));
+
 export function masteryLevelFromCount(count: number): number {
-  let level = Math.max(1, Math.min(MASTERY_MAX, Math.floor(Math.pow(count / 5, 1 / 2.2))));
-  while (level < MASTERY_MAX && count >= masteryCompletionsFor(level + 1)) level++;
-  while (level > 1 && count < masteryCompletionsFor(level)) level--;
-  return level;
+  // Binary search for the highest level whose threshold is reached.
+  let lo = 1;
+  let hi = MASTERY_MAX;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (count >= THRESHOLDS[mid]!) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
 }
 
+const STAT_KEYS = new Map<string, string>();
+
 export function masteryCount(s: GameState, actionId: string): number {
-  return s.stats[`action.${actionId}`] ?? 0;
+  let key = STAT_KEYS.get(actionId);
+  if (!key) STAT_KEYS.set(actionId, (key = `action.${actionId}`));
+  return s.stats[key] ?? 0;
 }
 
 export function masteryLevel(s: GameState, actionId: string): number {
