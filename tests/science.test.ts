@@ -15,6 +15,8 @@ import {
   offlineCap,
   plantSeed,
   plotReady,
+  setPlotNext,
+  uprootPlot,
   researchTech,
   simulate,
   startAction,
@@ -118,6 +120,41 @@ describe('Landwirtschaft', () => {
     advance(s, 3600, createRng(3), () => {});
     expect(s.stats.harvests).toBeGreaterThan(10);
     expect(s.plots[0]!.seed).toBe('seed_potato');
+  });
+});
+
+describe('Landwirtschaft: Beete umplanen', () => {
+  const farm = () =>
+    gameWith({
+      inventory: { seed_potato: 3, seed_wheat: 3 },
+      techs: ['sharp_stones', 'agriculture', 'irrigation', 'crop_rotation', 'fertilizer'],
+    });
+
+  it('Ausreißen gibt die Saat zurück und macht das Beet frei', () => {
+    const s = farm();
+    s.plots = [{ seed: null, elapsed: 0 }];
+    plantSeed(s, 0, 'seed_potato', () => {});
+    expect(s.inventory.seed_potato).toBe(2);
+    expect(uprootPlot(s, 0, createRng(1), () => {}).ok).toBe(true);
+    expect(s.plots[0]!.seed).toBeNull();
+    expect(s.inventory.seed_potato).toBe(3);
+  });
+
+  it('Auto-Ernte: „leer lassen" stoppt die Schleife, eine andere Saat wechselt', () => {
+    const s = farm();
+    setLevel(s, 'farming', 99);
+    s.plots = [
+      { seed: null, elapsed: 0 },
+      { seed: null, elapsed: 0 },
+    ];
+    plantSeed(s, 0, 'seed_potato', () => {});
+    plantSeed(s, 1, 'seed_potato', () => {});
+    setPlotNext(s, 0, null);
+    setPlotNext(s, 1, 'seed_wheat');
+    advance(s, 3600, createRng(3), () => {});
+    expect(s.plots[0]!.seed).toBeNull();
+    expect(s.plots[1]!.seed).toBe('seed_wheat');
+    expect(s.stats.harvests).toBeGreaterThanOrEqual(2);
   });
 });
 

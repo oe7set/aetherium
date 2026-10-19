@@ -13,6 +13,8 @@ export function FarmingView() {
   const rate = useGame((s) => growthRate(s.game));
   const plant = useGame((s) => s.plant);
   const harvestPlot = useGame((s) => s.harvestPlot);
+  const uproot = useGame((s) => s.uproot);
+  const setNext = useGame((s) => s.setPlotNext);
   const autoHarvest = useGame((s) => s.game.techs.includes('fertilizer'));
   const [choice, setChoice] = useState<string>('seed_potato');
   useNow(1000);
@@ -23,7 +25,9 @@ export function FarmingView() {
       <p className="muted small">
         Bei der Ernte gibt es Saat zurück und mit etwas Glück eine <b>Mutation</b> zur nächsten
         Sorte.
-        {autoHarvest && ' 🚜 Auto-Ernte aktiv.'}
+        {autoHarvest &&
+          ' 🚜 Auto-Ernte aktiv: pro Beet wählst du, was danach gepflanzt wird (oder leer lassen).'}{' '}
+        Wachsende Pflanzen kannst du ausreißen – die Saat kommt zurück.
       </p>
       <label className="field">
         <span>Saat zum Pflanzen</span>
@@ -64,9 +68,37 @@ export function FarmingView() {
                       Ernten ({getItem(crop.product).icon})
                     </button>
                   ) : (
-                    <small className="muted">
-                      {formatDuration((crop.growTime - p.elapsed) / rate)}
-                    </small>
+                    <>
+                      <small className="muted">
+                        {formatDuration((crop.growTime - p.elapsed) / rate)}
+                      </small>
+                      <button
+                        className="btn btn-ghost small"
+                        onClick={() => uproot(i)}
+                        title="Pflanze ausreißen – die Saat kommt zurück"
+                      >
+                        🪓 Ausreißen
+                      </button>
+                    </>
+                  )}
+                  {autoHarvest && (
+                    <select
+                      className="input plot-next"
+                      aria-label="Nach der Auto-Ernte"
+                      value={p.next === undefined ? 'same' : p.next === null ? 'none' : p.next}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setNext(i, v === 'same' ? undefined : v === 'none' ? null : v);
+                      }}
+                    >
+                      <option value="same">🔁 Danach: gleiche Saat</option>
+                      {CROPS.filter((c) => c.seed !== p.seed && level >= c.level).map((c) => (
+                        <option key={c.seed} value={c.seed}>
+                          ➡️ Danach: {c.icon} {c.name} (×{inventory[c.seed] ?? 0})
+                        </option>
+                      ))}
+                      <option value="none">⏹ Danach: leer lassen</option>
+                    </select>
                   )}
                 </>
               ) : (

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.41.0] – Beete & Symbole
+
+- Fehler behoben: In der Skill-Liste verschwanden am Handy beim Scrollen manchmal die Symbole (Schatten-Filter auf Emojis erzeugte eigene Grafik-Ebenen, die der Browser beim Scrollen verwarf – jetzt Text-Schatten).
+- Landwirtschaft: Wachsende Pflanzen lassen sich ausreißen (die Saat kommt zurück) und das Beet neu bepflanzen.
+- Auto-Ernte steuerbar: pro Beet wählst du, was danach gepflanzt wird – gleiche Saat, eine andere Saat oder leer lassen. Keine Endlosschleife mehr, die man nicht ändern kann.
+
 ## [1.40.0] – Periodensystem mit Sinn
 
 - Periodensystem mit Sinn: Die 118 Elemente sind in 10 chemische Gruppen eingefärbt (Alkalimetalle, Edelgase, Halogene …). Jede vollständige Gruppe gibt einen passenden Dauerbonus – z. B. Edelgase +15 % Forschung, Übergangsmetalle schnelleres Schmieden, Actinoide mehr Schaden im Riss, Lanthanoide mehr Dorfproduktion. Das ganze System gibt zusätzlich +10 % XP.

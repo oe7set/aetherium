@@ -30,6 +30,8 @@ import {
   assignHelper,
   dismissHelper,
   harvest,
+  setPlotNext,
+  uprootPlot,
   hireHelper,
   plantSeed,
   researchTech,
@@ -178,6 +180,8 @@ export interface GameStore {
   research: (tech: string) => void;
   plant: (plot: number, seed: string) => void;
   harvestPlot: (plot: number) => void;
+  uproot: (plot: number) => void;
+  setPlotNext: (plot: number, next: string | null | undefined) => void;
   hire: (type: string) => void;
   assign: (helper: number, actionId: string | null) => void;
   dismissHelperAt: (helper: number) => void;
@@ -488,6 +492,14 @@ export const useGame = create<GameStore>()((set, get) => {
     harvestPlot: (plot) =>
       mutate((s, emit) => {
         harvest(s, plot, defaultRng, emit);
+      }),
+    uproot: (plot) =>
+      mutate((s, emit) => {
+        uprootPlot(s, plot, defaultRng, emit);
+      }),
+    setPlotNext: (plot, next) =>
+      mutate((s) => {
+        setPlotNext(s, plot, next);
       }),
     hire: (type) => {
       let res = { ok: true } as HelperResult;

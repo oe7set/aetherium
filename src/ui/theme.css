@@ -410,11 +410,13 @@ h3,
   }
 }
 .item-icon,
+/* Shadow via text-shadow, not filter: filtered emoji in long scroll lists get their own GPU layer,
+   and mobile Chrome drops such layers while scrolling – the icons vanished. */
 .skill-icon,
 .action-icon,
 .monster-icon,
 .tech-icon {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* --- Skill head / hero banners ---------------------------------------------------------------- */
@@ -925,7 +927,7 @@ button.chip {
   font-size: 1.05rem;
 }
 .skill-row.locked .skill-icon {
-  filter: grayscale(1) brightness(0.7);
+  opacity: 0.55;
 }
 .skill-row .skill-level {
   display: grid;
@@ -2045,4 +2047,10 @@ button.item-pill.link .pill-go {
   .periodic .element b {
     font-size: 0.5625rem;
   }
+}
+.plot .plot-next {
+  width: 100%;
+  min-height: 30px;
+  padding: 2px 6px;
+  font-size: 0.6875rem;
 }

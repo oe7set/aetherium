@@ -81,6 +81,11 @@ export interface PlotState {
   seed: string | null;
   /** Growth seconds accumulated (already scaled by growth speed). */
   elapsed: number;
+  /**
+   * What auto-harvest plants afterwards: undefined = the same seed again, null = leave empty,
+   * a seed id = switch to that seed.
+   */
+  next?: string | null;
 }
 
 export interface HelperState {

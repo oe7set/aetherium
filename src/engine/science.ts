@@ -217,6 +217,28 @@ export function harvest(s: GameState, index: number, rng: Rng, emit: Emit): Farm
   return { ok: true };
 }
 
+/**
+ * Pulls up a growing plant: the seed comes back (nothing is lost for changing your mind),
+ * the plot is free again. A ripe plant is harvested instead.
+ */
+export function uprootPlot(s: GameState, index: number, rng: Rng, emit: Emit): FarmResult {
+  const plot = s.plots[index];
+  if (!plot?.seed) return { ok: false, reason: 'noSeed' };
+  if (plotReady(s, index)) return harvest(s, index, rng, emit);
+  gainItem(s, plot.seed, 1, emit);
+  plot.seed = null;
+  plot.elapsed = 0;
+  return { ok: true };
+}
+
+/** Auto-harvest follow-up for one plot: same seed (undefined), another seed, or nothing (null). */
+export function setPlotNext(s: GameState, index: number, next: string | null | undefined): void {
+  const plot = s.plots[index];
+  if (!plot) return;
+  if (next === undefined) delete plot.next;
+  else if (next === null || CROP_MAP.has(next)) plot.next = next;
+}
+
 registerTimeEffect('farming', {
   next: (s) => {
     if (techUnlockCount(s, 'autoHarvest') <= 0) return Infinity;
@@ -235,9 +257,9 @@ registerTimeEffect('farming', {
     if (techUnlockCount(s, 'autoHarvest') <= 0) return;
     s.plots.forEach((p, i) => {
       if (!p.seed || !plotReady(s, i)) return;
-      const seed = p.seed;
+      const seed = p.next === undefined ? p.seed : p.next;
       harvest(s, i, rng, emit);
-      plantSeed(s, i, seed, emit);
+      if (seed) plantSeed(s, i, seed, emit);
     });
   },
 });

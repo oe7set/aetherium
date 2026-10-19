@@ -599,11 +599,15 @@ function hydratePrestige(v: unknown, fallback: PrestigeState): PrestigeState {
 
 function hydratePlots(v: unknown, fallback: GameState['plots']): GameState['plots'] {
   if (!Array.isArray(v) || v.length === 0) return fallback;
-  return v.map((p) =>
-    isRecord(p) && typeof p.seed === 'string' && CROP_MAP.has(p.seed)
-      ? { seed: p.seed, elapsed: typeof p.elapsed === 'number' ? p.elapsed : 0 }
-      : { seed: null, elapsed: 0 },
-  );
+  return v.map((p) => {
+    const plot: GameState['plots'][number] =
+      isRecord(p) && typeof p.seed === 'string' && CROP_MAP.has(p.seed)
+        ? { seed: p.seed, elapsed: typeof p.elapsed === 'number' ? p.elapsed : 0 }
+        : { seed: null, elapsed: 0 };
+    if (isRecord(p) && p.next === null) plot.next = null;
+    else if (isRecord(p) && typeof p.next === 'string' && CROP_MAP.has(p.next)) plot.next = p.next;
+    return plot;
+  });
 }
 
 function hydrateCombat(v: unknown): CombatState | null {
