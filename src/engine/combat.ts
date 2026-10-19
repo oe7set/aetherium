@@ -17,7 +17,7 @@ import {
   SPELLS,
   type SpellDef,
 } from '../data/spells';
-import type { CombatStyle, EquipDef, EquipSlot } from '../data/types';
+import type { CombatStyle, EquipDef, EquipSlot, SpellElement } from '../data/types';
 import {
   EPS,
   gainItem,
@@ -46,7 +46,6 @@ export const RESPAWN_SECONDS = 1.5;
 /** Seconds per regenerated hit point. */
 export const HP_REGEN_SECONDS = 10;
 const UNARMED: EquipDef = { slot: 'weapon', style: 'melee', speed: 2.4, attack: 0, strength: 0 };
-const RUNE_ITEM = 'rune_basic';
 
 registerModifierSource('equipment', (s) =>
   Object.entries(s.equipment)
@@ -92,10 +91,7 @@ export interface PlayerCombatStats {
 // --- Spells -------------------------------------------------------------------------------------
 
 function hasReagents(s: GameState, sp: SpellDef): boolean {
-  return (
-    itemCount(s, RUNE_ITEM) >= sp.runes &&
-    (!sp.catalyst || itemCount(s, sp.catalyst.item) >= sp.catalyst.qty)
-  );
+  return sp.cost.every((c) => itemCount(s, c.item) >= c.qty);
 }
 
 export function spellUnlocked(s: GameState, sp: SpellDef): boolean {
@@ -110,18 +106,36 @@ export function castSpell(s: GameState): SpellDef | null {
   return hasReagents(s, spark) ? spark : null;
 }
 
-/** 'weak' / 'resist' when the spell's element meets a monster affinity. */
-export function spellAffinity(sp: SpellDef | null, monster: string): 'weak' | 'resist' | null {
-  if (!sp) return null;
+/** 'weak' / 'resist' when an element meets a monster affinity. */
+export function elementAffinity(
+  el: SpellElement | undefined,
+  monster: string,
+): 'weak' | 'resist' | null {
+  if (!el) return null;
   const aff = MONSTER_ELEMENTS[monster];
-  if (aff?.weak === sp.element) return 'weak';
-  if (aff?.resist === sp.element) return 'resist';
+  if (aff?.weak === el) return 'weak';
+  if (aff?.resist === el) return 'resist';
   return null;
 }
 
-function elementMult(sp: SpellDef | null | undefined, monster: string): number {
-  const aff = spellAffinity(sp ?? null, monster);
-  return aff === 'weak' ? ELEMENT_WEAK : aff === 'resist' ? ELEMENT_RESIST : 1;
+export function spellAffinity(sp: SpellDef | null, monster: string): 'weak' | 'resist' | null {
+  return elementAffinity(sp?.element, monster);
+}
+
+/** Element of the current attack: the spell for magic, enchanted ammo for ranged. */
+export function attackElement(s: GameState): SpellElement | undefined {
+  const style = combatStyle(s);
+  if (style === 'magic') return castSpell(s)?.element;
+  if (style === 'ranged' && s.equipment.ammo) return getItem(s.equipment.ammo).equip?.element;
+  return undefined;
+}
+
+/** Affinity multiplier plus gear bonuses for that element ('combat.element.<el>'). */
+function elementMult(s: GameState, el: SpellElement | undefined, monster: string): number {
+  if (!el) return 1;
+  const aff = elementAffinity(el, monster);
+  const base = aff === 'weak' ? ELEMENT_WEAK : aff === 'resist' ? ELEMENT_RESIST : 1;
+  return base * (1 + mod(s, `combat.element.${el}`));
 }
 
 export function playerStats(s: GameState): PlayerCombatStats {
@@ -184,7 +198,7 @@ export function combatLevel(s: GameState): number {
 /** Rough kills per hour estimate for the UI (ignores eating and deaths). */
 export function estimateKillTime(s: GameState, m: MonsterDef): number {
   const st = playerStats(s);
-  const elem = st.style === 'magic' ? elementMult(castSpell(s), m.id) : 1;
+  const elem = elementMult(s, attackElement(s), m.id);
   const dps = (playerHitChance(s, m) * ((1 + st.maxHit * elem) / 2)) / st.speed;
   return dps > 0 ? m.hp / dps + RESPAWN_SECONDS : Infinity;
 }
@@ -473,8 +487,7 @@ function payShot(s: GameState, rng: Rng, style: CombatStyle): SpellDef | null {
   if (!spell) return null;
   const save = mod(s, 'combat.runeSave');
   if (save <= 0 || rng() >= save) {
-    removeItem(s, RUNE_ITEM, spell.runes);
-    if (spell.catalyst) removeItem(s, spell.catalyst.item, spell.catalyst.qty);
+    for (const c of spell.cost) removeItem(s, c.item, c.qty);
   }
   return spell;
 }
@@ -491,19 +504,24 @@ function landHit(
   raw: number,
   rng: Rng,
   emit: Emit,
-  opts: { spell?: SpellDef | null; special?: boolean; heal?: number } = {},
+  opts: {
+    spell?: SpellDef | null;
+    special?: boolean;
+    heal?: number;
+    /** Element of enchanted ammo (ranged). */
+    element?: SpellElement;
+  } = {},
 ): void {
-  const damage = Math.max(
-    1,
-    Math.min(c.monsterHp, Math.round(raw * elementMult(opts.spell, m.id))),
-  );
+  const el = opts.spell?.element ?? opts.element;
+  const damage = Math.max(1, Math.min(c.monsterHp, Math.round(raw * elementMult(s, el, m.id))));
   c.monsterHp -= damage;
   addStat(s, 'damageDealt', damage);
   emit({ type: 'hit', target: 'monster', damage, special: opts.special });
   grantCombatXp(s, damage, emit, (opts.spell?.xp ?? 1) * (opts.special ? SPECIAL_XP : 1));
-  const heal = damage * ((opts.spell?.drain ?? 0) + (opts.heal ?? 0));
+  const ammoFx = opts.element ? AMMO_EFFECTS[opts.element] : undefined;
+  const heal = damage * ((opts.spell?.drain ?? 0) + (opts.heal ?? 0) + (ammoFx?.drain ?? 0));
   if (heal > 0) s.hp = Math.min(maxHp(s), s.hp + heal);
-  const freeze = opts.spell?.freeze;
+  const freeze = opts.spell?.freeze ?? ammoFx?.freeze;
   if (freeze && rng() < freeze.chance) c.monsterTimer += freeze.seconds;
   if (m.phases) {
     const frac = c.monsterHp / m.hp;
@@ -518,6 +536,14 @@ function landHit(
   }
   if (c.monsterHp <= 0) killMonster(s, c, m, rng, emit, opts.special ? 1 + SPECIAL_KILL_GOLD : 1);
 }
+
+/** Side effects of enchanted arrows (spells carry their own). */
+const AMMO_EFFECTS: Partial<
+  Record<SpellElement, { freeze?: { chance: number; seconds: number }; drain?: number }>
+> = {
+  frost: { freeze: { chance: 0.1, seconds: 1 } },
+  shadow: { drain: 0.1 },
+};
 
 /** Fraction of monster damage that gets through a matching protection prayer. */
 export const PROTECT_FACTOR = 0.5;
@@ -544,6 +570,8 @@ function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void 
   const m = getMonster(c.monster);
   const st = playerStats(s);
   c.playerTimer += st.speed;
+  // Read before paying: the last arrow of a stack still carries its element.
+  const ammoElement = s.equipment.ammo ? getItem(s.equipment.ammo).equip?.element : undefined;
   const spell = payShot(s, rng, st.style);
   if (rng() >= playerHitChance(s, m, c.phase)) {
     gainEnergy(s, c, SPECIAL_GAIN_MISS);
@@ -551,7 +579,8 @@ function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void 
     return;
   }
   gainEnergy(s, c, SPECIAL_GAIN_HIT);
-  landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { spell });
+  const element = st.style === 'ranged' ? ammoElement : undefined;
+  landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { spell, element });
 }
 
 export type SpecialResult = 'ok' | 'noCombat' | 'notReady' | 'noAmmo';
@@ -576,9 +605,10 @@ export function specialAttack(s: GameState, rng: Rng, emit: Emit): SpecialResult
     const chance = Math.min(1, playerHitChance(s, m, c.phase) * 1.4);
     for (let shot = 0; shot < 2 && c.monsterHp > 0; shot++) {
       if (shot > 0 && missingAmmo(s)) break;
+      const element = s.equipment.ammo ? getItem(s.equipment.ammo).equip?.element : undefined;
       payShot(s, rng, 'ranged');
       if (rng() < chance)
-        landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { special: true });
+        landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { special: true, element });
       else emit({ type: 'hit', target: 'monster', damage: 0 });
     }
   } else {

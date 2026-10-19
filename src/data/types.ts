@@ -89,6 +89,7 @@ export type EquipSlot =
   | 'amulet'
   | 'ammo';
 export type CombatStyle = 'melee' | 'ranged' | 'magic';
+export type SpellElement = 'arcane' | 'frost' | 'fire' | 'shadow' | 'lightning' | 'void';
 
 export interface EquipDef {
   slot: EquipSlot;
@@ -103,6 +104,8 @@ export interface EquipDef {
   defence?: number;
   /** Extra modifiers while equipped. */
   mods?: ModifierSet;
+  /** Element of enchanted ammo (uses the spell weaknesses/resistances). */
+  element?: SpellElement;
 }
 
 export interface AchievementCondition {

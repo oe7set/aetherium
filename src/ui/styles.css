@@ -2449,3 +2449,17 @@ button.chip {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.rune-pouch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.rune-pouch .chip-btn.weak {
+  border-color: #7be495;
+}
+.rune-pouch .chip-btn.resist {
+  opacity: 0.6;
+}
+.spell small .warn {
+  color: #ff7b7b;
+}

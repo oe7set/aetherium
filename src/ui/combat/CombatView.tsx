@@ -7,15 +7,18 @@ import {
   SPECIAL_COST,
   SPECIALS,
   SPELLS,
+  SPELL_MAP,
   ELEMENT_INFO,
   MONSTER_ELEMENTS,
   heavyEvery,
   type MonsterDef,
+  type SpellElement,
 } from '../../data';
 import {
   activePrayers,
   applyLoadout,
   castSpell,
+  elementAffinity,
   maxPrayer,
   protectsFrom,
   saveLoadout,
@@ -33,54 +36,79 @@ import {
   skillLevel,
 } from '../../engine';
 import { PRAYER_SLOTS, PRAYERS, monsterStyle } from '../../data/prayers';
+import { ELEMENT_RUNES } from '../../data/spells';
+
+const COST_ITEMS = [...new Set(SPELLS.flatMap((sp) => sp.cost.map((c) => c.item)))];
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 
 const STYLE_LABEL = { melee: '⚔️ Nahkampf', ranged: '🏹 Fernkampf', magic: '🪄 Magie' } as const;
 
-/** Spell book for the magic style: pick what the staff casts; locked/empty spells are greyed. */
+const ELEMENT_ORDER: SpellElement[] = ['arcane', 'fire', 'frost', 'lightning', 'shadow', 'void'];
+
+/** Spell book for the magic style: four tiers per element; costs and weaknesses at a glance. */
 function SpellPicker() {
   const chosen = useGame((s) => s.game.combatSettings.spell);
   const magic = useGame((s) => skillLevel(s.game, 'magic'));
   const casting = useGame((s) => castSpell(s.game)?.id ?? '');
-  const runes = useGame((s) => s.game.inventory.rune_basic ?? 0);
-  const reagentKey = useGame((s) =>
-    SPELLS.map((sp) => (sp.catalyst ? (s.game.inventory[sp.catalyst.item] ?? 0) : 0)).join(','),
-  );
+  // Counts of every item any spell needs, as one primitive string.
+  const haveKey = useGame((s) => COST_ITEMS.map((id) => s.game.inventory[id] ?? 0).join(','));
   const setCombatSetting = useGame((s) => s.setCombatSetting);
   const target = useGame((s) => s.game.combat?.monster ?? null);
+  const [el, setEl] = useState<SpellElement>(() => SPELL_MAP.get(chosen)?.element ?? 'arcane');
   const { int } = useFmt();
-  const reagents = reagentKey.split(',').map(Number);
+  const have = new Map(COST_ITEMS.map((id, i) => [id, Number(haveKey.split(',')[i] ?? 0)]));
   return (
     <div className="spell-book">
       <small className="muted">
-        📖 Zauberbuch · 🔣 {int(runes)} Runen
+        📖 Zauberbuch
         {casting && casting !== chosen && ' · Zutaten fehlen, es wird ein Funke gewirkt'}
       </small>
+      <div className="rune-pouch">
+        {ELEMENT_ORDER.map((e) => {
+          const rune = ELEMENT_RUNES[e];
+          const aff = target ? elementAffinity(e, target) : null;
+          return (
+            <button
+              key={e}
+              className={`chip-btn ${el === e ? 'active' : ''} ${aff ?? ''}`}
+              onClick={() => setEl(e)}
+              title={`${ELEMENT_INFO[e].name}${aff === 'weak' ? ' – Gegner ist anfällig!' : aff === 'resist' ? ' – Gegner ist resistent' : ''}`}
+            >
+              {ELEMENT_INFO[e].icon} {int(have.get(rune) ?? 0)}
+            </button>
+          );
+        })}
+      </div>
       <div className="spell-list">
-        {SPELLS.map((sp, i) => {
+        {SPELLS.filter((sp) => sp.element === el).map((sp) => {
           const locked = magic < sp.level;
-          const have = reagents[i] ?? 0;
+          const aff = target && !locked ? spellAffinity(sp, target) : null;
           return (
             <button
               key={sp.id}
               className={`spell ${chosen === sp.id ? 'active' : ''} ${locked ? 'locked' : ''}`}
               disabled={locked}
               onClick={() => setCombatSetting('spell', sp.id)}
-              title={sp.desc}
+              title={`${sp.desc} · Schaden ×${sp.damage.toLocaleString('de-DE')}`}
             >
               <span className="spell-icon">{locked ? '🔒' : sp.icon}</span>
-              {target && !locked && spellAffinity(sp, target) && (
-                <span className={`spell-aff ${spellAffinity(sp, target)}`}>
-                  {spellAffinity(sp, target) === 'weak' ? 'effektiv' : 'schwach'}
+              {aff && (
+                <span className={`spell-aff ${aff}`}>
+                  {aff === 'weak' ? 'effektiv' : 'schwach'}
                 </span>
               )}
               <strong>{sp.name}</strong>
               <small>
                 {locked
                   ? `Magie ${sp.level}`
-                  : `🔣${sp.runes}${sp.catalyst ? ` + ${getItem(sp.catalyst.item).icon}${sp.catalyst.qty} (${int(have)})` : ''}`}
+                  : sp.cost.map((c) => (
+                      <span key={c.item} className={(have.get(c.item) ?? 0) < c.qty ? 'warn' : ''}>
+                        {getItem(c.item).icon}
+                        {c.qty}{' '}
+                      </span>
+                    ))}
               </small>
             </button>
           );

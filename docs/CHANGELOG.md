@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.49.0] – Magie 2.0: Element-Runen
+
+- **Magie 2.0** (Phase 12): 24 Zauber – sechs Elemente (Arkan, Feuer, Frost, Blitz, Schatten, Leere) mit je vier Stufen (Stoß, Bolzen, Explosion, Welle). Feuer macht mehr Schaden, Frost friert ein, Blitz trifft sicherer, Schatten heilt, Leere ist roh und gewaltig.
+- **Element-Runen** 🔥❄️⚡🌑🌀 aus der Verzauberung: Runenessenz + Kohle, Minze, Federn, Asche oder Leerensplitter. Feuer- und Frostrunen gibt es auch beim Krämer. Zauber kosten jetzt eine Grundrune plus Element-Runen (die stärksten zusätzlich Katalysatoren).
+- **Element-Pfeile**: Feuer-, Eis-, Sturm-, Schatten- und Leerenpfeile – sie nutzen dieselben Anfälligkeiten wie Zauber; Eispfeile frieren ein, Schattenpfeile stehlen Leben.
+- **Element-Stäbe**: Feuer-, Frost-, Sturm-, Schatten- und Leerenstab (+15–20 % Schaden ihres Elements).
+- Zauberbuch nach Elementen sortiert: Runenvorrat auf einen Blick, grün markiert, wogegen der aktuelle Gegner anfällig ist; fehlende Runen rot.
+
 ## [1.48.0] – Kampf 2.0: Gebete & Loadouts
 
 Start des **Masterplans 3.0** (`docs/PLAN-3.md`): Kampf 2.0 und sechs neue Skills, in Phasen.

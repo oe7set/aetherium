@@ -1,5 +1,6 @@
 import { CRAFTING_ACTIONS } from './crafting';
 import { DEVOTION_ACTIONS } from './devotion';
+import { RUNE_ACTIONS } from './runes';
 import { EXPANSION_ACTIONS } from './expansion';
 import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
 import { SCIENCE_ACTIONS } from './science';
@@ -497,4 +498,5 @@ export const ACTIONS: ActionDef[] = [
   ...SCIENCE_ACTIONS,
   ...EXPANSION_ACTIONS,
   ...DEVOTION_ACTIONS,
+  ...RUNE_ACTIONS,
 ];

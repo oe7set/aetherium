@@ -32,17 +32,17 @@ describe('Zauber', () => {
     const spark = playerStats(s).maxHit;
     s.combatSettings.spell = 'fireball';
     expect(castSpell(s)?.id).toBe('spark');
-    s.inventory.coal = 10;
+    s.inventory.rune_fire = 10;
     expect(castSpell(s)?.id).toBe('fireball');
     expect(playerStats(s).maxHit).toBeGreaterThan(spark);
   });
 
-  it('Feuerball verbraucht Runen und Kohle', () => {
-    const s = mage({ rune_basic: 50, coal: 5, cooked_shark: 50 });
+  it('Feuerball verbraucht Grund- und Feuerrunen', () => {
+    const s = mage({ rune_basic: 50, rune_fire: 20, cooked_shark: 50 });
     s.combatSettings.spell = 'fireball';
     startCombat(s, 'monster', 'cow', () => {});
     advance(s, 8, createRng(1), () => {});
-    expect(s.inventory.coal ?? 0).toBeLessThan(5);
+    expect(s.inventory.rune_fire ?? 0).toBeLessThan(20);
     expect(s.inventory.rune_basic ?? 0).toBeLessThan(50);
   });
 
@@ -53,7 +53,7 @@ describe('Zauber', () => {
   });
 
   it('Lebensraub heilt beim Treffen', () => {
-    const s = mage({ rune_basic: 500, ectoplasm: 200 });
+    const s = mage({ rune_basic: 500, rune_shadow: 500, ectoplasm: 200 });
     s.combatSettings.spell = 'life_drain';
     s.combatSettings.autoEat = 0;
     startCombat(s, 'monster', 'wolf', () => {});
@@ -168,7 +168,7 @@ describe('Elemente und Wuchtschläge', () => {
     expect(spellAffinity(SPELL_MAP.get('frost_lance')!, 'fire_elemental')).toBe('weak');
     expect(spellAffinity(SPELL_MAP.get('fireball')!, 'fire_elemental')).toBe('resist');
     expect(spellAffinity(SPELL_MAP.get('spark')!, 'chicken')).toBeNull();
-    const s = mage({ rune_basic: 100, coal: 10 });
+    const s = mage({ rune_basic: 100, rune_fire: 100, rune_frost: 100 });
     const m = getMonster('fire_elemental');
     s.combatSettings.spell = 'frost_lance';
     const frost = estimateKillTime(s, m);
@@ -196,5 +196,42 @@ describe('Elemente und Wuchtschläge', () => {
     expect(s.stats.dodges).toBe(1);
     expect(s.hp).toBeGreaterThanOrEqual(hp);
     expect(s.combat!.energy).toBeGreaterThan(energy);
+  });
+});
+
+describe('Magie 2.0: Runen, Element-Pfeile, Element-Stäbe', () => {
+  it('jedes Element hat vier Stufen, Zauber kosten Element-Runen', async () => {
+    const { SPELLS, ELEMENT_RUNES } = await import('../src/data/spells');
+    for (const el of Object.keys(ELEMENT_RUNES)) {
+      const list = SPELLS.filter((sp) => sp.element === el);
+      expect(list.map((sp) => sp.tier).sort()).toEqual([0, 1, 2, 3]);
+      for (const sp of list) {
+        expect(sp.cost[0]!.item).toBe('rune_basic');
+        if (el !== 'arcane')
+          expect(sp.cost.some((c) => c.item === ELEMENT_RUNES[el as 'fire'])).toBe(true);
+      }
+    }
+  });
+
+  it('Element-Pfeile nutzen Anfälligkeiten', () => {
+    const shoot = (ammo: string) => {
+      const s = gameWith({ inventory: { bow_oak: 1, [ammo]: 2000, cooked_shark: 500 } });
+      for (const sk of ['ranged', 'defence', 'hitpoints']) setLevel(s, sk, 70);
+      s.hp = 70;
+      equipItem(s, 'bow_oak');
+      equipItem(s, ammo);
+      return estimateKillTime(s, getMonster('fire_elemental'));
+    };
+    // Frost arrows: weakness (+35 %) beats the slightly stronger fire arrows (resisted).
+    expect(shoot('arrow_frost')).toBeLessThan(shoot('arrow_fire'));
+  });
+
+  it('Element-Stäbe verstärken ihr Element', () => {
+    const s = mage({ rune_basic: 100, rune_fire: 100, staff_fire: 1 });
+    s.combatSettings.spell = 'fire_strike';
+    const m = getMonster('wolf');
+    const plain = estimateKillTime(s, m);
+    expect(equipItem(s, 'staff_fire').ok).toBe(true);
+    expect(estimateKillTime(s, m)).toBeLessThan(plain);
   });
 });
