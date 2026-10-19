@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.60.0] – Hohe Runen & Magie-Werkstatt
+
+- **Hohe Runen** (Phase 21, Verzauberung): 🌪️ Chaosrune (aus Goldtalismanen), 💀 Todesrune (große Knochen), 🩸 Blutrune (Basiliskenschuppen), 👻 Seelenrune (Seelensplitter).
+- **Hilfszauber im Kampf** – optional per Knopf, mit Abklingzeit: Schwächen (Gegner −25 % Verteidigung), Fluch (Gegner −25 % Schaden), Blutpakt (35 % Heilung), Seelenschild (blockt 3 Treffer).
+- **Magie-Werkstatt** (Skill Magie antippen): Magie-XP ohne Kampf – **Hochalchemie** verwandelt Barren, Saphire und Möbel in Gold (×1,6 Verkaufspreis), und **Schmuck verzaubern** macht aus Ringen und Amuletten stärkere Versionen: Verzauberter Topasring, Amulett des Waldläufers, des Erzmagiers, der Raserei und der Ring der Unsterblichkeit.
+- Runenkunde erklärt jetzt auch hohe Runen und die Werkstatt.
+
 ## [1.59.0] – Kampf-Assistent & Runenkunde
 
 Start des **Masterplans 4.0** (`docs/PLAN-4.md`): Klarheit, Tiefe, Vernetzung.

@@ -15,6 +15,7 @@ import {
 import { SPELL_MAP } from '../data/spells';
 import { PRAYER_MAP } from '../data/prayers';
 import { FAMILIAR_MAP } from '../data/summoning';
+import { UTILITY_MAP } from '../data/magic';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
@@ -711,6 +712,14 @@ function hydrateCombat(v: unknown): CombatState | null {
     swings: n(v.swings),
     windup: v.windup === true,
     dodged: v.dodged === true,
+    weaken: n(v.weaken),
+    curse: n(v.curse),
+    shield: n(v.shield),
+    cooldowns: Object.fromEntries(
+      Object.entries(isRecord(v.cooldowns) ? v.cooldowns : {}).filter(
+        ([id, t]) => UTILITY_MAP.has(id) && typeof t === 'number' && t > 0,
+      ),
+    ) as Record<string, number>,
   };
 }
 

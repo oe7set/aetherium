@@ -1,3 +1,4 @@
+import { getItem } from '../data';
 import { THIEVING_PER_LEVEL } from '../data/thieving';
 import type { ActionDef } from '../data/types';
 import { actionXp, registerActionGate, registerCompletionHook } from './actions';
@@ -29,6 +30,12 @@ registerActionGate('thieving', (s, def, rng, emit) => {
   addXp(s, def.skill, actionXp(s, def) * 0.1, emit);
   emit({ type: 'caught', actionId: def.id, damage, stun });
   return false;
+});
+
+// Hochalchemie (Magie-Werkstatt): the consumed item turns into gold.
+registerCompletionHook('alchemy-gold', (s, def, _rng, emit) => {
+  if (!def.alchemy) return;
+  earnGold(s, Math.round(getItem(def.alchemy.item).sellPrice * def.alchemy.mult), emit);
 });
 
 registerCompletionHook('thieving', (s, def, rng, emit) => {

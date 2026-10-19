@@ -1,6 +1,7 @@
 import { DUNGEON_MAP, getItem, getMonster, ITEM_MAP, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
 import { SET_OF, type GearSetDef } from '../data/sets';
+import { UTILITY_MAP } from '../data/magic';
 import { CRIT_MULT } from '../data/thieving';
 import {
   DODGE_ENERGY,
@@ -196,9 +197,13 @@ export function hitChance(attack: number, defence: number): number {
   return attack > defence ? 1 - (defence + 2) / (2 * (attack + 1)) : attack / (2 * (defence + 1));
 }
 
-export function monsterDefenceRating(m: MonsterDef): number {
-  return (m.defence + 9) * 64;
+export function monsterDefenceRating(m: MonsterDef, weakened = false): number {
+  return (m.defence + 9) * 64 * (weakened ? WEAKEN_FACTOR : 1);
 }
+
+/** Utility spells: Schwächen lowers defence, Fluch lowers damage. */
+const WEAKEN_FACTOR = 0.75;
+const CURSE_FACTOR = 0.75;
 
 export function monsterAccuracy(m: MonsterDef): number {
   return (m.attack + 9) * 64;
@@ -214,7 +219,8 @@ export function playerHitChance(s: GameState, m: MonsterDef, phase = 0): number 
   const st = playerStats(s);
   const acc = st.accuracy * (m.weakness === st.style ? 1.25 : 1) * (1 + slayerBonus(s, m.id));
   const evade = m.phases?.[phase]?.evade ?? 0;
-  return hitChance(acc, monsterDefenceRating(m)) * (1 - evade);
+  const weakened = !!s.combat && s.combat.monster === m.id && s.combat.weaken > 0;
+  return hitChance(acc, monsterDefenceRating(m, weakened)) * (1 - evade);
 }
 
 export function monsterHitChance(s: GameState, m: MonsterDef): number {
@@ -567,6 +573,10 @@ export function startCombat(
     swings: 0,
     windup: false,
     dodged: false,
+    weaken: 0,
+    curse: 0,
+    shield: 0,
+    cooldowns: {},
   };
   spawn(s, c);
   s.combat = c;
@@ -823,8 +833,15 @@ function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void
     emit({ type: 'hit', target: 'player', damage: 0 });
     return;
   }
+  if (c.shield > 0) {
+    // Seelenschild swallows the whole hit.
+    c.shield--;
+    emit({ type: 'hit', target: 'player', damage: 0, blocked: true });
+    return;
+  }
   const roll = randInt(rng, 1, m.maxHit + (phase?.maxHitBonus ?? 0));
-  const raw = heavy ? Math.round(roll * HEAVY_DAMAGE) : roll;
+  const cursed = c.curse > 0 ? CURSE_FACTOR : 1;
+  const raw = Math.max(1, Math.round((heavy ? roll * HEAVY_DAMAGE : roll) * cursed));
   // Protection prayers halve the damage of the matching style.
   const damage = protectsFrom(s, monsterStyle(m.id)) ? Math.round(raw * PROTECT_FACTOR) : raw;
   s.hp -= damage;
@@ -838,6 +855,29 @@ function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void
     stopCombat(s, emit, 'died');
     emit({ type: 'playerDied', monster: m.id });
   }
+}
+
+export type UtilityResult = 'ok' | 'noCombat' | 'level' | 'cooldown' | 'runes' | 'unknown';
+
+/** Hilfszauber (Schwächen, Fluch, Blutpakt, Seelenschild): manual, cost high runes. */
+export function castUtility(s: GameState, id: string, emit: Emit): UtilityResult {
+  const c = s.combat;
+  const def = UTILITY_MAP.get(id);
+  if (!def) return 'unknown';
+  if (!c || c.monsterHp <= 0) return 'noCombat';
+  if (skillLevel(s, 'magic') < def.level) return 'level';
+  if ((c.cooldowns[id] ?? 0) > 0) return 'cooldown';
+  if (def.cost.some((x) => itemCount(s, x.item) < x.qty)) return 'runes';
+  for (const x of def.cost) removeItem(s, x.item, x.qty);
+  if (id === 'weaken') c.weaken = def.amount;
+  else if (id === 'curse') c.curse = def.amount;
+  else if (id === 'soul_shield') c.shield = def.amount;
+  else if (id === 'blood_pact') s.hp = Math.min(maxHp(s), s.hp + maxHp(s) * def.amount);
+  c.cooldowns = { ...c.cooldowns, [id]: def.cooldown };
+  addStat(s, 'utilityCasts');
+  addXp(s, 'magic', 20 + def.level * 2, emit);
+  emit({ type: 'utilityCast', spell: id });
+  return 'ok';
 }
 
 /** Optional active play: dodge a telegraphed heavy attack. */
@@ -868,6 +908,13 @@ registerRunnerFactory('combat', (s, rng, emit) => {
         else {
           c.playerTimer -= dt;
           c.monsterTimer -= dt;
+        }
+        if (c.weaken > 0) c.weaken = Math.max(0, c.weaken - dt);
+        if (c.curse > 0) c.curse = Math.max(0, c.curse - dt);
+        for (const k in c.cooldowns) {
+          const left = (c.cooldowns[k] ?? 0) - dt;
+          if (left > 0) c.cooldowns[k] = left;
+          else delete c.cooldowns[k];
         }
       },
       ready: () => (dead() ? c.respawn <= EPS : c.playerTimer <= EPS || c.monsterTimer <= EPS),

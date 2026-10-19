@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  actionsForSkill,
   AREAS,
   DUNGEONS,
   getItem,
@@ -18,6 +19,7 @@ import {
   activePrayers,
   applyLoadout,
   castSpell,
+  castUtility,
   elementAffinity,
   equipStyle,
   styleReadiness,
@@ -43,6 +45,8 @@ import { PRAYER_SLOTS, PRAYERS, monsterStyle } from '../../data/prayers';
 import { ELEMENT_RUNES } from '../../data/spells';
 
 const COST_ITEMS = [...new Set(SPELLS.flatMap((sp) => sp.cost.map((c) => c.item)))];
+import { UTILITY_SPELLS } from '../../data/magic';
+import { ActionCard } from '../skills/ActionCard';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
@@ -413,8 +417,92 @@ function RuneGuide() {
           Grundrune endet der Kampf.
         </li>
         <li>Anfällige Gegner (grün markiert) nehmen +35 % Schaden, resistente nur 60 %.</li>
+        <li>
+          <b>Hohe Runen</b> (Verzauberung): 🌪️ Chaos (aus Goldtalismanen), 💀 Tod (große Knochen),
+          🩸 Blut (Basiliskenschuppen), 👻 Seele (Seelensplitter). Sie treiben die{' '}
+          <b>Hilfszauber</b> im Kampf an – Schwächen, Fluch, Blutpakt, Seelenschild – und verzaubern
+          Schmuck in der Magie-Werkstatt.
+        </li>
+        <li>
+          <b>Magie-Werkstatt</b> (Skill Magie antippen): Hochalchemie macht aus Barren und Möbeln
+          Gold und gibt Magie-XP ohne Kampf.
+        </li>
       </ul>
     </details>
+  );
+}
+
+/** Hilfszauber: optional, cast by hand during a fight (cost high runes, have a cooldown). */
+function UtilityBar() {
+  const magic = useGame((s) => skillLevel(s.game, 'magic'));
+  const key = useGame((s) => {
+    const c = s.game.combat;
+    return UTILITY_SPELLS.map((u) => {
+      const cd = Math.ceil(c?.cooldowns[u.id] ?? 0);
+      const afford = u.cost.every((x) => (s.game.inventory[x.item] ?? 0) >= x.qty);
+      return `${cd}:${afford ? 1 : 0}`;
+    }).join('|');
+  });
+  const effects = useGame((s) => {
+    const c = s.game.combat;
+    return c ? `${Math.ceil(c.weaken)}|${Math.ceil(c.curse)}|${c.shield}` : '0|0|0';
+  });
+  const act = useGame((s) => s.combatAct);
+  const unlocked = UTILITY_SPELLS.filter((u) => magic >= u.level);
+  if (!unlocked.length) return null;
+  const states = key.split('|');
+  const [weaken = '0', curse = '0', shield = '0'] = effects.split('|');
+  return (
+    <div className="utility-bar">
+      {UTILITY_SPELLS.map((u, i) => {
+        if (magic < u.level) return null;
+        const [cd = '0', afford = '0'] = (states[i] ?? '').split(':');
+        const cooling = Number(cd) > 0;
+        return (
+          <button
+            key={u.id}
+            className="btn small"
+            disabled={cooling || afford === '0'}
+            title={`${u.name}: ${u.desc} Kosten: ${u.cost.map((x) => `${x.qty}× ${getItem(x.item).name}`).join(', ')}`}
+            onClick={() => act((s, emit) => void castUtility(s, u.id, emit))}
+          >
+            {u.icon} {cooling ? `${cd}s` : u.name}
+          </button>
+        );
+      })}
+      <small className="muted">
+        {Number(weaken) > 0 && `🌪️ geschwächt ${weaken}s `}
+        {Number(curse) > 0 && `💀 verflucht ${curse}s `}
+        {Number(shield) > 0 && `🛡️ Schild ×${shield}`}
+      </small>
+    </div>
+  );
+}
+
+/** Magie-Werkstatt: magic XP away from the arena (Hochalchemie, enchanted jewellery). */
+function MagicWorkshop() {
+  const level = useGame((s) => skillLevel(s.game, 'magic'));
+  const list = actionsForSkill('magic');
+  const groups = new Map<string, typeof list>();
+  for (const a of list) groups.set(a.category ?? '', [...(groups.get(a.category ?? '') ?? []), a]);
+  return (
+    <section className="magic-workshop">
+      <h4 className="group-title">🪄 Magie-Werkstatt (XP ohne Kampf)</h4>
+      {[...groups].map(([cat, acts]) => (
+        <div key={cat}>
+          <small className="muted">{cat}</small>
+          <div className="action-list">
+            {acts
+              .filter(
+                (a, i) => a.levelReq <= level || acts.findIndex((x) => x.levelReq > level) + 1 > i,
+              )
+              .map((a) => (
+                <ActionCard key={a.id} def={a} />
+              ))}
+          </div>
+        </div>
+      ))}
+    </section>
   );
 }
 
@@ -527,6 +615,7 @@ function CurrentFight() {
       <ProgressBar fraction={Math.max(0, combat.monsterHp) / m.hp} color="#e5534b" height={10} />
       {combat.windup && combat.monsterHp > 0 && <DodgeAlert dodged={combat.dodged} name={m.name} />}
       <SpecialBar />
+      <UtilityBar />
       <small className="muted">
         {combat.monsterHp > 0
           ? `${Math.ceil(combat.monsterHp)}/${m.hp} LP`
@@ -644,6 +733,7 @@ export function CombatView({ onBack, skillId }: { onBack?: () => void; skillId?:
       <LoadoutBar />
       <PrayerPanel />
       <CurrentFight />
+      {skillId === 'magic' && <MagicWorkshop />}
       <h4 className="group-title">Gebiete</h4>
       {AREAS.map((a) => (
         <section key={a.id} className="area">

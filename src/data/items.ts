@@ -14,6 +14,7 @@ import { SUMMON_ITEMS } from './summoning';
 import { THIEVING_ITEMS } from './thieving';
 import { CONSTRUCTION_ITEMS } from './construction';
 import { CARTO_ITEMS } from './cartography';
+import { MAGIC_ITEMS } from './magic';
 import { EXPANSION_ITEMS } from './expansion';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
@@ -495,4 +496,5 @@ export const ITEMS: ItemDef[] = [
   ...THIEVING_ITEMS,
   ...CONSTRUCTION_ITEMS,
   ...CARTO_ITEMS,
+  ...MAGIC_ITEMS,
 ];

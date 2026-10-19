@@ -180,6 +180,8 @@ export interface ActionDef {
   /** Seconds of burn time this action adds to the campfire (firemaking). */
   fuelSeconds?: number;
   burn?: BurnDef;
+  /** Hochalchemie: gold for the consumed item (its sell price × mult) instead of outputs. */
+  alchemy?: { item: string; mult: number };
   /** Diebeskunst: chance to get caught (at the level requirement) and what it costs. */
   steal?: { failAtReq: number; stun: number; damage: number; gold: [number, number] };
   desc?: string;

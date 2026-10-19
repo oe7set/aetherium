@@ -38,9 +38,11 @@ export type GameEvent =
       damage: number;
       special?: boolean;
       heavy?: boolean;
+      blocked?: boolean;
     }
   | { type: 'windup'; monster: string }
   | { type: 'prayerEmpty' }
+  | { type: 'utilityCast'; spell: string }
   | { type: 'islandBuilt'; building: string; level: number }
   | { type: 'caught'; actionId: string; damage: number; stun: number }
   | { type: 'familiarSummoned'; familiar: string }

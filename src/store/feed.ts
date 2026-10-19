@@ -36,6 +36,7 @@ import {
 } from '../data/flavor';
 import { SPECIALS } from '../data/spells';
 import { FAMILIAR_MAP } from '../data/summoning';
+import { UTILITY_MAP } from '../data/magic';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -221,6 +222,7 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: e.damage > 0 ? (e.special ? 'rare' : 'xp') : 'bad',
             text: e.damage > 0 ? `${e.special ? '🌟' : '💥'} ${e.damage}` : 'daneben',
           });
+        else if (e.blocked) out.popups.push({ kind: 'item', text: '🛡️ geblockt' });
         else if (e.damage > 0)
           out.popups.push({ kind: 'bad', text: `${e.heavy ? '💢' : '❤️'} −${e.damage}` });
         break;
@@ -311,6 +313,11 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: 'rare',
             text: `🔨 ${b.icon} ${b.name} ${e.level === 1 ? 'errichtet' : `auf Stufe ${e.level} ausgebaut`}!`,
           });
+        break;
+      }
+      case 'utilityCast': {
+        const u = UTILITY_MAP.get(e.spell);
+        if (u) out.popups.push({ kind: 'rare', text: `${u.icon} ${u.name}!` });
         break;
       }
       case 'prayerEmpty':

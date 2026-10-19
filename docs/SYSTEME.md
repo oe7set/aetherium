@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.59.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.60.0**.
 
 ## 1. Der große Kreislauf
 
@@ -77,6 +77,12 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Kampf-Assistent** (Masterplan 4.0, Phase 20; `styleReadiness`/`equipStyle` in `engine/combat.ts`): Checkliste je
 Stil (Waffe, Pfeile, Runen) mit Lösung (anlegen / Krämer / Rezept-Sprung); Runenkunde-Karte in der Kampfansicht.
 Element-Stäbe (`EquipDef.runeSupply`, `suppliedRune`) liefern ihre Rune unbegrenzt (`hasReagents`/`payShot`).
+
+**Magie 3.0** (Phase 21, `data/magic.ts`): hohe Runen (Chaos/Tod/Blut/Seele, Verzauberung aus Talismanen,
+Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwächen −25 % Gegner-Verteidigung,
+Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
+`CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
+(`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
 
 **Kartografie** (Phase 18, `data/cartography.ts`, `engine/cartography.ts`): Pergament (Rindsleder, Krämer) →
 7 Regionskarten (Verkauf, Sammelbuch „Großer Atlas", Expeditions-Einsatz) mit Funden; Expeditionen (lange

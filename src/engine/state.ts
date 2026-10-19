@@ -74,6 +74,12 @@ export interface CombatState {
   windup: boolean;
   /** The player tapped „Ausweichen" during the wind-up. */
   dodged: boolean;
+  /** Utility spells: seconds of Schwächen/Fluch left, Seelenschild hits left. */
+  weaken: number;
+  curse: number;
+  shield: number;
+  /** Utility spell id → cooldown seconds left. */
+  cooldowns: Record<string, number>;
 }
 
 export interface SlayerState {
@@ -627,7 +633,7 @@ export function cloneState(s: GameState): GameState {
     achievements: [...s.achievements],
     buffs: s.buffs.map((b) => ({ ...b })),
     equipment: { ...s.equipment },
-    combat: s.combat ? { ...s.combat } : null,
+    combat: s.combat ? { ...s.combat, cooldowns: { ...s.combat.cooldowns } } : null,
     combatSettings: { ...s.combatSettings },
     prayer: { ...s.prayer, active: [...s.prayer.active] },
     loadouts: s.loadouts.map((l) => ({ ...l, gear: { ...l.gear } })),
