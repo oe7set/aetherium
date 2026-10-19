@@ -153,6 +153,7 @@ function resetRun(s: GameState): void {
     inventions: s.inventions,
     // Slot reinforcement belongs to the player like the gear.
     forge: s.forge,
+    worldBoss: s.worldBoss,
   };
   Object.assign(s, fresh, kept);
 

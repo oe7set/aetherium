@@ -23,6 +23,7 @@ import { GUILD_MAP } from '../data/guilds';
 import { CONSTELLATION_MAP, CONSTELLATION_MAX_RANK } from '../data/astronomy';
 import { INVENTION_MAP, INVENTION_MAX } from '../data/invention';
 import { AFFIX_MAP, FORGE_MAX, FORGE_SLOTS } from '../data/forge';
+import { WORLD_BOSS_MAP } from '../data/worldboss';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -276,6 +277,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     guilds: hydrateGuilds(data.guilds, base.guilds),
     stars: hydrateStars(data.stars),
     forge: hydrateForge(data.forge),
+    worldBoss: hydrateWorldBoss(data.worldBoss, base.worldBoss),
     inventions: Object.fromEntries(
       Object.entries(numberRecord(data.inventions))
         .filter(([id]) => INVENTION_MAP.has(id))
@@ -888,4 +890,43 @@ function hydrateForge(v: unknown): GameState['forge'] {
       )
         affixes[slot] = { key: a.key, value: a.value };
   return { levels, affixes };
+}
+
+function hydrateWorldBoss(v: unknown, fallback: GameState['worldBoss']): GameState['worldBoss'] {
+  if (!isRecord(v)) return { ...fallback };
+  const num = (x: unknown, d = 0) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  let fight: GameState['worldBoss']['fight'] = null;
+  const f = v.fight;
+  if (isRecord(f) && typeof f.boss === 'string' && WORLD_BOSS_MAP.has(f.boss)) {
+    const d = isRecord(f.dmg) ? f.dmg : {};
+    const r = isRecord(f.rates) ? f.rates : {};
+    fight = {
+      boss: f.boss,
+      hp: Math.max(0, num(f.hp)),
+      maxHp: Math.max(1, num(f.maxHp, 1)),
+      left: Math.max(0, num(f.left)),
+      dmg: {
+        island: num(d.island),
+        village: num(d.village),
+        hero: num(d.hero),
+        strike: num(d.strike),
+      },
+      rates: { island: num(r.island), village: num(r.village), hero: num(r.hero) },
+      recalc: Math.max(0, num(f.recalc)),
+      strikeCd: Math.max(0, num(f.strikeCd)),
+    };
+  }
+  const history = (Array.isArray(v.history) ? v.history : []).flatMap((h: unknown) =>
+    isRecord(h) && typeof h.boss === 'string' && WORLD_BOSS_MAP.has(h.boss)
+      ? [{ boss: h.boss, won: h.won === true, damage: num(h.damage), time: num(h.time) }]
+      : [],
+  );
+  return {
+    next: Math.max(0, num(v.next, fallback.next)),
+    fight,
+    kills: Math.max(0, Math.floor(num(v.kills))),
+    bestTime: Math.max(0, num(v.bestTime)),
+    history: history.slice(0, 5),
+    last: null,
+  };
 }

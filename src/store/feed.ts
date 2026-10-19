@@ -40,6 +40,7 @@ import { UTILITY_MAP } from '../data/magic';
 import { RELIC_MAP } from '../data/riftwalker';
 import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
 import { INVENTION_MAP } from '../data/invention';
+import { WORLD_BOSS_MAP } from '../data/worldboss';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -304,6 +305,21 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: 'warn',
             text: `🐾 ${f.icon} ${f.name} ist in die Geisterwelt zurückgekehrt.`,
           });
+        break;
+      }
+      case 'worldBoss': {
+        const b = WORLD_BOSS_MAP.get(e.boss);
+        const name = `${b?.icon ?? '👹'} ${b?.name ?? 'Weltboss'}`;
+        const text =
+          e.event === 'spawn'
+            ? `${name} taucht vor der Insel auf! Insel, Dorf und Held kämpfen – du kannst mitschlagen.`
+            : e.event === 'phase'
+              ? `${name} wird wütend und härter!`
+              : e.event === 'killed'
+                ? `${name} ist besiegt! Beute wartet.`
+                : `${name} zieht sich zurück – ein Teil der Beute bleibt.`;
+        out.feed.push({ kind: e.event === 'killed' ? 'rare' : 'info', text });
+        if (e.event !== 'phase') out.popups.push({ kind: 'rare', text });
         break;
       }
       case 'forged':

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.73.0] – Weltbosse
+
+- **Weltbosse** 👹 (Phase 34): Alle vier Stunden taucht ein Riese vor der Insel auf – Ätherkoloss, Krakenkönigin, Sternenfresser oder Magmatitan – und bleibt eine Stunde, auch wenn du offline bist.
+- **Alle kämpfen mit**: die Inselwehr (deine Kampfwerte und Verstärkungen), die Truppen aller Dörfer und dein Held, wenn er zu Hause ist. Dazu kannst du jede Minute selbst **mitschlagen** – das bringt viel extra.
+- Drei Phasen (der Boss wird zäher), Sieg: Gold, Essenz, Helden-XP, Prägestein, Schutzrune und mit Glück das **legendäre Stück** des Bosses (Kolosshammer, Krone der Krakenkönigin, Sternenschleier, Titanenherz). Jeder Sieg macht den nächsten Boss stärker.
+- Neuer Reiter Held → 👹 Weltboss mit Lebensbalken, Schaden je Quelle und Bilanz; „Was jetzt?" meldet, wenn ein Schlag bereit ist.
+
 ## [1.72.0] – Item-Aufwertung
 
 - **Schmiede-Verstärkung** 🔨 (Phase 33, unter Inventar → Ausrüstung): Jeder Ausrüstungsplatz lässt sich von +1 bis **+10** verstärken – jede Stufe +5 % auf Angriff, Stärke und Verteidigung des Teils, das dort sitzt. Die Verstärkung bleibt beim Wechsel auf bessere Ausrüstung erhalten.

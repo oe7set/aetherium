@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.72.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.73.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Weltbosse** (Phase 34, `data/worldboss.ts`, `engine/worldboss.ts`, `ui/rift/WorldBossView.tsx`): Zeiteffekt
+`worldBoss` – alle 4 h (ab Kampfstufe 10) erscheint einer von 4 Bossen für 60 Minuten, auch offline. Schadensquellen
+pro Sekunde (`worldBossRates`, jede Minute neu): Inselwehr (Max-Treffer/Tempo), Truppen aller Dörfer (Angriff/1000),
+Held zu Hause (Stärke/100); dazu ein manueller Schlag pro Minute (`strikeWorldBoss`). Phasen bei 66/33 % senken den
+Schaden (×0,85/×0,7). Sieg: Gold, Essenz, Helden-XP, Prägestein, Schutzrune (alles über `applyReward`), 12 % auf
+das legendäre Stück des Bosses; Flucht: Trostpreis nach Schaden. HP wachsen mit Kampfstufe und Siegen.
+`s.worldBoss` bleibt über Prestige; Held → 👹 Weltboss, „Was jetzt?" meldet bereite Schläge.
 
 **Item-Aufwertung** (Phase 33, `data/forge.ts`, `engine/forge.ts`, `ui/inventory/ForgePanel.tsx`): Verstärkung pro
 Ausrüstungsplatz (Items sind gestapelt, keine Einzelstücke) in `s.forge.levels`, +0..+10, +5 % auf Angriff/Stärke/

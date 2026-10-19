@@ -1,4 +1,5 @@
 import Decimal from 'break_eternity.js';
+import type { RewardLine } from './progress';
 import { BALANCE } from '../data/balance';
 import { SKILLS } from '../data/skills';
 import { STARTER_TOOLS } from '../data/tools';
@@ -485,6 +486,39 @@ export interface GameState {
     levels: Record<string, number>;
     affixes: Record<string, { key: string; value: number }>;
   };
+  /** Weltbosse (Phase 34). */
+  worldBoss: WorldBossState;
+}
+
+export interface WorldBossFight {
+  boss: string;
+  hp: number;
+  maxHp: number;
+  /** Seconds until the boss leaves. */
+  left: number;
+  dmg: { island: number; village: number; hero: number; strike: number };
+  /** Damage per second of the passive sources (recomputed every minute). */
+  rates: { island: number; village: number; hero: number };
+  recalc: number;
+  strikeCd: number;
+}
+
+export interface WorldBossState {
+  /** Seconds until the next boss (while none is here). */
+  next: number;
+  fight: WorldBossFight | null;
+  kills: number;
+  /** Fastest kill in seconds (0 = none yet). */
+  bestTime: number;
+  history: { boss: string; won: boolean; damage: number; time: number }[];
+  /** Result of the last fight for the UI. */
+  last: {
+    boss: string;
+    won: boolean;
+    damage: number;
+    lines: RewardLine[];
+    unique?: string;
+  } | null;
 }
 
 export interface GuildOrderLine {
@@ -611,6 +645,7 @@ export function newGame(now: number = Date.now()): GameState {
     stars: { ranks: {}, active: [] },
     inventions: {},
     forge: { levels: {}, affixes: {} },
+    worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
   };
 }
 
@@ -744,6 +779,16 @@ export function cloneState(s: GameState): GameState {
     stars: { ranks: { ...s.stars.ranks }, active: [...s.stars.active] },
     inventions: { ...s.inventions },
     forge: { levels: { ...s.forge.levels }, affixes: { ...s.forge.affixes } },
+    worldBoss: {
+      ...s.worldBoss,
+      fight: s.worldBoss.fight
+        ? {
+            ...s.worldBoss.fight,
+            dmg: { ...s.worldBoss.fight.dmg },
+            rates: { ...s.worldBoss.fight.rates },
+          }
+        : null,
+    },
     guilds: {
       ...s.guilds,
       rep: { ...s.guilds.rep },

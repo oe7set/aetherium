@@ -47,10 +47,11 @@ import { createRun } from '../../rift/sim';
 import { useGame } from '../../store/gameStore';
 import { AdventuresView, HeroView } from './HeroView';
 import { RelicsView } from './RelicsView';
+import { WorldBossView } from './WorldBossView';
 import { useRiftRun } from './runStore';
 import './rift.css';
 
-type Segment = 'hero' | 'adventures' | 'start' | 'talents' | 'relics' | 'codex';
+type Segment = 'hero' | 'adventures' | 'start' | 'boss' | 'talents' | 'relics' | 'codex';
 
 export function RiftPanel() {
   // Re-render on meta changes only (a primitive signature keeps the selector stable).
@@ -80,6 +81,7 @@ export function RiftPanel() {
             ['hero', '🦸 Held'],
             ['adventures', '❗ Abenteuer'],
             ['start', '🌀 Riss'],
+            ['boss', '👹 Weltboss'],
             ['talents', '✨ Talente'],
             ['relics', '🏺 Relikte'],
             ['codex', '📖 Kodex'],
@@ -99,6 +101,7 @@ export function RiftPanel() {
       {seg === 'hero' && <HeroView />}
       {seg === 'adventures' && <AdventuresView />}
       {seg === 'start' && <StartView />}
+      {seg === 'boss' && <WorldBossView />}
       {seg === 'talents' && <TalentView />}
       {seg === 'relics' && <RelicsView />}
       {seg === 'codex' && <CodexView />}

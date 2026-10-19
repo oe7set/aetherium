@@ -46,4 +46,5 @@ export * from './astronomy';
 export * from './agility';
 export * from './invention';
 export * from './forge';
+export * from './worldboss';
 export * from './time';

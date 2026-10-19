@@ -139,7 +139,7 @@ export interface UiState {
   selectedItem: string | null;
   menuSection: MenuSection;
   villageSegment: 'fields' | 'center' | 'map' | 'military' | 'market' | 'reports' | 'empire';
-  heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'relics' | 'codex';
+  heroSegment: 'hero' | 'adventures' | 'start' | 'boss' | 'talents' | 'relics' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
   /** Action card to scroll to and highlight in the skill view (recipe jumps). */

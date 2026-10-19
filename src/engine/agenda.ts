@@ -35,7 +35,7 @@ export type AgendaTarget =
   | { area: 'skill'; skill: string }
   | { area: 'inventory'; section: 'items' | 'album' | 'tools' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
-  | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
+  | { area: 'hero'; section: 'hero' | 'adventures' | 'start' | 'boss' }
   | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'guilds' | 'quests' };
 
 export interface AgendaItem {
@@ -187,6 +187,16 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Großer Preis für den ersten Sieg der Woche',
       kind: 'todo',
       target: { area: 'hero', section: 'start' },
+    });
+  const wbf = s.worldBoss.fight;
+  if (wbf)
+    add({
+      id: 'world-boss',
+      icon: '👹',
+      title: wbf.strikeCd > 0 ? 'Weltboss vor der Insel' : 'Weltboss: Schlag bereit!',
+      detail: `${Math.round((wbf.hp / wbf.maxHp) * 100)} % Leben übrig`,
+      kind: wbf.strikeCd > 0 ? 'todo' : 'reward',
+      target: { area: 'hero', section: 'boss' },
     });
   const d = s.rift.daily;
   if (
