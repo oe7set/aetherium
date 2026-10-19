@@ -111,8 +111,24 @@ const METALS: Metal[] = [
 
 /** Precious metal bars (no gear, used for jewellery and enchanting later). */
 const PRECIOUS = [
-  { key: 'silver', name: 'Silberbarren', level: 20, ore: 'ore_silver', xp: 14, price: 30 },
-  { key: 'gold', name: 'Goldbarren', level: 40, ore: 'ore_gold', xp: 23, price: 55 },
+  {
+    key: 'silver',
+    name: 'Silberbarren',
+    level: 20,
+    ore: 'ore_silver',
+    xp: 14,
+    price: 30,
+    color: '#dfe6ee',
+  },
+  {
+    key: 'gold',
+    name: 'Goldbarren',
+    level: 40,
+    ore: 'ore_gold',
+    xp: 23,
+    price: 55,
+    color: '#f2c94c',
+  },
 ];
 
 interface Piece {
@@ -251,6 +267,7 @@ for (const m of METALS) {
     id: bar,
     name: `${m.name}barren`,
     icon: '🧱',
+    art: { kind: 'bar', color: m.color },
     category: 'resource',
     sellPrice: m.barPrice,
     desc: `Ein solider ${m.name}barren. Riecht nach Fortschritt.`,
@@ -309,6 +326,7 @@ for (const p of PRECIOUS) {
     id: `bar_${p.key}`,
     name: p.name,
     icon: '🧱',
+    art: { kind: 'bar', color: p.color },
     category: 'resource',
     sellPrice: p.price,
     desc: 'Edel, glänzend, für Schmuck und Verzauberungen.',

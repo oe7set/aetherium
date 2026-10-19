@@ -2,6 +2,7 @@ import { getItem, ITEM_MAP } from '../../data';
 import { formatDuration, marketMult, trendMult, unitPrice } from '../../engine';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { ItemIcon } from '../ItemIcon';
 
 /** Dynamic market overview: today's trend, depressed prices, best things to sell right now. */
 export function MarketPanel() {
@@ -31,7 +32,9 @@ export function MarketPanel() {
       </p>
       {trend ? (
         <div className={`trend ${trend.mult >= 1 ? 'up' : 'down'}`}>
-          <span className="item-icon">{getItem(trend.item).icon}</span>
+          <span className="item-icon">
+            <ItemIcon id={trend.item} />
+          </span>
           <span>
             <strong>
               {trend.mult >= 1 ? 'Gefragt' : 'Ladenhüter'}: {getItem(trend.item).name}
@@ -61,7 +64,9 @@ export function MarketPanel() {
       <div className="shop-list">
         {sellable.map((e) => (
           <div key={e.id} className="shop-row">
-            <span className="item-icon">{getItem(e.id).icon}</span>
+            <span className="item-icon">
+              <ItemIcon id={e.id} />
+            </span>
             <span className="shop-meta">
               <strong>
                 {getItem(e.id).name} <small className="muted">×{int(e.qty)}</small>

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.42.0] – Erz- und Barren-Symbole
+
+- Neue Symbole für Erze und Barren: Erze sind Gesteinsbrocken mit farbigen Adern (Kupfer, Zinn, Eisen, Kohle, Silber, Gold, Mithril, Adamant, Runit, Uran, Platin), Barren sind glänzende Barren in ihrer Metallfarbe (Bronze, Eisen, Stahl, Mithril, Adamant, Runit, Silber, Gold) – statt lauter gleicher 🧱. Zu sehen im Inventar, in Item-Karten, Aktionskarten, beim Krämer und auf dem Markt.
+
 ## [1.41.0] – Beete & Symbole
 
 - Fehler behoben: In der Skill-Liste verschwanden am Handy beim Scrollen manchmal die Symbole (Schatten-Filter auf Emojis erzeugte eigene Grafik-Ebenen, die der Browser beim Scrollen verwarf – jetzt Text-Schatten).

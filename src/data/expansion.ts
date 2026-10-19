@@ -198,6 +198,7 @@ const gemsHigh: LootEntry[] = [
 ];
 
 interface Ore {
+  art?: ItemDef['art'];
   id: string;
   action: string;
   name: string;
@@ -240,6 +241,7 @@ const ORES: Ore[] = [
     action: 'Platin abbauen',
     name: 'Platinerz',
     icon: '⬜',
+    art: { kind: 'ore', color: '#eef3fa' },
     level: 62,
     time: 5.8,
     xp: 130,
@@ -300,6 +302,7 @@ export const EXPANSION_ITEMS: ItemDef[] = [
     id: o.id,
     name: o.name,
     icon: o.icon,
+    art: o.art,
     category: 'ore',
     sellPrice: o.price,
     desc: o.desc,

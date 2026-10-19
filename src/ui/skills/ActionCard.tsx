@@ -1,4 +1,4 @@
-import { getItem, type ActionDef } from '../../data';
+import { getItem, ITEM_MAP, type ActionDef } from '../../data';
 import { BALANCE } from '../../data/balance';
 import {
   actionDuration,
@@ -19,6 +19,7 @@ import {
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { ItemIcon } from '../ItemIcon';
 import { itemSource } from '../recipes';
 import { Tip } from '../Tip';
 
@@ -31,7 +32,7 @@ function IngredientPill({
 }: {
   item: string;
   ok: boolean;
-  label: string;
+  label: React.ReactNode;
   have: string;
 }) {
   const jump = useGame((s) => s.jumpToAction);
@@ -134,9 +135,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
     );
   }
 
+  // Smelting/mining: show the drawn ore/bar instead of a generic emoji.
+  const artOutput = def.outputs.find((o) => ITEM_MAP.get(o.item)?.art)?.item;
   return (
     <div className={`action-card ${isActive ? 'active' : ''}`} data-action={def.id}>
-      <span className="action-icon">{def.icon}</span>
+      <span className="action-icon">{artOutput ? <ItemIcon id={artOutput} /> : def.icon}</span>
       <div className="action-body">
         <div className="action-title">
           {def.name}
@@ -173,7 +176,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
                   key={i.item}
                   item={i.item}
                   ok={ok}
-                  label={`${it.icon} ${i.qty}× ${it.name}`}
+                  label={
+                    <>
+                      <ItemIcon id={i.item} /> {i.qty}× {it.name}
+                    </>
+                  }
                   have={int(have[idx] ?? 0)}
                 />
               );
@@ -189,7 +196,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
             const it = getItem(o.item);
             return (
               <span key={o.item} className="item-pill">
-                {it.icon} {o.qty}× {it.name}
+                <ItemIcon id={o.item} /> {o.qty}× {it.name}
               </span>
             );
           })}
@@ -202,7 +209,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
               return (
                 <Tip key={d.item} text={`${it.name}: ${it.desc}`}>
                   <span className={`item-pill ${d.rare ? 'rare' : ''}`}>
-                    {it.icon} <span className="pill-name">{it.name}</span>{' '}
+                    <ItemIcon id={d.item} /> <span className="pill-name">{it.name}</span>{' '}
                     <small>{chanceLabel(d.chance)}</small>
                   </span>
                 </Tip>

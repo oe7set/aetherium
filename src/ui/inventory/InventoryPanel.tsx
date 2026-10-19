@@ -12,6 +12,7 @@ import { ItemDetail } from './ItemDetail';
 import { MarketPanel } from './MarketPanel';
 import { ShopPanel } from './ShopPanel';
 import { ToolsPanel } from './ToolsPanel';
+import { ItemIcon } from '../ItemIcon';
 
 type SortKey = 'category' | 'name' | 'qty' | 'value';
 const CATEGORY_ORDER: ItemCategory[] = [
@@ -178,7 +179,9 @@ function ItemsGrid() {
             onClick={() => setUi({ selectedItem: selected === def.id ? null : def.id })}
             title={def.name}
           >
-            <span className="item-icon">{def.icon}</span>
+            <span className="item-icon">
+              <ItemIcon id={def.id} />
+            </span>
             <span className="item-qty">{int(qty)}</span>
           </button>
         ))}

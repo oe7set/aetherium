@@ -5,6 +5,7 @@ import { defaultRng, flavor, formatDuration } from '../engine';
 import { t, type MessageKey } from '../i18n';
 import { useGame } from '../store/gameStore';
 import { useFmt } from './hooks';
+import { ItemIcon } from './ItemIcon';
 
 function ItemList({ items }: { items: Record<string, number> }) {
   const { int } = useFmt();
@@ -14,7 +15,7 @@ function ItemList({ items }: { items: Record<string, number> }) {
         const it = getItem(id);
         return (
           <span key={id} className="item-pill">
-            {it.icon} {int(qty)}× {it.name}
+            <ItemIcon id={it.id} /> {int(qty)}× {it.name}
           </span>
         );
       })}

@@ -2,6 +2,7 @@ import { getItem, SHOP_OFFERS } from '../../data';
 import { t } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { ItemIcon } from '../ItemIcon';
 
 export function ShopPanel() {
   const buy = useGame((s) => s.buy);
@@ -17,7 +18,9 @@ export function ShopPanel() {
           const it = getItem(o.item);
           return (
             <div key={o.item} className="shop-row">
-              <span className="item-icon">{it.icon}</span>
+              <span className="item-icon">
+                <ItemIcon id={it.id} />
+              </span>
               <span className="shop-meta">
                 <strong>{it.name}</strong>
                 <small className="muted">{it.desc}</small>

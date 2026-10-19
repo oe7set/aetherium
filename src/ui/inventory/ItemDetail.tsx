@@ -6,6 +6,7 @@ import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { TouchCard } from '../TouchCard';
+import { ItemIcon } from '../ItemIcon';
 
 function RecipeChips({ label, list }: { label: string; list: ActionDef[] }) {
   const jump = useGame((s) => s.jumpToAction);
@@ -57,7 +58,9 @@ export function ItemDetail({ itemId, onClose }: { itemId: string; onClose: () =>
   return (
     <TouchCard onClose={onClose} className={`item-detail rarity-${def.rarity ?? 'common'}`}>
       <div className="item-detail-head">
-        <span className="item-icon big">{def.icon}</span>
+        <span className="item-icon big">
+          <ItemIcon id={itemId} />
+        </span>
         <div>
           <strong>{def.name}</strong> <span className="muted">×{int(qty)}</span>
           <div className="item-tags">

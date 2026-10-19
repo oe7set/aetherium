@@ -64,6 +64,8 @@ export interface ItemDef {
   rarity?: Rarity;
   /** If set, the item can be used/opened from the inventory. */
   consume?: ConsumeEffect;
+  /** Drawn icon instead of the emoji in item views (ores and bars look alike as emoji). */
+  art?: { kind: 'ore' | 'bar'; color: string };
   /** Hit points restored when eaten in combat. */
   heal?: number;
   /** Equippable gear (Phase 4). */
