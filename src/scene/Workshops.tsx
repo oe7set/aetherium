@@ -147,3 +147,38 @@ export function SummonCircle({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Diebeskunst: two market stalls with striped awnings – tempting targets. */
+export function MarketStalls({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('thieving')!;
+  const stalls: [number, string, string][] = [
+    [-0.6, '#d94a4a', '#f2c94c'],
+    [0.6, '#3f7bd9', '#7be495'],
+  ];
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      {stalls.map(([x, awning, goods]) => (
+        <group key={x} position={[x, 0, 0]}>
+          <mesh position={[0, 0.35, 0]} castShadow>
+            <boxGeometry args={[0.9, 0.7, 0.6]} />
+            <meshStandardMaterial color="#8b6b4a" flatShading />
+          </mesh>
+          <mesh position={[0, 0.75, 0]}>
+            <boxGeometry args={[0.8, 0.12, 0.5]} />
+            <meshStandardMaterial color={goods} />
+          </mesh>
+          {[-0.4, 0.4].map((px) => (
+            <mesh key={px} position={[px, 0.9, -0.25]}>
+              <cylinderGeometry args={[0.03, 0.03, 1.1, 5]} />
+              <meshStandardMaterial color="#5b4030" />
+            </mesh>
+          ))}
+          <mesh position={[0, 1.42, 0]} rotation={[0.35, 0, 0]}>
+            <boxGeometry args={[1.0, 0.05, 0.8]} />
+            <meshStandardMaterial color={awning} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}

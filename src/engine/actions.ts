@@ -103,6 +103,16 @@ export function registerCompletionHook(name: string, fn: CompletionHook): void {
   if (!completionHooks.some((h) => h.name === name)) completionHooks.push({ name, fn });
 }
 
+/**
+ * Gates run after the inputs are paid and may cancel the rewards (Diebeskunst: caught!).
+ * Return false to skip outputs, XP and drops of this completion.
+ */
+type ActionGate = (s: GameState, def: ActionDef, rng: Rng, emit: Emit) => boolean;
+const actionGates: { name: string; fn: ActionGate }[] = [];
+export function registerActionGate(name: string, fn: ActionGate): void {
+  if (!actionGates.some((g) => g.name === name)) actionGates.push({ name, fn });
+}
+
 /** Extra availability checks registered by other modules (tech locks). */
 type AvailabilityCheck = (s: GameState, def: ActionDef) => boolean;
 const availabilityChecks: AvailabilityCheck[] = [];
@@ -204,6 +214,7 @@ const SKILL_STATS: Record<string, string> = {
   brewing: 'drinksBrewed',
   jewelcrafting: 'jewelsCrafted',
   summoning: 'pouchesMade',
+  thieving: 'thefts',
 };
 
 /**
@@ -221,6 +232,7 @@ export function completeAction(
     removeItem(s, input.item, input.qty);
     emit({ type: 'itemConsumed', item: input.item, qty: input.qty });
   }
+  for (const g of actionGates) if (!g.fn(s, def, rng, emit)) return;
 
   const burnt = def.burn ? rng() < burnChance(s, def) : false;
   if (burnt && def.burn) {

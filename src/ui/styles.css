@@ -2233,6 +2233,14 @@ button.chip {
   left: 36%;
   top: 28%;
 }
+.st-thief {
+  left: 60%;
+  top: 30%;
+}
+.character.st-thief {
+  left: 58%;
+  top: 34%;
+}
 .character.st-jewel {
   left: 62%;
   top: 48%;

@@ -178,6 +178,8 @@ export interface ActionDef {
   /** Seconds of burn time this action adds to the campfire (firemaking). */
   fuelSeconds?: number;
   burn?: BurnDef;
+  /** Diebeskunst: chance to get caught (at the level requirement) and what it costs. */
+  steal?: { failAtReq: number; stun: number; damage: number; gold: [number, number] };
   desc?: string;
   /** Sub-group shown in the skill view (e.g. „Barren", „Waffen"). */
   category?: string;

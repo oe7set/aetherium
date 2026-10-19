@@ -1,6 +1,7 @@
 import { DUNGEON_MAP, getItem, getMonster, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
 import { SET_OF, type GearSetDef } from '../data/sets';
+import { CRIT_MULT } from '../data/thieving';
 import {
   DODGE_ENERGY,
   ELEMENT_RESIST,
@@ -539,7 +540,10 @@ function landHit(
   } = {},
 ): void {
   const el = opts.spell?.element ?? opts.element;
-  const mult = elementMult(s, el, m.id) * (1 + slayerBonus(s, m.id));
+  // Diebeskunst sharpens the eye: critical hits.
+  const critChance = mod(s, 'combat.crit');
+  const crit = critChance > 0 && rng() < critChance;
+  const mult = elementMult(s, el, m.id) * (1 + slayerBonus(s, m.id)) * (crit ? CRIT_MULT : 1);
   const damage = Math.max(1, Math.min(c.monsterHp, Math.round(raw * mult)));
   c.monsterHp -= damage;
   addStat(s, 'damageDealt', damage);

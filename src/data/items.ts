@@ -11,6 +11,7 @@ import { JEWEL_ITEMS } from './jewelcrafting';
 import { UNIQUE_ITEMS } from './sets';
 import { SLAYER_ITEMS } from './slayer';
 import { SUMMON_ITEMS } from './summoning';
+import { THIEVING_ITEMS } from './thieving';
 import { EXPANSION_ITEMS } from './expansion';
 
 // Sell prices roughly track the time it takes to get the item (see docs/BALANCING.md).
@@ -489,4 +490,5 @@ export const ITEMS: ItemDef[] = [
   ...UNIQUE_ITEMS,
   ...SLAYER_ITEMS,
   ...SUMMON_ITEMS,
+  ...THIEVING_ITEMS,
 ];

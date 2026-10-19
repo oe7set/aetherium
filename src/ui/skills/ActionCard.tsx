@@ -13,6 +13,7 @@ import {
   masteryProgress,
   masterySpeed,
   skillLevel,
+  stealFailChance,
   toolSpeed,
   xpMultiplierFor,
 } from '../../engine';
@@ -102,7 +103,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const haveKey = useGame((s) => def.inputs.map((i) => s.game.inventory[i.item] ?? 0).join(','));
   const derived = useGame((s) => {
     const g = s.game;
-    return `${actionDuration(g, def)}|${actionXp(g, def)}|${burnChance(g, def)}|${toolSpeed(g, def.skill)}|${xpMultiplierFor(g, def.skill)}`;
+    return `${actionDuration(g, def)}|${actionXp(g, def)}|${burnChance(g, def)}|${toolSpeed(g, def.skill)}|${xpMultiplierFor(g, def.skill)}|${stealFailChance(g, def)}`;
   });
   const masteryKey = useGame((s) => {
     const m = masteryProgress(s.game, def.id);
@@ -112,7 +113,9 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const stop = useGame((s) => s.stop);
   const { num, int } = useFmt();
 
-  const [duration = 1, xp = 0, burn = 0, tool = 1, mult = 1] = derived.split('|').map(Number);
+  const [duration = 1, xp = 0, burn = 0, tool = 1, mult = 1, caught = 0] = derived
+    .split('|')
+    .map(Number);
   const have = haveKey ? haveKey.split(',').map(Number) : [];
   const locked = level < def.levelReq;
   const times = craftableTimes(useGame.getState().game, def.inputs);
@@ -156,6 +159,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
           {def.burn && (
             <span>
               🔥 {t('action.burnChance')} {formatPercent(burn)}
+            </span>
+          )}
+          {def.steal && (
+            <span className={caught > 0.3 ? 'warn' : ''}>
+              🚨 Erwischt {formatPercent(caught)} · 🪙 {def.steal.gold[0]}–{def.steal.gold[1]}
             </span>
           )}
           {def.fuelSeconds && (

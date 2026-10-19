@@ -179,6 +179,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Kiesel sieben, Geoden knacken, Steine veredeln – und daraus Ringe und Amulette für jeden Kampfstil und viele Skills schmieden.',
   },
   {
+    id: 'thieving',
+    name: 'Diebeskunst',
+    icon: '🗝️',
+    color: '#8c9aa8',
+    group: 'gathering',
+    desc: 'Taschen leeren, Stände plündern, Truhen knacken – mit Risiko. Jede Stufe schärft den Blick: kritische Treffer im Kampf und Spione, die das Dorf warnen.',
+  },
+  {
     id: 'summoning',
     name: 'Beschwörung',
     icon: '🐾',

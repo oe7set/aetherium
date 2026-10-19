@@ -300,6 +300,9 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           });
         break;
       }
+      case 'caught':
+        out.popups.push({ kind: 'bad', text: `🚨 Erwischt! −${e.damage} LP` });
+        break;
       case 'prayerEmpty':
         out.feed.push({
           kind: 'warn',

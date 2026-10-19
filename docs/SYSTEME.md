@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.52.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.53.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,12 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Diebeskunst** (Phase 16, `data/thieving.ts`, `engine/thieving.ts`): Aktionen mit `steal` (Fehlschlag-Chance je
+Stufenabstand, `stealth`-Mod senkt sie). Neuer Engine-Hook `registerActionGate` in `completeAction` (läuft nach dem
+Bezahlen, kann Belohnungen abbrechen): erwischt = LP-Verlust, Betäubung (negativer Fortschritt), 10 % XP. Erfolg:
+Gold über Completion-Hook, Beute über `drops`. Passiv je Stufe: `combat.crit` (×1,5 Schaden in `landHit`) und
+`village.defense`. Dietriche (Schmieden), Diebesmaske/Leisetreter als seltene Beute, Marktstände auf der Insel.
 
 **Beschwörung** (Phase 15, `data/summoning.ts`, `engine/summoning.ts`): Talismane (`charmDrops` je Monsterstufe an
 jedes Nicht-Boss-Monster gehängt) + Seelensplitter (Aktion, Ektoplasma, Krämer) + Zutat = Beutel (`consume: familiar`).

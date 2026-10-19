@@ -832,4 +832,5 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
     base: 15,
     icon: '🐾',
   },
+  { id: 'thefts', label: 'Stiehl {n}-mal erfolgreich', stat: 'thefts', base: 40, icon: '🗝️' },
 ];

@@ -20,6 +20,12 @@ const LABELS: Record<string, string> = {
   'combat.ammoSave': 'Munition sparen',
   'combat.runeSave': 'Runen sparen',
   'combat.energy': 'Spezial-Aufladung',
+  'combat.crit': 'kritische Treffer',
+  'combat.slayer': 'gegen Kopfgeld-Ziele',
+  'combat.regen': 'Heilung',
+  stealth: 'seltener erwischt',
+  'village.defense': 'Dorfabwehr',
+  'village.prod': 'Dorfproduktion',
   wisdom: 'Weisheit',
 };
 

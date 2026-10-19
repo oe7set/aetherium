@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.53.0] – Diebeskunst
+
+- Neuer Skill **Diebeskunst** 🗝️ (Phase 16): Bauern, Wachen, Gelehrte, Ritter und Zauberer bestehlen, Marktstände plündern, Truhen und Schatzkammern knacken – bis zum Drachenhort. Jeder Versuch kann scheitern: Wer erwischt wird, verliert ein paar Lebenspunkte und ist kurz betäubt. Die Aktionskarte zeigt die Erwischt-Chance und die Goldausbeute.
+- **Dietriche** (Schmieden 18) öffnen Truhen und Schatzkammern; seltene Beute: Diebesmaske und Leisetreter (seltener erwischt werden).
+- Jede Diebeskunst-Stufe schärft den Blick: **kritische Treffer** im Kampf (+50 % Schaden) und Spione, die die **Dorfabwehr** stärken.
+- Marktstände auf der Insel; Diebstähle zählen für Aufträge und Ruhmesleiter.
+
 ## [1.52.0] – Beschwörung
 
 - Neuer Skill **Beschwörung** 🐾 (Phase 15): Monster lassen jetzt Talismane fallen (Gold, Grün, Purpur, Blau – je nach Stärke). Mit Seelensplittern und einer Zutat werden daraus Beschwörungsbeutel; öffnen ruft einen Vertrauten für 30–60 Minuten – auch offline.

@@ -34,3 +34,4 @@ export * from './rivals';
 export * from './prayer';
 export * from './slayer';
 export * from './summoning';
+export * from './thieving';
