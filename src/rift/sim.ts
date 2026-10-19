@@ -20,6 +20,7 @@ import {
   type WeaponStats,
 } from '../data/rift';
 import { createRng, type Rng } from '../engine/rng';
+import { SHRINE_EVERY, SHRINE_OPTIONS, type ShrineOption } from '../data/riftCurses';
 
 export const WEAPON_MAP = new Map(RIFT_WEAPONS.map((w) => [w.id, w]));
 export const PASSIVE_MAP = new Map(RIFT_PASSIVES.map((p) => [p.id, p]));
@@ -128,7 +129,7 @@ export interface Gem {
   magnet: boolean;
 }
 
-export type PickupKind = 'chest' | 'heal' | 'magnet' | 'bomb';
+export type PickupKind = 'chest' | 'heal' | 'magnet' | 'bomb' | 'shrine';
 export interface Pickup {
   kind: PickupKind;
   x: number;
@@ -230,6 +231,14 @@ export interface RunConfig {
   endless?: boolean;
   /** Beschwörung: the active familiar follows the hero; fighters (power > 0) attack. */
   companion?: { icon: string; power: number };
+  /** Flüche (ids, for the result) and their effect on the horde. */
+  curses?: string[];
+  spawnMult?: number;
+  enemySpeed?: number;
+  /** Shrines show up every few minutes (default on, off for the weekly boss). */
+  shrines?: boolean;
+  /** Tagesriss (fixed seed of the day). */
+  daily?: boolean;
 }
 
 /** Minutes until the final boss of a run. */
@@ -237,7 +246,7 @@ export function runMinutes(config: RunConfig): number {
   return config.minutes ?? RUN_MINUTES;
 }
 
-export type RunPhase = 'playing' | 'levelup' | 'chest' | 'paused' | 'dead' | 'won';
+export type RunPhase = 'playing' | 'levelup' | 'chest' | 'shrine' | 'paused' | 'dead' | 'won';
 
 export interface RunState {
   config: RunConfig;
@@ -298,6 +307,12 @@ export interface RunState {
   shake: number;
   /** The familiar following the hero (position + attack timer). */
   companion: { x: number; y: number; timer: number } | null;
+  /** Shrines: seconds to the next one, the open offer, stat boni and extra enemy HP gained. */
+  shrineTimer: number;
+  shrine: ShrineOption[] | null;
+  shrinesUsed: number;
+  bonus: Partial<RiftStats>;
+  enemyHpMult: number;
 }
 
 // --- Setup ----------------------------------------------------------------------------------------
@@ -366,6 +381,11 @@ export function createRun(config: RunConfig): RunState {
     nextId: 1,
     shake: 0,
     companion: config.companion ? { x: 0, y: 0, timer: 1 } : null,
+    shrineTimer: SHRINE_EVERY * 0.6,
+    shrine: null,
+    shrinesUsed: 0,
+    bonus: {},
+    enemyHpMult: 1,
   };
   run.weapons.push(newWeapon(hero.weapon, Math.min(WEAPON_MAX_LEVEL, config.startWeaponLevel)));
   recomputeStats(run);
@@ -387,6 +407,7 @@ export function recomputeStats(run: RunState): void {
     if (MULTIPLICATIVE_STATS.includes(def.stat)) out[def.stat] += BASE_STATS[def.stat] * add;
     else out[def.stat] += add;
   }
+  for (const [k, v] of Object.entries(run.bonus) as [keyof RiftStats, number][]) out[k] += v;
   out.cooldown = Math.max(0.35, out.cooldown);
   const hpGain = out.maxHp - run.stats.maxHp;
   run.stats = out;
@@ -485,7 +506,12 @@ function pushFx(run: RunState, fx: Fx): void {
 }
 
 function scaleHp(run: RunState): number {
-  return run.biome.difficulty * (run.config.difficulty ?? 1) * (1 + (run.time / 60) * 0.2);
+  return (
+    run.biome.difficulty *
+    (run.config.difficulty ?? 1) *
+    run.enemyHpMult *
+    (1 + (run.time / 60) * 0.2)
+  );
 }
 
 function scaleDamage(run: RunState): number {
@@ -669,7 +695,7 @@ export function spawnEnemy(
     y,
     hp,
     maxHp: hp,
-    speed: def.speed * (kind === 'elite' ? 0.9 : 1),
+    speed: def.speed * (kind === 'elite' ? 0.9 : 1) * (run.config.enemySpeed ?? 1),
     damage: def.damage * scaleDamage(run) * (kind === 'elite' ? 1.5 : 1),
     radius,
     xp,
@@ -716,15 +742,30 @@ function pickWeighted(run: RunState, pool: EnemyDef[]): EnemyDef {
 function updateSpawns(run: RunState, dt: number): void {
   const minute = run.time / 60;
   const living = run.enemies.length;
-  const target = Math.min(MAX_ENEMIES, 18 + minute * 22);
+  const spawnMult = run.config.spawnMult ?? 1;
+  const target = Math.min(MAX_ENEMIES, (18 + minute * 22) * spawnMult);
   run.spawnTimer -= dt;
   if (run.spawnTimer <= 0) {
     run.spawnTimer = Math.max(0.15, 0.6 - minute * 0.04);
     const pool = spawnPool(run);
-    const batch = living < target ? 1 + Math.floor(minute / 2.5) : 0;
+    const batch = living < target ? Math.round((1 + Math.floor(minute / 2.5)) * spawnMult) : 0;
     for (let i = 0; i < batch && pool.length; i++) {
       const [x, y] = ringPoint(run);
       spawnEnemy(run, pickWeighted(run, pool), x, y);
+    }
+  }
+  // Shrines: a choice between risk and reward every few minutes.
+  if (run.config.shrines !== false) {
+    run.shrineTimer -= dt;
+    if (run.shrineTimer <= 0) {
+      run.shrineTimer = SHRINE_EVERY;
+      const angle = run.rng() * Math.PI * 2;
+      run.pickups.push({
+        kind: 'shrine',
+        x: run.hero.x + Math.cos(angle) * 260,
+        y: run.hero.y + Math.sin(angle) * 260,
+      });
+      announce(run, '⛩️ Ein Schrein ist erschienen!');
     }
   }
   // Swarms: a wall of fast enemies from one direction.
@@ -1498,6 +1539,9 @@ function updatePickups(run: RunState, dt: number): void {
       case 'chest':
         openChest(run);
         break;
+      case 'shrine':
+        openShrine(run);
+        break;
     }
   }
   run.pickups = run.pickups.filter((p) => !Number.isNaN(p.x));
@@ -1667,6 +1711,84 @@ export function closeChest(run: RunState): void {
   if (run.phase === 'levelup') run.choices = rollChoices(run);
 }
 
+// --- Shrines -------------------------------------------------------------------------------------
+
+function openShrine(run: RunState): void {
+  const pool = [...SHRINE_OPTIONS];
+  const offer: ShrineOption[] = [];
+  while (offer.length < 3 && pool.length) {
+    offer.push(pool.splice(Math.floor(run.rng() * pool.length), 1)[0]!);
+  }
+  run.shrine = offer;
+  run.phase = 'shrine';
+}
+
+function addBonus(run: RunState, key: keyof RiftStats, value: number): void {
+  run.bonus[key] = (run.bonus[key] ?? 0) + value;
+}
+
+/** Takes a shrine's offer (index) or walks past it (-1). */
+export function chooseShrine(run: RunState, index: number): void {
+  if (run.phase !== 'shrine' || !run.shrine) return;
+  const opt = index >= 0 ? run.shrine[index] : undefined;
+  const h = run.hero;
+  if (opt) {
+    run.shrinesUsed++;
+    switch (opt.kind) {
+      case 'might':
+        addBonus(run, 'might', 0.15);
+        run.enemyHpMult *= 1.1;
+        break;
+      case 'heal':
+        h.hp = run.stats.maxHp;
+        break;
+      case 'gamble':
+        if (run.rng() < 0.5) run.pendingLevels += 2;
+        else h.hp = Math.max(1, h.hp - run.stats.maxHp * 0.25);
+        break;
+      case 'elites': {
+        const pool = spawnPool(run).filter((d) => d.behavior !== 'swarm');
+        for (let i = 0; i < 3 && pool.length; i++) {
+          const [x, y] = ringPoint(run);
+          spawnEnemy(run, pickWeighted(run, pool), x, y, 'elite');
+        }
+        run.bonusEssence += 15;
+        break;
+      }
+      case 'greed':
+        run.bonusEssence += 30;
+        run.enemyHpMult *= 1.12;
+        break;
+      case 'swift':
+        addBonus(run, 'speed', BASE_STATS.speed * 0.15);
+        break;
+      case 'fortune':
+        run.rerolls += 2;
+        run.banishes += 1;
+        addBonus(run, 'luck', 0.1);
+        break;
+      case 'armor':
+        addBonus(run, 'armor', 2);
+        addBonus(run, 'cooldown', 0.05);
+        break;
+    }
+    recomputeStats(run);
+    pushFx(run, {
+      type: 'text',
+      x: h.x,
+      y: h.y - 40,
+      text: `${opt.icon} ${opt.name}`,
+      color: '#ffd166',
+      life: 1.6,
+      max: 1.6,
+      big: true,
+    });
+  }
+  run.shrine = null;
+  run.phase = run.pendingLevels > 0 ? 'levelup' : 'playing';
+  if (run.phase === 'levelup') run.choices = rollChoices(run);
+}
+
 export function togglePause(run: RunState): void {
   if (run.phase === 'playing') run.phase = 'paused';
   else if (run.phase === 'paused') run.phase = 'playing';
@@ -1789,6 +1911,9 @@ export interface RunResult {
   bonusEssence: number;
   mode: 'rift' | 'dungeon';
   endless?: boolean;
+  curses?: string[];
+  shrines?: number;
+  daily?: boolean;
 }
 
 export function runResult(run: RunState): RunResult {
@@ -1806,5 +1931,8 @@ export function runResult(run: RunState): RunResult {
     bonusEssence: run.bonusEssence,
     mode: run.config.mode ?? 'rift',
     endless: run.config.endless === true,
+    curses: run.config.curses ?? [],
+    shrines: run.shrinesUsed,
+    daily: run.config.daily === true,
   };
 }

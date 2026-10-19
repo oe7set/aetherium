@@ -87,6 +87,9 @@ import {
   type AdventureReward,
   prepareDungeon,
   prepareWeekly,
+  prepareDaily,
+  finishDaily,
+  type DailyReward,
   finishWeekly,
   type WeeklyReward,
   finishDungeon,
@@ -233,6 +236,8 @@ export interface GameStore {
   /** Wochenboss: start and book (the first win of the week opens a reward reveal). */
   weeklyPrepare: (hero: string) => RunConfig | null;
   weeklyFinish: (result: RunResult) => WeeklyReward | null;
+  dailyPrepare: (hero: string) => RunConfig | null;
+  dailyFinish: (result: RunResult) => DailyReward | null;
   /** Runs a village action; a failed result becomes a warning line in the feed. */
   village: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
@@ -753,6 +758,22 @@ export const useGame = create<GameStore>()((set, get) => {
           r.firstWin ? '🦹' : '🎖️',
           r.lines,
         );
+      return r;
+    },
+    dailyPrepare: (hero) => {
+      let cfg: RunConfig | null = null;
+      mutate((s) => {
+        cfg = prepareDaily(s, hero, Date.now(), defaultRng);
+      });
+      return cfg;
+    },
+    dailyFinish: (result) => {
+      let reward: DailyReward | null = null;
+      mutate((s, emit) => {
+        reward = finishDaily(s, result, Date.now(), defaultRng, emit);
+      });
+      const r = reward as DailyReward | null;
+      if (r?.lines) showReward('Tagesriss geschafft!', '📅', r.lines);
       return r;
     },
     village: (fn) => {

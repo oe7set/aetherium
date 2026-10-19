@@ -1077,3 +1077,30 @@
   opacity: 0.55;
   cursor: default;
 }
+.curse-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.curse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  text-align: center;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  font-size: 0.8rem;
+}
+.curse > span {
+  font-size: 1.4rem;
+}
+.curse.on {
+  border-color: rgba(255, 93, 115, 0.8);
+  background: linear-gradient(160deg, rgba(255, 93, 115, 0.22), var(--panel));
+}

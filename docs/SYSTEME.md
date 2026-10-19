@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.63.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.64.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Flüche, Schreine, Tagesriss** (Phase 25, `data/riftCurses.ts`, `engine/rift.ts`, `engine/daily.ts`): 6 Flüche
+(`s.rift.curses`, ab 3 Läufen) → `applyCurses` (Werte, `difficulty`, `spawnMult`, `enemySpeed`, Hunger = kein
+Proviant) in `prepareRun` (`curseOverride`: Wochenboss [], Tagesriss fester Fluch); +Essenz (`curseEssence` in
+`essenceFor`) und +50 % Relikt-Chance je Fluch. Schreine in `rift/sim.ts`: alle 150 s ein Pickup → Phase `shrine`
+mit 3 von 8 Angeboten (`chooseShrine`, Boni über `run.bonus` in `recomputeStats`, `enemyHpMult` in `scaleHp`),
+nicht beim Wochenboss. Tagesriss: Seed/Biom/Fluch aus `dayKey`, 10 Minuten, erster Lauf des Tages zahlt
+`DAILY_REWARD`; `s.rift.daily` (Bestwerte, gemeisterte Tage), „Was jetzt?" meldet ihn.
 
 **Rissläufer & Relikte** (Phase 24, `data/riftwalker.ts`, `engine/rift.ts`): Skill `riftwalker` ohne Aktionen –
 XP aus `finishRun`/`finishDungeon` (`riftwalkerXp`: Zeit, Kills, Stufen, Bosse, Sieg, Biom; Dungeons ×0,5). Je Stufe

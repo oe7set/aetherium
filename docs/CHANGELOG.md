@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.64.0] – Flüche, Schreine & Tagesriss
+
+- **Flüche** 🕯️ (Phase 25, ab dem 3. Lauf): Horde, Hast, Raserei, Zerbrechlich, Hungersnot, Dunkelheit – frei kombinierbar vor jedem Lauf. Jeder Fluch macht den Riss härter, bringt aber bis zu +30 % Essenz und +50 % Relikt-Chance.
+- **Schreine** ⛩️ im Lauf: Alle zweieinhalb Minuten erscheint ein Schrein mit drei Angeboten – Stärke gegen zähere Gegner, Heilung, Würfel des Schicksals, Elite-Herausforderung, Altar der Gier, Windschrein, Glücksbrunnen, Steinwächter. Oder einfach weitergehen.
+- **Tagesriss** 📅: Jeden Tag derselbe Seed, ein festes Biom und ein Fluch des Tages, 10 Minuten. Der erste Lauf des Tages bringt Essenz, Helden-XP und Gold; Bestzeit und gemeisterte Tage werden gezählt. „Was jetzt?" erinnert daran.
+
 ## [1.63.0] – Rissläufer & Relikte
 
 - **Neuer Skill Rissläufer** 🌀 (Phase 24): Jeder Lauf durch den Ätherriss gibt XP – fürs Überleben, Kills, Stufen, Bosse und Siege (tiefere Biome mehr, Live-Abenteuer zur Hälfte). Jede Stufe: mehr Schaden und Leben im Riss.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { WEEKLY_MINUTES, WEEKLY_MUTATORS } from '../src/data/weekly';
-import { chooseUpgrade, closeChest, createRun, stepRun } from '../src/rift/sim';
+import { chooseShrine, chooseUpgrade, closeChest, createRun, stepRun } from '../src/rift/sim';
 import {
   createRng,
   deserialize,
@@ -93,6 +93,7 @@ describe('Montagsfürst', () => {
     for (let t = 0; t < (WEEKLY_MINUTES * 60 + 30) * 5; t++) {
       if (run.phase === 'levelup') chooseUpgrade(run, 0);
       if (run.phase === 'chest') closeChest(run);
+      if (run.phase === 'shrine') chooseShrine(run, 0);
       stepRun(run, 0.2, { x: 0, y: 0 });
       shots = Math.max(shots, run.shots.length);
     }

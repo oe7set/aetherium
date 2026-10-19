@@ -7,6 +7,7 @@ import type { AdventureReward, RiftReward, WeeklyReward } from '../../engine';
 import {
   banishChoice,
   chooseUpgrade,
+  chooseShrine,
   closeChest,
   maxLevelOf,
   PASSIVE_MAP,
@@ -115,6 +116,7 @@ export default function RiftOverlay() {
         if (useGame.getState().game.settings.sound) {
           if (run.hero.level > lastLevel) SOUNDS.levelUp();
           else if (run.phase === 'chest' && lastPhase !== 'chest') SOUNDS.rare();
+          else if (run.phase === 'shrine' && lastPhase !== 'shrine') SOUNDS.rare();
           else if (run.phase === 'dead' && lastPhase !== 'dead') SOUNDS.hurt();
           else if (run.phase === 'won' && lastPhase !== 'won') SOUNDS.prestige();
           else if (run.kills - lastKills > 0 && now - lastHud > 120) SOUNDS.hit();
@@ -167,7 +169,10 @@ export default function RiftOverlay() {
     if (!run || finished.current) return;
     if (run.phase === 'dead' || run.phase === 'won') {
       finished.current = true;
-      if (run.config.trial) {
+      if (run.config.daily) {
+        const d = useGame.getState().dailyFinish(runResult(run));
+        setReward(d?.run ?? null);
+      } else if (run.config.trial) {
         const w = useGame.getState().weeklyFinish(runResult(run));
         setWeekly(w);
         setReward(w?.run ?? null);
@@ -234,6 +239,9 @@ export default function RiftOverlay() {
       {run.phase === 'levelup' && <LevelUp run={run} onChange={bump} />}
       {run.phase === 'chest' && run.chest && (
         <ChestView run={run} onClose={() => (closeChest(run), bump())} />
+      )}
+      {run.phase === 'shrine' && run.shrine && (
+        <ShrineView run={run} onPick={(i) => (chooseShrine(run, i), bump())} />
       )}
       {run.phase === 'paused' && (
         <div className="rift-modal">
@@ -471,6 +479,34 @@ function ChestView({ run, onClose }: { run: RunState; onClose: () => void }) {
         )}
         <button className="btn btn-primary" onClick={onClose}>
           Weiter
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ShrineView({ run, onPick }: { run: RunState; onPick: (index: number) => void }) {
+  return (
+    <div className="rift-modal">
+      <div className="rift-card rift-levelup">
+        <div className="chest-icon">⛩️</div>
+        <h2 className="rift-title">Schrein</h2>
+        <p className="rift-sub">
+          Ein uralter Schrein flüstert. Nimm ein Angebot an – oder geh weiter.
+        </p>
+        <div className="choice-list">
+          {run.shrine!.map((o, i) => (
+            <button key={o.kind} className="choice" onClick={() => onPick(i)}>
+              <span className="choice-icon">{o.icon}</span>
+              <span className="choice-body">
+                <strong>{o.name}</strong>
+                <small>{o.desc}</small>
+              </span>
+            </button>
+          ))}
+        </div>
+        <button className="btn btn-ghost" onClick={() => onPick(-1)}>
+          Weitergehen
         </button>
       </div>
     </div>

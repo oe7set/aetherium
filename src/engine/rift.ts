@@ -44,6 +44,7 @@ import {
   type RunPerk,
 } from '../data/riftwalker';
 import { addXp } from './skills';
+import { CURSE_MAP, CURSE_RELIC_BONUS, CURSE_UNLOCK_RUNS } from '../data/riftCurses';
 import { xpMultiplierFor } from './actions';
 
 export const RIFT_TALENT_MAP = new Map(RIFT_TALENTS.map((t) => [t.id, t]));
@@ -90,9 +91,55 @@ export function riftwalkerXp(r: RunResult): number {
   return Math.round(base * (1 + x.biome * biome) * (r.mode === 'dungeon' ? x.dungeon : 1));
 }
 
+// --- Flüche --------------------------------------------------------------------------------------
+
+export function cursesUnlocked(s: GameState): boolean {
+  return s.rift.runs >= CURSE_UNLOCK_RUNS;
+}
+
+export function toggleCurse(s: GameState, id: string): boolean {
+  if (!CURSE_MAP.has(id) || !cursesUnlocked(s)) return false;
+  s.rift.curses = s.rift.curses.includes(id)
+    ? s.rift.curses.filter((c) => c !== id)
+    : [...s.rift.curses, id];
+  return true;
+}
+
+/** Extra essence factor of a set of curses (0.45 = +45 %). */
+export function curseEssence(curses: readonly string[]): number {
+  return curses.reduce((sum, id) => sum + (CURSE_MAP.get(id)?.essence ?? 0), 0);
+}
+
+/** Applies curses to a run config (stats, enemy strength, count and speed, provisions). */
+export function applyCurses(cfg: RunConfig, curses: readonly string[]): RunConfig {
+  if (!curses.length) return cfg;
+  const stats = { ...cfg.stats };
+  let difficulty = cfg.difficulty ?? 1;
+  let spawn = cfg.spawnMult ?? 1;
+  let speed = cfg.enemySpeed ?? 1;
+  for (const id of curses) {
+    const c = CURSE_MAP.get(id);
+    if (!c) continue;
+    for (const [k, v] of Object.entries(c.mult ?? {}) as [keyof RiftStats, number][]) stats[k] *= v;
+    for (const [k, v] of Object.entries(c.add ?? {}) as [keyof RiftStats, number][]) stats[k] += v;
+    difficulty *= c.difficulty ?? 1;
+    spawn *= c.spawn ?? 1;
+    speed *= c.enemySpeed ?? 1;
+  }
+  return {
+    ...cfg,
+    stats,
+    difficulty,
+    spawnMult: spawn,
+    enemySpeed: speed,
+    provisions: curses.some((id) => CURSE_MAP.get(id)?.hunger) ? [] : cfg.provisions,
+    curses: [...curses],
+  };
+}
+
 /** Rolls for a relic: each boss and a victory may drop one the player does not own yet. */
 export function rollRelic(s: GameState, r: RunResult, rng: Rng): string | null {
-  const luck = 1 + mod(s, 'rift.luck');
+  const luck = (1 + mod(s, 'rift.luck')) * (1 + CURSE_RELIC_BONUS * (r.curses?.length ?? 0));
   const chance =
     1 - (1 - RELIC_CHANCE.perBoss * luck) ** r.bossKills * (r.won ? 1 - RELIC_CHANCE.win : 1);
   if (rng() >= chance) return null;
@@ -270,16 +317,20 @@ export function prepareRun(
   biome: string,
   rng: Rng,
   endless = false,
+  /** Curses for this run: the player's choice by default, fixed ones for weekly/daily. */
+  curseOverride?: readonly string[],
 ): RunConfig | null {
   if (!canStartRun(s, hero, biome).ok) return null;
   if (endless && !endlessUnlocked(s)) return null;
-  const provisions = packProvisions(s);
+  const curses = curseOverride ?? (cursesUnlocked(s) ? s.rift.curses : []);
+  const hunger = curses.some((id) => CURSE_MAP.get(id)?.hunger);
+  const provisions = hunger ? [] : packProvisions(s);
   s.rift.hero = hero;
   s.hero.style = hero;
   s.rift.biome = biome;
   s.rift.runs++;
   addStat(s, 'riftRuns');
-  const cfg = baseConfig(s, hero, biome, rng, provisions);
+  const cfg = applyCurses(baseConfig(s, hero, biome, rng, provisions), curses);
   return endless ? { ...cfg, endless: true } : cfg;
 }
 
@@ -371,7 +422,8 @@ export function essenceFor(s: GameState, r: RunResult): number {
     r.time / 12 + r.kills / 40 + r.level * 0.8 + r.bossKills * 12 + r.elites * 3 + r.bonusEssence;
   const won = r.won ? 1.5 : 1;
   const greed = 1 + 0.1 * riftTalentLevel(s, 't_greed');
-  return Math.round(base * (1 + 0.6 * biome) * won * greed + (r.won ? 40 : 0));
+  const cursed = 1 + curseEssence(r.curses ?? []);
+  return Math.round(base * (1 + 0.6 * biome) * won * greed * cursed + (r.won ? 40 : 0));
 }
 
 export function finishRun(s: GameState, r: RunResult, rng: Rng, emit: Emit): RiftReward {

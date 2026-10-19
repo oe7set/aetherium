@@ -25,6 +25,7 @@ import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
 import { HERO_ITEMS, HERO_SLOTS, type HeroSlot } from '../data/hero';
 import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
 import { RELIC_MAP } from '../data/riftwalker';
+import { CURSE_MAP } from '../data/riftCurses';
 import { createVillage } from './villageWorld';
 import {
   defaultCombatSettings,
@@ -422,6 +423,21 @@ function hydrateRift(v: unknown, fallback: RiftState): RiftState {
     echo: Math.max(0, num(v.echo, fallback.echo)),
     weekly: hydrateWeekly(v.weekly, fallback.weekly),
     relics: stringArray(v.relics).filter((id) => RELIC_MAP.has(id)),
+    curses: stringArray(v.curses).filter((id) => CURSE_MAP.has(id)),
+    daily: hydrateDaily(v.daily, fallback.daily),
+  };
+}
+
+function hydrateDaily(v: unknown, fallback: RiftState['daily']): RiftState['daily'] {
+  if (!isRecord(v)) return { ...fallback };
+  const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? Math.max(0, x) : 0);
+  return {
+    day: typeof v.day === 'string' ? v.day : '',
+    attempts: num(v.attempts),
+    bestTime: num(v.bestTime),
+    bestKills: num(v.bestKills),
+    claimed: v.claimed === true,
+    days: num(v.days),
   };
 }
 

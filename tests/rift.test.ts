@@ -18,6 +18,7 @@ import {
   weaponPool,
 } from '../src/engine';
 import {
+  chooseShrine,
   chooseUpgrade,
   closeChest,
   createRun,
@@ -71,6 +72,7 @@ function botRun(run: RunState, seconds: number): void {
     stepRun(run, 1 / 30, l > 1e-9 ? { x: mx / l, y: my / l } : { x: 0, y: 0 });
     if (run.phase === 'levelup') chooseUpgrade(run, 0);
     if (run.phase === 'chest') closeChest(run);
+    if (run.phase === 'shrine') chooseShrine(run, 0);
   }
 }
 
@@ -232,6 +234,7 @@ describe('Endlos-Riss', () => {
     for (let t = 0; t < 11 * 60 * 5; t++) {
       if (run.phase === 'levelup') chooseUpgrade(run, 0);
       if (run.phase === 'chest') closeChest(run);
+      if (run.phase === 'shrine') chooseShrine(run, 0);
       stepRun(run, 0.2, { x: 0, y: 0 });
     }
     expect(run.phase).toBe('playing');

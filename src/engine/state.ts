@@ -380,6 +380,20 @@ export interface RiftState {
   weekly: WeeklyState;
   /** Relikte found in runs (Phase 24). */
   relics: string[];
+  /** Flüche chosen for the next runs. */
+  curses: string[];
+  daily: DailyRiftState;
+}
+
+/** Tagesriss: today's attempts and best result; the first finished run of a day pays a bonus. */
+export interface DailyRiftState {
+  day: string;
+  attempts: number;
+  bestTime: number;
+  bestKills: number;
+  claimed: boolean;
+  /** Lifetime days with a finished daily run. */
+  days: number;
 }
 
 /** Wochenboss: progress in the current week plus the lifetime count of weekly victories. */
@@ -597,6 +611,8 @@ export function defaultRift(): RiftState {
     echo: 600,
     weekly: { week: '', attempts: 0, won: false, bestTime: 0, bestKills: 0, wins: 0 },
     relics: [],
+    curses: [],
+    daily: { day: '', attempts: 0, bestTime: 0, bestKills: 0, claimed: false, days: 0 },
   };
 }
 

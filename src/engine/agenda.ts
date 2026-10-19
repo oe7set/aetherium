@@ -1,7 +1,7 @@
 import { collectionsClaimable } from './collections';
 import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
-import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey } from './meta';
+import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
 import { SKILLS, TOOL_MAP, toolsForSkill } from '../data';
 import { skillLevel } from './skills';
@@ -174,6 +174,20 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       icon: '🦹',
       title: 'Wochenboss noch offen',
       detail: 'Großer Preis für den ersten Sieg der Woche',
+      kind: 'todo',
+      target: { area: 'hero', section: 'start' },
+    });
+  const d = s.rift.daily;
+  if (
+    s.rift.runs > 0 &&
+    !(d.day === dayKey(now) && d.claimed) &&
+    canStartRun(s, s.rift.hero, s.rift.biome).ok
+  )
+    add({
+      id: 'daily-rift',
+      icon: '📅',
+      title: 'Tagesriss wartet',
+      detail: 'Fester Seed, Fluch des Tages, Bonus für den ersten Lauf',
       kind: 'todo',
       target: { area: 'hero', section: 'start' },
     });

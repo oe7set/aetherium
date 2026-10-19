@@ -12,6 +12,10 @@ import {
 import {
   autoProvisions,
   canStartRun,
+  curseEssence,
+  cursesUnlocked,
+  dailyChallenge,
+  toggleCurse,
   biomeUnlocked,
   echoEssence,
   endlessUnlocked,
@@ -30,6 +34,15 @@ import {
   weeklyChallenge,
 } from '../../engine';
 import { WEEKLY_MINUTES } from '../../data/weekly';
+import {
+  CURSE_MAP,
+  CURSE_RELIC_BONUS,
+  CURSE_UNLOCK_RUNS,
+  CURSES,
+  DAILY_MINUTES,
+  DAILY_REWARD,
+  SHRINE_EVERY,
+} from '../../data/riftCurses';
 import { createRun } from '../../rift/sim';
 import { useGame } from '../../store/gameStore';
 import { AdventuresView, HeroView } from './HeroView';
@@ -156,6 +169,93 @@ function WeeklyCard({ hero }: { hero: string }) {
   );
 }
 
+function DailyCard({ hero }: { hero: string }) {
+  useGame(
+    (s) => `${s.game.rift.daily.day}|${s.game.rift.daily.attempts}|${s.game.rift.daily.claimed}`,
+  );
+  const prepare = useGame((s) => s.dailyPrepare);
+  const game = useGame.getState().game;
+  const c = dailyChallenge(game, Date.now());
+  const d = game.rift.daily.day === c.day ? game.rift.daily : null;
+  const biome = BIOMES.find((b) => b.id === c.biome)!;
+  const curse = CURSE_MAP.get(c.curse)!;
+  const check = canStartRun(game, hero, c.biome);
+  const start = () => {
+    const cfg = prepare(hero);
+    if (cfg) useRiftRun.getState().setRun(createRun(cfg));
+  };
+  return (
+    <div className={`weekly-card daily-card${d?.claimed ? ' done' : ''}`}>
+      <div className="weekly-head">
+        <span className="weekly-icon">{d?.claimed ? '✅' : '📅'}</span>
+        <div>
+          <strong>Tagesriss</strong>
+          <small className="muted">
+            {biome.icon} {biome.name} · {DAILY_MINUTES} Minuten · gleicher Seed für alle heute
+          </small>
+        </div>
+      </div>
+      <p className="weekly-mut">
+        <b>
+          {curse.icon} Fluch des Tages – {curse.name}:
+        </b>{' '}
+        {curse.desc}
+      </p>
+      <p className="small muted">
+        {d?.claimed
+          ? 'Heute schon belohnt – weitere Läufe zählen für die Bestzeit.'
+          : `Erster Lauf des Tages: +${DAILY_REWARD.essence} Essenz, Helden-XP und Gold.`}
+        {d && d.attempts > 0 && ` · Bestzeit ${fmt(d.bestTime)} · 💀 ${d.bestKills}`}
+        {game.rift.daily.days > 0 && ` · ${game.rift.daily.days} Tage gemeistert`}
+      </p>
+      <button className="btn btn-primary" disabled={!check.ok} onClick={start}>
+        {check.ok ? '📅 Tagesriss starten' : 'Held nicht bereit'}
+      </button>
+    </div>
+  );
+}
+
+function CursePicker() {
+  const sig = useGame((s) => s.game.rift.curses.join(','));
+  const act = useGame((s) => s.combatAct);
+  const game = useGame.getState().game;
+  const active = sig ? sig.split(',') : [];
+  if (!cursesUnlocked(game))
+    return (
+      <p className="small muted">
+        🕯️ Flüche schalten sich nach {CURSE_UNLOCK_RUNS} Läufen frei ({game.rift.runs}/
+        {CURSE_UNLOCK_RUNS}): schwerer, aber mehr Essenz und Relikte.
+      </p>
+    );
+  return (
+    <div className="curse-picker">
+      <h4 className="rift-h4">
+        🕯️ Flüche{' '}
+        <small className="muted">
+          {active.length
+            ? `+${Math.round(curseEssence(active) * 100)} % Essenz · +${Math.round(active.length * CURSE_RELIC_BONUS * 100)} % Relikt-Chance`
+            : 'freiwillig: schwerer, dafür mehr Essenz und Relikte'}
+        </small>
+      </h4>
+      <div className="curse-list">
+        {CURSES.map((c) => (
+          <button
+            key={c.id}
+            className={`curse ${active.includes(c.id) ? 'on' : ''}`}
+            aria-pressed={active.includes(c.id)}
+            onClick={() => act((s) => void toggleCurse(s, c.id))}
+          >
+            <span>{c.icon}</span>
+            <strong>{c.name}</strong>
+            <small>{c.desc}</small>
+            <small className="muted">+{Math.round(c.essence * 100)} %</small>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function weekLeft(now: number): string {
   const d = new Date(now);
   const day = (d.getDay() + 6) % 7;
@@ -198,6 +298,7 @@ function StartView() {
       </div>
 
       <WeeklyCard hero={hero} />
+      <DailyCard hero={hero} />
 
       <h4 className="rift-h4">Kampfstil von {game.hero.name}</h4>
       <div className="hero-grid">
@@ -289,6 +390,12 @@ function StartView() {
           <div className="small">⚔️ Ausgerüstete Waffe: Startwaffe beginnt auf Stufe 2</div>
         )}
       </div>
+
+      <CursePicker />
+      <p className="small muted">
+        ⛩️ Alle {Math.round((SHRINE_EVERY / 60) * 10) / 10} Minuten erscheint ein Schrein: Segen,
+        Heilung, Glücksspiel oder eine Elite-Herausforderung.
+      </p>
 
       <label className={`toggle endless-toggle ${endlessOpen ? '' : 'locked'}`}>
         <input

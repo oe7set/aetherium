@@ -221,15 +221,24 @@ export function render(
   // Pickups bob a little.
   for (const p of run.pickups) {
     const icon =
-      p.kind === 'chest' ? '🎁' : p.kind === 'heal' ? '🍗' : p.kind === 'magnet' ? '🧲' : '💣';
+      p.kind === 'chest'
+        ? '🎁'
+        : p.kind === 'shrine'
+          ? '⛩️'
+          : p.kind === 'heal'
+            ? '🍗'
+            : p.kind === 'magnet'
+              ? '🧲'
+              : '💣';
     const bob = Math.sin(time * 4 + p.x) * 3;
-    if (p.kind === 'chest') {
-      ctx.fillStyle = 'rgba(255, 209, 102, 0.35)';
+    if (p.kind === 'chest' || p.kind === 'shrine') {
+      ctx.fillStyle =
+        p.kind === 'shrine' ? 'rgba(179, 140, 255, 0.4)' : 'rgba(255, 209, 102, 0.35)';
       ctx.beginPath();
       ctx.arc(p.x, p.y, 24 + Math.sin(time * 5) * 4, 0, Math.PI * 2);
       ctx.fill();
     }
-    drawSprite(ctx, icon, p.x, p.y + bob, p.kind === 'chest' ? 34 : 24);
+    drawSprite(ctx, icon, p.x, p.y + bob, p.kind === 'chest' || p.kind === 'shrine' ? 34 : 24);
   }
 
   // Enemies (shadow, sprite, flash, elite/boss marks).

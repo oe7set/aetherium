@@ -55,7 +55,7 @@ export function prepareWeekly(s: GameState, hero: string, now: number, rng: Rng)
   syncWeekly(s, now);
   const c = weeklyChallenge(s, now);
   if (!canStartRun(s, hero, c.biome).ok) return null;
-  const base = prepareRun(s, hero, c.biome, rng);
+  const base = prepareRun(s, hero, c.biome, rng, false, []);
   if (!base) return null;
   s.rift.weekly.attempts++;
   addStat(s, 'weeklyAttempts');
@@ -69,6 +69,7 @@ export function prepareWeekly(s: GameState, hero: string, now: number, rng: Rng)
     stats,
     mode: 'dungeon',
     trial: true,
+    shrines: false,
     trialLabel: `${c.mutator.icon} ${c.mutator.name}`,
     minutes: WEEKLY_MINUTES,
     difficulty: c.difficulty,
