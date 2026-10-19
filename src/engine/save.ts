@@ -22,6 +22,7 @@ import { COLLECTION_MAP } from '../data/collections';
 import { GUILD_MAP } from '../data/guilds';
 import { CONSTELLATION_MAP, CONSTELLATION_MAX_RANK } from '../data/astronomy';
 import { INVENTION_MAP, INVENTION_MAX } from '../data/invention';
+import { AFFIX_MAP, FORGE_MAX, FORGE_SLOTS } from '../data/forge';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -274,6 +275,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     rift: hydrateRift(data.rift, base.rift),
     guilds: hydrateGuilds(data.guilds, base.guilds),
     stars: hydrateStars(data.stars),
+    forge: hydrateForge(data.forge),
     inventions: Object.fromEntries(
       Object.entries(numberRecord(data.inventions))
         .filter(([id]) => INVENTION_MAP.has(id))
@@ -863,4 +865,27 @@ function hydrateStars(v: unknown): GameState['stars'] {
   );
   const active = stringArray(v.active).filter((id) => (ranks[id] ?? 0) > 0);
   return { ranks, active: [...new Set(active)].slice(0, 5) };
+}
+
+function hydrateForge(v: unknown): GameState['forge'] {
+  if (!isRecord(v)) return { levels: {}, affixes: {} };
+  const slots = new Set<string>(FORGE_SLOTS);
+  const levels = Object.fromEntries(
+    Object.entries(numberRecord(v.levels))
+      .filter(([slot]) => slots.has(slot))
+      .map(([slot, l]) => [slot, Math.max(0, Math.min(FORGE_MAX, Math.floor(l)))]),
+  );
+  const affixes: GameState['forge']['affixes'] = {};
+  if (isRecord(v.affixes))
+    for (const [slot, a] of Object.entries(v.affixes))
+      if (
+        slots.has(slot) &&
+        isRecord(a) &&
+        typeof a.key === 'string' &&
+        AFFIX_MAP.has(a.key) &&
+        typeof a.value === 'number' &&
+        Number.isFinite(a.value)
+      )
+        affixes[slot] = { key: a.key, value: a.value };
+  return { levels, affixes };
 }

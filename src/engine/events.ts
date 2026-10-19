@@ -47,6 +47,7 @@ export type GameEvent =
   | { type: 'caught'; actionId: string; damage: number; stun: number }
   | { type: 'fell'; actionId: string; damage: number }
   | { type: 'invented'; invention: string; level: number }
+  | { type: 'forged'; slot: string; level: number; result: string }
   | { type: 'familiarSummoned'; familiar: string }
   | { type: 'familiarLeft'; familiar: string }
   | { type: 'slayerTask'; monster: string; count: number }

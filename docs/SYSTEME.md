@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.71.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.72.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,13 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Item-Aufwertung** (Phase 33, `data/forge.ts`, `engine/forge.ts`, `ui/inventory/ForgePanel.tsx`): Verstärkung pro
+Ausrüstungsplatz (Items sind gestapelt, keine Einzelstücke) in `s.forge.levels`, +0..+10, +5 % auf Angriff/Stärke/
+Verteidigung des Teils im Platz (`forgeMult` in `gearSum`). Kosten Gold + Barren (Eisen → Mithril → Runit, ab +8
+Diamanten), Erfolg 100 % bis +3, dann fallend bis 30 %; ab +6 kostet ein Fehlschlag eine Stufe, außer mit
+Schutzrune (Magie). Prägungen: Prägestein (Erfinden) würfelt je Platz einen Zusatzwert aus `AFFIXES`
+(`s.forge.affixes`, Modifier-Quelle `imprints`, wirkt nur mit angelegtem Teil). Bleibt über Prestige.
 
 **Erfinden** (Phase 32, `data/invention.ts`, `engine/invention.ts`, `ui/skills/InventionPanel.tsx`): Schrott
 (alte Stiefel, Verbranntes, Tonscherben, Nägel) → Schrauben; Runen → Zauberteile; Meteoriten → uralte Teile.

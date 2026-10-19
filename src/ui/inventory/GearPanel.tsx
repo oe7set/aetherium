@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getItem, getSkill, type EquipDef, type EquipSlot, type ModifierSet } from '../../data';
-import { canWear, playerStats, setProgress } from '../../engine';
+import { canWear, forgeLevel, forgeMult, playerStats, setProgress } from '../../engine';
+import { ForgePanel } from './ForgePanel';
 import { SET_OF } from '../../data/sets';
 import { useGame } from '../../store/gameStore';
 import { ItemIcon } from '../ItemIcon';
@@ -78,9 +79,10 @@ export function GearPanel() {
   for (const [slot, id] of Object.entries(equipment)) {
     if (!id || slot === 'ammo') continue;
     const eq = getItem(id).equip;
-    atk += eq?.attack ?? 0;
-    str += eq?.strength ?? 0;
-    def += eq?.defence ?? 0;
+    const m = forgeMult(game, slot);
+    atk += Math.round((eq?.attack ?? 0) * m);
+    str += Math.round((eq?.strength ?? 0) * m);
+    def += Math.round((eq?.defence ?? 0) * m);
   }
   const mods = sumMods(Object.entries(equipment).map(([slot, id]) => (slot === 'ammo' ? '' : id)));
 
@@ -113,7 +115,12 @@ export function GearPanel() {
               >
                 <span className="gear-slot-label">{label}</span>
                 <span className="item-icon">{id ? <ItemIcon id={id} /> : icon}</span>
-                <small>{it ? it.name : '—'}</small>
+                <small>
+                  {it ? it.name : '—'}
+                  {forgeLevel(game, slot) > 0 && (
+                    <b className="forge-level"> +{forgeLevel(game, slot)}</b>
+                  )}
+                </small>
                 {slot === 'ammo' && id && <small className="muted">×{inventory[id] ?? 0}</small>}
               </button>
             );
@@ -174,6 +181,11 @@ export function GearPanel() {
           </button>
         </div>
       </div>
+
+      <details className="forge-details">
+        <summary>🔨 Schmiede-Verstärkung & Prägungen</summary>
+        <ForgePanel />
+      </details>
 
       <div className="chip-row gear-filter">
         {FILTERS.map((f) => (

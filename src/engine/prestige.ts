@@ -151,6 +151,8 @@ function resetRun(s: GameState): void {
     stars: s.stars,
     // Inventions are machines on the island – they stay.
     inventions: s.inventions,
+    // Slot reinforcement belongs to the player like the gear.
+    forge: s.forge,
   };
   Object.assign(s, fresh, kept);
 

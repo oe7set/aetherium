@@ -306,6 +306,19 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           });
         break;
       }
+      case 'forged':
+        out.popups.push(
+          e.result === 'ok'
+            ? { kind: 'rare', text: `🔨 Verstärkt auf +${e.level}!` }
+            : {
+                kind: 'bad',
+                text:
+                  e.result === 'dropped'
+                    ? `💥 Fehlschlag – zurück auf +${e.level}`
+                    : '💥 Fehlschlag',
+              },
+        );
+        break;
       case 'invented': {
         const d = INVENTION_MAP.get(e.invention);
         out.feed.push({

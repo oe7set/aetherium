@@ -2768,3 +2768,16 @@ button.chip {
 .night-banner.on {
   background: rgba(124, 92, 255, 0.22);
 }
+
+/* Item-Aufwertung (Phase 33) */
+.forge-level {
+  color: #ffd166;
+}
+.forge-details {
+  margin: 8px 0;
+}
+.forge-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+}

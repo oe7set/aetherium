@@ -480,6 +480,11 @@ export interface GameState {
   stars: { ranks: Record<string, number>; active: string[] };
   /** Erfinden: built inventions and their level (1–5). */
   inventions: Record<string, number>;
+  /** Item-Aufwertung per equipment slot: level +0..+10 and one imprint. */
+  forge: {
+    levels: Record<string, number>;
+    affixes: Record<string, { key: string; value: number }>;
+  };
 }
 
 export interface GuildOrderLine {
@@ -605,6 +610,7 @@ export function newGame(now: number = Date.now()): GameState {
     guilds: { rep: {}, orders: [], seq: 1, done: 0, refill: 5 },
     stars: { ranks: {}, active: [] },
     inventions: {},
+    forge: { levels: {}, affixes: {} },
   };
 }
 
@@ -737,6 +743,7 @@ export function cloneState(s: GameState): GameState {
     },
     stars: { ranks: { ...s.stars.ranks }, active: [...s.stars.active] },
     inventions: { ...s.inventions },
+    forge: { levels: { ...s.forge.levels }, affixes: { ...s.forge.affixes } },
     guilds: {
       ...s.guilds,
       rep: { ...s.guilds.rep },

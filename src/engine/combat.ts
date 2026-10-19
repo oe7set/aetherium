@@ -39,6 +39,7 @@ import { addResearch } from './science';
 import { consumeItem } from './consume';
 import { maxPrayer, protectsFrom } from './prayer';
 import { activeFamiliar } from './summoning';
+import { forgeMult } from './forge';
 import { monsterStyle } from '../data/prayers';
 import { BUFF_MAP } from '../data';
 import { earnGold } from './shop';
@@ -105,7 +106,8 @@ function gearSum(s: GameState, key: 'attack' | 'strength' | 'defence'): number {
   for (const [slot, id] of Object.entries(s.equipment)) {
     if (!id) continue;
     if (slot === 'ammo' && (key !== 'strength' || !ammoFits(s, id))) continue;
-    sum += getItem(id).equip?.[key] ?? 0;
+    // Schmiede-Verstärkung: +5 % per level on the item in that slot.
+    sum += (getItem(id).equip?.[key] ?? 0) * forgeMult(s, slot);
   }
   return sum;
 }

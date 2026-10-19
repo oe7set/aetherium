@@ -45,4 +45,5 @@ export * from './sailing';
 export * from './astronomy';
 export * from './agility';
 export * from './invention';
+export * from './forge';
 export * from './time';

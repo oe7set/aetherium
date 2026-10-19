@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.72.0] – Item-Aufwertung
+
+- **Schmiede-Verstärkung** 🔨 (Phase 33, unter Inventar → Ausrüstung): Jeder Ausrüstungsplatz lässt sich von +1 bis **+10** verstärken – jede Stufe +5 % auf Angriff, Stärke und Verteidigung des Teils, das dort sitzt. Die Verstärkung bleibt beim Wechsel auf bessere Ausrüstung erhalten.
+- Bis +3 gelingt alles, danach sinkt die Chance bis auf 30 %. Ab +6 kann ein Fehlschlag eine Stufe kosten – eine **Schutzrune** (neu bei Magie) verhindert das.
+- **Prägungen** 🔷: Prägesteine (neu bei Erfinden) geben einem Platz einen zufälligen Zusatzwert – Schaden, Krit, Beute, Gold, XP, Tempo, Riss-Schaden … Neu würfeln jederzeit möglich.
+- Die Puppe zeigt die Verstärkung (+N) direkt am Platz.
+
 ## [1.71.0] – Erfinden
 
 - **Neuer Skill Erfinden** ⚙️ (Phase 32): Alte Ausrüstung **zerlegen** (Schrauben, Präzisionsteile, Zauberteile, uralte Teile – je nach Art und Seltenheit), Schrott wie alte Stiefel und Verbranntes endlich verwerten, Runen und Meteoriten zu besonderen Bauteilen verarbeiten.
