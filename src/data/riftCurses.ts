@@ -83,7 +83,17 @@ export const CURSE_UNLOCK_RUNS = 3;
 export const CURSE_RELIC_BONUS = 0.5;
 
 export type ShrineKind =
-  'might' | 'heal' | 'gamble' | 'elites' | 'greed' | 'swift' | 'fortune' | 'armor';
+  | 'might'
+  | 'heal'
+  | 'gamble'
+  | 'elites'
+  | 'greed'
+  | 'swift'
+  | 'fortune'
+  | 'armor'
+  | 'treasure'
+  | 'vortex'
+  | 'sacrifice';
 
 export interface ShrineOption {
   kind: ShrineKind;
@@ -130,6 +140,24 @@ export const SHRINE_OPTIONS: ShrineOption[] = [
     icon: '🛡️',
     name: 'Steinwächter',
     desc: '+2 Rüstung, aber Waffen 5 % langsamer.',
+  },
+  {
+    kind: 'treasure',
+    icon: '🎁',
+    name: 'Schatzschrein',
+    desc: 'Eine Schatztruhe erscheint neben dir.',
+  },
+  {
+    kind: 'vortex',
+    icon: '🌀',
+    name: 'Sog des Äthers',
+    desc: 'Alle Erfahrung fliegt dir zu, +25 % Sammelradius.',
+  },
+  {
+    kind: 'sacrifice',
+    icon: '🩸',
+    name: 'Blutopfer',
+    desc: '30 % deiner Lebenspunkte für ein zusätzliches Geschoss.',
   },
 ];
 

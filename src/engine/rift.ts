@@ -38,6 +38,8 @@ import {
   RELIC_DUPLICATE_ESSENCE,
   RELIC_MAP,
   RELICS,
+  RELIC_SETS,
+  type RelicSetDef,
   RIFTWALKER_MILESTONES,
   RIFTWALKER_PER_LEVEL,
   RIFTWALKER_XP,
@@ -68,7 +70,13 @@ export function runPerks(s: GameState): RunPerk[] {
   return [
     ...RIFTWALKER_MILESTONES.filter((m) => level >= m.level),
     ...s.rift.relics.flatMap((id) => RELIC_MAP.get(id) ?? []),
+    ...completedRelicSets(s),
   ];
+}
+
+/** Relic sets whose relics are all owned. */
+export function completedRelicSets(s: GameState): RelicSetDef[] {
+  return RELIC_SETS.filter((set) => set.relics.every((id) => s.rift.relics.includes(id)));
 }
 
 function perkSum(s: GameState, key: 'rerolls' | 'revives' | 'skips' | 'banishes' | 'weapon') {

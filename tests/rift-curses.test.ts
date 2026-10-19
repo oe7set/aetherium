@@ -71,3 +71,22 @@ describe('Tagesriss', () => {
     expect(s.rift.daily.days).toBe(1);
   });
 });
+
+describe('Neue Schreine', () => {
+  it('Blutopfer gibt ein Geschoss, Schatzschrein eine Truhe', () => {
+    const s = gameWith();
+    const run = createRun(prepareRun(s, 'farmer', 'meadow', createRng(2))!);
+    run.phase = 'shrine';
+    run.shrine = [
+      { kind: 'sacrifice', icon: '🩸', name: 'Blutopfer', desc: '' },
+      { kind: 'treasure', icon: '🎁', name: 'Schatz', desc: '' },
+    ];
+    const amount = run.stats.amount;
+    chooseShrine(run, 0);
+    expect(run.stats.amount).toBe(amount + 1);
+    run.phase = 'shrine';
+    run.shrine = [{ kind: 'treasure', icon: '🎁', name: 'Schatz', desc: '' }];
+    chooseShrine(run, 0);
+    expect(run.pickups.some((p) => p.kind === 'chest')).toBe(true);
+  });
+});

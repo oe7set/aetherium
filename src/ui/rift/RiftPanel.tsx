@@ -21,6 +21,7 @@ import {
   endlessUnlocked,
   myRecord,
   parseRecordCode,
+  rankDaily,
   rankRivals,
   recordCode,
   type RivalRecord,
@@ -214,6 +215,10 @@ function DailyCard({ hero }: { hero: string }) {
       <button className="btn btn-primary" disabled={!check.ok} onClick={start}>
         {check.ok ? '📅 Tagesriss starten' : 'Held nicht bereit'}
       </button>
+      <details className="daily-board">
+        <summary>📅 Rangliste des Tages</summary>
+        <Leaderboard mode="daily" />
+      </details>
     </div>
   );
 }
@@ -459,7 +464,7 @@ function saveRivals(codes: string[]): void {
 }
 
 /** Endless-rift ranking via shareable record codes – no server, friends swap codes. */
-function Leaderboard() {
+function Leaderboard({ mode = 'endless' }: { mode?: 'endless' | 'daily' }) {
   const game = useGame((s) => s.game);
   const [codes, setCodes] = useState<string[]>(loadRivals);
   const [input, setInput] = useState('');
@@ -469,7 +474,9 @@ function Leaderboard() {
   const rivals = codes
     .map((c) => ({ code: c, rec: parseRecordCode(c) }))
     .filter((r): r is { code: string; rec: RivalRecord } => r.rec !== null);
-  const ranked = rankRivals([mine, ...rivals.map((r) => r.rec)]);
+  const all = [mine, ...rivals.map((r) => r.rec)];
+  const today = dailyChallenge(game, Date.now()).day;
+  const ranked = mode === 'daily' ? rankDaily(all, today) : rankRivals(all);
   const add = () => {
     const rec = parseRecordCode(input);
     if (!rec) return setMsg('❌ Ungültiger Code – bitte vollständig einfügen.');
@@ -498,7 +505,14 @@ function Leaderboard() {
   };
   return (
     <div className="leaderboard">
-      <h3 className="rift-heading">🏆 Endlos-Rangliste</h3>
+      <h3 className="rift-heading">
+        {mode === 'daily' ? '📅 Tagesriss-Rangliste (heute)' : '🏆 Endlos-Rangliste'}
+      </h3>
+      {mode === 'daily' && ranked.length === 0 && (
+        <p className="small muted">
+          Heute noch keine Zeiten – lauf den Tagesriss und tausche Codes mit Freunden.
+        </p>
+      )}
       <ol className="leader-list">
         {ranked.map((r, i) => {
           const me = r === mine;
@@ -514,7 +528,7 @@ function Leaderboard() {
                   · {r.wins} Siege · Gesamtlevel {r.total}
                 </small>
               </span>
-              <b>♾️ {fmt(r.endless)}</b>
+              <b>{mode === 'daily' ? `📅 ${fmt(r.daily?.time ?? 0)}` : `♾️ ${fmt(r.endless)}`}</b>
               {entry && (
                 <button
                   className="btn small"

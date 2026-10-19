@@ -1,5 +1,7 @@
 import { BIOMES } from '../../data/rift';
 import {
+  RELIC_MAP,
+  RELIC_SETS,
   RELICS,
   RIFTWALKER_MILESTONES,
   RIFTWALKER_PER_LEVEL,
@@ -51,6 +53,19 @@ export function RelicsView() {
         Relikte lassen Riss-Bosse fallen (jeder Boss und jeder Sieg ist eine Chance). Sie wirken in
         jedem Lauf – manche auch auf der Insel.
       </p>
+      <h4 className="rift-h4">Relikt-Sets</h4>
+      <ul className="milestones">
+        {RELIC_SETS.map((set) => {
+          const n = set.relics.filter((id) => have.has(id)).length;
+          return (
+            <li key={set.id} className={n === set.relics.length ? 'done' : ''}>
+              {n === set.relics.length ? '✅' : set.icon} {set.name} ({n}/{set.relics.length}):{' '}
+              {set.desc} –{' '}
+              {set.relics.map((id) => (have.has(id) ? RELIC_MAP.get(id)?.icon : '❔')).join(' ')}
+            </li>
+          );
+        })}
+      </ul>
       <div className="talent-grid">
         {RELICS.map((r) => {
           const got = have.has(r.id);

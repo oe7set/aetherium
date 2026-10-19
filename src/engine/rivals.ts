@@ -15,6 +15,8 @@ export interface RivalRecord {
   combat: number;
   /** Day the code was made (ms). */
   at: number;
+  /** Tagesriss: day key and best time of that day (codes before 1.74 have none). */
+  daily?: { day: string; time: number };
 }
 
 const PREFIX = 'AE1-';
@@ -49,12 +51,21 @@ export function myRecord(s: GameState, now: number = Date.now()): RivalRecord {
     total: totalLevel(s),
     combat: combatLevel(s),
     at: now,
+    daily: s.rift.daily.day ? { day: s.rift.daily.day, time: s.rift.daily.bestTime } : undefined,
   };
 }
 
 export function recordCode(r: RivalRecord): string {
   const body = toBase64Url(
-    JSON.stringify([r.name.slice(0, 24), r.endless, r.wins, r.total, r.combat, r.at]),
+    JSON.stringify([
+      r.name.slice(0, 24),
+      r.endless,
+      r.wins,
+      r.total,
+      r.combat,
+      r.at,
+      ...(r.daily ? [r.daily.day, Math.round(r.daily.time)] : []),
+    ]),
   );
   return `${PREFIX}${body}.${checksum(body)}`;
 }
@@ -66,8 +77,8 @@ export function parseRecordCode(code: string): RivalRecord | null {
   if (!body || checksum(body) !== sum) return null;
   try {
     const v: unknown = JSON.parse(fromBase64Url(body));
-    if (!Array.isArray(v) || v.length !== 6) return null;
-    const [name, endless, wins, total, combat, at] = v as unknown[];
+    if (!Array.isArray(v) || (v.length !== 6 && v.length !== 8)) return null;
+    const [name, endless, wins, total, combat, at, day, dailyTime] = v as unknown[];
     const nums = [endless, wins, total, combat, at];
     if (typeof name !== 'string' || !nums.every((n) => typeof n === 'number' && n >= 0))
       return null;
@@ -78,10 +89,21 @@ export function parseRecordCode(code: string): RivalRecord | null {
       total: total as number,
       combat: combat as number,
       at: at as number,
+      daily:
+        typeof day === 'string' && typeof dailyTime === 'number' && dailyTime >= 0
+          ? { day: day.slice(0, 12), time: dailyTime }
+          : undefined,
     };
   } catch {
     return null;
   }
+}
+
+/** Tagesriss ranking: only today's runs, longest survival first. */
+export function rankDaily(list: RivalRecord[], day: string): RivalRecord[] {
+  return list
+    .filter((r) => r.daily?.day === day && r.daily.time > 0)
+    .sort((a, b) => (b.daily?.time ?? 0) - (a.daily?.time ?? 0));
 }
 
 /** Ranking: longest endless run first, then rift wins. */

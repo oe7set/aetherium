@@ -5,7 +5,11 @@ import {
   finishRun,
   invalidateMods,
   mod,
+  myRecord,
+  parseRecordCode,
   prepareRun,
+  rankDaily,
+  recordCode,
   runStats,
   skillLevel,
 } from '../src/engine';
@@ -74,5 +78,34 @@ describe('Relikte', () => {
     expect(stats.speed).toBeGreaterThan(base.speed);
     expect(stats.might).toBeCloseTo(base.might + 0.06);
     expect(mod(s, 'xp.husbandry')).toBeCloseTo(xp + 0.05);
+  });
+});
+
+describe('Relikt-Sets & Tagesriss-Codes', () => {
+  it('ein vollständiges Set wirkt im Lauf', () => {
+    const s = gameWith();
+    s.rift.relics = ['phoenix_ash', 'lucky_clover'];
+    const a = prepareRun(s, 'farmer', 'meadow', createRng(1))!;
+    s.hero.status = 'home';
+    s.rift.relics = ['phoenix_ash', 'lucky_clover', 'magnet_stone'];
+    const b = prepareRun(s, 'farmer', 'meadow', createRng(1))!;
+    // Magnet stone itself plus the set's extra revive.
+    expect(b.revives).toBe(a.revives + 1);
+  });
+
+  it('Rekord-Codes tragen die Tagesriss-Bestzeit', () => {
+    const s = gameWith();
+    s.rift.daily = {
+      day: '2026-10-19',
+      attempts: 2,
+      bestTime: 321,
+      bestKills: 900,
+      claimed: true,
+      days: 1,
+    };
+    const rec = parseRecordCode(recordCode(myRecord(s, 0)))!;
+    expect(rec.daily).toEqual({ day: '2026-10-19', time: 321 });
+    expect(rankDaily([rec], '2026-10-19')).toHaveLength(1);
+    expect(rankDaily([rec], '2026-10-20')).toHaveLength(0);
   });
 });

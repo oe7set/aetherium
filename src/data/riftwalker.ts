@@ -189,6 +189,58 @@ export const RELICS: RelicDef[] = [
 
 export const RELIC_MAP = new Map(RELICS.map((r) => [r.id, r]));
 
+export interface RelicSetDef extends RunPerk {
+  id: string;
+  name: string;
+  icon: string;
+  relics: string[];
+  desc: string;
+}
+
+/** Relikt-Sets: owning every relic of a set adds an extra perk to every run. */
+export const RELIC_SETS: RelicSetDef[] = [
+  {
+    id: 'wild',
+    name: 'Wildnis',
+    icon: '🐾',
+    relics: ['hen_feather', 'wolf_fang', 'vampire_tooth'],
+    stat: { key: 'speed', value: 0.1 },
+    desc: '+10 % Tempo',
+  },
+  {
+    id: 'scholar',
+    name: 'Gelehrsamkeit',
+    icon: '📚',
+    relics: ['forbidden_page', 'gnome_cog', 'hourglass'],
+    rerolls: 1,
+    desc: '+1 Neu würfeln',
+  },
+  {
+    id: 'elements',
+    name: 'Elemente',
+    icon: '🔥',
+    relics: ['ember_heart', 'frost_crown', 'quantum_die'],
+    stat: { key: 'area', value: 0.1 },
+    desc: '+10 % Fläche',
+  },
+  {
+    id: 'undying',
+    name: 'Unsterblichkeit',
+    icon: '💖',
+    relics: ['phoenix_ash', 'lucky_clover', 'magnet_stone'],
+    revives: 1,
+    desc: '+1 Wiederbelebung',
+  },
+  {
+    id: 'crowned',
+    name: 'Gekrönt',
+    icon: '👑',
+    relics: ['examiner_crown', 'aether_lens'],
+    stat: { key: 'might', value: 0.15 },
+    desc: '+15 % Schaden',
+  },
+];
+
 /** Relic drop chance per boss kill, plus a bonus roll for a victory. */
 export const RELIC_CHANCE = { perBoss: 0.12, win: 0.35 };
 /** Essence instead of a relic once all of a pool is owned. */

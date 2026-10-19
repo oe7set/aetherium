@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.73.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.74.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,10 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Riss-Ausbau** (Phase 35): Rekord-Codes (`engine/rivals.ts`) tragen jetzt die Tagesriss-Bestzeit (alte 6er-Codes
+bleiben gültig), `rankDaily` sortiert nur Zeiten von heute; Tagesriss-Karte zeigt die Rangliste. 5 Relikt-Sets
+(`RELIC_SETS`, `completedRelicSets` → `runPerks`). 11 Schrein-Arten (neu: Schatzschrein, Sog des Äthers, Blutopfer).
 
 **Weltbosse** (Phase 34, `data/worldboss.ts`, `engine/worldboss.ts`, `ui/rift/WorldBossView.tsx`): Zeiteffekt
 `worldBoss` – alle 4 h (ab Kampfstufe 10) erscheint einer von 4 Bossen für 60 Minuten, auch offline. Schadensquellen
@@ -387,7 +391,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Gameplay & Inhalt**
 
 - [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
-- [ ] Riss: Bestenliste für den Tagesriss (Rivalen-Codes wie beim Endlos-Riss), mehr Schrein-Arten, Relikt-Sets.
 - [ ] Zünfte: Sonderaufträge mit Zeitdruck und seltenen Belohnungen ab Rang 5; Bolzen verzaubern (Magie).
 
 **Qualität**

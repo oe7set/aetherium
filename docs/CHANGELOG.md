@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.74.0] – Riss: Rangliste, Relikt-Sets, Schreine
+
+- **Tagesriss-Rangliste** 📅 (Phase 35): Der Rekord-Code enthält jetzt auch deine Bestzeit im Tagesriss. Tausche Codes mit Freunden – unter der Tagesriss-Karte siehst du, wer heute am längsten überlebt hat (alle laufen denselben Seed).
+- **Relikt-Sets**: Wildnis, Gelehrsamkeit, Elemente, Unsterblichkeit und Gekrönt – wer alle Relikte eines Sets hat, bekommt einen Extra-Bonus in jedem Lauf.
+- **Drei neue Schreine**: Schatzschrein (Truhe sofort), Sog des Äthers (alle Erfahrung fliegt dir zu) und Blutopfer (Lebenspunkte gegen ein zusätzliches Geschoss).
+
 ## [1.73.0] – Weltbosse
 
 - **Weltbosse** 👹 (Phase 34): Alle vier Stunden taucht ein Riese vor der Insel auf – Ätherkoloss, Krakenkönigin, Sternenfresser oder Magmatitan – und bleibt eine Stunde, auch wenn du offline bist.

@@ -1771,6 +1771,17 @@ export function chooseShrine(run: RunState, index: number): void {
         addBonus(run, 'armor', 2);
         addBonus(run, 'cooldown', 0.05);
         break;
+      case 'treasure':
+        run.pickups.push({ kind: 'chest', x: h.x + 40, y: h.y });
+        break;
+      case 'vortex':
+        for (const g of run.gems) g.magnet = true;
+        addBonus(run, 'magnet', BASE_STATS.magnet * 0.25);
+        break;
+      case 'sacrifice':
+        h.hp = Math.max(1, h.hp - run.stats.maxHp * 0.3);
+        addBonus(run, 'amount', 1);
+        break;
     }
     recomputeStats(run);
     pushFx(run, {
