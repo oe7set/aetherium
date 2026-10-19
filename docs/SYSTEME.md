@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.44.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.45.0**.
 
 ## 1. Der große Kreislauf
 
@@ -65,6 +65,12 @@ Ausrüstungsansicht `ui/inventory/GearPanel` (Figur, Werte, Filter, ▲/▼-Verg
 Zauber haben Elemente (`MONSTER_ELEMENTS`: anfällig ×1,35, resistent ×0,6, `spellAffinity`). Monster ab Stufe 10
 (Bosse öfter, `heavyEvery`) holen jeden n-ten Schlag aus (`windup`): kommt 60 % später, trifft ×1,6 – Idle bleibt
 im Schnitt gleich; `dodge` (💨 in Kampfansicht und Kampfleiste) vermeidet ihn und gibt +25 Spezialenergie.
+
+**Frostgipfel** (7. Biom/Gebiet `glacier`): Kampfgebiet Stufe 100 (Frosttroll, Yeti, Eiswurm; anfällig für Feuer)
+liefert `frost_shard` → Zauber Gletschersturz (Magie 85) und Frostmantel (Handwerk 80); Riss-Biom mit
+Schwierigkeit 11. Riss-Gegnerverhalten `shielder` (Gegner im Umkreis nehmen 45 % Schaden, blauer Ring, nutzt das
+Raster des letzten Frames) und `healer` (hält Abstand, heilt alle 3,2 s 12 % LP im Umkreis, Bosse 2 %) – auch in
+Gnomlabor, Bibliothek, Vulkan und Quantenriss ab Minute 6.
 
 **Periodensystem** (`ELEMENT_GROUPS` in `data/science.ts`, `elementGroupProgress` in `engine/science.ts`): 10 chemische
 Gruppen; jede vollständige Gruppe gibt einen passenden Bonus (Alkalimetalle → Verkaufspreis, Erdalkali → Bergbau,
@@ -225,8 +231,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 **Gameplay & Inhalt**
 
 - [ ] Endgame: Inselschmuck als Kosmetik (3D-Deko auf der Insel); Endlos-Riss-Rangliste über Export-Codes.
-- [ ] Riss: eigener 7. Biom (braucht ein neues Kampfgebiet in `data/combat.ts`), neue Gegner-Verhalten
-      (z. B. Schild, Heiler).
 
 **Qualität**
 

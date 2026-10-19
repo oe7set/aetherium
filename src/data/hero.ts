@@ -234,4 +234,5 @@ export const ADVENTURE_NAMES: Record<string, string[]> = {
   library: ['Verbotene Abteilung', 'Staubige Gruft', 'Archiv der Fußnoten'],
   volcano: ['Glutschlund', 'Obsidianhalle', 'Drachenhort'],
   quantum_rift: ['Superpositions-Kammer', 'Ereignishorizont', 'Paradoxe Pforte'],
+  glacier: ['Gletscherspalte', 'Yeti-Höhle', 'Eiswurm-Nest'],
 };

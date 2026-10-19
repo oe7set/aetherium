@@ -64,6 +64,8 @@ export interface Enemy {
   /** Second timer for bosses with two attacks (warlord: volley, then summons). */
   alt: number;
   flash: number;
+  /** Seconds of shielding left (from a nearby shielder): incoming damage is reduced. */
+  shield: number;
   /** Per-source hit times for continuous damage (auras, orbits, zones). */
   hits: Record<string, number>;
   dead: boolean;
@@ -494,6 +496,13 @@ function scaleDamage(run: RunState): number {
 
 // --- Damage ---------------------------------------------------------------------------------------
 
+/** Damage factor on shielded enemies, shield range and healer pulse. */
+const SHIELD_FACTOR = 0.45;
+const SHIELD_RANGE = 140;
+const HEAL_RANGE = 170;
+const HEAL_EVERY = 3.2;
+const HEAL_FRACTION = 0.12;
+
 export function damageEnemy(
   run: RunState,
   e: Enemy,
@@ -504,7 +513,8 @@ export function damageEnemy(
 ): void {
   if (e.dead) return;
   const crit = run.rng() < 0.04 + (run.stats.luck - 1) * 0.25;
-  const dmg = Math.max(1, Math.round(amount * (crit ? 2 : 1) * (0.9 + run.rng() * 0.2)));
+  const shielded = e.shield > 0 ? SHIELD_FACTOR : 1;
+  const dmg = Math.max(1, Math.round(amount * shielded * (crit ? 2 : 1) * (0.9 + run.rng() * 0.2)));
   e.hp -= dmg;
   e.flash = 0.12;
   run.damageDealt += dmg;
@@ -616,7 +626,7 @@ function hurtHero(run: RunState, amount: number): void {
 
 // --- Spawning -------------------------------------------------------------------------------------
 
-function spawnEnemy(
+export function spawnEnemy(
   run: RunState,
   def: EnemyDef,
   x: number,
@@ -668,6 +678,7 @@ function spawnEnemy(
     timer: 1 + run.rng() * 2,
     alt: 3,
     flash: 0,
+    shield: 0,
     hits: {},
     dead: false,
   };
@@ -804,6 +815,7 @@ function updateEnemies(run: RunState, dt: number): void {
   for (const e of run.enemies) {
     if (e.dead) continue;
     e.flash = Math.max(0, e.flash - dt);
+    if (e.shield > 0) e.shield -= dt;
     const dx = h.x - e.x;
     const dy = h.y - e.y;
     const d = Math.hypot(dx, dy) || 1;
@@ -865,6 +877,43 @@ function updateEnemies(run: RunState, dt: number): void {
             max: 0.3,
             size: e.radius,
           });
+        }
+        break;
+      case 'shielder':
+        speed *= 0.9;
+        // Spatial grid from the last frame: positions are a frame old, good enough for an aura.
+        grid.query(e.x, e.y, SHIELD_RANGE, (o) => {
+          if (!o.dead && o !== e && dist2(o.x, o.y, e.x, e.y) < SHIELD_RANGE * SHIELD_RANGE)
+            o.shield = Math.max(o.shield, 0.3);
+        });
+        break;
+      case 'healer':
+        e.timer -= dt;
+        if (d < 260) {
+          // Stay behind the front line.
+          mx = -mx;
+          my = -my;
+          speed *= 0.6;
+        }
+        if (e.timer <= 0) {
+          e.timer = HEAL_EVERY;
+          let healed = false;
+          for (const o of run.enemies) {
+            if (o.dead || o.hp >= o.maxHp) continue;
+            if (dist2(o.x, o.y, e.x, e.y) > HEAL_RANGE * HEAL_RANGE) continue;
+            o.hp = Math.min(o.maxHp, o.hp + o.maxHp * (o.boss ? 0.02 : HEAL_FRACTION));
+            healed = true;
+          }
+          if (healed)
+            pushFx(run, {
+              type: 'burst',
+              x: e.x,
+              y: e.y,
+              color: '#7be495',
+              life: 0.45,
+              max: 0.45,
+              size: HEAL_RANGE,
+            });
         }
         break;
       case 'tank':

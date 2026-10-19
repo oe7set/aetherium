@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.45.0] – Frostgipfel
+
+- Neues Gebiet und 7. Riss-Biom **Frostgipfel** 🏔️ (die Berge vom Horizont): Frosttroll, Yeti und Eiswurm (Stufe 98–108, anfällig für Feuerzauber). Im Riss: Kampfpinguine, Eiswölfe, Yetis, Blizzardgeister und zwei neue Bosse – Eiswurm Glacius und Der Ewige Winter.
+- Neuer Fund **Frostsplitter** 🧊: für den Zauber **Gletschersturz** (Magie 85, +95 % Schaden, friert oft ein) und den **Frostmantel** (Handwerk 80).
+- Neue Riss-Gegner-Verhalten: **Schildträger** schützen Gegner in der Nähe (blauer Ring, nur 45 % Schaden – zuerst ausschalten!) und **Heiler** halten Abstand und flicken Verletzte. Beide tauchen auch im Gnomlabor, in der Bibliothek, im Vulkan und im Quantenriss auf.
+- Neue Abenteuerorte des Helden am Frostgipfel.
+
 ## [1.44.0] – Elemente & Wuchtschläge
 
 - Zauber haben jetzt Elemente (Arkan, Frost, Feuer, Schatten, Blitz, Leere). Viele Monster sind anfällig (+35 % Schaden) oder resistent (−40 %): Frost gegen Feuerelementar, Lavawurm und Drachen, Feuer gegen Spinnen, Bücher und Zombie-Professoren, Blitz gegen Golems, Leere gegen Phantome. Monsterkarten zeigen das, im Zauberbuch steht „effektiv"/„schwach" für den aktuellen Gegner.

@@ -1041,6 +1041,10 @@ export type EnemyBehavior =
   | 'splitter'
   | 'tank'
   | 'teleporter'
+  /** Projects a shield onto nearby enemies (they take less damage) – kill it first. */
+  | 'shielder'
+  /** Keeps distance and heals nearby enemies every few seconds. */
+  | 'healer'
   /** Weekly boss: charges, fires rings of shots, calls reinforcements. */
   | 'warlord';
 
@@ -1170,6 +1174,7 @@ export const BIOMES: BiomeDef[] = [
       e('r_robot', 'Kaputter Roboter', '🤖', 'shooter', 70, 60, 12, 16, 5, 3),
       e('r_ooze', 'Versuchsschleim', '🫧', 'splitter', 80, 60, 10, 17, 4, 5, 'r_bubble'),
       e('r_bubble', 'Bläschen', '🔵', 'chase', 16, 110, 6, 10, 1, 99),
+      e('r_shieldbot', 'Schildgenerator', '🔰', 'shielder', 180, 55, 12, 18, 7, 6),
       e('r_golem', 'Proto-Golem', '🗿', 'tank', 320, 45, 24, 24, 12, 7),
       e('r_drone', 'Spähdrohne', '🛸', 'swarm', 26, 170, 9, 11, 2, 9),
       e('r_turret', 'Wandelndes Geschütz', '📡', 'shooter', 140, 45, 16, 17, 7, 11),
@@ -1194,6 +1199,7 @@ export const BIOMES: BiomeDef[] = [
       e('r_inkblot', 'Tintenklecks', '⚫', 'splitter', 90, 65, 12, 16, 4, 3, 'r_inkdrop'),
       e('r_inkdrop', 'Tintentropfen', '💧', 'chase', 20, 120, 6, 9, 1, 99),
       e('r_quill', 'Rotstift', '🖍️', 'shooter', 80, 70, 14, 14, 6, 4),
+      e('r_librarian', 'Strenge Bibliothekarin', '👵', 'healer', 120, 70, 10, 14, 7, 6),
       e('r_zombie', 'Zombie-Professor', '🧟', 'tank', 480, 45, 28, 22, 14, 7),
       e('r_scroll', 'Fluchrolle', '📜', 'chase', 70, 115, 14, 13, 4, 9),
       e('r_censor', 'Der Zensor', '✂️', 'shooter', 130, 65, 18, 15, 7, 11),
@@ -1218,6 +1224,7 @@ export const BIOMES: BiomeDef[] = [
       e('r_imp', 'Lava-Imp', '😈', 'chase', 90, 110, 16, 14, 5, 2),
       e('r_lavaworm', 'Lavawurm', '🐛', 'splitter', 160, 60, 18, 18, 6, 4, 'r_lavalet'),
       e('r_lavalet', 'Lavawürmchen', '🪱', 'chase', 30, 120, 8, 10, 2, 99),
+      e('r_obsidian', 'Obsidianwächter', '🗿', 'shielder', 420, 55, 20, 20, 10, 6),
       e('r_drake', 'Jungdrache', '🐲', 'tank', 900, 55, 34, 24, 20, 7),
       e('r_salamander', 'Feuersalamander', '🦎', 'teleporter', 140, 100, 20, 14, 7, 9),
       e('r_phoenix', 'Phönixküken', '🐤', 'swarm', 50, 180, 14, 11, 3, 11),
@@ -1242,6 +1249,7 @@ export const BIOMES: BiomeDef[] = [
       e('r_antimatter', 'Antimaterie-Golem', '⬛', 'splitter', 300, 60, 24, 20, 8, 3, 'r_antibit'),
       e('r_antibit', 'Antibit', '▪️', 'chase', 50, 130, 10, 9, 2, 99),
       e('r_blackhole', 'Schwarzloch-Wichtel', '🕳️', 'shooter', 220, 75, 22, 16, 9, 4),
+      e('r_entangler', 'Verschränker', '♾️', 'healer', 280, 80, 18, 15, 10, 6),
       e('r_boson', 'Higgs-Brocken', '🟣', 'tank', 1600, 50, 44, 26, 26, 7),
       e('r_photon', 'Wildes Photon', '💫', 'swarm', 60, 200, 14, 9, 3, 9),
       e('r_paradox', 'Zeitparadoxon', '⏳', 'teleporter', 420, 90, 32, 18, 12, 11),
@@ -1253,6 +1261,31 @@ export const BIOMES: BiomeDef[] = [
     difficulty: 9,
     area: 'quantum_rift',
     desc: 'Alles ist gleichzeitig hier und nicht hier. Vor allem die Gegner.',
+  },
+  {
+    id: 'glacier',
+    name: 'Frostgipfel',
+    icon: '🏔️',
+    ground: ['#6f8fa8', '#8fb0c8'],
+    decor: ['❄️', '🧊', '🪨', '🌨️'],
+    enemies: [
+      e('r_snowflake', 'Wilde Schneeflocke', '❄️', 'swarm', 55, 190, 13, 9, 2, 0),
+      e('r_penguin', 'Kampfpinguin', '🐧', 'chase', 260, 105, 26, 15, 7, 1),
+      e('r_icewall', 'Eisschild-Wächter', '🛡️', 'shielder', 520, 60, 28, 20, 12, 2),
+      e('r_shaman', 'Frostschamane', '🧙', 'healer', 300, 75, 22, 15, 12, 3),
+      e('r_frosttroll', 'Frosttroll', '🧌', 'tank', 2000, 50, 50, 26, 30, 5),
+      e('r_wolfpack', 'Eiswolf', '🐺', 'swarm', 90, 210, 18, 12, 3, 7),
+      e('r_yeti', 'Yeti', '🦍', 'splitter', 700, 70, 40, 22, 14, 9, 'r_yetling'),
+      e('r_yetling', 'Yetichen', '🐻‍❄️', 'chase', 120, 140, 18, 12, 4, 99),
+      e('r_blizzard', 'Blizzardgeist', '🌨️', 'teleporter', 480, 95, 36, 17, 13, 11),
+    ],
+    bosses: [
+      boss('rb_wyrm', 'Eiswurm Glacius', '🐉', 40000, 65, 70, 5),
+      boss('rb_winter', 'Der Ewige Winter', '☃️', 72000, 50, 88, 10),
+    ],
+    difficulty: 11,
+    area: 'glacier',
+    desc: 'Die Berge vom Horizont. Kalt, schön, mit Zähnen.',
   },
 ];
 

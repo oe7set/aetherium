@@ -21,7 +21,9 @@ import {
   chooseUpgrade,
   closeChest,
   createRun,
+  damageEnemy,
   evolutionFor,
+  spawnEnemy,
   runResult,
   stepRun,
   upgradeOptions,
@@ -241,4 +243,39 @@ describe('Endlos-Riss', () => {
     expect(s.stats.riftEndlessMinutes).toBe(Math.floor(run.time / 60));
     expect(run.time).toBeGreaterThan(10 * 60);
   }, 20000);
+});
+
+describe('Ätherriss: Schildträger und Heiler', () => {
+  const def = (id: string) =>
+    BIOMES.find((b) => b.id === 'glacier')!.enemies.find((e) => e.id === id)!;
+
+  it('Schildträger schützen Nachbarn: weniger Schaden', () => {
+    const run = createRun(config({ biome: 'glacier' }));
+    run.enemies.length = 0;
+    spawnEnemy(run, def('r_icewall'), 600, 600);
+    const target = spawnEnemy(run, def('r_penguin'), 640, 600);
+    for (let i = 0; i < 3; i++) stepRun(run, 1 / 30, { x: 0, y: 0 });
+    expect(target.shield).toBeGreaterThan(0);
+    const before = target.hp;
+    damageEnemy(run, target, 100);
+    // 100 × 0,45 × Krit (≤2) × Streuung (≤1,1)
+    expect(before - target.hp).toBeLessThanOrEqual(100);
+    expect(before - target.hp).toBeLessThanOrEqual(Math.round(100 * 0.45 * 2 * 1.1));
+  });
+
+  it('Heiler flicken verletzte Gegner in der Nähe', () => {
+    const run = createRun(config({ biome: 'glacier' }));
+    run.enemies.length = 0;
+    const healer = spawnEnemy(run, def('r_shaman'), 700, 700);
+    healer.timer = 0.1;
+    const target = spawnEnemy(run, def('r_penguin'), 740, 700);
+    target.hp = target.maxHp / 2;
+    for (let i = 0; i < 10; i++) stepRun(run, 1 / 30, { x: 0, y: 0 });
+    expect(target.hp).toBeGreaterThan(target.maxHp / 2);
+  });
+
+  it('Frostgipfel ist das 7. Biom und hängt an einem Kampfgebiet', () => {
+    expect(BIOMES.length).toBe(7);
+    expect(BIOMES[6]!.area).toBe('glacier');
+  });
 });

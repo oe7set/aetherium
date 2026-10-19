@@ -36,6 +36,9 @@ export const MONSTER_ELEMENTS: Record<string, { weak?: SpellElement; resist?: Sp
   peer_reviewer_2: { weak: 'fire' },
   elder_dragon: { weak: 'frost', resist: 'fire' },
   standard_model: { weak: 'void', resist: 'arcane' },
+  frost_troll: { weak: 'fire', resist: 'frost' },
+  yeti: { weak: 'fire', resist: 'frost' },
+  ice_wyrm: { weak: 'fire', resist: 'frost' },
 };
 
 export interface SpellDef {
@@ -140,6 +143,20 @@ export const SPELLS: SpellDef[] = [
     accuracy: 1.15,
     xp: 1.5,
     desc: '+85 % Schaden. Das Nichts schlägt erstaunlich hart zu.',
+  },
+  {
+    id: 'glacier_fall',
+    element: 'frost',
+    name: 'Gletschersturz',
+    icon: '🧊',
+    level: 85,
+    runes: 2,
+    catalyst: { item: 'frost_shard', qty: 1 },
+    damage: 1.95,
+    accuracy: 1.1,
+    freeze: { chance: 0.4, seconds: 1.5 },
+    xp: 1.6,
+    desc: '+95 % Schaden, 40 % Chance einzufrieren. Ein Eisberg auf Bestellung.',
   },
 ];
 

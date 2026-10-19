@@ -248,6 +248,13 @@ export function render(
       ctx.arc(e.x, e.y, e.radius + 4 + Math.sin(time * 6) * 2, 0, Math.PI * 2);
       ctx.stroke();
     }
+    if (e.shield > 0) {
+      ctx.strokeStyle = 'rgba(120, 190, 255, 0.85)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius + 3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
     const wobble = Math.sin(time * 10 + e.id) * 0.08;
     drawSprite(ctx, e.def.icon, e.x, e.y, size, wobble, e.x > h.x);
     if (e.flash > 0) {
