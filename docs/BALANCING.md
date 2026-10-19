@@ -122,3 +122,11 @@ Langzeit-Bot „neue Skills, je 6 Stunden" (`tests/longterm.test.ts`, ab Stufe 1
 | Juwelierkunst          | 35             | –       | nur Kiesel/Funde, ohne Geoden aus dem Bergbau                         |
 | Kartografie            | 44             | −3 600  | Pergament gekauft; Karten unverkauft (Küstenkarte 14 vs. Pergament 6) |
 | Kopfgeldjagd           | 25             | ~12 000 | Kampfstufe 30, Bronzeschwert                                          |
+| Bogenbau (1.66)        | 44             | –       | Leder, Holz, Barren, Federn gestellt; Bögen/Bolzen unverkauft         |
+| Viehzucht (1.66)       | 49             | –       | Feldfrüchte gestellt, Stall Stufe 1; Produkte unverkauft              |
+
+Masterplan 4.0 (1.61–1.66): Bogenbau und Viehzucht liegen im Bot zwischen Kartografie und Diebeskunst – sie
+kosten Rohstoffe aus anderen Skills und sollen sich deshalb nicht langsamer anfühlen. Zunftaufträge zahlen das
+Dreifache des Verkaufswerts (+10 % je Rang) und halbe Rezept-XP: lohnender als Verkaufen, aber kein XP-Ersatz.
+Flüche geben +15–30 % Essenz je Fluch; Rissläufer-Meilensteine sind bewusst flach (+0,2 % Schaden je Stufe), die
+großen Sprünge kommen über Relikte und Meilenstein-Perks.

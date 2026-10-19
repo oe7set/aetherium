@@ -393,7 +393,7 @@ function StartView() {
 
       <CursePicker />
       <p className="small muted">
-        ⛩️ Alle {Math.round((SHRINE_EVERY / 60) * 10) / 10} Minuten erscheint ein Schrein: Segen,
+        ⛩️ Alle {(SHRINE_EVERY / 60).toLocaleString('de-DE')} Minuten erscheint ein Schrein: Segen,
         Heilung, Glücksspiel oder eine Elite-Herausforderung.
       </p>
 

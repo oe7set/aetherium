@@ -4,8 +4,9 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.65.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
-Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.66.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Sammelbuch, Wochenboss), Masterplan 3.0 (`docs/PLAN-3.md`) und 4.0 (`docs/PLAN-4.md`: Bogenbau, Viehzucht, Rissläufer/Relikte,
+Flüche/Schreine/Tagesriss, Zunftaufträge) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
 eintragen, Erledigtes streichen, Neues Offenes ergänzen).
@@ -37,6 +38,10 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Masterplan 3.0 (`docs/PLAN-3.md`): Juwelierkunst `data/jewelcrafting.ts`, Sets/Unikate `data/sets.ts`,
   Kopfgeldjagd `engine/slayer.ts`, Beschwörung `engine/summoning.ts`, Diebeskunst `engine/thieving.ts`
   (`registerActionGate`), Baukunst `engine/construction.ts` (`s.buildings`), Kartografie `data/cartography.ts`.
+  Masterplan 4.0: Bogenbau `data/fletching.ts` (`EquipDef.ammoType`, `ammoFits`), Viehzucht `data/husbandry.ts`
+  (`ActionDef.requiresBuilding` → Stall), Rissläufer/Relikte `data/riftwalker.ts` (`runPerks`), Flüche/Schreine
+  `data/riftCurses.ts` (+ `chooseShrine` in `rift/sim.ts`), Tagesriss `engine/daily.ts`, Zünfte `engine/guilds.ts`,
+  Verbindungen `skillLinks` in `ui/recipes.ts`.
   Neue Skill-Stationen als generische Werkstätten in `scene/Workshops.tsx`. Nächster Plan: `docs/PLAN-4.md`. Rezept-Navigation
   (welche Aktion macht/braucht ein Item) = `ui/recipes.ts`, Sprung über `jumpToAction`.
 - Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,

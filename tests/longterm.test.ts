@@ -166,7 +166,26 @@ describe('Langzeit-Bot: neue Skills, je 6 Stunden', () => {
       s.inventory.bronze_sword = 1;
       e.equipItem(s, 'bronze_sword');
     });
+    // Bogenbau: buy hides and logs, the bot strings bows and shafts.
+    run('fletching', () => {
+      s.combat = null;
+      s.inventory = {
+        cowhide: 400,
+        log_oak: 1500,
+        log_willow: 1500,
+        bar_bronze: 400,
+        bar_iron: 400,
+        feather: 4000,
+      };
+    });
+    // Viehzucht: crops from the fields feed the animals.
+    run('husbandry', () => {
+      s.inventory = { wheat: 3000, potato: 1500, herb_mint: 800, apple: 1500 };
+      s.buildings = { ...s.buildings, barn: 1 };
+    });
     console.table(rows);
+    expect(rows.fletching!.level).toBeGreaterThan(25);
+    expect(rows.husbandry!.level).toBeGreaterThan(25);
     expect(rows.thieving!.level).toBeGreaterThan(20);
     expect(rows.thieving!.goldPerHour).toBeGreaterThan(0);
     expect(rows.jewelcrafting!.level).toBeGreaterThan(15);

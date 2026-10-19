@@ -7,19 +7,23 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.65)
+## Was dich erwartet (v1.66)
 
 **🏝️ Die Insel**
 
-- 26 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 400 Aktionen – jede mit eigener
+- 29 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 400 Aktionen – jede mit eigener
   **Meisterschaft** 🏅 (Stufe 1–99: schneller und öfter doppelte Ausbeute).
 - Sammeln: Holzfällen (20 Baumarten), Bergbau, Angeln, Landwirtschaft (Echtzeit-Beete, Mutationen), Jagen,
-  Archäologie, **Diebeskunst**, **Kartografie** (Regionen, Expeditionen, Schatzkarten).
+  Archäologie, **Diebeskunst**, **Kartografie** (Regionen, Expeditionen, Schatzkarten), **Viehzucht** (7 Tiere,
+  Stall, Käserei).
 - Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes, Brauen,
-  **Juwelierkunst**, **Baukunst** (9 Inselbauten mit Dauer-Boni), Glaube und **Beschwörung** (11 Vertraute).
+  **Juwelierkunst**, **Baukunst** (10 Inselbauten mit Dauer-Boni), Glaube, **Beschwörung** (11 Vertraute) und
+  **Bogenbau** (Langbögen, Armbrüste, Edelsteinbolzen, Köcher).
+- **Zunftaufträge** über mehrere Skills mit Ruf und Rängen; jede Skill-Ansicht zeigt ihre **Verbindungen**.
 - **Kampf 2.0**: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte und **Kopfgeldjagd** gegen über 30 Monster –
   24 Element-Zauber, Element-Pfeile und -Stäbe, 13 Gebete, Ausrüstungs-Sets, Boss-Unikate, Loadouts, Auto-Trank,
-  optionale Spezialangriffe und Ausweichen.
+  optionale Spezialangriffe und Ausweichen, hohe Runen und Hilfszauber, Magie-Werkstatt (Hochalchemie,
+  Verzaubern). Ein **Kampf-Assistent** erklärt pro Stil, was fehlt (Bogen? Pfeile oder Bolzen? Runen?).
 - 3D-Low-Poly-Insel (React Three Fiber) mit antippbaren Stationen, Pfaden, Strand, Fluss und Tag/Nacht.
   Sie wächst mit dem Fortschritt bis zum Teilchenbeschleuniger-Ring.
 - Forschung mit Tech-Baum, Periodensystem-Codex (118 Elemente) und Helfern.
@@ -46,6 +50,8 @@ greift ineinander.
 - 15-Minuten-Läufe gegen Horden, 20 Waffen mit Evolutionen, 6 Biome, 6 Kampfstile, 19 Meta-Talente.
 - **Wochenboss**: jede Woche eine neue Prüfung mit eigener Wochenregel, am Ende der **Montagsfürst** 🦹.
 - **Endlos-Riss** ♾️: kein Zeitlimit, alle 5 Minuten ein Boss – wie lange hältst du durch?
+- **Rissläufer**-Skill mit Meilensteinen, **14 Relikte** von Riss-Bossen, **Flüche** für mehr Essenz,
+  **Schreine** mit Risiko-Wahl im Lauf und ein **Tagesriss** mit festem Seed.
 
 **🎁 Belohnungen und Motivation**
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.66.0] – Feinschliff & Abschluss Masterplan 4.0
+
+Abschluss des **Masterplans 4.0** (Phase 27).
+
+- **Langzeit-Bot** spielt jetzt auch Bogenbau und Viehzucht (je 6 Stunden: Stufe 44 bzw. 49) – beide liegen zwischen Kartografie und Diebeskunst. Ergebnisse in `docs/BALANCING.md`.
+- Rissläufer-Ansicht mit richtigem Fortschrittsbalken; Schrein-Hinweis mit deutschem Komma.
+- README, Systemkarte und Plan aktualisiert.
+
 ## [1.65.0] – Zunftaufträge & Verbindungen
 
 - **Zunftaufträge** 📜 (Phase 26): Schmiedezunft, Küchengilde, Arkaner Zirkel und Entdeckerbund bestellen Waren aus mehreren Skills (z. B. „Stahlbarren + Langbögen + Bretter"). Liefern bringt Gold, XP für die herstellenden Skills und **Ruf**: höhere Ränge zahlen mehr, ab Rang 3 gibt es einen Zusatzauftrag, ab Rang 5 Münzbeutel. Neue Aufträge kommen alle paar Minuten, auch offline. Zu finden unter Mehr → Quests → Zünfte; „Was jetzt?" meldet lieferbare Aufträge.

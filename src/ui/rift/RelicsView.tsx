@@ -8,6 +8,7 @@ import {
 import { levelProgress } from '../../engine';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
+import { ProgressBar } from '../ProgressBar';
 
 /** Rissläufer level with milestones and the relic collection (rift hub and skill view). */
 export function RelicsView() {
@@ -23,9 +24,7 @@ export function RelicsView() {
         <span className="essence-orb">🌀</span>
         <div>
           <strong className="rift-heading">Rissläufer Stufe {p.level}</strong>
-          <div className="bar">
-            <div className="bar-fill" style={{ width: `${(p.fraction * 100).toFixed(1)}%` }} />
-          </div>
+          <ProgressBar fraction={p.fraction} color="#b38cff" height={8} />
           <small className="muted">
             {int(p.current)} / {int(p.needed)} XP · jetzt +
             {(lvl * RIFTWALKER_PER_LEVEL.might * 100).toFixed(1)} % Schaden, +
