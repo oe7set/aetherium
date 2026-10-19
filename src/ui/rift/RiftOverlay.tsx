@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { RELIC_MAP } from '../../data/riftwalker';
 import { getItem } from '../../data';
 import { HERO_ITEMS, TIER_NAMES } from '../../data/hero';
 import { BIOMES, RIFT_PASSIVES } from '../../data/rift';
@@ -588,6 +589,12 @@ function Results({
                 {reward.items
                   .map((i) => `${i.qty}× ${getItem(i.item).icon} ${getItem(i.item).name}`)
                   .join(', ')}
+              </p>
+            )}
+            <p className="rift-sub">+{reward.walkerXp} ✨ Rissläufer-XP</p>
+            {reward.relic && (
+              <p className="reward-essence">
+                🏺 Relikt: {RELIC_MAP.get(reward.relic)?.icon} {RELIC_MAP.get(reward.relic)?.name}
               </p>
             )}
             {reward.village > 0 && (

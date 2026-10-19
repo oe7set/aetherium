@@ -24,6 +24,7 @@ import { LAWS } from '../data/prestige';
 import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
 import { HERO_ITEMS, HERO_SLOTS, type HeroSlot } from '../data/hero';
 import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
+import { RELIC_MAP } from '../data/riftwalker';
 import { createVillage } from './villageWorld';
 import {
   defaultCombatSettings,
@@ -420,6 +421,7 @@ function hydrateRift(v: unknown, fallback: RiftState): RiftState {
         : fallback.biome,
     echo: Math.max(0, num(v.echo, fallback.echo)),
     weekly: hydrateWeekly(v.weekly, fallback.weekly),
+    relics: stringArray(v.relics).filter((id) => RELIC_MAP.has(id)),
   };
 }
 

@@ -33,12 +33,76 @@ import {
   type AdventureReward,
 } from './hero';
 import { DUNGEON_MINUTES } from '../data/hero';
+import {
+  RELIC_CHANCE,
+  RELIC_DUPLICATE_ESSENCE,
+  RELIC_MAP,
+  RELICS,
+  RIFTWALKER_MILESTONES,
+  RIFTWALKER_PER_LEVEL,
+  RIFTWALKER_XP,
+  type RunPerk,
+} from '../data/riftwalker';
+import { addXp } from './skills';
+import { xpMultiplierFor } from './actions';
 
 export const RIFT_TALENT_MAP = new Map(RIFT_TALENTS.map((t) => [t.id, t]));
 
 registerModifierSource('rift', (s) =>
   s.rift.essenceTotal > 0 ? [riftIslandBonus(s.rift.essenceTotal)] : [],
 );
+
+registerModifierSource('relics', (s) =>
+  s.rift.relics.flatMap((id) => {
+    const m = RELIC_MAP.get(id)?.mods;
+    return m ? [m] : [];
+  }),
+);
+
+// --- Rissläufer & Relikte -------------------------------------------------------------------------
+
+/** Every perk of the next run: reached Rissläufer milestones plus owned relics. */
+export function runPerks(s: GameState): RunPerk[] {
+  const level = skillLevel(s, 'riftwalker');
+  return [
+    ...RIFTWALKER_MILESTONES.filter((m) => level >= m.level),
+    ...s.rift.relics.flatMap((id) => RELIC_MAP.get(id) ?? []),
+  ];
+}
+
+function perkSum(s: GameState, key: 'rerolls' | 'revives' | 'skips' | 'banishes' | 'weapon') {
+  return runPerks(s).reduce((sum, p) => sum + (p[key] ?? 0), 0);
+}
+
+/** Rissläufer XP for a finished run. */
+export function riftwalkerXp(r: RunResult): number {
+  const x = RIFTWALKER_XP;
+  const biome = Math.max(
+    0,
+    BIOMES.findIndex((b) => b.id === r.biome),
+  );
+  const base =
+    r.time * x.perSecond +
+    r.kills * x.perKill +
+    r.level * x.perLevel +
+    r.bossKills * x.perBoss +
+    (r.won ? x.win : 0);
+  return Math.round(base * (1 + x.biome * biome) * (r.mode === 'dungeon' ? x.dungeon : 1));
+}
+
+/** Rolls for a relic: each boss and a victory may drop one the player does not own yet. */
+export function rollRelic(s: GameState, r: RunResult, rng: Rng): string | null {
+  const luck = 1 + mod(s, 'rift.luck');
+  const chance =
+    1 - (1 - RELIC_CHANCE.perBoss * luck) ** r.bossKills * (r.won ? 1 - RELIC_CHANCE.win : 1);
+  if (rng() >= chance) return null;
+  const pool = RELICS.filter(
+    (x) =>
+      !s.rift.relics.includes(x.id) && (!x.biome || x.biome === r.biome) && (!x.winOnly || r.won),
+  );
+  if (!pool.length) return null;
+  return pool[Math.floor(rng() * pool.length)]!.id;
+}
 
 export function riftTalentLevel(s: GameState, id: string): number {
   return s.rift.talents[id] ?? 0;
@@ -144,6 +208,15 @@ export function runStats(s: GameState, hero: string): RiftStats {
   out.speed *= Math.max(0.5, 1 + mod(s, 'rift.speed'));
   out.area += mod(s, 'rift.area');
   out.luck += mod(s, 'rift.luck');
+  // Rissläufer levels and milestones, relics.
+  const walker = skillLevel(s, 'riftwalker') - 1;
+  out.might += walker * RIFTWALKER_PER_LEVEL.might;
+  out.maxHp += Math.floor(walker * RIFTWALKER_PER_LEVEL.maxHp);
+  for (const p of runPerks(s)) {
+    if (!p.stat) continue;
+    const { key, value } = p.stat;
+    out[key] += MULTIPLICATIVE_STATS.includes(key) ? BASE_STATS[key] * value : value;
+  }
   return out;
 }
 
@@ -223,12 +296,12 @@ function baseConfig(
     seed: Math.floor(rng() * 2 ** 31),
     avatar: s.hero.avatar,
     stats: runStats(s, hero),
-    startWeaponLevel: 1 + (s.equipment.weapon ? 1 : 0),
+    startWeaponLevel: 1 + (s.equipment.weapon ? 1 : 0) + perkSum(s, 'weapon'),
     pool: weaponPool(s, hero),
-    rerolls: 2 * riftTalentLevel(s, 't_reroll'),
-    skips: riftTalentLevel(s, 't_skip'),
-    banishes: riftTalentLevel(s, 't_banish'),
-    revives: riftTalentLevel(s, 't_revival'),
+    rerolls: 2 * riftTalentLevel(s, 't_reroll') + perkSum(s, 'rerolls'),
+    skips: riftTalentLevel(s, 't_skip') + perkSum(s, 'skips'),
+    banishes: riftTalentLevel(s, 't_banish') + perkSum(s, 'banishes'),
+    revives: riftTalentLevel(s, 't_revival') + perkSum(s, 'revives'),
     provisions,
     companion: riftCompanion(s),
   };
@@ -269,6 +342,7 @@ export function finishDungeon(
   const adv = currentAdventure(s);
   if (!adv) return null;
   gainHeroXp(s, Math.round(r.kills / 10), emit);
+  addXp(s, 'riftwalker', riftwalkerXp(r) * xpMultiplierFor(s, 'riftwalker'), emit);
   addStat(s, 'riftKills', r.kills);
   const quality = 1 + Math.min(0.3, r.kills / 2000);
   return grantAdventure(s, adv, r.won, quality, r.won ? 5 : 45, rng, emit);
@@ -282,6 +356,10 @@ export interface RiftReward {
   /** Resources of each kind shipped to the active village. */
   village: number;
   record: boolean;
+  /** Rissläufer XP gained. */
+  walkerXp: number;
+  /** Relic found in this run. */
+  relic?: string;
 }
 
 export function essenceFor(s: GameState, r: RunResult): number {
@@ -352,12 +430,29 @@ export function finishRun(s: GameState, r: RunResult, rng: Rng, emit: Emit): Rif
   for (const it of items)
     if (ITEM_MAP.has(it.item)) gainItem(s, it.item, it.qty, emit, it.item !== 'aether');
 
+  // Rissläufer XP and relics.
+  const walkerXp = Math.round(riftwalkerXp(r) * xpMultiplierFor(s, 'riftwalker'));
+  addXp(s, 'riftwalker', walkerXp, emit);
+  let relic: string | undefined;
+  if (r.bossKills > 0 || r.won) {
+    const found = rollRelic(s, r, rng);
+    if (found) {
+      relic = found;
+      s.rift.relics = [...s.rift.relics, found];
+      addStat(s, 'riftRelics');
+      emit({ type: 'relicFound', relic: found });
+    } else if (r.won && RELICS.every((x) => s.rift.relics.includes(x.id))) {
+      s.rift.essence += RELIC_DUPLICATE_ESSENCE;
+      s.rift.essenceTotal += RELIC_DUPLICATE_ESSENCE;
+    }
+  }
+
   // Tribute for the village: rift spoils are shipped as resources.
   const village = Math.round((Math.floor(minutes) * 40 + r.bossKills * 200) * (1 + biome));
   if (village > 0) villageTribute(s, village);
   invalidateMods(s);
   emit({ type: 'riftFinished', essence, won: r.won, time: r.time, kills: r.kills, record });
-  return { essence, items, village, record };
+  return { essence, items, village, record, walkerXp, relic };
 }
 
 /** Food names for the UI. */

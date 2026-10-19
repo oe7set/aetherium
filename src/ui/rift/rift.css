@@ -1058,3 +1058,22 @@
 .frame-opt.locked span {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
+.rift-relics .milestones {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+.rift-relics .milestones li {
+  opacity: 0.65;
+}
+.rift-relics .milestones li.done {
+  opacity: 1;
+  color: var(--accent, #b38cff);
+}
+.rift-talent.missing {
+  opacity: 0.55;
+  cursor: default;
+}

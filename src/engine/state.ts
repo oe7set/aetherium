@@ -378,6 +378,8 @@ export interface RiftState {
   /** Seconds until the next echo run. */
   echo: number;
   weekly: WeeklyState;
+  /** Relikte found in runs (Phase 24). */
+  relics: string[];
 }
 
 /** Wochenboss: progress in the current week plus the lifetime count of weekly victories. */
@@ -594,6 +596,7 @@ export function defaultRift(): RiftState {
     biome: 'meadow',
     echo: 600,
     weekly: { week: '', attempts: 0, won: false, bestTime: 0, bestKills: 0, wins: 0 },
+    relics: [],
   };
 }
 

@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.62.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.63.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Rissläufer & Relikte** (Phase 24, `data/riftwalker.ts`, `engine/rift.ts`): Skill `riftwalker` ohne Aktionen –
+XP aus `finishRun`/`finishDungeon` (`riftwalkerXp`: Zeit, Kills, Stufen, Bosse, Sieg, Biom; Dungeons ×0,5). Je Stufe
++0,2 % Macht, +0,5 Leben; Meilensteine (`RIFTWALKER_MILESTONES`) als `RunPerk` (Würfeln, Magnet, Startwaffe,
+Wiederbelebung, Glück, Überspringen/Verbannen, Projektil, Wachstum). 14 Relikte in `s.rift.relics` (bleiben über
+Prestige): Drop je Boss/Sieg (`rollRelic`, nur fehlende, Biom-/Sieg-Bindung), wirken über `runPerks` in `runStats`/
+`baseConfig` und teils als Modifier-Quelle `relics` auf der Insel. UI: Riss → 🏺 Relikte, Skill-Ansicht Rissläufer,
+Ergebnis-Bildschirm zeigt XP und Fund.
 
 **Viehzucht** (Phase 23, `data/husbandry.ts`, `engine/husbandry.ts`): 7 Tiere fressen Feldfrüchte (Weizen,
 Kartoffeln, Äpfel, Kräuter, Alraune + Manakristall) → Eier (+Federn), Wolle, Milch (+Rindsleder), Honig (+Bienenwachs),

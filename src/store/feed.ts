@@ -37,6 +37,7 @@ import {
 import { SPECIALS } from '../data/spells';
 import { FAMILIAR_MAP } from '../data/summoning';
 import { UTILITY_MAP } from '../data/magic';
+import { RELIC_MAP } from '../data/riftwalker';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -468,6 +469,15 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           kind: e.success ? 'gold' : 'warn',
           text: `${e.success ? '🏆' : '🩹'} Abenteuer „${e.name}" ${e.success ? 'gemeistert' : 'abgebrochen'}: +${e.xp} Helden-XP${item ? ` und ${item} (${TIER_NAMES[e.tier]})` : ''}.`,
         });
+        break;
+      }
+      case 'relicFound': {
+        const r = RELIC_MAP.get(e.relic);
+        out.feed.push({
+          kind: 'rare',
+          text: `${r?.icon ?? '🏺'} Relikt gefunden: ${r?.name ?? e.relic}! ${r?.desc ?? ''}`,
+        });
+        out.popups.push({ kind: 'rare', text: `🏺 ${r?.icon ?? ''} ${r?.name ?? e.relic}` });
         break;
       }
       case 'riftEcho':

@@ -80,6 +80,7 @@ export type GameEvent =
       record: boolean;
     }
   | { type: 'riftEcho'; essence: number }
+  | { type: 'relicFound'; relic: string }
   | { type: 'heroLevel'; level: number }
   | { type: 'heroDied' }
   | { type: 'heroRevived' }

@@ -195,6 +195,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Sehnen drehen, Langbögen und Armbrüste bauen, Bolzen mit Edelsteinspitzen veredeln, Köcher nähen. Armbrüste verschießen nur Bolzen. Jede Stufe: etwas mehr Treffsicherheit im Fernkampf und Munition sparen.',
   },
   {
+    id: 'riftwalker',
+    name: 'Rissläufer',
+    icon: '🌀',
+    color: '#b38cff',
+    group: 'combat',
+    desc: 'Wächst mit jedem Lauf durch den Ätherriss (Zeit, Kills, Bosse, Siege). Jede Stufe: mehr Schaden und Leben im Riss; Meilensteine geben Neu-Würfeln, Startwaffe, Wiederbelebung, Projektile …',
+  },
+  {
     id: 'husbandry',
     name: 'Viehzucht',
     icon: '🐄',

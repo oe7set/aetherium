@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.63.0] – Rissläufer & Relikte
+
+- **Neuer Skill Rissläufer** 🌀 (Phase 24): Jeder Lauf durch den Ätherriss gibt XP – fürs Überleben, Kills, Stufen, Bosse und Siege (tiefere Biome mehr, Live-Abenteuer zur Hälfte). Jede Stufe: mehr Schaden und Leben im Riss.
+- **Meilensteine**: Stufe 10 Neu würfeln, 20 Magnet, 30 stärkere Startwaffe, 40 Wiederbelebung, 50 Glück, 60 Überspringen & Verbannen, 75 ein Projektil mehr, 90 Wachstum.
+- **14 Relikte**: Riss-Bosse und Siege können sie fallen lassen – jedes Biom hat ein eigenes, dazu seltene Allrounder wie Phönixasche, Ätherlinse oder die Krone des Prüfers (nur aus Siegen). Sie wirken in jedem Lauf und teils auch auf der Insel.
+- Neuer Riss-Reiter **🏺 Relikte** mit Sammlung und Meilensteinen; der Ergebnis-Bildschirm zeigt Rissläufer-XP und Funde.
+
 ## [1.62.0] – Viehzucht
 
 - **Neuer Skill Viehzucht** 🐄 (Phase 23): Hühner, Schafe, Kühe, Bienen, Ziegen, Alpakas und Ätherschafe fressen deine Feldfrüchte und liefern Eier, Federn, Wolle, Milch, Honig, Bienenwachs und edle Wolle. In der Molkerei reifen Käse und Ziegenkäse.

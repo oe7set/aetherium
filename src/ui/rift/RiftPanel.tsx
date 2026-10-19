@@ -33,10 +33,11 @@ import { WEEKLY_MINUTES } from '../../data/weekly';
 import { createRun } from '../../rift/sim';
 import { useGame } from '../../store/gameStore';
 import { AdventuresView, HeroView } from './HeroView';
+import { RelicsView } from './RelicsView';
 import { useRiftRun } from './runStore';
 import './rift.css';
 
-type Segment = 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
+type Segment = 'hero' | 'adventures' | 'start' | 'talents' | 'relics' | 'codex';
 
 export function RiftPanel() {
   // Re-render on meta changes only (a primitive signature keeps the selector stable).
@@ -45,6 +46,7 @@ export function RiftPanel() {
       s.game.rift.essence,
       s.game.rift.talents,
       s.game.rift.runs,
+      s.game.rift.relics.length,
       s.game.hero.status,
       Math.floor(s.game.hero.health),
       s.game.hero.level,
@@ -66,6 +68,7 @@ export function RiftPanel() {
             ['adventures', '❗ Abenteuer'],
             ['start', '🌀 Riss'],
             ['talents', '✨ Talente'],
+            ['relics', '🏺 Relikte'],
             ['codex', '📖 Kodex'],
           ] as [Segment, string][]
         ).map(([k, label]) => (
@@ -84,6 +87,7 @@ export function RiftPanel() {
       {seg === 'adventures' && <AdventuresView />}
       {seg === 'start' && <StartView />}
       {seg === 'talents' && <TalentView />}
+      {seg === 'relics' && <RelicsView />}
       {seg === 'codex' && <CodexView />}
     </div>
   );
