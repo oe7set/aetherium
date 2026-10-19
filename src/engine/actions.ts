@@ -200,6 +200,8 @@ const SKILL_STATS: Record<string, string> = {
   mining: 'oresMined',
   firemaking: 'fuelBurned',
   fishing: 'fishCaught',
+  faith: 'ritesPerformed',
+  brewing: 'drinksBrewed',
 };
 
 /**

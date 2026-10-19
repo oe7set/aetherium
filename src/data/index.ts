@@ -27,9 +27,10 @@ export {
 export type { CropDef, ElementDef, HelperDef, TechDef, TechUnlock } from './science';
 export type { AreaDef, BossPhase, DungeonDef, MonsterDef } from './combat';
 export { ACHIEVEMENTS } from './achievements';
+import { DEVOTION_BUFFS } from './devotion';
 export { LUCKY_EVENTS, POTION_BUFFS } from './buffs';
 
-export const BUFFS: BuffDef[] = [...LUCKY_EVENTS, ...POTION_BUFFS];
+export const BUFFS: BuffDef[] = [...LUCKY_EVENTS, ...POTION_BUFFS, ...DEVOTION_BUFFS];
 
 function indexById<T extends { id: string }>(list: T[], kind: string): Map<string, T> {
   const map = new Map<string, T>();

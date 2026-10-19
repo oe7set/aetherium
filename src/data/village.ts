@@ -746,7 +746,11 @@ export const HARBOR_IMPORTS: { res: VRes; items: string[]; per: number }[] = [
   },
   { res: 'clay', items: ['ash', 'ore_copper', 'ore_tin', 'stone_granite'], per: 5 },
   { res: 'iron', items: ['ore_iron', 'bar_iron', 'bar_bronze'], per: 8 },
-  { res: 'crop', items: ['wheat', 'potato', 'apple'], per: 10 },
+  {
+    res: 'crop',
+    items: ['wheat', 'potato', 'apple', 'apple_cider', 'wheat_beer', 'mead', 'potato_schnapps'],
+    per: 10,
+  },
 ];
 
 /** Gold per 100 resources sold at the harbor (×(1 + 10 % per harbor level)). */

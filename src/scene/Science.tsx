@@ -389,6 +389,87 @@ export function AetherSpring({ onTap }: { onTap: TapHandler }) {
   );
 }
 
+/** Glaube: a small stone shrine with a flickering candle that flares on each offering. */
+export function Shrine({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('faith')!;
+  const flame = useRef<THREE.MeshStandardMaterial>(null);
+  const pulse = useSkillPulse('faith');
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const k = Math.max(0, 1 - (t - pulse.current) / 1.2);
+    if (flame.current) flame.current.emissiveIntensity = 1.4 + Math.sin(t * 9) * 0.3 + k * 2.5;
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.15, 0]}>
+        <boxGeometry args={[1.3, 0.3, 1]} />
+        <meshStandardMaterial color="#9a958c" flatShading />
+      </mesh>
+      <mesh position={[0, 0.85, -0.25]}>
+        <boxGeometry args={[0.9, 1.1, 0.25]} />
+        <meshStandardMaterial color="#b9b2a4" flatShading />
+      </mesh>
+      <mesh position={[0, 1.55, -0.25]} rotation={[0, 0, Math.PI / 4]}>
+        <boxGeometry args={[0.45, 0.45, 0.26]} />
+        <meshStandardMaterial
+          color="#e8d79a"
+          emissive="#c9a640"
+          emissiveIntensity={0.35}
+          flatShading
+        />
+      </mesh>
+      <mesh position={[0.35, 0.42, 0.15]}>
+        <cylinderGeometry args={[0.06, 0.06, 0.24, 8]} />
+        <meshStandardMaterial color="#f4ecd8" />
+      </mesh>
+      <mesh position={[0.35, 0.6, 0.15]}>
+        <coneGeometry args={[0.05, 0.14, 6]} />
+        <meshStandardMaterial
+          ref={flame}
+          color="#ffcf6a"
+          emissive="#ff9b2e"
+          emissiveIntensity={1.4}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/** Brauen: two barrels and a copper kettle that steams while brewing. */
+export function Brewery({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('brewing')!;
+  const kettle = useRef<THREE.Group>(null);
+  const pulse = useSkillPulse('brewing');
+  useFrame(() => {
+    const t = performance.now() / 1000;
+    const k = Math.max(0, 1 - (t - pulse.current) / 0.8);
+    if (kettle.current) kettle.current.scale.setScalar(1 + k * 0.08);
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      {[
+        [-0.45, 0.3],
+        [0.15, 0.5],
+      ].map(([x, z], i) => (
+        <mesh key={i} position={[x!, 0.38, z!]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.32, 0.32, 0.6, 10]} />
+          <meshStandardMaterial color="#8a5a35" flatShading />
+        </mesh>
+      ))}
+      <group ref={kettle} position={[0.3, 0, -0.45]}>
+        <mesh position={[0, 0.35, 0]}>
+          <sphereGeometry args={[0.38, 10, 8]} />
+          <meshStandardMaterial color="#c87533" metalness={0.6} roughness={0.35} flatShading />
+        </mesh>
+        <mesh position={[0, 0.78, 0]}>
+          <cylinderGeometry args={[0.07, 0.14, 0.3, 8]} />
+          <meshStandardMaterial color="#b0662b" metalness={0.6} roughness={0.4} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
 const HELPER_COLORS: Record<string, string> = {
   intern: '#f0c8a0',
   gnome: '#d9534f',

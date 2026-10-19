@@ -154,6 +154,22 @@ export const SKILLS: SkillDef[] = [
     group: 'combat',
     desc: 'Wichtiger als man denkt. Jedes Level = 1 maximaler Lebenspunkt.',
   },
+  {
+    id: 'faith',
+    name: 'Glaube',
+    icon: '🙏',
+    color: '#f3e3a1',
+    group: 'science',
+    desc: 'Knochen vergraben, Asche verstreuen, Wasser segnen. Jede Stufe: mehr Verteidigung im Kampf, mehr Lebenskraft im Riss und eine wehrhaftere Dorfgemeinschaft.',
+  },
+  {
+    id: 'brewing',
+    name: 'Brauen',
+    icon: '🍺',
+    color: '#d9a441',
+    group: 'processing',
+    desc: 'Aus Äpfeln, Weizen, Kartoffeln und Kräutern werden Most, Bier und Met – Kampfproviant, Buffs, Handelsware und Getreide fürs Dorf.',
+  },
 ];
 
 export const COMING_SOON_SKILLS: ComingSoonSkill[] = [];

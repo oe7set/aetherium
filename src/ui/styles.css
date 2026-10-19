@@ -2093,3 +2093,19 @@ button.chip {
   left: 50%;
   top: 86%;
 }
+.st-faith {
+  left: 14%;
+  top: 74%;
+}
+.st-brew {
+  left: 88%;
+  top: 62%;
+}
+.character.st-faith {
+  left: 20%;
+  top: 70%;
+}
+.character.st-brew {
+  left: 82%;
+  top: 60%;
+}

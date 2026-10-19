@@ -26,6 +26,8 @@ import {
   AlchemyLab,
   RuneCircle,
   AetherSpring,
+  Brewery,
+  Shrine,
   Obelisk,
   ResearchTower,
   Workbench,
@@ -79,7 +81,10 @@ function LabelProjector() {
       v.set(st.pos[0], 3.2, st.pos[1]).project(camera);
       const visible = v.z < 1;
       el.style.opacity = visible ? '1' : '0';
-      el.style.transform = `translate(-50%, -50%) translate(${((v.x + 1) / 2) * size.width}px, ${((1 - v.y) / 2) * size.height}px)`;
+      // Keep labels on screen: a station at the edge must not lose half its name.
+      const half = el.offsetWidth / 2 + 4;
+      const x = Math.min(size.width - half, Math.max(half, ((v.x + 1) / 2) * size.width));
+      el.style.transform = `translate(-50%, -50%) translate(${x}px, ${((1 - v.y) / 2) * size.height}px)`;
     }
   });
   return null;
@@ -165,6 +170,8 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <AlchemyLab onTap={tap('alchemy')} />
       <RuneCircle onTap={tap('enchanting')} />
       <AetherSpring onTap={tap('arcane')} />
+      <Shrine onTap={tap('faith')} />
+      <Brewery onTap={tap('brewing')} />
       <Helpers />
       <Character skill={activeSkill} />
       <LabelProjector />

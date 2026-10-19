@@ -7,6 +7,7 @@ export * from './collections';
 export * from './combat';
 export * from './market';
 export * from './mastery';
+export * from './devotion';
 export * from './meta';
 export * from './modifiers';
 export * from './consume';

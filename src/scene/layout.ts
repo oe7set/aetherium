@@ -28,6 +28,8 @@ export const STATIONS: StationDef[] = [
   { skill: 'alchemy', label: 'Alchemie', pos: [-7, -6], workPos: [-5.9, -5.2] },
   { skill: 'enchanting', label: 'Runenkreis', pos: [5.4, -6.2], workPos: [4.6, -5.2] },
   { skill: 'arcane', label: 'Ätherquelle', pos: [-0.8, 9.6], workPos: [-0.4, 8.4] },
+  { skill: 'faith', label: 'Schrein', pos: [-7.1, 6.6], workPos: [-6.2, 5.8] },
+  { skill: 'brewing', label: 'Brauerei', pos: [8.4, 3.1], workPos: [7.2, 2.7] },
 ];
 
 /** Skills that share a station. */

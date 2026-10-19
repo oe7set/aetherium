@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.39.0] – Glaube & Brauen
+
+- Neuer Skill **Glaube** 🙏 (Schrein auf der Insel): Knochen vergraben, Aschenandacht, Ektoplasma opfern, Drachenknochen weihen, Wasser segnen, Kerzen weihen, Göttliches Ritual. Jede Stufe gibt dauerhaft mehr Verteidigung im Kampf, mehr Lebenspunkte im Riss und bessere Dorfabwehr. Weihwasser und geweihte Kerzen sind Buffs, der „Göttliche Funke" gibt +1 Intelligenz.
+- Neuer Skill **Brauen** 🍺 (Brauerei auf der Insel): Apfelmost, Minztee, Weizenbier, Kartoffelschnaps, Kräutermet, Alraunen-Gebräu, Quantenbräu. Getränke heilen im Kampf, geben Buffs (XP, Verkaufspreis, Schaden, Tempo, doppelte Ausbeute), verkaufen sich gut und gehen über den Inselhafen als Getreide ins Dorf.
+- Beide Skills zählen für Aufträge, Ruhmesleiter, Erfolge und Meisterschaft.
+- Rezept-Sprung erweitert: Zutaten aus Kämpfen (z. B. Knochen) führen zum Kampf (⚔️), Funde aus Aktionen zur passenden Aktion.
+- Stationsnamen auf der Insel bleiben immer ganz im Bild.
+
 ## [1.38.0] – Rezept-Sprung
 
 - Rezept-Sprung: In jeder Aktion sind die benötigten Zutaten antippbar (↪) – das Spiel springt zur Aktion, die sie herstellt (z. B. Schmieden → Kupfererz → Bergbau „Kupfer abbauen") und lässt die Karte kurz aufleuchten. Was man nur kaufen kann (🏪), führt zum Krämer. Auch im Inventar springen „Verwendet für"/„Entsteht durch" direkt zur Aktion.

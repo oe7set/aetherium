@@ -1,3 +1,4 @@
+import { invalidateMods } from './modifiers';
 import { BALANCE } from '../data/balance';
 import type { Emit } from './events';
 import type { GameState } from './state';
@@ -47,6 +48,9 @@ export function addXp(s: GameState, skill: string, amount: number, emit: Emit): 
   entry.xp += amount;
   const after = levelForXp(entry.xp, cap);
   emit({ type: 'xp', skill, amount });
-  if (after > before) levelsChanged.add(s);
+  if (after > before) {
+    levelsChanged.add(s);
+    invalidateMods(s); // level-based bonus sources (Glaube) change
+  }
   for (let lvl = before + 1; lvl <= after; lvl++) emit({ type: 'levelUp', skill, level: lvl });
 }

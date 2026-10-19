@@ -809,4 +809,6 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
   { id: 'gold', label: 'Verdiene {n} Gold', stat: 'goldEarned', base: 3000, icon: '🪙' },
   { id: 'clicks', label: 'Tippe {n}× auf Aktionen', stat: 'clicks', base: 300, icon: '👆' },
   { id: 'harvest', label: 'Ernte {n}-mal', stat: 'harvests', base: 8, icon: '🌾' },
+  { id: 'rites', label: 'Vollziehe {n} Andachten', stat: 'ritesPerformed', base: 40, icon: '🙏' },
+  { id: 'brew', label: 'Braue {n} Getränke', stat: 'drinksBrewed', base: 30, icon: '🍺' },
 ];

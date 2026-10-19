@@ -36,6 +36,7 @@ function IngredientPill({
 }) {
   const jump = useGame((s) => s.jumpToAction);
   const setUi = useGame((s) => s.setUi);
+  const openSkill = useGame((s) => s.openSkill);
   const source = itemSource(useGame.getState().game, item);
   if (!source)
     return (
@@ -46,7 +47,9 @@ function IngredientPill({
   const go = () =>
     source.kind === 'action'
       ? jump(source.action.id)
-      : setUi({ tab: 'inventory', inventorySegment: 'shop' });
+      : source.kind === 'combat'
+        ? openSkill('melee')
+        : setUi({ tab: 'inventory', inventorySegment: 'shop' });
   return (
     <button
       className={`item-pill link ${ok ? '' : 'missing'}`}
@@ -54,11 +57,15 @@ function IngredientPill({
       title={
         source.kind === 'action'
           ? `Herstellen: ${source.action.name} (Lv ${source.action.levelReq})`
-          : 'Beim Krämer kaufen'
+          : source.kind === 'combat'
+            ? 'Beute aus Kämpfen'
+            : 'Beim Krämer kaufen'
       }
     >
       {label} <small>({have})</small>{' '}
-      <span className="pill-go">{source.kind === 'shop' ? '🏪' : '↪'}</span>
+      <span className="pill-go">
+        {source.kind === 'shop' ? '🏪' : source.kind === 'combat' ? '⚔️' : '↪'}
+      </span>
     </button>
   );
 }

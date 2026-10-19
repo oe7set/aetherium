@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.38.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.39.0**.
 
 ## 1. Der große Kreislauf
 
@@ -46,6 +46,13 @@
 | Haustiere, Quests, Aufträge | `data/meta.ts`                                                      | `engine/meta.ts`                             | `ui/quests/`                     |
 | Erfolge                     | `data/achievements.ts`                                              | `engine/achievements.ts`                     | `ui/menu/`                       |
 | Prestige                    | `data/prestige.ts`                                                  | `engine/prestige.ts` (`resetRun`)            | `ui/menu/`                       |
+
+**Glaube & Brauen** (`data/devotion.ts`, `engine/devotion.ts`): Glaube verwertet Knochen (Kampf/Jagd), Asche
+(Feuermachen), Kräuter (Beete) und Ektoplasma; jede Stufe gibt +0,4 % Verteidigung im Kampf, +0,3 % Riss-LP und
++0,2 % Dorfabwehr (Modifier-Quelle `faith`, Stufenaufstieg ruft `invalidateMods`). Weihwasser/Kerzen sind Buffs,
+das Ritual macht „Göttlicher Funke" (+1 Intelligenz). Brauen macht aus Äpfeln, Weizen, Kartoffeln und Kräutern
+Getränke: Kampfproviant (`heal`), Buffs, Handelsware und – über den Inselhafen – Getreide fürs Dorf. Stationen
+Schrein/Brauerei auf der Insel; Zähler `ritesPerformed`/`drinksBrewed` für Aufträge und Ruhmesleiter.
 
 ## 3. Verbindungen (wer gibt wem was?)
 

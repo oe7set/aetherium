@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
 import {
+  faithBonus,
   hasMasteryPool,
   levelCap,
   levelProgress,
@@ -53,6 +54,20 @@ function MasteryPool({ skillId }: { skillId: string }) {
         bleibt auch nach der Wiedergeburt.
       </small>
     </details>
+  );
+}
+
+/** Glaube: what the current level already gives across the game. */
+function FaithFact() {
+  const b = useGame((s) => {
+    const f = faithBonus(s.game);
+    return `${(f.defence * 100).toFixed(1)}|${(f.riftHp * 100).toFixed(1)}|${(f.villageDefense * 100).toFixed(1)}`;
+  });
+  const [def, hp, village] = b.split('|');
+  return (
+    <span className="fact">
+      🙏 Segen: +{def} % Verteidigung · +{hp} % Riss-LP · +{village} % Dorfabwehr
+    </span>
   );
 }
 
@@ -166,6 +181,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
             {t('skills.tool', { name: `${tool.icon} ${tool.name}`, speed: tool.speed })}
           </span>
         )}
+        {skillId === 'faith' && <FaithFact />}
         <span className="fact">
           {next
             ? t('action.nextUnlock', { name: next.name, level: next.levelReq })
