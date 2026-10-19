@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.48.0] – Kampf 2.0: Gebete & Loadouts
+
+Start des **Masterplans 3.0** (`docs/PLAN-3.md`): Kampf 2.0 und sechs neue Skills, in Phasen.
+
+- **Gebete** 🙏 (Phase 11): 13 Gebete aus dem Skill Glaube – Dicke Haut, Kraftschub, Klarer Blick, Schnelle Heilung, Stahlhaut, Adlerauge (Fernkampf), Mystische Macht (Magie), Urgewalt (Nahkampf), drei Schutzgebete, Heiliger Zorn und Göttliche Ägide. Bis zu drei gleichzeitig. Gebetspunkte sinken im Kampf und füllen sich in Ruhe und mit jedem Ritual am Schrein – auch offline.
+- **Monster-Angriffsstile**: Monster greifen mit Nahkampf, Fernkampf oder Magie an; das passende Schutzgebet halbiert ihren Schaden.
+- **Weihtrunk** 🫗 (Brauen 25): gibt Gebetspunkte zurück und wird im Kampf automatisch getrunken, wenn sie knapp werden.
+- **Loadouts**: drei Ausrüstungs-Sets (Nah/Fern/Magie) mit 💾 speichern und mit einem Tipp wechseln – inklusive Zauber.
+- **Auto-Trank** 🧪: Ein gewählter Trank (Met, Tee, Bier …) wird im Kampf automatisch nachgelegt, sobald seine Wirkung endet.
+
 ## [1.47.0] – Endlos-Rangliste
 
 - **Endlos-Rangliste** 🏆 im Riss-Start (nach dem ersten Sieg über den Prüfer): Dein Rekord-Code fasst Bestzeit im Endlos-Riss, Riss-Siege und Gesamtlevel zusammen. Kopieren, an Freunde schicken, deren Codes einfügen – schon gibt es eine Rangliste mit 🥇🥈🥉. Neue Codes derselben Person ersetzen die alten.

@@ -268,6 +268,12 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           });
         }
         break;
+      case 'prayerEmpty':
+        out.feed.push({
+          kind: 'warn',
+          text: '🙏 Gebetspunkte leer – die Gebete verstummen. Weihtrunk oder Schrein hilft.',
+        });
+        break;
       case 'dodged':
         out.popups.push({ kind: 'rare', text: '💨 Ausgewichen!' });
         break;

@@ -2368,3 +2368,84 @@ button.chip {
   min-width: 0;
   font-size: 0.75rem;
 }
+
+/* --- Combat 2.0: prayers, loadouts ------------------------------------------------------------- */
+
+.combat-box {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.combat-box > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+.prayer-points {
+  margin-left: auto;
+  font-weight: 700;
+  color: #f3e3a1;
+}
+.prayer-box[open] > summary {
+  margin-bottom: 6px;
+}
+.prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+}
+.prayer {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 6px 2px;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  cursor: pointer;
+}
+.prayer span {
+  font-size: 1.2rem;
+}
+.prayer small {
+  font-size: 0.625rem;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.prayer.on {
+  border-color: #f3e3a1;
+  background: rgba(243, 227, 161, 0.16);
+  box-shadow: 0 0 10px rgba(243, 227, 161, 0.35);
+}
+.prayer.locked {
+  opacity: 0.4;
+  cursor: default;
+}
+.loadout-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+}
+.loadout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px;
+}
+.loadout .btn {
+  width: auto;
+  min-width: 0;
+  padding-left: 6px;
+  padding-right: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

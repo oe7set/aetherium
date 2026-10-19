@@ -76,6 +76,20 @@ export interface CombatState {
   dodged: boolean;
 }
 
+export interface PrayerState {
+  points: number;
+  active: string[];
+}
+
+export interface Loadout {
+  name: string;
+  gear: Partial<Record<EquipSlot, string>>;
+  /** Spell to cast with this set (magic loadouts). */
+  spell?: string;
+}
+
+export const LOADOUT_COUNT = 3;
+
 export interface CombatSettings {
   /** Where combat XP goes: the weapon's style or defence. */
   training: 'style' | 'defence';
@@ -85,6 +99,8 @@ export interface CombatSettings {
   food: string | null;
   /** Chosen combat spell (magic style); falls back to the spark without reagents. */
   spell: string;
+  /** Buff item drunk automatically in combat whenever its buff runs out (null = off). */
+  potion: string | null;
 }
 
 export interface PlotState {
@@ -402,6 +418,10 @@ export interface GameState {
   equipment: Partial<Record<EquipSlot, string>>;
   combat: CombatState | null;
   combatSettings: CombatSettings;
+  /** Prayer points and active prayers (faith in combat). */
+  prayer: PrayerState;
+  /** Saved equipment sets („Loadouts"), switched with one tap. */
+  loadouts: Loadout[];
   /** Research points (currency for the tech tree). */
   research: number;
   techs: string[];
@@ -443,7 +463,11 @@ export function defaultSettings(): Settings {
 }
 
 export function defaultCombatSettings(): CombatSettings {
-  return { training: 'style', autoEat: 0.5, food: null, spell: 'spark' };
+  return { training: 'style', autoEat: 0.5, food: null, spell: 'spark', potion: null };
+}
+
+export function defaultLoadouts(): Loadout[] {
+  return ['⚔️ Nahkampf', '🏹 Fernkampf', '🪄 Magie'].map((name) => ({ name, gear: {} }));
 }
 
 export function newGame(now: number = Date.now()): GameState {
@@ -474,6 +498,8 @@ export function newGame(now: number = Date.now()): GameState {
     equipment: {},
     combat: null,
     combatSettings: defaultCombatSettings(),
+    prayer: { points: 12, active: [] },
+    loadouts: defaultLoadouts(),
     research: 0,
     techs: [],
     codex: [],
@@ -586,6 +612,8 @@ export function cloneState(s: GameState): GameState {
     equipment: { ...s.equipment },
     combat: s.combat ? { ...s.combat } : null,
     combatSettings: { ...s.combatSettings },
+    prayer: { ...s.prayer, active: [...s.prayer.active] },
+    loadouts: s.loadouts.map((l) => ({ ...l, gear: { ...l.gear } })),
     techs: [...s.techs],
     codex: [...s.codex],
     plots: s.plots.map((p) => ({ ...p })),

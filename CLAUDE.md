@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.47.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.48.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
@@ -26,7 +26,7 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   `registerAfterComplete`/`registerAfterAdvance` (Erfolge). Module registrieren sich beim Import über
   `engine/index.ts` – Tests daher aus `../src/engine` importieren.
 - Weitere Hooks: `registerCompletionHook` (pro abgeschlossener Aktion, z. B. Forschung/Codex) und
-  `registerAvailabilityCheck` (Tech-Sperren). Kampf = `engine/combat.ts`, Forschung/Beete/Helfer = `engine/science.ts`,
+  `registerAvailabilityCheck` (Tech-Sperren). Kampf = `engine/combat.ts` (+ Gebete `engine/prayer.ts`, Zauber `data/spells.ts`; Plan: `docs/PLAN-3.md`), Forschung/Beete/Helfer = `engine/science.ts`,
   Prestige = `engine/prestige.ts` (`resetRun` legt fest, was bei Resets erhalten bleibt – neue State-Felder dort
   bewusst einordnen!). Level-Cap: `levelCap(s)`. Haustiere/Quests/Aufträge = `engine/meta.ts`.
   Wochenboss = `engine/weekly.ts` (Riss-Lauf mit `trial: true`, Mutatoren in `data/weekly.ts`).

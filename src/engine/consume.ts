@@ -1,5 +1,6 @@
 import { getItem, getTool } from '../data';
 import { addBuff } from './buffs';
+import { restorePrayer } from './prayer';
 import { addResearch } from './science';
 import { invalidateMods } from './modifiers';
 import { skillLevel } from './skills';
@@ -46,6 +47,9 @@ export function consumeItem(s: GameState, itemId: string, rng: Rng, emit: Emit):
       break;
     case 'buff':
       addBuff(s, effect.buff, emit);
+      break;
+    case 'prayer':
+      restorePrayer(s, effect.amount);
       break;
     case 'gold':
       earnGold(s, randInt(rng, effect.min, effect.max), emit);

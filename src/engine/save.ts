@@ -13,6 +13,7 @@ import {
   TOOL_MAP,
 } from '../data';
 import { SPELL_MAP } from '../data/spells';
+import { PRAYER_MAP } from '../data/prayers';
 import { COLLECTION_MAP } from '../data/collections';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
@@ -23,10 +24,13 @@ import { BIOMES, HEROES, RIFT_TALENTS, RIFT_WEAPONS } from '../data/rift';
 import { createVillage } from './villageWorld';
 import {
   defaultCombatSettings,
+  defaultLoadouts,
   defaultSettings,
   newGame,
   SAVE_VERSION,
   type CombatSettings,
+  type Loadout,
+  type PrayerState,
   type Village,
   type VillageState,
   type CombatState,
@@ -261,6 +265,8 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     hero: hydrateHero(data.hero, base.hero),
     progress: hydrateProgress(data.progress, base.progress),
     combatSettings: hydrateCombatSettings(data.combatSettings),
+    prayer: hydratePrayer(data.prayer, base.prayer),
+    loadouts: hydrateLoadouts(data.loadouts),
     achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
     buffs: Array.isArray(data.buffs)
       ? data.buffs.filter(
@@ -615,7 +621,33 @@ function hydrateCombatSettings(v: unknown): CombatSettings {
     ...(isRecord(v) ? (v as Partial<CombatSettings>) : {}),
   };
   if (typeof merged.spell !== 'string' || !SPELL_MAP.has(merged.spell)) merged.spell = 'spark';
+  if (merged.potion !== null && !(typeof merged.potion === 'string' && ITEM_MAP.has(merged.potion)))
+    merged.potion = null;
   return merged;
+}
+
+function hydratePrayer(v: unknown, fallback: PrayerState): PrayerState {
+  if (!isRecord(v)) return fallback;
+  const points =
+    typeof v.points === 'number' && Number.isFinite(v.points) ? Math.max(0, v.points) : 0;
+  return { points, active: stringArray(v.active).filter((id) => PRAYER_MAP.has(id)) };
+}
+
+function hydrateLoadouts(v: unknown): Loadout[] {
+  const base = defaultLoadouts();
+  if (!Array.isArray(v)) return base;
+  return base.map((def, i) => {
+    const l: unknown = v[i];
+    if (!isRecord(l)) return def;
+    const gear = Object.fromEntries(
+      Object.entries(stringRecord(l.gear)).filter(([, id]) => ITEM_MAP.get(id)?.equip),
+    );
+    return {
+      name: typeof l.name === 'string' && l.name ? l.name.slice(0, 24) : def.name,
+      gear,
+      spell: typeof l.spell === 'string' && SPELL_MAP.has(l.spell) ? l.spell : undefined,
+    };
+  });
 }
 
 function hydrateCombat(v: unknown): CombatState | null {

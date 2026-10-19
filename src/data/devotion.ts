@@ -74,6 +74,15 @@ export const DEVOTION_ITEMS: ItemDef[] = [
     desc: 'Gesegnet mit Salbei und guten Absichten. Benutzen: Segen (+15 % Verteidigung).',
   },
   {
+    id: 'prayer_draught',
+    name: 'Weihtrunk',
+    icon: '🫗',
+    category: 'consumable',
+    sellPrice: 45,
+    consume: { type: 'prayer', amount: 30 },
+    desc: 'Gibt 30 Gebetspunkte zurück. Wird im Kampf automatisch getrunken, wenn die Gebete knapp werden.',
+  },
+  {
     id: 'blessed_candle',
     name: 'Geweihte Kerze',
     icon: '🕯️',
@@ -352,6 +361,21 @@ const BREWING: ActionDef[] = [
     ],
     outputs: [{ item: 'mead', qty: 1 }],
     category: 'Bier & Met',
+  },
+  {
+    id: 'brew_prayer',
+    skill: 'brewing',
+    name: 'Weihtrunk brauen',
+    icon: '🫗',
+    levelReq: 25,
+    baseTime: 4.2,
+    xp: 52,
+    inputs: [
+      { item: 'holy_water', qty: 1 },
+      { item: 'mint_tea', qty: 1 },
+    ],
+    outputs: [{ item: 'prayer_draught', qty: 2 }],
+    category: 'Tränke',
   },
   {
     id: 'brew_mandrake',

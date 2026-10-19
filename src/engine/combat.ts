@@ -33,6 +33,10 @@ import { itemCount, removeItem, addItem, freeSlots } from './inventory';
 import { invalidateMods, mod, modFor, registerModifierSource } from './modifiers';
 import { randInt, type Rng } from './rng';
 import { addResearch } from './science';
+import { consumeItem } from './consume';
+import { maxPrayer, protectsFrom } from './prayer';
+import { monsterStyle } from '../data/prayers';
+import { BUFF_MAP } from '../data';
 import { earnGold } from './shop';
 import { addXp, skillLevel } from './skills';
 import { addStat, type CombatState, type GameState } from './state';
@@ -267,6 +271,37 @@ export function equipBest(s: GameState): number {
   return changed;
 }
 
+// --- Loadouts -----------------------------------------------------------------------------------
+
+/** Stores the worn equipment (and spell) in loadout i. */
+export function saveLoadout(s: GameState, i: number): boolean {
+  const l = s.loadouts[i];
+  if (!l) return false;
+  l.gear = { ...s.equipment };
+  l.spell = s.combatSettings.spell;
+  return true;
+}
+
+/** Puts on loadout i; returns how many pieces were missing from the bag. */
+export function applyLoadout(s: GameState, i: number): number {
+  const l = s.loadouts[i];
+  if (!l) return 0;
+  let missing = 0;
+  const all: EquipSlot[] = [...ARMOUR_SLOTS, 'weapon', 'ring', 'amulet', 'ammo'];
+  for (const slot of all) {
+    const want = l.gear[slot];
+    if (s.equipment[slot] === want) continue;
+    if (!want) {
+      unequip(s, slot);
+      continue;
+    }
+    if (itemCount(s, want) > 0 && equipItem(s, want).ok) continue;
+    missing++;
+  }
+  if (l.spell) s.combatSettings = { ...s.combatSettings, spell: l.spell };
+  return missing;
+}
+
 // --- Food ---------------------------------------------------------------------------------------
 
 export const FOODS = ITEMS.filter((i) => (i.heal ?? 0) > 0).sort(
@@ -484,7 +519,28 @@ function landHit(
   if (c.monsterHp <= 0) killMonster(s, c, m, rng, emit, opts.special ? 1 + SPECIAL_KILL_GOLD : 1);
 }
 
+/** Fraction of monster damage that gets through a matching protection prayer. */
+export const PROTECT_FACTOR = 0.5;
+const DRAUGHT = 'prayer_draught';
+
+/** Drinks a Weihtrunk when prayers are running low (only while some prayer is switched on). */
+function autoPrayerDraught(s: GameState, rng: Rng, emit: Emit): void {
+  if (!s.prayer.active.length || itemCount(s, DRAUGHT) <= 0) return;
+  if (s.prayer.points < maxPrayer(s) * 0.25) consumeItem(s, DRAUGHT, rng, emit);
+}
+
+/** Keeps the chosen combat potion's buff up (Auto-Trank). */
+function autoPotion(s: GameState, rng: Rng, emit: Emit): void {
+  const id = s.combatSettings.potion;
+  if (!id || itemCount(s, id) <= 0) return;
+  const effect = getItem(id).consume;
+  if (effect?.type !== 'buff' || !BUFF_MAP.has(effect.buff)) return;
+  if (s.buffs.some((b) => b.id === effect.buff)) return;
+  consumeItem(s, id, rng, emit);
+}
+
 function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {
+  autoPotion(s, rng, emit);
   const m = getMonster(c.monster);
   const st = playerStats(s);
   c.playerTimer += st.speed;
@@ -560,11 +616,14 @@ function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void
     return;
   }
   const roll = randInt(rng, 1, m.maxHit + (phase?.maxHitBonus ?? 0));
-  const damage = heavy ? Math.round(roll * HEAVY_DAMAGE) : roll;
+  const raw = heavy ? Math.round(roll * HEAVY_DAMAGE) : roll;
+  // Protection prayers halve the damage of the matching style.
+  const damage = protectsFrom(s, monsterStyle(m.id)) ? Math.round(raw * PROTECT_FACTOR) : raw;
   s.hp -= damage;
   addStat(s, 'damageTaken', damage);
   emit({ type: 'hit', target: 'player', damage, heavy });
   autoEat(s, emit);
+  autoPrayerDraught(s, rng, emit);
   if (s.hp <= 0) {
     addStat(s, 'deaths');
     s.hp = maxHp(s);
@@ -620,6 +679,7 @@ registerTimeEffect('hpRegen', {
   next: () => Infinity,
   apply: (s, dt) => {
     const max = maxHp(s);
-    if (s.hp < max) s.hp = Math.min(max, s.hp + dt / HP_REGEN_SECONDS);
+    if (s.hp < max)
+      s.hp = Math.min(max, s.hp + (dt / HP_REGEN_SECONDS) * (1 + mod(s, 'combat.regen')));
   },
 });

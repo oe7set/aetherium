@@ -13,8 +13,14 @@ import {
   type MonsterDef,
 } from '../../data';
 import {
+  activePrayers,
+  applyLoadout,
   castSpell,
+  maxPrayer,
+  protectsFrom,
+  saveLoadout,
   spellAffinity,
+  togglePrayer,
   combatLevel,
   estimateKillTime,
   formatDuration,
@@ -26,6 +32,7 @@ import {
   monsterHitChance,
   skillLevel,
 } from '../../engine';
+import { PRAYER_SLOTS, PRAYERS, monsterStyle } from '../../data/prayers';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
@@ -133,6 +140,144 @@ function AmmoLine() {
   );
 }
 
+/** Gebete: faith in combat. Toggle up to three, the bar drains while fighting. */
+function PrayerPanel() {
+  const points = useGame((s) => Math.ceil(s.game.prayer.points));
+  const max = useGame((s) => maxPrayer(s.game));
+  const faith = useGame((s) => skillLevel(s.game, 'faith'));
+  const active = useGame((s) => s.game.prayer.active.join(','));
+  const drain = useGame((s) => activePrayers(s.game).reduce((a, p) => a + p.drain, 0));
+  const draughts = useGame((s) => s.game.inventory.prayer_draught ?? 0);
+  const act = useGame((s) => s.combatAct);
+  const on = active ? active.split(',') : [];
+  // Unlocked prayers plus the next two as a goal.
+  const firstLocked = PRAYERS.some((p) => faith < p.level)
+    ? PRAYERS.findIndex((p) => faith < p.level)
+    : PRAYERS.length;
+  return (
+    <details className="combat-box prayer-box" open={on.length > 0}>
+      <summary>
+        🙏 Gebete{' '}
+        <small className="muted">
+          · {on.length}/{PRAYER_SLOTS} aktiv
+        </small>
+        <span className="prayer-points">
+          {points}/{max}
+        </span>
+      </summary>
+      <ProgressBar
+        fraction={points / Math.max(1, max)}
+        color="#f3e3a1"
+        height={6}
+        label="Gebetspunkte"
+      />
+      <small className="muted">
+        {drain > 0
+          ? `−${drain}/Min im Kampf`
+          : 'Füllt sich außerhalb des Kampfes und mit jedem Ritual am Schrein'}
+        {' · '}🫗 Weihtrunk ×{draughts} (automatisch bei &lt; 25 %)
+      </small>
+      <div className="prayer-grid">
+        {PRAYERS.filter((p, i) => faith >= p.level || i < firstLocked + 2).map((p) => {
+          const locked = faith < p.level;
+          const isOn = on.includes(p.id);
+          return (
+            <button
+              key={p.id}
+              className={`prayer ${isOn ? 'on' : ''} ${locked ? 'locked' : ''}`}
+              disabled={locked}
+              title={`${p.name}: ${p.desc} (${p.drain}/Min)`}
+              onClick={() => act((s) => void togglePrayer(s, p.id))}
+            >
+              <span>{locked ? '🔒' : p.icon}</span>
+              <small>{locked ? `Glaube ${p.level}` : p.name}</small>
+            </button>
+          );
+        })}
+      </div>
+    </details>
+  );
+}
+
+/** Three gear sets: tap to switch, 💾 to store the current gear. */
+function LoadoutBar() {
+  const names = useGame((s) =>
+    s.game.loadouts.map((l) => `${l.name}:${Object.keys(l.gear).length}`).join('|'),
+  );
+  const act = useGame((s) => s.combatAct);
+  const pushFeed = useGame((s) => s.pushFeed);
+  return (
+    <div className="loadout-bar">
+      {names.split('|').map((entry, i) => {
+        const [name = '', count = '0'] = entry.split(':');
+        return (
+          <span key={i} className="loadout">
+            <button
+              className="btn small"
+              disabled={count === '0'}
+              title={count === '0' ? 'Noch leer – erst mit 💾 speichern' : `${name} anlegen`}
+              onClick={() => {
+                let missing = 0;
+                act((s) => {
+                  missing = applyLoadout(s, i);
+                });
+                pushFeed(
+                  missing > 0
+                    ? `🎒 ${name}: ${missing} Teil${missing === 1 ? '' : 'e'} fehlen im Inventar.`
+                    : `🎒 ${name} angelegt.`,
+                  missing > 0 ? 'warn' : 'info',
+                );
+              }}
+            >
+              {name}
+            </button>
+            <button
+              className="btn small btn-ghost"
+              title="Aktuelle Ausrüstung hier speichern"
+              onClick={() => {
+                act((s) => void saveLoadout(s, i));
+                pushFeed(`💾 Ausrüstung als ${name} gespeichert.`, 'info');
+              }}
+            >
+              💾
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Auto-Trank: a buff potion that is drunk again whenever its effect runs out in combat. */
+function PotionPicker() {
+  const potion = useGame((s) => s.game.combatSettings.potion);
+  const key = useGame((s) =>
+    Object.keys(s.game.inventory)
+      .filter((id) => getItem(id).consume?.type === 'buff')
+      .join(','),
+  );
+  const setCombatSetting = useGame((s) => s.setCombatSetting);
+  const options = key ? key.split(',') : [];
+  if (potion && !options.includes(potion)) options.unshift(potion);
+  return (
+    <label className="field-inline">
+      🧪 Auto-Trank
+      <select
+        className="input"
+        value={potion ?? ''}
+        onChange={(e) => setCombatSetting('potion', e.target.value || null)}
+      >
+        <option value="">aus</option>
+        {options.map((id) => (
+          <option key={id} value={id}>
+            {getItem(id).icon} {getItem(id).name}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 function PlayerPanel() {
   const hp = useGame((s) => Math.ceil(s.game.hp));
   const max = useGame((s) => maxHp(s.game));
@@ -192,6 +337,7 @@ function PlayerPanel() {
             ))}
           </select>
         </label>
+        <PotionPicker />
         <label className="field-inline">
           XP für
           <select
@@ -227,6 +373,7 @@ function CurrentFight() {
   if (!combat) return null;
   const m = getMonster(combat.monster);
   const phase = m.phases?.[combat.phase];
+  const protectedNow = protectsFrom(useGame.getState().game, monsterStyle(m.id));
   return (
     <div className={`combat-fight ${m.boss ? 'boss' : ''}`}>
       <div className="combat-row">
@@ -245,6 +392,8 @@ function CurrentFight() {
           ? `${Math.ceil(combat.monsterHp)}/${m.hp} LP`
           : 'Nächster Gegner erscheint …'}
         {phase && ` · Phase: ${phase.name}`}
+        {` · greift an mit ${STYLE_LABEL[monsterStyle(m.id)]}`}
+        {protectedNow && ' · 🙏 geschützt'}
         {combat.kind === 'dungeon' &&
           ` · Dungeon-Fortschritt ${combat.index + 1}/${DUNGEONS.find((d) => d.id === combat.target)?.monsters.length}`}
       </small>
@@ -293,6 +442,9 @@ function MonsterCard({ m }: { m: MonsterDef }) {
               {ELEMENT_INFO[MONSTER_ELEMENTS[m.id]!.resist!].name}
             </span>
           )}
+          <span title="Angriffsstil – Schutzgebete halbieren diesen Schaden">
+            Greift an: {STYLE_LABEL[monsterStyle(m.id)]}
+          </span>
           {heavyEvery(m.level, m.boss) > 0 && (
             <span title="Holt regelmäßig zu einem Wuchtschlag aus – im Kampf kannst du ausweichen">
               💢 Wuchtschlag
@@ -344,6 +496,8 @@ export function CombatView({ onBack }: { onBack?: () => void }) {
       )}
       <h2>⚔️ Kampf</h2>
       <PlayerPanel />
+      <LoadoutBar />
+      <PrayerPanel />
       <CurrentFight />
       <h4 className="group-title">Gebiete</h4>
       {AREAS.map((a) => (

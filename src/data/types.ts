@@ -41,7 +41,7 @@ export interface ComingSoonSkill {
  * 'burn', 'fireDuration', 'offlineHours', 'research', 'helperSpeed', 'combat.accuracy',
  * 'combat.damage', 'combat.defence', 'combat.hp', 'combat.loot', 'wisdom', style-specific
  * 'combat.accuracy.<style>' / 'combat.damage.<style>', 'combat.ammoSave', 'combat.runeSave',
- * 'combat.energy' (special attack charge),
+ * 'combat.energy' (special attack charge), 'combat.regen' (extra HP regeneration factor),
  * village: 'village.prod', 'village.defense'; rift run stats: 'rift.might', 'rift.hp', 'rift.speed',
  * 'rift.area', 'rift.luck'.
  */
@@ -53,7 +53,9 @@ export type ConsumeEffect =
   | { type: 'buff'; buff: string }
   | { type: 'research'; amount: number }
   | { type: 'loot'; table: LootEntry[]; rolls: number }
-  | { type: 'gold'; min: number; max: number };
+  | { type: 'gold'; min: number; max: number }
+  /** Restores prayer points (Gebete im Kampf). */
+  | { type: 'prayer'; amount: number };
 
 export interface ItemDef {
   id: ItemId;

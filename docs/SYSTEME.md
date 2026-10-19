@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.47.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.48.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,13 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Gebete, Loadouts, Auto-Trank** (Kampf 2.0 Phase 11, `data/prayers.ts`, `engine/prayer.ts`): Gebetspunkte
+`10 + 2 × Glaube`, Zeiteffekt `prayer` zieht pro Minute im Kampf ab (bis 3 Gebete, ein Schutzgebet), füllt sich
+außerhalb (+2/Min) und pro Glaube-Aktion (+2). Modifier-Quelle `prayer`; Schutz halbiert Schaden des Monster-Stils
+(`MONSTER_STYLES`/`monsterStyle`). Weihtrunk (Brauen) = `consume: prayer`, automatisch bei < 25 %. `combat.regen`
+beschleunigt die LP-Heilung. `loadouts` (3 Sets, `saveLoadout`/`applyLoadout`, bleiben über Prestige),
+`combatSettings.potion` = Auto-Trank (Buff-Item wird nachgelegt).
 
 **Frostgipfel** (7. Biom/Gebiet `glacier`): Kampfgebiet Stufe 100 (Frosttroll, Yeti, Eiswurm; anfällig für Feuer)
 liefert `frost_shard` → Zauber Gletschersturz (Magie 85) und Frostmantel (Handwerk 80); Riss-Biom mit

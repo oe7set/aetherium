@@ -40,6 +40,7 @@ export type GameEvent =
       heavy?: boolean;
     }
   | { type: 'windup'; monster: string }
+  | { type: 'prayerEmpty' }
   | { type: 'dodged'; monster: string }
   | { type: 'special'; style: CombatStyle }
   | { type: 'monsterKilled'; monster: string }

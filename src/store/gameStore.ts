@@ -183,6 +183,8 @@ export interface GameStore {
   eatNow: () => void;
   /** Fires the charged special attack (optional active play). */
   special: () => void;
+  /** Runs a combat-side engine call (prayers, loadouts …) on a state copy. */
+  combatAct: (fn: (s: GameState, emit: (e: GameEvent) => void) => void) => void;
   /** Dodges a telegraphed heavy monster attack. */
   dodge: () => void;
   research: (tech: string) => void;
@@ -502,6 +504,7 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s, emit) => {
         specialAttack(s, defaultRng, emit);
       }),
+    combatAct: (fn) => mutate(fn),
     dodge: () =>
       mutate((s) => {
         dodge(s);
