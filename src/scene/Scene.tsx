@@ -6,7 +6,7 @@ import { labelElements } from './labels';
 import { getAction, getItem } from '../data';
 import { Clouds, Fireflies, Ocean } from './Ambience';
 import { Arena } from './Arena';
-import { Birds, DistantIslands, JumpingFish, Sailboat, SkyDome } from './Life';
+import { Birds, Mountains, JumpingFish, Sailboat, SkyDome } from './Life';
 import { useGame } from '../store/gameStore';
 import { Character } from './Character';
 import { Growth } from './Growth';
@@ -42,15 +42,26 @@ function usePageVisible(): boolean {
   return visible;
 }
 
-/** Portrait screens see less horizontally, so the camera backs off to keep the whole island in view. */
+/**
+ * Portrait screens see less horizontally, so the camera backs off to keep the whole island in view.
+ * A flatter angle plus a lens shift (view offset) puts the horizon with its mountains into the
+ * upper part of the picture while the island stays the orbit centre.
+ */
 function CameraRig() {
-  const camera = useThree((s) => s.camera);
-  const aspect = useThree((s) => s.size.width / Math.max(1, s.size.height));
+  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
+  const size = useThree((s) => s.size);
+  const aspect = size.width / Math.max(1, size.height);
   useEffect(() => {
-    const distance = aspect < 0.8 ? 40 : aspect < 1.3 ? 28 : 21;
-    camera.position.set(0.15, 0.78, 0.62).normalize().multiplyScalar(distance);
+    const portrait = aspect < 0.8;
+    const distance = portrait ? 39 : aspect < 1.3 ? 30 : 23;
+    camera.fov = portrait ? 52 : 45;
+    camera.position.set(0.18, 0.64, 0.745).normalize().multiplyScalar(distance);
     camera.lookAt(0, 0.5, 0);
-  }, [aspect, camera]);
+    // Shift the view up by a fraction of its height: more sky and horizon, island lower.
+    const shift = portrait ? 0.14 : 0.1;
+    camera.setViewOffset(size.width, size.height, 0, -shift * size.height, size.width, size.height);
+    camera.updateProjectionMatrix();
+  }, [aspect, camera, size.width, size.height]);
   return null;
 }
 
@@ -116,7 +127,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
         antialias: quality.antialias,
         powerPreference: perf === 'eco' ? 'low-power' : 'high-performance',
       }}
-      camera={{ position: [13, 12, 15], fov: 45, near: 0.5, far: 200 }}
+      camera={{ position: [13, 12, 15], fov: 45, near: 0.5, far: 260 }}
     >
       <FrameTicker fps={visible ? sceneFps(perf, covered) : 0} />
       <CameraRig />
@@ -124,7 +135,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <SkyDome />
       <Island />
       <Ocean />
-      <DistantIslands />
+      <Mountains />
       {quality.level !== 'low' && <Birds count={quality.level === 'high' ? 9 : 6} />}
       <Sailboat />
       {quality.level !== 'low' && <JumpingFish />}

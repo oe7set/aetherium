@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.36.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.37.0**.
 
 ## 1. Der große Kreislauf
 
@@ -178,8 +178,10 @@ Haustiere ↔ Held, Expansion)
 - Insel-HUD (`ui/WorldHud.tsx`): oben auf der Welt-Seite Status von Dorf (Baumeister frei / Restzeit), Held, Riss
   (Essenz, Wochenboss offen) und Tagesbonus.
 - Belebte Szene (`scene/Life.tsx`): Himmelskuppel mit Verlauf, Sonne und Mond (`SkyDome`, teilt die Horizontfarbe
-  `HORIZON` mit dem Meer), Inseln am Horizont, Vogelschwarm (tagsüber), Segelboot, springende Fische.
-  Eigene Shader brauchen `#include <colorspace_fragment>`, sonst sind die Farben zu dunkel.
+  `HORIZON` mit dem Meer), Berg- und Hügelring hinter der Bucht (`Mountains`: Silhouette aus Sinus-Schichten,
+  Schneekappen, Dunst statt Szenen-Nebel), Vogelschwarm (tagsüber), Segelboot, springende Fische.
+  Eigene Shader brauchen `#include <colorspace_fragment>`, sonst sind die Farben zu dunkel. Kamera (`CameraRig`):
+  etwas flacher plus Linsenverschiebung (`setViewOffset`), damit Horizont und Berge oben im Bild sind.
 
 - Musik `ui/music.ts` (Sequenzer, Themen je Bereich, gesteuert über `useBackgroundMusic` in `App.tsx`),
   Soundeffekte `ui/audio.ts` (gleicher AudioContext). Inselboden: vertexgefärbte Scheibe in `scene/Island.tsx`

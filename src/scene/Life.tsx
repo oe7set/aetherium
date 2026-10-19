@@ -76,31 +76,133 @@ export function SkyDome() {
   });
   return (
     <mesh material={material} renderOrder={-1}>
-      <sphereGeometry args={[95, 32, 16]} />
+      <sphereGeometry args={[170, 32, 16]} />
     </mesh>
   );
 }
 
-/** Hazy islands on the horizon – the world does not end at the beach. */
-export function DistantIslands() {
-  const islands = useMemo(() => {
-    const rnd = scatter(9191);
-    return Array.from({ length: 7 }, (_, i) => {
-      const a = (i / 7) * Math.PI * 2 + rnd() * 0.5;
-      const r = 72 + rnd() * 12;
-      return { x: Math.cos(a) * r, z: Math.sin(a) * r, s: 5 + rnd() * 7, h: 3 + rnd() * 5 };
-    });
-  }, []);
-  const mat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: '#4d7a55', flatShading: true }),
+/** One ring of terrain: jagged silhouette from layered sines, snow above `snow` (world units). */
+function ringGeometry(
+  radius: number,
+  base: number,
+  amp: number,
+  seed: number,
+  rock: THREE.Color,
+  low: THREE.Color,
+  snow: number,
+): THREE.BufferGeometry {
+  const N = 220;
+  const rnd = scatter(seed);
+  const ph = Array.from({ length: 5 }, () => rnd() * Math.PI * 2);
+  const pos: number[] = [];
+  const col: number[] = [];
+  const t: number[] = [];
+  const white = new THREE.Color('#f4f7ff');
+  const c = new THREE.Color();
+  for (let i = 0; i <= N; i++) {
+    const a = (i / N) * Math.PI * 2;
+    const r = radius + Math.sin(a * 4 + ph[0]!) * radius * 0.06;
+    // Broad ranges, mid hills and sharp ridges (1 - |sin| gives pointed peaks).
+    const n =
+      0.45 * (0.5 + 0.5 * Math.sin(a * 3 + ph[1]!)) +
+      0.3 * (1 - Math.abs(Math.sin(a * 7 + ph[2]!))) +
+      0.17 * (1 - Math.abs(Math.sin(a * 19 + ph[3]!))) +
+      0.08 * Math.sin(a * 41 + ph[4]!);
+    const h = base + amp * Math.max(0, n);
+    const x = Math.cos(a) * r;
+    const z = Math.sin(a) * r;
+    pos.push(x, -1.2, z, x, h, z);
+    c.copy(h > snow ? white : rock);
+    col.push(low.r, low.g, low.b, c.r, c.g, c.b);
+    t.push(0, 1);
+  }
+  const index: number[] = [];
+  for (let i = 0; i < N; i++) {
+    const k = i * 2;
+    index.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setAttribute('aT', new THREE.Float32BufferAttribute(t, 1));
+  g.setIndex(index);
+  return g;
+}
+
+function hazeMaterial(haze: number): THREE.ShaderMaterial {
+  return new THREE.ShaderMaterial({
+    side: THREE.DoubleSide,
+    fog: false,
+    vertexColors: true,
+    uniforms: {
+      uHorizon: { value: new THREE.Color() },
+      uDay: { value: 1 },
+      uHaze: { value: haze },
+    },
+    vertexShader: /* glsl */ `
+      attribute float aT;
+      varying vec3 vCol;
+      varying float vT;
+      void main() {
+        vCol = color;
+        vT = aT;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      uniform vec3 uHorizon;
+      uniform float uDay;
+      uniform float uHaze;
+      varying vec3 vCol;
+      varying float vT;
+      void main() {
+        vec3 col = vCol * (0.3 + 0.7 * uDay);
+        // Atmospheric perspective: far layers and the foot of the mountains melt into the horizon.
+        float haze = clamp(uHaze + (1.0 - vT) * 0.35, 0.0, 0.9);
+        col = mix(col, uHorizon, haze);
+        gl_FragColor = vec4(col, 1.0);
+        #include <colorspace_fragment>
+      }
+    `,
+  });
+}
+
+const MOUNTAIN_ROCK = new THREE.Color('#4a5a7e');
+const MOUNTAIN_FOOT = new THREE.Color('#2c3852');
+const HILL_GREEN = new THREE.Color('#3f7a46');
+const HILL_FOOT = new THREE.Color('#2d5a3a');
+
+/**
+ * Mountains and hills far behind the island – two hazy rings so the world does not end at the
+ * beach. Not affected by scene fog (they would vanish); they fade into the horizon colour instead.
+ */
+export function Mountains() {
+  const layers = useMemo(
+    () => [
+      {
+        // Mountains with snow caps, just behind the hills.
+        geo: ringGeometry(66, 3, 9.5, 11, MOUNTAIN_ROCK, MOUNTAIN_FOOT, 8.5),
+        mat: hazeMaterial(0.06),
+      },
+      {
+        // Green hills around the bay.
+        geo: ringGeometry(56, 0.4, 4, 23, HILL_GREEN, HILL_FOOT, 99),
+        mat: hazeMaterial(0.12),
+      },
+    ],
     [],
   );
+  useFrame(() => {
+    const light = daylight(dayPhase());
+    for (const l of layers) {
+      (l.mat.uniforms.uHorizon!.value as THREE.Color).copy(HORIZON);
+      l.mat.uniforms.uDay!.value = light;
+    }
+  });
   return (
     <group>
-      {islands.map((it, i) => (
-        <mesh key={i} material={mat} position={[it.x, -1.1, it.z]} scale={[it.s, it.h, it.s * 0.8]}>
-          <coneGeometry args={[1, 1, 6]} />
-        </mesh>
+      {layers.map((l, i) => (
+        <mesh key={i} geometry={l.geo} material={l.mat} renderOrder={-0.5} />
       ))}
     </group>
   );

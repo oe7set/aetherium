@@ -49,7 +49,7 @@ export function Ocean() {
             col += vec3(foam * 0.6) + vec3(glint);
             col *= 0.35 + 0.65 * uDay;
             // Far water fades into the sky – no hard edge, a real horizon.
-            col = mix(col, uHorizon, smoothstep(uIsland + 4.0, 46.0, d) * 0.75);
+            col = mix(col, uHorizon, smoothstep(uIsland + 4.0, 70.0, d) * 0.8);
             gl_FragColor = vec4(col, 1.0);
             #include <colorspace_fragment>
           }
@@ -64,7 +64,7 @@ export function Ocean() {
   });
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.15, 0]} material={material}>
-      <planeGeometry args={[160, 160, 64, 64]} />
+      <planeGeometry args={[260, 260, 80, 80]} />
     </mesh>
   );
 }
@@ -76,8 +76,8 @@ export function Clouds({ count }: { count: number }) {
     const rnd = scatter(777);
     return Array.from({ length: count }, () => ({
       angle: rnd() * Math.PI * 2,
-      radius: 14 + rnd() * 12,
-      y: 9 + rnd() * 5,
+      radius: 18 + rnd() * 16,
+      y: 14 + rnd() * 6,
       scale: 0.8 + rnd() * 1.2,
       speed: 0.01 + rnd() * 0.02,
     }));

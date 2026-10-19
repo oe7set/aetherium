@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.37.0] – Berge am Horizont
+
+- 3D-Welt: Im Hintergrund liegt jetzt eine Landschaft – grüne Hügel rund um die Bucht und dahinter blaugraue Berge mit Schneekappen, die im Dunst am Horizont verschwimmen. Tag und Nacht färben sie mit.
+- Kamera etwas flacher und nach oben verschoben, damit Horizont und Berge oben im Bild zu sehen sind; die Insel bleibt der Drehpunkt. Wolken ziehen höher.
+
 ## [1.36.0] – Tippen wie gewohnt
 
 - Insel: Ein Tipp auf eine Station (Wald, Mine, Kochstelle …) legt sofort los – mit der Aktion, die du dort zuletzt gemacht hast, sonst mit der besten machbaren. Doppeltipp öffnet die Auswahl aller Aktionen des Skills. Die Schnellkarte ist dafür weg.
