@@ -106,9 +106,19 @@ Vergleich der rohen XP/h (beste Aktion je Stufe, ohne Materialkosten) gegen Holz
 
 - **Diebeskunst**: Fehlschläge geben nur 10 % XP, an der Stufengrenze scheitern ~45 %. Deshalb ×1,6 auf alle
   Diebstahl-XP (`THIEVING_XP_MULT`) – effektiv landet sie zwischen Holzfällen und Bergbau, dazu kommt Gold.
-- **Kartografie**: Kartieren ×1,4 (`SURVEY_XP_MULT`); Expeditionen verbrauchen Karten und Brot und zahlen jetzt
+- **Kartografie**: Kartieren ×1,8 (`SURVEY_XP_MULT`, Bot: Stufe ~45 in 6 h statt 41; Holzfällen 65 – Kartieren ist der Nebenskill mit Pergamentkosten); Expeditionen verbrauchen Karten und Brot und zahlen jetzt
   das 2–3-Fache (Ruinen 900, Gipfel 1800, Schlund 4200 XP) – sonst wären sie schlechter als Kartieren.
 - **Baukunst**: Eichenbretter 6 → 8 XP für einen weniger zähen Start; die großen Sprünge kommen über Möbel und
   die XP-Batzen der Inselbauten.
 - **Beschwörung** liegt roh am höchsten, ist aber durch Talismane (Kampf-Drops) gedrosselt – wie das Vorbild.
 - Helden-Abenteuer: vier Heldenstufen pro Biom, der Frostgipfel (Schwierigkeit 11) erst ab Stufe 25.
+
+Langzeit-Bot „neue Skills, je 6 Stunden" (`tests/longterm.test.ts`, ab Stufe 1, ohne Werkzeuge/Boni):
+
+| Skill                  | Stufe nach 6 h | Gold/h  | Bemerkung                                                             |
+| ---------------------- | -------------- | ------- | --------------------------------------------------------------------- |
+| Holzfällen (Vergleich) | 65             | –       | Holz unverkauft                                                       |
+| Diebeskunst            | 60             | ~32 000 | etwa wie verkauftes Holz derselben Stufe                              |
+| Juwelierkunst          | 35             | –       | nur Kiesel/Funde, ohne Geoden aus dem Bergbau                         |
+| Kartografie            | 44             | −3 600  | Pergament gekauft; Karten unverkauft (Küstenkarte 14 vs. Pergament 6) |
+| Kopfgeldjagd           | 25             | ~12 000 | Kampfstufe 30, Bronzeschwert                                          |

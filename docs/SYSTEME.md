@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.57.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.58.0**.
 
 ## 1. Der große Kreislauf
 
@@ -291,8 +291,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Langzeit-Bot um die sechs neuen Skills erweitern (Gold aus Diebeskunst und Kopfgeld-Punkte pro Stunde im
-      Verlauf beobachten; XP-Kurven sind statisch abgeglichen, siehe BALANCING.md).
 - [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
 
 **Qualität**
@@ -302,7 +300,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät.
-- [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente), Prestige, 7+ Tage; Spieler ohne Truppen werden oft
+- [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente), Prestige, 7+ Tage, Juwelierkunst mit Bergbau-Geoden; Spieler ohne Truppen werden oft
       geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
 
 **Bekannte Schwächen**

@@ -192,7 +192,7 @@ export const CARTO_ITEMS: ItemDef[] = [
 ];
 
 /** Surveying is slow and eats parchment; expeditions eat maps and bread – both pay accordingly. */
-const SURVEY_XP_MULT = 1.4;
+const SURVEY_XP_MULT = 1.8;
 
 export const CARTO_ACTIONS: ActionDef[] = [
   {

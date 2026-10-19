@@ -120,3 +120,57 @@ describe('Langzeit-Bot: Insel + Dorf + Held, 3 Tage', () => {
     }
   }, 120000);
 });
+
+describe('Langzeit-Bot: neue Skills, je 6 Stunden', () => {
+  it('Diebeskunst, Juwelierkunst, Kartografie und Kopfgeldjagd kommen voran', () => {
+    const rng = e.createRng(77);
+    const s = gameWith();
+    const rows: Record<string, { level: number; goldPerHour: number }> = {};
+    const run = (skill: string, setup: () => void) => {
+      const gold = s.gold.toNumber();
+      setup();
+      for (let hour = 0; hour < 6; hour++) {
+        // Re-pick the best action every hour (levels rise), refill parchment if needed.
+        // Surveying eats about one sheet every few seconds – buy an hour's worth.
+        if (skill === 'cartography' && (s.inventory.parchment ?? 0) < 1200)
+          e.buyItem(s, 'parchment', 1200);
+        if (skill !== 'slayer') {
+          const level = e.skillLevel(s, skill);
+          const best = actionsForSkill(skill)
+            .filter(
+              (a) =>
+                a.levelReq <= level && a.inputs.every((i) => (s.inventory[i.item] ?? 0) >= i.qty),
+            )
+            .pop();
+          if (best && s.active?.actionId !== best.id) e.startAction(s, best.id, noop);
+        } else {
+          if (!s.slayer.task) e.newSlayerTask(s, rng, noop);
+          const target = s.slayer.task?.monster;
+          if (target && s.combat?.monster !== target) e.startCombat(s, 'monster', target, noop);
+        }
+        e.advance(s, 3600, rng, noop);
+      }
+      rows[skill] = {
+        level: e.skillLevel(s, skill),
+        goldPerHour: Math.round((s.gold.toNumber() - gold) / 6),
+      };
+    };
+    run('thieving', () => {});
+    run('jewelcrafting', () => {});
+    s.gold = s.gold.add(100000);
+    run('cartography', () => {});
+    run('slayer', () => {
+      s.inventory.cooked_shark = 2000;
+      for (const sk of ['melee', 'defence', 'hitpoints']) s.skills[sk] = { xp: e.xpForLevel(30) };
+      s.hp = 30;
+      s.inventory.bronze_sword = 1;
+      e.equipItem(s, 'bronze_sword');
+    });
+    console.table(rows);
+    expect(rows.thieving!.level).toBeGreaterThan(20);
+    expect(rows.thieving!.goldPerHour).toBeGreaterThan(0);
+    expect(rows.jewelcrafting!.level).toBeGreaterThan(15);
+    expect(rows.cartography!.level).toBeGreaterThan(40);
+    expect(s.slayer.done).toBeGreaterThan(0);
+  });
+});

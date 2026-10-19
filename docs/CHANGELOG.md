@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.58.0] – Balance-Bot für neue Skills
+
+- Langzeit-Bot spielt jetzt auch die neuen Skills (je 6 Stunden Diebeskunst, Juwelierkunst, Kartografie, Kopfgeldjagd) und prüft, dass alles vorankommt. Ergebnisse in `docs/BALANCING.md`.
+- Kartografie: Kartieren gibt noch einmal mehr XP (×1,8 statt ×1,4) – der Skill kostet Pergament und soll sich trotzdem lohnen.
+
 ## [1.57.0] – Begleiter & Balance
 
 - **Vertraute im Riss**: Dein aktiver Vertrauter begleitet den Helden jetzt sichtbar durch den Riss und die Abenteuer-Dungeons; Kampf-Vertraute (Geisterwolf, Kampfeber, Eisentitan, Phönix) schießen dabei regelmäßig auf den nächsten Gegner.
