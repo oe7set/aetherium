@@ -36,3 +36,4 @@ export * from './slayer';
 export * from './summoning';
 export * from './thieving';
 export * from './construction';
+import './cartography';

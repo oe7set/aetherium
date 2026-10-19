@@ -39,6 +39,7 @@ import {
   BuildSite,
   IslandBuildings,
   JewelBench,
+  MapTent,
   MarketStalls,
   SummonCircle,
 } from './Workshops';
@@ -210,6 +211,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <SummonCircle onTap={tap('summoning')} />
       <MarketStalls onTap={tap('thieving')} />
       <BuildSite onTap={tap('construction')} />
+      <MapTent onTap={tap('cartography')} />
       <IslandBuildings />
       <IslandDecor />
       <Helpers />

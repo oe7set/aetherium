@@ -23,7 +23,7 @@ import { BIOMES } from '../data/rift';
 import { SPEED, STORAGE, V_RESOURCES } from '../data/village';
 import { gainItem, registerTimeEffect } from './actions';
 import type { Emit } from './events';
-import { invalidateMods, registerModifierSource } from './modifiers';
+import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import type { Rng } from './rng';
 import { addStat, type Adventure, type GameState, type HeroItem, type Village } from './state';
 
@@ -241,7 +241,7 @@ function homeVillage(s: GameState): Village {
 }
 
 export function heroTravelTime(s: GameState, dist: number): number {
-  const speed = HERO_SPEED * (1 + heroStat(s, 'heroSpeed'));
+  const speed = HERO_SPEED * (1 + heroStat(s, 'heroSpeed') + mod(s, 'hero.travel'));
   return Math.max(5, Math.round(((dist / speed) * 3600) / SPEED));
 }
 

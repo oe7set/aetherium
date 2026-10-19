@@ -94,6 +94,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'pouchesMade', per: 1 / 10, label: 'Beschwörungsbeutel', icon: '🐾' },
   { stat: 'thefts', per: 1 / 30, label: 'Diebstähle', icon: '🗝️' },
   { stat: 'buildingsBuilt', per: 2, label: 'Inselbauten', icon: '🔨' },
+  { stat: 'mapsDrawn', per: 1 / 20, label: 'Gezeichnete Karten', icon: '🧭' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------

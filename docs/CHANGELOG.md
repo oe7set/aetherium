@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.55.0] – Kartografie
+
+- Neuer Skill **Kartografie** 🧭 (Phase 18): Pergament gerben (aus Rindsleder oder beim Krämer) und sieben Regionen kartieren – Küste, Wald, Hügelland, Gebirge, Glutwüste, Offenes Meer, Ätherweiten. Jede Region hat eigene Funde.
+- **Expeditionen**: Versunkene Ruinen, Gipfelsturm, Meeresschlund – lange Unternehmungen mit Karten und Brot als Proviant, die Schatzkarten und Seltenes bringen.
+- **Schatzkarten** in drei Stufen: öffnen und graben – Geoden, Edelsteine, Talismane, Goldbarren, Drachenschuppen bis zum Ätherstein.
+- Jede Kartografie-Stufe verkürzt die **Reisen deines Helden** und gibt etwas Archäologie-XP. Neues Sammelbuch-Set „Großer Atlas". Kartenzelt auf der Insel.
+
 ## [1.54.0] – Baukunst
 
 - Neuer Skill **Baukunst** 🔨 (Phase 17): Bretter sägen (Eiche, Ahorn, Eibe, Zauberholz), Steinblöcke hauen, Nägel schmieden und Möbel zimmern – Stuhl, Tisch, Regal, Schrank, Granitbüste, Thron.

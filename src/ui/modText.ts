@@ -25,6 +25,7 @@ const LABELS: Record<string, string> = {
   'combat.regen': 'Heilung',
   stealth: 'seltener erwischt',
   'prayer.max': 'Gebetspunkte',
+  'hero.travel': 'Reisetempo des Helden',
   'village.defense': 'Dorfabwehr',
   'village.prod': 'Dorfproduktion',
   wisdom: 'Weisheit',

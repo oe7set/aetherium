@@ -179,6 +179,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Kiesel sieben, Geoden knacken, Steine veredeln – und daraus Ringe und Amulette für jeden Kampfstil und viele Skills schmieden.',
   },
   {
+    id: 'cartography',
+    name: 'Kartografie',
+    icon: '🧭',
+    color: '#d9b26b',
+    group: 'gathering',
+    desc: 'Regionen kartieren, Expeditionen ausrüsten, Schatzkarten finden. Jede Stufe verkürzt die Reisen deines Helden.',
+  },
+  {
     id: 'construction',
     name: 'Baukunst',
     icon: '🔨',

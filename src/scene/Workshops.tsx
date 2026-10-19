@@ -266,3 +266,37 @@ export function IslandBuildings() {
     </group>
   );
 }
+
+/** Kartografie: a tent with a map table and a spinning globe. */
+export function MapTent({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('cartography')!;
+  const globe = useRef<THREE.Mesh>(null);
+  const active = useActive('cartography');
+  useFrame((_, dt) => {
+    if (globe.current) globe.current.rotation.y += dt * (active.current ? 2.5 : 0.5);
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.7, -0.3]} castShadow>
+        <coneGeometry args={[1.0, 1.4, 4]} />
+        <meshStandardMaterial color="#e8d9b0" flatShading />
+      </mesh>
+      <mesh position={[0, 0.35, 0.55]}>
+        <boxGeometry args={[0.9, 0.08, 0.6]} />
+        <meshStandardMaterial color="#8b6b4a" />
+      </mesh>
+      <mesh position={[0, 0.4, 0.55]}>
+        <boxGeometry args={[0.7, 0.01, 0.45]} />
+        <meshStandardMaterial color="#f1e3c0" />
+      </mesh>
+      <mesh position={[0, 0.2, 0.55]}>
+        <boxGeometry args={[0.1, 0.3, 0.1]} />
+        <meshStandardMaterial color="#5b4030" />
+      </mesh>
+      <mesh ref={globe} position={[0.35, 0.62, 0.55]}>
+        <sphereGeometry args={[0.14, 12, 10]} />
+        <meshStandardMaterial color="#4a90d9" flatShading />
+      </mesh>
+    </group>
+  );
+}
