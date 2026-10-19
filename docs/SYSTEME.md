@@ -353,6 +353,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät.
+- [ ] Offline-Tempo: 24 h schnellste Aktion ≈ 3,5 s lokal / 5 s CI. Profil: Dorf-Tick (`production`/`population`
+      pro Schritt), `masteryCount`, `checkAchievementsFast` – Dorf-Produktion je Dorf cachen bzw. Dorf-Ticks bündeln.
 - [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente/Relikte/Flüche), Zunftaufträge, Prestige, 7+ Tage, Juwelierkunst mit Bergbau-Geoden; Spieler ohne Truppen werden oft
       geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
 

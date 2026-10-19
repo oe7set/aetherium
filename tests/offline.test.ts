@@ -52,8 +52,9 @@ describe('Offline-Fortschritt', () => {
     startAction(s, 'wc_oak', () => {});
     const t0 = performance.now();
     const summary = applyOfflineProgress(s, 24 * 3600 * 1000, createRng(3));
-    // Generous bound for slow CI runners; locally this takes ~0.8 s. Guards against 5–10× regressions.
-    expect(performance.now() - t0).toBeLessThan(5000);
+    // Generous bound for slow CI runners; locally ~3.5 s since 1.60 (village, mastery and achievements
+    // run per step), CI ~5 s. Guards against 3× regressions.
+    expect(performance.now() - t0).toBeLessThan(10000);
     expect(summary.actionsCompleted).toBeGreaterThan(50_000);
   });
 });
