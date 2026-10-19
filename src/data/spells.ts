@@ -2,8 +2,45 @@
  * Combat spells for the magic style. Every cast costs its runes (plus an optional catalyst);
  * stronger spells hit harder or carry a side effect. Chosen in the combat view.
  */
+export type SpellElement = 'arcane' | 'frost' | 'fire' | 'shadow' | 'lightning' | 'void';
+
+export const ELEMENT_INFO: Record<SpellElement, { name: string; icon: string }> = {
+  arcane: { name: 'Arkan', icon: '✨' },
+  frost: { name: 'Frost', icon: '❄️' },
+  fire: { name: 'Feuer', icon: '🔥' },
+  shadow: { name: 'Schatten', icon: '🩸' },
+  lightning: { name: 'Blitz', icon: '⚡' },
+  void: { name: 'Leere', icon: '🌀' },
+};
+
+/** Damage multiplier when a spell hits a weakness / a resistance. */
+export const ELEMENT_WEAK = 1.35;
+export const ELEMENT_RESIST = 0.6;
+
+/** Elemental affinities of monsters (magic only); everything else is neutral. */
+export const MONSTER_ELEMENTS: Record<string, { weak?: SpellElement; resist?: SpellElement }> = {
+  wolf: { weak: 'fire' },
+  bandit: { weak: 'lightning' },
+  spider: { weak: 'fire' },
+  homunculus: { weak: 'lightning' },
+  golem_proto: { weak: 'lightning', resist: 'frost' },
+  flying_book: { weak: 'fire' },
+  plagiarism_phantom: { weak: 'void', resist: 'shadow' },
+  zombie_professor: { weak: 'fire', resist: 'shadow' },
+  fire_elemental: { weak: 'frost', resist: 'fire' },
+  lava_worm: { weak: 'frost', resist: 'fire' },
+  dragon: { weak: 'frost', resist: 'fire' },
+  particle_wraith: { weak: 'void', resist: 'lightning' },
+  antimatter_golem: { weak: 'lightning', resist: 'void' },
+  black_hole_imp: { weak: 'lightning', resist: 'void' },
+  peer_reviewer_2: { weak: 'fire' },
+  elder_dragon: { weak: 'frost', resist: 'fire' },
+  standard_model: { weak: 'void', resist: 'arcane' },
+};
+
 export interface SpellDef {
   id: string;
+  element: SpellElement;
   name: string;
   icon: string;
   /** Magic level needed. */
@@ -28,6 +65,7 @@ export interface SpellDef {
 export const SPELLS: SpellDef[] = [
   {
     id: 'spark',
+    element: 'arcane',
     name: 'Funke',
     icon: '✨',
     level: 1,
@@ -39,6 +77,7 @@ export const SPELLS: SpellDef[] = [
   },
   {
     id: 'frost_lance',
+    element: 'frost',
     name: 'Frostlanze',
     icon: '❄️',
     level: 15,
@@ -51,6 +90,7 @@ export const SPELLS: SpellDef[] = [
   },
   {
     id: 'fireball',
+    element: 'fire',
     name: 'Feuerball',
     icon: '🔥',
     level: 30,
@@ -63,6 +103,7 @@ export const SPELLS: SpellDef[] = [
   },
   {
     id: 'life_drain',
+    element: 'shadow',
     name: 'Lebensraub',
     icon: '🩸',
     level: 40,
@@ -76,6 +117,7 @@ export const SPELLS: SpellDef[] = [
   },
   {
     id: 'chain_lightning',
+    element: 'lightning',
     name: 'Kettenblitz',
     icon: '⚡',
     level: 55,
@@ -88,6 +130,7 @@ export const SPELLS: SpellDef[] = [
   },
   {
     id: 'void_blast',
+    element: 'void',
     name: 'Leerenstoß',
     icon: '🌀',
     level: 75,
@@ -120,6 +163,19 @@ export const SPECIALS = {
     desc: 'Sicherer Treffer mit 160 % Schaden, heilt 30 % davon.',
   },
 } as const;
+
+/**
+ * Monster heavy attacks: every n-th swing is telegraphed (wind-up). The wind-up makes that swing
+ * slower, so idle damage stays about the same; a tap on „Ausweichen" avoids it completely.
+ */
+export function heavyEvery(level: number, boss = false): number {
+  return boss ? 3 : level >= 10 ? 5 : 0;
+}
+export const HEAVY_DAMAGE = 1.6;
+/** Extra wind-up time as a fraction of the monster's attack interval. */
+export const HEAVY_WINDUP = 0.6;
+/** Special energy for a dodge. */
+export const DODGE_ENERGY = 25;
 
 /** Energy needed for one special attack. */
 export const SPECIAL_COST = 100;

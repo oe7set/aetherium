@@ -759,6 +759,9 @@ body.reduce-motion *::after {
   --panel-2: rgba(38, 45, 78, 0.96);
 }
 .perf-eco .special-bar.ready .btn,
+.perf-eco .dodge-alert,
+.perf-eco .quick-dodge,
+.perf-eco .quick-special,
 .perf-eco .rift-portal,
 .perf-eco .rift-portal span,
 .perf-eco .hero-portrait::after,

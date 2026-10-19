@@ -370,6 +370,17 @@ const STAT_SERIES: StatSeries[] = [
     reward: () => ({ 'combat.energy': 0.05 }),
   },
   {
+    key: 'dodges',
+    icon: '💨',
+    desc: (n) => `Weiche ${n} Wuchtschlägen aus.`,
+    steps: [
+      [1, 'Flinke Füße'],
+      [100, 'Matrix-Moment'],
+      [1000, 'Unberührbar'],
+    ],
+    reward: (i) => ({ 'combat.defence': 0.01 * (i + 1) }),
+  },
+  {
     key: 'bossKills',
     icon: '👹',
     desc: (n) => `Besiege ${n} Bosse.`,

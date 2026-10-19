@@ -32,7 +32,15 @@ export type GameEvent =
   | { type: 'combatStarted'; monster: string }
   | { type: 'monsterSpawned'; monster: string }
   | { type: 'combatStopped'; monster: string; reason: CombatStopReason }
-  | { type: 'hit'; target: 'monster' | 'player'; damage: number; special?: boolean }
+  | {
+      type: 'hit';
+      target: 'monster' | 'player';
+      damage: number;
+      special?: boolean;
+      heavy?: boolean;
+    }
+  | { type: 'windup'; monster: string }
+  | { type: 'dodged'; monster: string }
   | { type: 'special'; style: CombatStyle }
   | { type: 'monsterKilled'; monster: string }
   | { type: 'bossPhase'; monster: string; phase: number }

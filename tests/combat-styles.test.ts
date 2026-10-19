@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   advance,
   castSpell,
+  dodge,
+  spellAffinity,
+  estimateKillTime,
   collector,
   createRng,
   deserialize,
@@ -12,6 +15,7 @@ import {
   specialAttack,
   startCombat,
 } from '../src/engine';
+import { getMonster, SPELL_MAP } from '../src/data';
 import { gameWith, setLevel } from './helpers';
 
 function mage(inventory: Record<string, number>) {
@@ -156,5 +160,41 @@ describe('Ausrüstung', () => {
     equipItem(s2, 'bronze_sword');
     s2.equipment.hands = 'leather_gloves';
     expect(melee).toBeCloseTo(playerStats(s2).accuracy);
+  });
+});
+
+describe('Elemente und Wuchtschläge', () => {
+  it('Frost ist gegen Feuerwesen effektiv, Feuer schwach', () => {
+    expect(spellAffinity(SPELL_MAP.get('frost_lance')!, 'fire_elemental')).toBe('weak');
+    expect(spellAffinity(SPELL_MAP.get('fireball')!, 'fire_elemental')).toBe('resist');
+    expect(spellAffinity(SPELL_MAP.get('spark')!, 'chicken')).toBeNull();
+    const s = mage({ rune_basic: 100, coal: 10 });
+    const m = getMonster('fire_elemental');
+    s.combatSettings.spell = 'frost_lance';
+    const frost = estimateKillTime(s, m);
+    s.combatSettings.spell = 'fireball';
+    expect(estimateKillTime(s, m)).toBeGreaterThan(frost);
+  });
+
+  it('Monster holen aus; Ausweichen vermeidet den Schlag und lädt die Leiste', () => {
+    const s = gameWith({ inventory: { cooked_shark: 100 } });
+    for (const sk of ['melee', 'defence', 'hitpoints']) setLevel(s, sk, 30);
+    s.hp = 30;
+    startCombat(s, 'monster', 'wolf', () => {});
+    const { emit, events } = collector();
+    const rng = createRng(9);
+    let guard = 0;
+    while (!s.combat!.windup && guard++ < 2000) advance(s, 0.1, rng, emit);
+    expect(s.combat!.windup).toBe(true);
+    expect(events.some((e) => e.type === 'windup')).toBe(true);
+    expect(dodge(s)).toBe(true);
+    const hp = s.hp;
+    const energy = s.combat!.energy;
+    guard = 0;
+    while (s.combat!.windup && guard++ < 2000) advance(s, 0.1, rng, emit);
+    expect(events.some((e) => e.type === 'dodged')).toBe(true);
+    expect(s.stats.dodges).toBe(1);
+    expect(s.hp).toBeGreaterThanOrEqual(hp);
+    expect(s.combat!.energy).toBeGreaterThan(energy);
   });
 });

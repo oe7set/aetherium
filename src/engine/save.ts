@@ -638,6 +638,9 @@ function hydrateCombat(v: unknown): CombatState | null {
     playerTimer: n(v.playerTimer),
     monsterTimer: n(v.monsterTimer),
     energy: Math.min(100, n(v.energy)),
+    swings: n(v.swings),
+    windup: v.windup === true,
+    dodged: v.dodged === true,
   };
 }
 

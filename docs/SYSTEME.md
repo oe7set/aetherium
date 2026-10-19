@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.43.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.44.0**.
 
 ## 1. Der große Kreislauf
 
@@ -62,6 +62,9 @@ fällt ohne Zutaten auf den Funken zurück. Aktiv (optional): `combat.energy` 0�
 (Store `special`) feuert Zerschmetterer/Doppelschuss/Arkanausbruch – +50 % XP, +25 % Gold beim Kill, Zähler
 `specialsUsed` (Erfolg). Nie automatisch, damit Aktivspiel minimal mehr bringt. `equipBest` füllt die Rüstungsplätze.
 Ausrüstungsansicht `ui/inventory/GearPanel` (Figur, Werte, Filter, ▲/▼-Vergleich).
+Zauber haben Elemente (`MONSTER_ELEMENTS`: anfällig ×1,35, resistent ×0,6, `spellAffinity`). Monster ab Stufe 10
+(Bosse öfter, `heavyEvery`) holen jeden n-ten Schlag aus (`windup`): kommt 60 % später, trifft ×1,6 – Idle bleibt
+im Schnitt gleich; `dodge` (💨 in Kampfansicht und Kampfleiste) vermeidet ihn und gibt +25 Spezialenergie.
 
 **Periodensystem** (`ELEMENT_GROUPS` in `data/science.ts`, `elementGroupProgress` in `engine/science.ts`): 10 chemische
 Gruppen; jede vollständige Gruppe gibt einen passenden Bonus (Alkalimetalle → Verkaufspreis, Erdalkali → Bergbau,
@@ -224,8 +227,6 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Endgame: Inselschmuck als Kosmetik (3D-Deko auf der Insel); Endlos-Riss-Rangliste über Export-Codes.
 - [ ] Riss: eigener 7. Biom (braucht ein neues Kampfgebiet in `data/combat.ts`), neue Gegner-Verhalten
       (z. B. Schild, Heiler).
-- [ ] Kampf: Gebiets-/Monster-Schwächen auf einzelne Zauber (z. B. Feuer gegen Eis), Spezialangriffe der Monster
-      zum Ausweichen (aktives Gegenstück zur Spezialleiste).
 
 **Qualität**
 

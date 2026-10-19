@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.0] – Elemente & Wuchtschläge
+
+- Zauber haben jetzt Elemente (Arkan, Frost, Feuer, Schatten, Blitz, Leere). Viele Monster sind anfällig (+35 % Schaden) oder resistent (−40 %): Frost gegen Feuerelementar, Lavawurm und Drachen, Feuer gegen Spinnen, Bücher und Zombie-Professoren, Blitz gegen Golems, Leere gegen Phantome. Monsterkarten zeigen das, im Zauberbuch steht „effektiv"/„schwach" für den aktuellen Gegner.
+- Wuchtschläge: Monster ab Stufe 10 (Bosse öfter) holen regelmäßig sichtbar aus. Der Schlag kommt später, trifft aber härter – im Schnitt bleibt es für Idle-Spieler gleich. Wer „💨 Ausweichen" tippt, nimmt keinen Schaden und bekommt +25 % Spezialenergie.
+- Ausweichen und Spezialangriff gibt es auch direkt in der Kampfleiste unten – aus jeder Ansicht.
+- Neuer Erfolg „Flinke Füße" (Ausweichen).
+
 ## [1.43.0] – Ausrüstung & Kampfstile
 
 - Ausrüstung neu: Figur mit 11 Plätzen – neu sind **Umhang, Hände und Füße**. Werte-Übersicht (Max. Treffer, Treffwert, Tempo, Abwehr, LP, Summe aller Boni in Worten), Filter (Waffen/Rüstung/Schmuck/Munition) und ▲/▼-Vergleich mit dem angelegten Teil. Knopf „Beste Rüstung anlegen".

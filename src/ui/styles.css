@@ -2275,3 +2275,51 @@ button.chip {
     transform: scale(1.04);
   }
 }
+.dodge-alert {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 123, 123, 0.7);
+  background: rgba(229, 83, 75, 0.18);
+  font-size: 0.875rem;
+  animation: dodge-flash 0.6s ease-in-out infinite alternate;
+}
+.dodge-alert.done {
+  animation: none;
+  border-color: var(--line);
+  background: rgba(123, 228, 149, 0.12);
+}
+@keyframes dodge-flash {
+  to {
+    background: rgba(229, 83, 75, 0.32);
+  }
+}
+.spell {
+  position: relative;
+}
+.spell-aff {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 0.5625rem;
+  padding: 0 4px;
+  border-radius: 999px;
+}
+.spell-aff.weak {
+  background: rgba(123, 228, 149, 0.25);
+  color: #7be495;
+}
+.spell-aff.resist {
+  background: rgba(255, 123, 123, 0.2);
+  color: #ff7b7b;
+}
+.quick-dodge,
+.quick-special {
+  font-size: 1.2rem;
+  padding: 6px 10px;
+  animation: special-pulse 0.9s ease-in-out infinite;
+}

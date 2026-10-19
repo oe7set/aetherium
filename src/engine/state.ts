@@ -68,6 +68,12 @@ export interface CombatState {
   monsterTimer: number;
   /** Special attack charge 0–100; fills on attacks, fired by hand. */
   energy: number;
+  /** Monster swings since spawn (every n-th is a telegraphed heavy attack). */
+  swings: number;
+  /** The monster winds up a heavy attack right now. */
+  windup: boolean;
+  /** The player tapped „Ausweichen" during the wind-up. */
+  dodged: boolean;
 }
 
 export interface CombatSettings {

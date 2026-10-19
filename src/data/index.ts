@@ -27,8 +27,16 @@ export {
 export type { CropDef, ElementDef, HelperDef, TechDef, TechUnlock } from './science';
 export type { AreaDef, BossPhase, DungeonDef, MonsterDef } from './combat';
 export { ACHIEVEMENTS } from './achievements';
-export { SPELLS, SPELL_MAP, SPECIALS, SPECIAL_COST } from './spells';
-export type { SpellDef } from './spells';
+export {
+  SPELLS,
+  SPELL_MAP,
+  SPECIALS,
+  SPECIAL_COST,
+  ELEMENT_INFO,
+  MONSTER_ELEMENTS,
+  heavyEvery,
+} from './spells';
+export type { SpellDef, SpellElement } from './spells';
 import { DEVOTION_BUFFS } from './devotion';
 export { LUCKY_EVENTS, POTION_BUFFS } from './buffs';
 

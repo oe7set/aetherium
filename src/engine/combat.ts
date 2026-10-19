@@ -1,6 +1,13 @@
 import { DUNGEON_MAP, getItem, getMonster, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
 import {
+  DODGE_ENERGY,
+  ELEMENT_RESIST,
+  ELEMENT_WEAK,
+  HEAVY_DAMAGE,
+  HEAVY_WINDUP,
+  heavyEvery,
+  MONSTER_ELEMENTS,
   SPECIAL_COST,
   SPECIAL_GAIN_HIT,
   SPECIAL_GAIN_MISS,
@@ -99,6 +106,20 @@ export function castSpell(s: GameState): SpellDef | null {
   return hasReagents(s, spark) ? spark : null;
 }
 
+/** 'weak' / 'resist' when the spell's element meets a monster affinity. */
+export function spellAffinity(sp: SpellDef | null, monster: string): 'weak' | 'resist' | null {
+  if (!sp) return null;
+  const aff = MONSTER_ELEMENTS[monster];
+  if (aff?.weak === sp.element) return 'weak';
+  if (aff?.resist === sp.element) return 'resist';
+  return null;
+}
+
+function elementMult(sp: SpellDef | null | undefined, monster: string): number {
+  const aff = spellAffinity(sp ?? null, monster);
+  return aff === 'weak' ? ELEMENT_WEAK : aff === 'resist' ? ELEMENT_RESIST : 1;
+}
+
 export function playerStats(s: GameState): PlayerCombatStats {
   const style = combatStyle(s);
   const level = skillLevel(s, style);
@@ -159,7 +180,8 @@ export function combatLevel(s: GameState): number {
 /** Rough kills per hour estimate for the UI (ignores eating and deaths). */
 export function estimateKillTime(s: GameState, m: MonsterDef): number {
   const st = playerStats(s);
-  const dps = (playerHitChance(s, m) * ((1 + st.maxHit) / 2)) / st.speed;
+  const elem = st.style === 'magic' ? elementMult(castSpell(s), m.id) : 1;
+  const dps = (playerHitChance(s, m) * ((1 + st.maxHit * elem) / 2)) / st.speed;
   return dps > 0 ? m.hp / dps + RESPAWN_SECONDS : Infinity;
 }
 
@@ -301,6 +323,9 @@ function spawn(s: GameState, c: CombatState): void {
   c.respawn = 0;
   c.playerTimer = playerStats(s).speed * 0.5;
   c.monsterTimer = m.speed;
+  c.swings = 0;
+  c.windup = false;
+  c.dodged = false;
 }
 
 export function startCombat(
@@ -323,6 +348,9 @@ export function startCombat(
     playerTimer: 0,
     monsterTimer: 0,
     energy: 0,
+    swings: 0,
+    windup: false,
+    dodged: false,
   };
   spawn(s, c);
   s.combat = c;
@@ -430,7 +458,10 @@ function landHit(
   emit: Emit,
   opts: { spell?: SpellDef | null; special?: boolean; heal?: number } = {},
 ): void {
-  const damage = Math.max(1, Math.min(c.monsterHp, raw));
+  const damage = Math.max(
+    1,
+    Math.min(c.monsterHp, Math.round(raw * elementMult(opts.spell, m.id))),
+  );
   c.monsterHp -= damage;
   addStat(s, 'damageDealt', damage);
   emit({ type: 'hit', target: 'monster', damage, special: opts.special });
@@ -504,15 +535,35 @@ export function specialAttack(s: GameState, rng: Rng, emit: Emit): SpecialResult
 function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {
   const m = getMonster(c.monster);
   const phase = m.phases?.[c.phase];
-  c.monsterTimer += m.speed * (phase?.speedMult ?? 1);
+  const interval = m.speed * (phase?.speedMult ?? 1);
+  const heavy = c.windup;
+  const dodged = c.dodged;
+  c.windup = false;
+  c.dodged = false;
+  c.monsterTimer += interval;
+  c.swings++;
+  // Telegraph the next heavy swing: it comes later (wind-up) but hits harder.
+  const every = heavyEvery(m.level, m.boss);
+  if (every > 0 && c.swings % every === every - 1) {
+    c.windup = true;
+    c.monsterTimer += interval * HEAVY_WINDUP;
+    emit({ type: 'windup', monster: m.id });
+  }
+  if (heavy && dodged) {
+    addStat(s, 'dodges');
+    gainEnergy(s, c, DODGE_ENERGY);
+    emit({ type: 'dodged', monster: m.id });
+    return;
+  }
   if (rng() >= monsterHitChance(s, m)) {
     emit({ type: 'hit', target: 'player', damage: 0 });
     return;
   }
-  const damage = randInt(rng, 1, m.maxHit + (phase?.maxHitBonus ?? 0));
+  const roll = randInt(rng, 1, m.maxHit + (phase?.maxHitBonus ?? 0));
+  const damage = heavy ? Math.round(roll * HEAVY_DAMAGE) : roll;
   s.hp -= damage;
   addStat(s, 'damageTaken', damage);
-  emit({ type: 'hit', target: 'player', damage });
+  emit({ type: 'hit', target: 'player', damage, heavy });
   autoEat(s, emit);
   if (s.hp <= 0) {
     addStat(s, 'deaths');
@@ -520,6 +571,14 @@ function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void
     stopCombat(s, emit, 'died');
     emit({ type: 'playerDied', monster: m.id });
   }
+}
+
+/** Optional active play: dodge a telegraphed heavy attack. */
+export function dodge(s: GameState): boolean {
+  const c = s.combat;
+  if (!c || !c.windup || c.dodged || c.monsterHp <= 0) return false;
+  c.dodged = true;
+  return true;
 }
 
 registerRunnerFactory('combat', (s, rng, emit) => {

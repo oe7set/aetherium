@@ -7,10 +7,14 @@ import {
   SPECIAL_COST,
   SPECIALS,
   SPELLS,
+  ELEMENT_INFO,
+  MONSTER_ELEMENTS,
+  heavyEvery,
   type MonsterDef,
 } from '../../data';
 import {
   castSpell,
+  spellAffinity,
   combatLevel,
   estimateKillTime,
   formatDuration,
@@ -38,6 +42,7 @@ function SpellPicker() {
     SPELLS.map((sp) => (sp.catalyst ? (s.game.inventory[sp.catalyst.item] ?? 0) : 0)).join(','),
   );
   const setCombatSetting = useGame((s) => s.setCombatSetting);
+  const target = useGame((s) => s.game.combat?.monster ?? null);
   const { int } = useFmt();
   const reagents = reagentKey.split(',').map(Number);
   return (
@@ -59,6 +64,11 @@ function SpellPicker() {
               title={sp.desc}
             >
               <span className="spell-icon">{locked ? '🔒' : sp.icon}</span>
+              {target && !locked && spellAffinity(sp, target) && (
+                <span className={`spell-aff ${spellAffinity(sp, target)}`}>
+                  {spellAffinity(sp, target) === 'weak' ? 'effektiv' : 'schwach'}
+                </span>
+              )}
               <strong>{sp.name}</strong>
               <small>
                 {locked
@@ -198,6 +208,19 @@ function PlayerPanel() {
   );
 }
 
+/** Telegraphed heavy attack: an optional tap avoids it completely and charges the special bar. */
+function DodgeAlert({ dodged, name }: { dodged: boolean; name: string }) {
+  const dodge = useGame((s) => s.dodge);
+  return (
+    <div className={`dodge-alert ${dodged ? 'done' : ''}`}>
+      <span>{dodged ? `💨 Bereit zum Ausweichen …` : `⚠️ ${name} holt zum Wuchtschlag aus!`}</span>
+      <button className="btn btn-gold" disabled={dodged} onClick={dodge}>
+        {dodged ? 'Ausgewichen' : '💨 Ausweichen'}
+      </button>
+    </div>
+  );
+}
+
 function CurrentFight() {
   const combat = useGame((s) => s.game.combat);
   const flee = useGame((s) => s.flee);
@@ -215,6 +238,7 @@ function CurrentFight() {
         </button>
       </div>
       <ProgressBar fraction={Math.max(0, combat.monsterHp) / m.hp} color="#e5534b" height={10} />
+      {combat.windup && combat.monsterHp > 0 && <DodgeAlert dodged={combat.dodged} name={m.name} />}
       <SpecialBar />
       <small className="muted">
         {combat.monsterHp > 0
@@ -257,6 +281,23 @@ function MonsterCard({ m }: { m: MonsterDef }) {
             ☠️ {danger.toFixed(1).replace('.', ',')} Schaden/s
           </span>
           <span>⏱️ ~{Number.isFinite(kill) ? formatDuration(kill) : '∞'}/Kill</span>
+          {MONSTER_ELEMENTS[m.id]?.weak && (
+            <span className="up" title="Zauber dieses Elements machen +35 % Schaden">
+              Anfällig: {ELEMENT_INFO[MONSTER_ELEMENTS[m.id]!.weak!].icon}{' '}
+              {ELEMENT_INFO[MONSTER_ELEMENTS[m.id]!.weak!].name}
+            </span>
+          )}
+          {MONSTER_ELEMENTS[m.id]?.resist && (
+            <span className="warn" title="Zauber dieses Elements machen 40 % weniger Schaden">
+              Resistent: {ELEMENT_INFO[MONSTER_ELEMENTS[m.id]!.resist!].icon}{' '}
+              {ELEMENT_INFO[MONSTER_ELEMENTS[m.id]!.resist!].name}
+            </span>
+          )}
+          {heavyEvery(m.level, m.boss) > 0 && (
+            <span title="Holt regelmäßig zu einem Wuchtschlag aus – im Kampf kannst du ausweichen">
+              💢 Wuchtschlag
+            </span>
+          )}
           {m.weakness && (
             <span className={m.weakness === style ? 'up' : ''}>
               Schwäche: {STYLE_LABEL[m.weakness]}

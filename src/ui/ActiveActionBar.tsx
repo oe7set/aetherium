@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { getAction, getMonster, getSkill } from '../data';
-import { actionDuration, formatSeconds, maxHp } from '../engine';
+import { getAction, getMonster, getSkill, SPECIAL_COST, SPECIALS } from '../data';
+import { actionDuration, combatStyle, formatSeconds, maxHp } from '../engine';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 import { LiveProgressBar, ProgressBar } from './ProgressBar';
@@ -23,7 +23,13 @@ function CombatBar() {
   const max = useGame((s) => maxHp(s.game));
   const flee = useGame((s) => s.flee);
   const openSkill = useGame((s) => s.openSkill);
+  const dodge = useGame((s) => s.dodge);
+  const special = useGame((s) => s.special);
+  const style = useGame((s) => combatStyle(s.game));
   if (!combat) return null;
+  const alive = combat.monsterHp > 0;
+  const canDodge = alive && combat.windup && !combat.dodged;
+  const canSpecial = alive && combat.energy >= SPECIAL_COST;
   const m = getMonster(combat.monster);
   return (
     <div className="active-bar">
@@ -46,6 +52,20 @@ function CombatBar() {
           </small>
         </span>
       </button>
+      {canDodge && (
+        <button className="btn btn-gold quick-dodge" onClick={dodge} aria-label="Ausweichen">
+          💨
+        </button>
+      )}
+      {canSpecial && (
+        <button
+          className="btn btn-gold quick-special"
+          onClick={special}
+          aria-label={SPECIALS[style].name}
+        >
+          {SPECIALS[style].icon}
+        </button>
+      )}
       <button className="btn btn-stop" onClick={flee} aria-label="Fliehen">
         ■
       </button>

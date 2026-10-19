@@ -219,7 +219,8 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: e.damage > 0 ? (e.special ? 'rare' : 'xp') : 'bad',
             text: e.damage > 0 ? `${e.special ? '🌟' : '💥'} ${e.damage}` : 'daneben',
           });
-        else if (e.damage > 0) out.popups.push({ kind: 'bad', text: `❤️ −${e.damage}` });
+        else if (e.damage > 0)
+          out.popups.push({ kind: 'bad', text: `${e.heavy ? '💢' : '❤️'} −${e.damage}` });
         break;
       case 'monsterKilled': {
         const m = getMonster(e.monster);
@@ -266,6 +267,9 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             text: `⚠️ ${e.reason === 'noAmmo' ? 'Keine Pfeile mehr! Der Bogen ist jetzt ein sehr teurer Stock.' : 'Keine Runen mehr! Ohne Runen ist ein Zauberstab nur ein Stock.'}`,
           });
         }
+        break;
+      case 'dodged':
+        out.popups.push({ kind: 'rare', text: '💨 Ausgewichen!' });
         break;
       case 'special':
         out.popups.push({

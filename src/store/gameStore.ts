@@ -42,6 +42,7 @@ import {
   startCombat,
   equipBest,
   specialAttack,
+  dodge,
   stopCombat,
   unequip as unequipSlot,
   type CombatSettings,
@@ -182,6 +183,8 @@ export interface GameStore {
   eatNow: () => void;
   /** Fires the charged special attack (optional active play). */
   special: () => void;
+  /** Dodges a telegraphed heavy monster attack. */
+  dodge: () => void;
   research: (tech: string) => void;
   plant: (plot: number, seed: string) => void;
   harvestPlot: (plot: number) => void;
@@ -498,6 +501,10 @@ export const useGame = create<GameStore>()((set, get) => {
     special: () =>
       mutate((s, emit) => {
         specialAttack(s, defaultRng, emit);
+      }),
+    dodge: () =>
+      mutate((s) => {
+        dodge(s);
       }),
     research: (tech) =>
       mutate((s, emit) => {
