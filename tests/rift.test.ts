@@ -279,3 +279,25 @@ describe('Ätherriss: Schildträger und Heiler', () => {
     expect(BIOMES[6]!.area).toBe('glacier');
   });
 });
+
+describe('Ätherriss: Vertrauter als Begleiter', () => {
+  it('kämpfende Vertraute treffen Gegner in der Nähe', () => {
+    const def = BIOMES[0]!.enemies[0]!;
+    const hpAfter = (companion?: { icon: string; power: number }) => {
+      const run = createRun(config({ companion }));
+      run.weapons.length = 0;
+      run.enemies.length = 0;
+      const e = spawnEnemy(run, def, 120, 0);
+      e.hp = e.maxHp = 10000;
+      e.speed = 0;
+      for (let i = 0; i < 120; i++) stepRun(run, 1 / 30, { x: 0, y: 0 });
+      return e.hp;
+    };
+    expect(hpAfter()).toBe(10000);
+    expect(hpAfter({ icon: '🐺', power: 50 })).toBeLessThan(10000);
+  });
+
+  it('ohne Vertrauten gibt es keinen Begleiter', () => {
+    expect(createRun(config()).companion).toBeNull();
+  });
+});

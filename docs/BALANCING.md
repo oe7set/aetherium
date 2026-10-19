@@ -99,3 +99,16 @@ Heldenstufe 11 / 19 / 27, Abenteuer 13 / 23 / 35, Invasionen 17 abgewehrt zu 6 v
 Gefundener Fehler: Abenteuer waren für frische Helden fast unschaffbar (Stufe 3 ≈ 18 % Erfolg, 16 von 20
 gescheitert). Jetzt bemisst sich die Gefahr an der üblichen Stärke auf der Stufe (100 + 60 × Stufe):
 gleiche Stufe ≈ 62 %, schwer ≈ 51 %; Abenteuer erscheinen rund um die Heldenstufe.
+
+## Masterplan 3.0: neue Skills (1.57)
+
+Vergleich der rohen XP/h (beste Aktion je Stufe, ohne Materialkosten) gegen Holzfällen/Bergbau/Schmieden:
+
+- **Diebeskunst**: Fehlschläge geben nur 10 % XP, an der Stufengrenze scheitern ~45 %. Deshalb ×1,6 auf alle
+  Diebstahl-XP (`THIEVING_XP_MULT`) – effektiv landet sie zwischen Holzfällen und Bergbau, dazu kommt Gold.
+- **Kartografie**: Kartieren ×1,4 (`SURVEY_XP_MULT`); Expeditionen verbrauchen Karten und Brot und zahlen jetzt
+  das 2–3-Fache (Ruinen 900, Gipfel 1800, Schlund 4200 XP) – sonst wären sie schlechter als Kartieren.
+- **Baukunst**: Eichenbretter 6 → 8 XP für einen weniger zähen Start; die großen Sprünge kommen über Möbel und
+  die XP-Batzen der Inselbauten.
+- **Beschwörung** liegt roh am höchsten, ist aber durch Talismane (Kampf-Drops) gedrosselt – wie das Vorbild.
+- Helden-Abenteuer: vier Heldenstufen pro Biom, der Frostgipfel (Schwierigkeit 11) erst ab Stufe 25.

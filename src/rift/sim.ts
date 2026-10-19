@@ -228,6 +228,8 @@ export interface RunConfig {
   trialLabel?: string;
   /** Endless rift: no examiner, a boss every 5 minutes, ends only on death. */
   endless?: boolean;
+  /** Beschwörung: the active familiar follows the hero; fighters (power > 0) attack. */
+  companion?: { icon: string; power: number };
 }
 
 /** Minutes until the final boss of a run. */
@@ -294,6 +296,8 @@ export interface RunState {
   nextId: number;
   /** Shake intensity for the renderer. */
   shake: number;
+  /** The familiar following the hero (position + attack timer). */
+  companion: { x: number; y: number; timer: number } | null;
 }
 
 // --- Setup ----------------------------------------------------------------------------------------
@@ -361,6 +365,7 @@ export function createRun(config: RunConfig): RunState {
     endlessWave: 0,
     nextId: 1,
     shake: 0,
+    companion: config.companion ? { x: 0, y: 0, timer: 1 } : null,
   };
   run.weapons.push(newWeapon(hero.weapon, Math.min(WEAPON_MAX_LEVEL, config.startWeaponLevel)));
   recomputeStats(run);
@@ -1685,6 +1690,53 @@ export function stepRun(run: RunState, dt: number, input: RiftInput): void {
   }
 }
 
+const COMPANION_RANGE = 230;
+const COMPANION_EVERY = 1.1;
+
+/** Beschwörung: the familiar trails the hero and, if it is a fighter, zaps the nearest enemy. */
+function updateCompanion(run: RunState, dt: number): void {
+  const c = run.companion;
+  const def = run.config.companion;
+  if (!c || !def) return;
+  const h = run.hero;
+  // Trail behind the hero with a soft follow.
+  const tx = h.x - h.fx * 34 + 18;
+  const ty = h.y - h.fy * 34 - 22;
+  const k = Math.min(1, dt * 6);
+  c.x += (tx - c.x) * k;
+  c.y += (ty - c.y) * k;
+  if (def.power <= 0) return;
+  c.timer -= dt;
+  if (c.timer > 0) return;
+  let best: Enemy | null = null;
+  let bestD = COMPANION_RANGE * COMPANION_RANGE;
+  for (const e of run.enemies) {
+    if (e.dead) continue;
+    const d = dist2(e.x, e.y, c.x, c.y);
+    if (d < bestD) {
+      bestD = d;
+      best = e;
+    }
+  }
+  if (!best) {
+    c.timer = 0.3;
+    return;
+  }
+  c.timer = COMPANION_EVERY;
+  pushFx(run, {
+    type: 'beam',
+    x1: c.x,
+    y1: c.y,
+    x2: best.x,
+    y2: best.y,
+    width: 3,
+    color: '#b98cff',
+    life: 0.15,
+    max: 0.15,
+  });
+  damageEnemy(run, best, def.power * run.stats.might, 0.3, c.x, c.y);
+}
+
 function tick(run: RunState, dt: number, input: RiftInput): void {
   const h = run.hero;
   run.time += dt;
@@ -1705,6 +1757,7 @@ function tick(run: RunState, dt: number, input: RiftInput): void {
   updateSpawns(run, dt);
   updateEnemies(run, dt);
   updateWeapons(run, dt);
+  updateCompanion(run, dt);
   updateProjectiles(run, dt);
   updateZones(run, dt);
   run.enemies = run.enemies.filter((e) => !e.dead);

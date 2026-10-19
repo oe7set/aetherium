@@ -1,3 +1,4 @@
+import { activeFamiliar } from './summoning';
 import { getItem, ITEM_MAP, SKILL_MAP, TECH_MAP } from '../data';
 import {
   BASE_PROVISIONS,
@@ -229,7 +230,14 @@ function baseConfig(
     banishes: riftTalentLevel(s, 't_banish'),
     revives: riftTalentLevel(s, 't_revival'),
     provisions,
+    companion: riftCompanion(s),
   };
+}
+
+/** Beschwörung: the active familiar joins the run; fighting familiars attack. */
+function riftCompanion(s: GameState): RunConfig['companion'] {
+  const f = activeFamiliar(s);
+  return f ? { icon: f.icon, power: (f.strike ?? 0) * 1.4 } : undefined;
 }
 
 // --- Adventures as real-time dungeons -------------------------------------------------------------

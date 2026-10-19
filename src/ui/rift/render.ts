@@ -291,6 +291,11 @@ export function render(
   const step = h.moving ? Math.sin(time * 14) * 2.5 : 0;
   if (h.invuln > 0 && Math.floor(time * 20) % 2 === 0) ctx.globalAlpha = 0.5;
   drawSprite(ctx, run.config.avatar ?? hero.icon, h.x, h.y - Math.abs(step), 36, 0, h.fx < 0);
+  // Beschwörung: the familiar hovers next to the hero.
+  if (run.companion && run.config.companion) {
+    const bob = Math.sin(time * 4) * 3;
+    drawSprite(ctx, run.config.companion.icon, run.companion.x, run.companion.y + bob, 26);
+  }
   ctx.globalAlpha = 1;
   if (h.hurt > 0) {
     ctx.fillStyle = `rgba(255, 60, 80, ${h.hurt * 1.6})`;

@@ -191,6 +191,9 @@ export const CARTO_ITEMS: ItemDef[] = [
   })),
 ];
 
+/** Surveying is slow and eats parchment; expeditions eat maps and bread – both pay accordingly. */
+const SURVEY_XP_MULT = 1.4;
+
 export const CARTO_ACTIONS: ActionDef[] = [
   {
     id: 'carto_parchment',
@@ -212,7 +215,7 @@ export const CARTO_ACTIONS: ActionDef[] = [
     icon: r.icon,
     levelReq: r.level,
     baseTime: r.time,
-    xp: r.xp,
+    xp: Math.round(r.xp * SURVEY_XP_MULT),
     inputs: [{ item: 'parchment', qty: 1 }],
     outputs: [{ item: `map_${r.id}`, qty: 1 }],
     drops: r.drops,
@@ -226,7 +229,7 @@ export const CARTO_ACTIONS: ActionDef[] = [
     icon: '🏛️',
     levelReq: 30,
     baseTime: 45,
-    xp: 400,
+    xp: 900,
     inputs: [
       { item: 'map_hills', qty: 3 },
       { item: 'bread', qty: 5 },
@@ -247,7 +250,7 @@ export const CARTO_ACTIONS: ActionDef[] = [
     icon: '🧗',
     levelReq: 50,
     baseTime: 60,
-    xp: 750,
+    xp: 1800,
     inputs: [
       { item: 'map_mountains', qty: 3 },
       { item: 'bread', qty: 8 },
@@ -268,7 +271,7 @@ export const CARTO_ACTIONS: ActionDef[] = [
     icon: '🌀',
     levelReq: 75,
     baseTime: 90,
-    xp: 1500,
+    xp: 4200,
     inputs: [
       { item: 'map_ocean', qty: 3 },
       { item: 'bread', qty: 12 },

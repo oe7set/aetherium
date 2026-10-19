@@ -260,7 +260,8 @@ export function spawnAdventure(s: GameState, rng: Rng): Adventure | null {
   const y = Math.round(v.y + Math.sin(angle) * dist);
   // Around the hero's own level: close ones a little easier, far ones a little harder.
   const level = Math.max(1, Math.round(h.level + (dist - 6) / 3 + rng() * 2 - 1));
-  const biome = BIOMES[Math.min(BIOMES.length - 1, Math.floor((level - 1) / 3))]!;
+  // Four hero levels per biome: the 7th biome (Frostgipfel, difficulty 11) waits until level 25.
+  const biome = BIOMES[Math.min(BIOMES.length - 1, Math.floor((level - 1) / 4))]!;
   const names = ADVENTURE_NAMES[biome.id] ?? ['Abenteuer'];
   const adv: Adventure = {
     id: h.nextAdventureId++,

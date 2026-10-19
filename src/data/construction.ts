@@ -13,7 +13,7 @@ interface Plank {
 }
 
 const PLANKS: Plank[] = [
-  { id: 'plank_oak', name: 'Eichenbrett', log: 'log_oak', level: 1, xp: 6, price: 4 },
+  { id: 'plank_oak', name: 'Eichenbrett', log: 'log_oak', level: 1, xp: 8, price: 4 },
   { id: 'plank_maple', name: 'Ahornbrett', log: 'log_maple', level: 30, xp: 22, price: 18 },
   { id: 'plank_yew', name: 'Eibenbrett', log: 'log_yew', level: 50, xp: 38, price: 40 },
   { id: 'plank_magic', name: 'Zauberholzbrett', log: 'log_magic', level: 70, xp: 60, price: 90 },

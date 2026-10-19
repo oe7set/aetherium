@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.56.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.57.0**.
 
 ## 1. Der große Kreislauf
 
@@ -96,7 +96,8 @@ Gold über Completion-Hook, Beute über `drops`. Passiv je Stufe: `combat.crit` 
 jedes Nicht-Boss-Monster gehängt) + Seelensplitter (Aktion, Ektoplasma, Krämer) + Zutat = Beutel (`consume: familiar`).
 `s.familiar` (ein Vertrauter, Zeiteffekt `familiar`, auch offline; gleicher Vertrauter verlängert). Modifier-Quelle
 `familiar`; Kampf-Vertraute (`strike`) schlagen in `playerAttack` bei 50 % der Angriffe zu; `rift.*`-Boni wirken im
-Riss. Anzeige in der Buff-Leiste; Beschwörungskreis auf der Insel. Zähler `pouchesMade`.
+Riss (`RunConfig.companion`: Vertrauter folgt dem Helden sichtbar, Kämpfer schießen alle 1,1 s auf den nächsten
+Gegner). Anzeige in der Buff-Leiste; Beschwörungskreis auf der Insel. Zähler `pouchesMade`.
 
 **Kopfgeldjagd** (Phase 14, `data/slayer.ts`, `engine/slayer.ts`, `ui/combat/SlayerView.tsx`): Auftrag (12–35 Kills)
 aus `slayerCandidates` (passend zur Kampfstufe, keine Bosse, ohne Sperren); Kill-Hook gibt Kopfgeld-XP (1,2 × LP),
@@ -290,9 +291,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Masterplan 3.0 nachjustieren: Langzeit-Bot um die sechs neuen Skills erweitern (XP-Kurven, Gold aus
-      Diebeskunst, Kopfgeld-Punkte pro Stunde), Monster-Talismane gegen Inventarplatz abwägen.
-- [ ] Riss: Vertraute sichtbar als Begleiter im Lauf (bisher nur Werte-Bonus).
+- [ ] Langzeit-Bot um die sechs neuen Skills erweitern (Gold aus Diebeskunst und Kopfgeld-Punkte pro Stunde im
+      Verlauf beobachten; XP-Kurven sind statisch abgeglichen, siehe BALANCING.md).
 - [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
 
 **Qualität**

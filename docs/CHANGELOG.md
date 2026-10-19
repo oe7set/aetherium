@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.57.0] – Begleiter & Balance
+
+- **Vertraute im Riss**: Dein aktiver Vertrauter begleitet den Helden jetzt sichtbar durch den Riss und die Abenteuer-Dungeons; Kampf-Vertraute (Geisterwolf, Kampfeber, Eisentitan, Phönix) schießen dabei regelmäßig auf den nächsten Gegner.
+- **Balance der neuen Skills**: Diebeskunst gibt 60 % mehr XP pro Erfolg (Fehlschläge zählen kaum), Kartieren 40 % mehr, Expeditionen das Zwei- bis Dreifache, Eichenbretter mehr XP für einen leichteren Baukunst-Start.
+- Helden-Abenteuer: Der Frostgipfel kommt erst ab Heldenstufe 25 (vorher 19) – vier Stufen pro Gebiet.
+
 ## [1.56.0] – Die Zünfte der Insel
 
 Abschluss des **Masterplans 3.0** (Phase 19 – Verweben & Feinschliff):

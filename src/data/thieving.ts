@@ -263,6 +263,9 @@ const TARGETS: Target[] = [
   },
 ];
 
+/** Failed attempts only teach 10 %, so successes pay more (keeps XP/h in line with other skills). */
+const THIEVING_XP_MULT = 1.6;
+
 export const THIEVING_ACTIONS: ActionDef[] = [
   ...TARGETS.map((t): ActionDef => ({
     id: `thieve_${t.id}`,
@@ -272,7 +275,7 @@ export const THIEVING_ACTIONS: ActionDef[] = [
     icon: t.icon,
     levelReq: t.level,
     baseTime: t.time,
-    xp: t.xp,
+    xp: Math.round(t.xp * THIEVING_XP_MULT),
     inputs: t.inputs ?? [],
     outputs: t.outputs ?? [],
     drops: t.drops,
