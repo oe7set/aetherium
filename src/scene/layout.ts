@@ -36,6 +36,7 @@ export const STATIONS: StationDef[] = [
   { skill: 'thieving', label: 'Marktstände', pos: [2.4, -5.4], workPos: [2.2, -4.4] },
   { skill: 'construction', label: 'Bauplatz', pos: [-3.4, -2.4], workPos: [-2.6, -1.6] },
   { skill: 'cartography', label: 'Kartenzelt', pos: [4.8, 4.8], workPos: [4.2, 4.0] },
+  { skill: 'fletching', label: 'Bogner', pos: [-9.0, 3.0], workPos: [-8.0, 2.6] },
 ];
 
 /** Skills that share a station. */

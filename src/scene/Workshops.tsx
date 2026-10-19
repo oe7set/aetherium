@@ -300,3 +300,35 @@ export function MapTent({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Bogenbau: a hut with a straw target that wobbles while you fletch. */
+export function FletcherHut({ onTap }: { onTap: TapHandler }) {
+  const target = useRef<THREE.Group>(null);
+  const active = useActive('fletching');
+  useFrame(({ clock }) => {
+    if (target.current)
+      target.current.rotation.z = active.current ? Math.sin(clock.elapsedTime * 9) * 0.08 : 0;
+  });
+  return (
+    <Workshop skill="fletching" roof="#6f9a3e" onTap={onTap}>
+      <group ref={target} position={[0.45, 0.45, 0.1]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.26, 0.26, 0.08, 16]} />
+          <meshStandardMaterial color="#e8cf7a" flatShading />
+        </mesh>
+        <mesh position={[0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.14, 0.14, 0.01, 16]} />
+          <meshStandardMaterial color="#d64545" />
+        </mesh>
+        <mesh position={[0, 0, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.01, 12]} />
+          <meshStandardMaterial color="#ffd166" />
+        </mesh>
+      </group>
+      <mesh position={[-0.4, 0.4, 0.1]} rotation={[0, 0, 0.2]}>
+        <torusGeometry args={[0.28, 0.025, 6, 16, Math.PI]} />
+        <meshStandardMaterial color="#8b5a2b" />
+      </mesh>
+    </Workshop>
+  );
+}

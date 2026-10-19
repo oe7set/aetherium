@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.60.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.61.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,15 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Bogenbau** (Phase 22, `data/fletching.ts`, `engine/fletching.ts`): Sehnen (Rindsleder, Spinnenseide) →
+Langbögen (Holz ×3, langsamer, +6 % Treffsicherheit) und Armbrüste (Barren + Holz, 3,0 s, +10 % Fernkampfschaden).
+`EquipDef.ammoType` ('arrow' Standard, 'bolt'): `ammoFits` prüft Waffe ↔ Munition in `missingAmmo`, `gearSum`,
+der Modifier-Quelle `equipment` (Munitions-Mods zählen nur, wenn sie passen), `bestAmmo`/`equipStyle` und dem
+Kampf-Assistenten („Armbrüste verschießen nur Bolzen"). Bolzen (Barren + Federn), Edelsteinbolzen (Juwelierkunst:
+Opal Beute, Jade Krit, Topas Feuer, Saphir Frost, Rubin Schaden, Diamant Treffsicherheit, Onyx Schatten/Leben),
+Köcher im Umhang-Platz (`combat.ammoSave`). Passiv je Stufe Fernkampf-Treffsicherheit + Munition sparen.
+Bogner-Hütte auf der Insel, Zähler `bowsFletched`.
 
 **Kartografie** (Phase 18, `data/cartography.ts`, `engine/cartography.ts`): Pergament (Rindsleder, Krämer) →
 7 Regionskarten (Verkauf, Sammelbuch „Großer Atlas", Expeditions-Einsatz) mit Funden; Expeditionen (lange

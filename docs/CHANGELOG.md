@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.61.0] – Bogenbau
+
+- **Neuer Skill Bogenbau** 🪶 (Phase 22): Sehnen aus Rindsleder oder Spinnenseide, **Langbögen** (treffsicherer) und **Armbrüste** (langsam, aber +10 % Schaden) aus Holz und Barren.
+- **Bolzen** und **Edelsteinbolzen** aus der Juwelierkunst: Opal (mehr Beute), Jade (Krit), Topas (Feuer), Saphir (Frost, friert ein), Rubin (Schaden), Diamant (Treffsicherheit), Onyx (Schatten, heilt).
+- **Armbrüste verschießen nur Bolzen, Bögen nur Pfeile** – der Kampf-Assistent sagt dir genau, was nicht passt, und „Fernkampf ausrüsten" nimmt automatisch die passende Munition.
+- **Köcher** (Umhang-Platz) sparen Munition; jede Bogenbau-Stufe gibt etwas Treffsicherheit und Munitions-Sparen.
+- Bogner-Hütte mit wackelnder Zielscheibe auf der Insel.
+
 ## [1.60.0] – Hohe Runen & Magie-Werkstatt
 
 - **Hohe Runen** (Phase 21, Verzauberung): 🌪️ Chaosrune (aus Goldtalismanen), 💀 Todesrune (große Knochen), 🩸 Blutrune (Basiliskenschuppen), 👻 Seelenrune (Seelensplitter).

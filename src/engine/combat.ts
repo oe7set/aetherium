@@ -69,9 +69,21 @@ registerModifierSource('sets', (s) =>
 
 registerModifierSource('equipment', (s) =>
   Object.entries(s.equipment)
-    .filter(([slot, id]) => slot !== 'ammo' && id)
+    .filter(([slot, id]) => id && (slot !== 'ammo' || ammoFits(s, id)))
     .map(([, id]) => getItem(id as string).equip?.mods ?? {}),
 );
+
+/** Ammo type the wielded ranged weapon shoots (bows: arrows, crossbows: bolts). */
+export function weaponAmmoType(s: GameState, weaponId = s.equipment.weapon): 'arrow' | 'bolt' {
+  return (weaponId && ITEM_MAP.get(weaponId)?.equip?.ammoType) || 'arrow';
+}
+
+/** True when this ammo can be shot from the wielded (or given) ranged weapon. */
+export function ammoFits(s: GameState, ammoId: string, weaponId = s.equipment.weapon): boolean {
+  const w = weaponId ? ITEM_MAP.get(weaponId)?.equip : undefined;
+  if (w?.style !== 'ranged') return false;
+  return (ITEM_MAP.get(ammoId)?.equip?.ammoType ?? 'arrow') === weaponAmmoType(s, weaponId);
+}
 
 // --- Player stats -------------------------------------------------------------------------------
 
@@ -92,7 +104,7 @@ function gearSum(s: GameState, key: 'attack' | 'strength' | 'defence'): number {
   let sum = 0;
   for (const [slot, id] of Object.entries(s.equipment)) {
     if (!id) continue;
-    if (slot === 'ammo' && (key !== 'strength' || combatStyle(s) !== 'ranged')) continue;
+    if (slot === 'ammo' && (key !== 'strength' || !ammoFits(s, id))) continue;
     sum += getItem(id).equip?.[key] ?? 0;
   }
   return sum;
@@ -351,12 +363,13 @@ function bestWeapon(s: GameState, style: CombatStyle): string | null {
   return best;
 }
 
-function bestAmmo(s: GameState): string | null {
+function bestAmmo(s: GameState, weaponId = s.equipment.weapon): string | null {
   let best: string | null = null;
   let score = -1;
   for (const [id, qty] of Object.entries(s.inventory)) {
     const eq = ITEM_MAP.get(id)?.equip;
     if (!eq || eq.slot !== 'ammo' || qty <= 0 || !canWear(s, id)) continue;
+    if (weaponId && !ammoFits(s, id, weaponId)) continue;
     if ((eq.strength ?? 0) > score) {
       score = eq.strength ?? 0;
       best = id;
@@ -387,13 +400,16 @@ export function styleReadiness(s: GameState, style: CombatStyle): ReadyCheck[] {
     return out;
   }
   if (style === 'ranged') {
+    const bolts = weaponAmmoType(s, worn ? s.equipment.weapon : (weapon ?? undefined)) === 'bolt';
     out.push({
       ok: worn,
       label: worn
-        ? 'Bogen angelegt'
+        ? bolts
+          ? 'Armbrust angelegt'
+          : 'Bogen angelegt'
         : weapon
-          ? 'Bogen im Inventar – anlegen'
-          : 'Kein Bogen: Handwerk → Bögen',
+          ? 'Fernwaffe im Inventar – anlegen'
+          : 'Kein Bogen: Handwerk → Bögen oder Bogenbau',
       fix: worn
         ? undefined
         : weapon
@@ -401,18 +417,32 @@ export function styleReadiness(s: GameState, style: CombatStyle): ReadyCheck[] {
           : { kind: 'craft', action: 'craft_bow_oak' },
     });
     const ammo = s.equipment.ammo;
-    const count = ammo ? itemCount(s, ammo) : 0;
-    const spare = bestAmmo(s);
+    const fits = !!ammo && (!worn || ammoFits(s, ammo));
+    const count = ammo && fits ? itemCount(s, ammo) : 0;
+    const spare = bestAmmo(s, worn ? s.equipment.weapon : (weapon ?? undefined));
+    const noun = bolts ? 'Bolzen' : 'Pfeile';
     out.push({
       ok: count > 0,
       label:
         count > 0
-          ? `Pfeile bereit (${count})`
-          : spare
-            ? 'Pfeile im Inventar – anlegen'
-            : 'Keine Pfeile: beim Krämer kaufen oder Handwerk → Pfeile',
+          ? `${noun} bereit (${count})`
+          : ammo && !fits
+            ? bolts
+              ? 'Armbrüste verschießen nur Bolzen – Pfeile passen nicht'
+              : 'Bögen verschießen nur Pfeile – Bolzen passen nicht'
+            : spare
+              ? `${noun} im Inventar – anlegen`
+              : bolts
+                ? 'Keine Bolzen: Bogenbau → Bolzen'
+                : 'Keine Pfeile: beim Krämer kaufen oder Handwerk → Pfeile',
       fix:
-        count > 0 ? undefined : spare ? { kind: 'equip' } : { kind: 'shop', item: 'arrow_bronze' },
+        count > 0
+          ? undefined
+          : spare
+            ? { kind: 'equip' }
+            : bolts
+              ? { kind: 'craft', action: 'fl_bolt_bronze' }
+              : { kind: 'shop', item: 'arrow_bronze' },
     });
     return out;
   }
@@ -449,7 +479,8 @@ export function equipStyle(s: GameState, style: CombatStyle): boolean {
   let changed = false;
   if (weapon && s.equipment.weapon !== weapon && equipItem(s, weapon).ok) changed = true;
   if (style === 'ranged') {
-    const ammo = s.equipment.ammo && itemCount(s, s.equipment.ammo) > 0 ? null : bestAmmo(s);
+    const cur = s.equipment.ammo;
+    const ammo = cur && itemCount(s, cur) > 0 && ammoFits(s, cur) ? null : bestAmmo(s);
     if (ammo && equipItem(s, ammo).ok) changed = true;
   }
   return changed;
@@ -599,7 +630,7 @@ function missingAmmo(s: GameState): 'noAmmo' | 'noRunes' | null {
   const style = combatStyle(s);
   if (style === 'ranged') {
     const ammo = s.equipment.ammo;
-    return ammo && itemCount(s, ammo) > 0 ? null : 'noAmmo';
+    return ammo && itemCount(s, ammo) > 0 && ammoFits(s, ammo) ? null : 'noAmmo';
   }
   if (style === 'magic') return castSpell(s) ? null : 'noRunes';
   return null;

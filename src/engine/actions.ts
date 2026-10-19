@@ -217,6 +217,7 @@ const SKILL_STATS: Record<string, string> = {
   thieving: 'thefts',
   construction: 'constructionActions',
   cartography: 'mapsDrawn',
+  fletching: 'bowsFletched',
 };
 
 /**

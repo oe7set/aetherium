@@ -110,6 +110,8 @@ export interface EquipDef {
   element?: SpellElement;
   /** Element staffs: this rune never runs out while the staff is wielded. */
   runeSupply?: string;
+  /** Ranged weapons and ammo: crossbows shoot bolts, bows arrows (default 'arrow'). */
+  ammoType?: 'arrow' | 'bolt';
 }
 
 export interface AchievementCondition {

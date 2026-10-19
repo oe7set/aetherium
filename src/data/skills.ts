@@ -187,6 +187,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Regionen kartieren, Expeditionen ausrüsten, Schatzkarten finden. Jede Stufe verkürzt die Reisen deines Helden.',
   },
   {
+    id: 'fletching',
+    name: 'Bogenbau',
+    icon: '🪶',
+    color: '#9fc46b',
+    group: 'processing',
+    desc: 'Sehnen drehen, Langbögen und Armbrüste bauen, Bolzen mit Edelsteinspitzen veredeln, Köcher nähen. Armbrüste verschießen nur Bolzen. Jede Stufe: etwas mehr Treffsicherheit im Fernkampf und Munition sparen.',
+  },
+  {
     id: 'construction',
     name: 'Baukunst',
     icon: '🔨',
