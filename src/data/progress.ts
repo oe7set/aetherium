@@ -424,3 +424,80 @@ export const FRAMES: FrameDef[] = [
 ];
 
 export const FRAME_MAP = new Map(FRAMES.map((f) => [f.id, f]));
+
+/** Inselschmuck: 3D decorations on the island, unlocked across all systems (purely cosmetic). */
+export interface DecorDef {
+  id: string;
+  name: string;
+  icon: string;
+  hint: string;
+  unlock: FrameCondition;
+}
+
+export const DECORS: DecorDef[] = [
+  {
+    id: 'lanterns',
+    name: 'Laternenweg',
+    icon: '🏮',
+    hint: '100 Rituale im Schrein',
+    unlock: { stat: 'ritesPerformed', gte: 100 },
+  },
+  {
+    id: 'pumpkins',
+    name: 'Kürbisbeet',
+    icon: '🎃',
+    hint: '100 Ernten',
+    unlock: { stat: 'harvests', gte: 100 },
+  },
+  {
+    id: 'statue',
+    name: 'Heldenstatue',
+    icon: '🗿',
+    hint: '25 Erfolge',
+    unlock: { achievements: 25 },
+  },
+  {
+    id: 'fountain',
+    name: 'Springbrunnen',
+    icon: '⛲',
+    hint: 'Gesamtlevel 300',
+    unlock: { totalLevel: 300 },
+  },
+  {
+    id: 'banners',
+    name: 'Siegesbanner',
+    icon: '🚩',
+    hint: '10 Bosse besiegen',
+    unlock: { stat: 'bossKills', gte: 10 },
+  },
+  {
+    id: 'crystal',
+    name: 'Ätherkristall',
+    icon: '💎',
+    hint: '3 Riss-Läufe gewinnen',
+    unlock: { stat: 'riftWins', gte: 3 },
+  },
+  {
+    id: 'snowman',
+    name: 'Schneemann',
+    icon: '☃️',
+    hint: 'Einen Yeti am Frostgipfel besiegen',
+    unlock: { stat: 'kills.yeti', gte: 1 },
+  },
+  {
+    id: 'lighthouse',
+    name: 'Leuchtturm',
+    icon: '🗼',
+    hint: 'Gesamtlevel 800',
+    unlock: { totalLevel: 800 },
+  },
+  {
+    id: 'rainbow',
+    name: 'Regenbogen',
+    icon: '🌈',
+    hint: 'Einmal wiedergeboren',
+    unlock: { stat: 'rebirths', gte: 1 },
+  },
+];
+
+export const DECOR_MAP = new Map(DECORS.map((d) => [d.id, d]));

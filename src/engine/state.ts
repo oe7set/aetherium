@@ -323,6 +323,8 @@ export interface ProgressState {
   title: string;
   /** Chosen portrait frame (`FRAMES` id, '' = default). */
   frame: string;
+  /** Inselschmuck the player switched off (unlocked pieces show by default). */
+  decorHidden: string[];
 }
 
 export interface RiftBest {
@@ -499,6 +501,7 @@ export function newGame(now: number = Date.now()): GameState {
       sets: [],
       title: '',
       frame: '',
+      decorHidden: [],
     },
     rift: defaultRift(),
   };

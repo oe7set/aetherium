@@ -1,4 +1,6 @@
-import { dailyAvailable, weekKey } from '../engine';
+import { useState } from 'react';
+import { DECORS } from '../data/progress';
+import { dailyAvailable, decorShown, decorUnlocked, toggleDecor, weekKey } from '../engine';
 import { useGame } from '../store/gameStore';
 import { duration } from './village/vui';
 
@@ -23,11 +25,40 @@ function useStatus(): string {
   });
 }
 
+/** Inselschmuck: unlocked pieces can be switched on and off; locked ones show how to get them. */
+function DecorPanel() {
+  const key = useGame((s) =>
+    DECORS.map((d) => (decorShown(s.game, d.id) ? 2 : decorUnlocked(s.game, d) ? 1 : 0)).join(''),
+  );
+  const act = useGame((s) => s.hero);
+  return (
+    <div className="decor-panel">
+      {DECORS.map((d, i) => {
+        const state = key[i];
+        return (
+          <button
+            key={d.id}
+            className={`decor-opt ${state === '2' ? 'on' : ''} ${state === '0' ? 'locked' : ''}`}
+            disabled={state === '0'}
+            onClick={() => act((s) => void toggleDecor(s, d.id))}
+            title={state === '0' ? `🔒 ${d.hint}` : d.name}
+          >
+            <span>{state === '0' ? '🔒' : d.icon}</span>
+            <small>{state === '0' ? d.hint : d.name}</small>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Island screen: system status at a glance – the empty sky gets a job. */
 export function WorldHud() {
   const status = useStatus();
   const setUi = useGame((s) => s.setUi);
   const setDailyOpen = useGame((s) => s.setDailyOpen);
+  const [decor, setDecor] = useState(false);
+  const decorCount = useGame((s) => DECORS.filter((d) => decorUnlocked(s.game, d)).length);
   const game = useGame.getState().game;
   const [build, hero, essence, weekly, daily] = status.split('|') as [
     string,
@@ -69,12 +100,20 @@ export function WorldHud() {
           🌀 {essence}
           {weekly === 'open' && <small> · Boss</small>}
         </button>
+        <button
+          className={`hud-pill ${decor ? 'active' : ''}`}
+          onClick={() => setDecor(!decor)}
+          aria-expanded={decor}
+        >
+          🎨 {decorCount}/{DECORS.length}
+        </button>
         {daily && (
           <button className="hud-pill glow gift" onClick={() => setDailyOpen(true)}>
             🎁 Tagesbonus
           </button>
         )}
       </div>
+      {decor && <DecorPanel />}
     </div>
   );
 }

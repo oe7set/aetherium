@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.46.0] – Inselschmuck
+
+- **Inselschmuck** 🎨: 9 Deko-Teile für die 3D-Insel, die man überall im Spiel freischaltet – Laternenweg (Rituale), Kürbisbeet (Ernten), Heldenstatue (Erfolge), Springbrunnen (Gesamtlevel 300), Siegesbanner (Bosse), schwebender Ätherkristall (Riss-Siege), Schneemann (Yeti besiegt), Leuchtturm mit drehendem Lichtkegel (Gesamtlevel 800) und ein Regenbogen am Horizont (Wiedergeburt).
+- Neuer Knopf 🎨 auf der Welt-Seite: zeigt, was du schon hast und wie du den Rest bekommst; jedes Teil lässt sich ein- und ausschalten.
+
 ## [1.45.0] – Frostgipfel
 
 - Neues Gebiet und 7. Riss-Biom **Frostgipfel** 🏔️ (die Berge vom Horizont): Frosttroll, Yeti und Eiswurm (Stufe 98–108, anfällig für Feuerzauber). Im Riss: Kampfpinguine, Eiswölfe, Yetis, Blizzardgeister und zwei neue Bosse – Eiswurm Glacius und Der Ewige Winter.

@@ -158,3 +158,20 @@ describe('Porträt-Rahmen', () => {
     expect(deserialize(old).progress.frame).toBe('');
   });
 });
+
+describe('Inselschmuck', () => {
+  it('erscheint nach Freischaltung, lässt sich ausblenden und überlebt das Laden', async () => {
+    const { decorShown, toggleDecor, serialize, deserialize } = await import('../src/engine');
+    const s = gameWith();
+    expect(decorShown(s, 'pumpkins')).toBe(false);
+    expect(toggleDecor(s, 'pumpkins')).toBe(false);
+    s.stats.harvests = 100;
+    expect(decorShown(s, 'pumpkins')).toBe(true);
+    expect(toggleDecor(s, 'pumpkins')).toBe(true);
+    expect(decorShown(s, 'pumpkins')).toBe(false);
+    s.progress.decorHidden.push('gibts_nicht');
+    const loaded = deserialize(serialize(s, 0), 0);
+    expect(loaded.progress.decorHidden).toEqual(['pumpkins']);
+    expect(decorShown(loaded, 'pumpkins')).toBe(false);
+  });
+});

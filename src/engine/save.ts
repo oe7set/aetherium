@@ -14,7 +14,7 @@ import {
 } from '../data';
 import { SPELL_MAP } from '../data/spells';
 import { COLLECTION_MAP } from '../data/collections';
-import { FRAME_MAP } from '../data/progress';
+import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
 import { TROOPS, VALLEYS, V_BUILDINGS } from '../data/village';
@@ -290,6 +290,7 @@ function hydrateProgress(v: unknown, fallback: GameState['progress']): GameState
     sets: stringArray(v.sets).filter((id) => COLLECTION_MAP.has(id)),
     title: typeof v.title === 'string' && ACHIEVEMENT_MAP.has(v.title) ? v.title : '',
     frame: typeof v.frame === 'string' && FRAME_MAP.has(v.frame) ? v.frame : '',
+    decorHidden: stringArray(v.decorHidden).filter((id) => DECOR_MAP.has(id)),
   };
 }
 

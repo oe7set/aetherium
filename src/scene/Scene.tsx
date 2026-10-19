@@ -33,6 +33,7 @@ import {
   Workbench,
 } from './Science';
 import { Forest, WorkTree } from './Trees';
+import { IslandDecor } from './Decor';
 
 function usePageVisible(): boolean {
   const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden');
@@ -172,6 +173,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <AetherSpring onTap={tap('arcane')} />
       <Shrine onTap={tap('faith')} />
       <Brewery onTap={tap('brewing')} />
+      <IslandDecor />
       <Helpers />
       <Character skill={activeSkill} />
       <LabelProjector />

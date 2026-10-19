@@ -8,9 +8,12 @@ import {
   PASS_TIERS,
   passReward,
   passThreshold,
+  DECOR_MAP,
   FRAME_MAP,
   FRAMES,
   type ChronicleCondition,
+  type DecorDef,
+  type FrameCondition,
   type FrameDef,
   type RewardDef,
 } from '../data/progress';
@@ -246,8 +249,10 @@ export function currentTitle(s: GameState): string {
 // --- Porträt-Rahmen ---------------------------------------------------------------------------------
 
 export function frameUnlocked(s: GameState, f: FrameDef): boolean {
-  const u = f.unlock;
-  if (!u) return true;
+  return !f.unlock || conditionMet(s, f.unlock);
+}
+
+function conditionMet(s: GameState, u: FrameCondition): boolean {
   if ('stat' in u) return (s.stats[u.stat] ?? 0) >= u.gte;
   if ('totalLevel' in u) return totalLevel(s) >= u.totalLevel;
   if ('achievements' in u) return s.achievements.length >= u.achievements;
@@ -258,6 +263,26 @@ export function setFrame(s: GameState, id: string): boolean {
   const f = FRAME_MAP.get(id);
   if (id && (!f || !frameUnlocked(s, f))) return false;
   s.progress.frame = id;
+  return true;
+}
+
+// --- Inselschmuck ---------------------------------------------------------------------------------
+
+export function decorUnlocked(s: GameState, d: DecorDef): boolean {
+  return conditionMet(s, d.unlock);
+}
+
+/** Unlocked decorations show up by default; the player can hide single pieces. */
+export function decorShown(s: GameState, id: string): boolean {
+  const d = DECOR_MAP.get(id);
+  return !!d && decorUnlocked(s, d) && !s.progress.decorHidden.includes(id);
+}
+
+export function toggleDecor(s: GameState, id: string): boolean {
+  const d = DECOR_MAP.get(id);
+  if (!d || !decorUnlocked(s, d)) return false;
+  const hidden = s.progress.decorHidden;
+  s.progress.decorHidden = hidden.includes(id) ? hidden.filter((x) => x !== id) : [...hidden, id];
   return true;
 }
 

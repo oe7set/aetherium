@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.45.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.46.0**.
 
 ## 1. Der große Kreislauf
 
@@ -65,6 +65,10 @@ Ausrüstungsansicht `ui/inventory/GearPanel` (Figur, Werte, Filter, ▲/▼-Verg
 Zauber haben Elemente (`MONSTER_ELEMENTS`: anfällig ×1,35, resistent ×0,6, `spellAffinity`). Monster ab Stufe 10
 (Bosse öfter, `heavyEvery`) holen jeden n-ten Schlag aus (`windup`): kommt 60 % später, trifft ×1,6 – Idle bleibt
 im Schnitt gleich; `dodge` (💨 in Kampfansicht und Kampfleiste) vermeidet ihn und gibt +25 Spezialenergie.
+
+**Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
+`scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
+(Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
 
 **Frostgipfel** (7. Biom/Gebiet `glacier`): Kampfgebiet Stufe 100 (Frosttroll, Yeti, Eiswurm; anfällig für Feuer)
 liefert `frost_shard` → Zauber Gletschersturz (Magie 85) und Frostmantel (Handwerk 80); Riss-Biom mit
@@ -230,7 +234,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Endgame: Inselschmuck als Kosmetik (3D-Deko auf der Insel); Endlos-Riss-Rangliste über Export-Codes.
+- [ ] Endgame: Endlos-Riss-Rangliste über Export-Codes; mehr Inselschmuck (z. B. für Dorf-Meilensteine).
 
 **Qualität**
 
