@@ -4,7 +4,7 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.55.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.56.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss). Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
@@ -33,7 +33,11 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   „Was jetzt?" = `engine/agenda.ts` (alles Fällige über alle Systeme; neue Systeme mit Handlungsbedarf dort
   eintragen). Leere Zustände über `ui/EmptyState.tsx` mit Weg zum Ziel.
   Sammelbuch = `engine/collections.ts` (`addItem` merkt Funde in `progress.found`; Sets geben Dauer-Boni).
-  Glaube/Brauen = `data/devotion.ts` + `engine/devotion.ts` (Glaube-Stufe als Modifier-Quelle). Rezept-Navigation
+  Glaube/Brauen = `data/devotion.ts` + `engine/devotion.ts` (Glaube-Stufe als Modifier-Quelle).
+  Masterplan 3.0 (`docs/PLAN-3.md`): Juwelierkunst `data/jewelcrafting.ts`, Sets/Unikate `data/sets.ts`,
+  Kopfgeldjagd `engine/slayer.ts`, Beschwörung `engine/summoning.ts`, Diebeskunst `engine/thieving.ts`
+  (`registerActionGate`), Baukunst `engine/construction.ts` (`s.buildings`), Kartografie `data/cartography.ts`.
+  Neue Skill-Stationen als generische Werkstätten in `scene/Workshops.tsx`. Rezept-Navigation
   (welche Aktion macht/braucht ein Item) = `ui/recipes.ts`, Sprung über `jumpToAction`.
 - Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,
   Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung

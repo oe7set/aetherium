@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.56.0] – Die Zünfte der Insel
+
+Abschluss des **Masterplans 3.0** (Phase 19 – Verweben & Feinschliff):
+
+- Neue Questreihe **„Die Zünfte der Insel"** (6 Quests): Juwelierkunst, Baukunst, Diebeskunst, Kopfgeldjagd mit Gebeten, Beschwörung und Kartografie – Belohnungen aus allen Systemen und ein neuer Avatar 🧭.
+- Alle neuen Skills zählen für Aufträge, Ruhmesleiter, Erfolge (Level-Erfolge), Meisterschaft und „Was jetzt?".
+- Skill-Liste: Kopfgeldjagd erklärt, wie sie trainiert wird.
+- README und Entwickler-Doku auf den neuen Stand: 26 Skills, Kampf 2.0.
+
 ## [1.55.0] – Kartografie
 
 - Neuer Skill **Kartografie** 🧭 (Phase 18): Pergament gerben (aus Rindsleder oder beim Krämer) und sieben Regionen kartieren – Küste, Wald, Hügelland, Gebirge, Glutwüste, Offenes Meer, Ätherweiten. Jede Region hat eigene Funde.

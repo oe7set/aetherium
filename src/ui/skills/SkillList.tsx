@@ -24,6 +24,7 @@ function skillHint(id: string, level: number, unlocked: boolean, running: string
   }
   if (running) return `▶ ${running}`;
   const list = BY_SKILL.get(id);
+  if (id === 'slayer') return 'Aufträge am Kopfgeldbrett – Kills am Ziel geben XP';
   if (!list) return 'Wird im Kampf trainiert';
   const next = list.find((a) => a.levelReq > level);
   return next ? `Nächstes: ${next.name} (Lv ${next.levelReq})` : '✔ Alles freigeschaltet';

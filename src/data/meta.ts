@@ -783,6 +783,106 @@ export const QUESTS: QuestDef[] = [
     rewards: { gold: 15000, extra: { heroItem: 3, essence: 500, avatar: '🐫' } },
     outro:
       '„Der Geist hat drei Wünsche frei. Zwei davon hat er schon für Urlaub verbraucht. Viel Glück!“',
+  }, // --- Questreihe „Die Zünfte der Insel": die sechs neuen Skills und Kampf 2.0 ----------------------
+  {
+    id: 'qz_jeweller',
+    chain: 'Die Zünfte der Insel',
+    name: 'Funkelnde Anfänge',
+    icon: '💎',
+    giver: 'Gildenmeisterin Odila',
+    story:
+      '„Jede Zunft beginnt mit einem Stein. Siebe Kiesel, knacke Geoden und bring mir einen Quarzring.“',
+    objectives: [
+      { type: 'level', skill: 'jewelcrafting', level: 10, label: 'Juwelierkunst Level 10' },
+      { type: 'deliver', item: 'ring_quartz', qty: 1, label: 'Bringe 1 Quarzring' },
+    ],
+    rewards: { gold: 600, items: [{ item: 'geode', qty: 10 }] },
+    outro:
+      '„Hübsch. Der erste Ring ist immer der schiefste. Behalt ihn als Erinnerung – nein, warte, ich behalte ihn.“',
+  },
+  {
+    id: 'qz_builder',
+    chain: 'Die Zünfte der Insel',
+    requires: ['qz_jeweller'],
+    name: 'Ein Dach über der Zunft',
+    icon: '🔨',
+    giver: 'Gildenmeisterin Odila',
+    story: '„Eine Zunft braucht ein Haus. Säge Bretter, zimmere Möbel und errichte die Werkstatt.“',
+    objectives: [
+      { type: 'stat', key: 'constructionActions', amount: 60, label: 'Säge oder zimmere 60-mal' },
+      { type: 'stat', key: 'buildingsBuilt', amount: 1, label: 'Errichte einen Inselbau' },
+    ],
+    rewards: { gold: 1500, items: [{ item: 'nails', qty: 100 }] },
+    outro: '„Es steht! Es wackelt ein bisschen, aber es steht.“',
+  },
+  {
+    id: 'qz_thief',
+    chain: 'Die Zünfte der Insel',
+    requires: ['qz_builder'],
+    name: 'Lange Finger',
+    icon: '🗝️',
+    giver: 'Der Schatten',
+    story:
+      '„Odila muss das nicht wissen. Zeig mir, dass du leise sein kannst: 40 Diebstähle – und lass dich nicht zu oft erwischen.“',
+    objectives: [
+      { type: 'stat', key: 'thefts', amount: 40, label: 'Stiehl 40-mal' },
+      { type: 'level', skill: 'thieving', level: 20, label: 'Diebeskunst Level 20' },
+    ],
+    rewards: { gold: 2500, items: [{ item: 'lockpick', qty: 15 }] },
+    outro: '„Nicht schlecht. Deine Geldbörse habe ich übrigens zurückgelegt. Fast vollständig.“',
+  },
+  {
+    id: 'qz_hunter',
+    chain: 'Die Zünfte der Insel',
+    requires: ['qz_thief'],
+    name: 'Kopfgeld auf Bestellung',
+    icon: '🎯',
+    giver: 'Hauptfrau Brunna',
+    story:
+      '„Die Wildnis wird frech. Erfülle drei Kopfgeld-Aufträge und lerne, Gebete im Kampf zu nutzen.“',
+    objectives: [
+      { type: 'stat', key: 'slayerTasks', amount: 3, label: 'Erfülle 3 Kopfgeld-Aufträge' },
+      { type: 'level', skill: 'faith', level: 12, label: 'Glaube Level 12' },
+    ],
+    rewards: { gold: 5000, items: [{ item: 'prayer_draught', qty: 5 }] },
+    outro: '„Drei Ziele, drei Treffer. Die Wildnis wird sich das merken.“',
+  },
+  {
+    id: 'qz_summoner',
+    chain: 'Die Zünfte der Insel',
+    requires: ['qz_hunter'],
+    name: 'Ein treuer Begleiter',
+    icon: '🐾',
+    giver: 'Druidin Wynn',
+    story:
+      '„Kämpfer jagen allein. Weise nicht. Fertige zehn Beschwörungsbeutel und rufe einen Vertrauten an deine Seite.“',
+    objectives: [
+      { type: 'stat', key: 'pouchesMade', amount: 10, label: 'Fertige 10 Beschwörungsbeutel' },
+      { type: 'level', skill: 'summoning', level: 25, label: 'Beschwörung Level 25' },
+    ],
+    rewards: { gold: 8000, items: [{ item: 'spirit_shard', qty: 200 }] },
+    outro: '„Er mag dich. Oder deine Taschen voller Knochen. Schwer zu sagen.“',
+  },
+  {
+    id: 'qz_cartographer',
+    chain: 'Die Zünfte der Insel',
+    requires: ['qz_summoner'],
+    name: 'Bis zum Rand der Karte',
+    icon: '🧭',
+    giver: 'Gildenmeisterin Odila',
+    story:
+      '„Die letzte Prüfung der Zünfte: Zeichne die Welt. 30 Karten und eine Expedition in die Ruinen.“',
+    objectives: [
+      { type: 'stat', key: 'mapsDrawn', amount: 30, label: 'Zeichne 30 Karten' },
+      { type: 'level', skill: 'cartography', level: 30, label: 'Kartografie Level 30' },
+    ],
+    rewards: {
+      gold: 15000,
+      items: [{ item: 'treasure_map_2', qty: 2 }],
+      extra: { essence: 300, avatar: '🧭' },
+    },
+    outro:
+      '„Die Zünfte der Insel grüßen ihr neues Ehrenmitglied. Der Mitgliedsbeitrag? Ein Lächeln. Und 500 Gold.“',
   },
 ];
 

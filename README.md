@@ -7,16 +7,19 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.55)
+## Was dich erwartet (v1.56)
 
 **🏝️ Die Insel**
 
-- 18 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 250 Aktionen – jede mit eigener
+- 26 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 400 Aktionen – jede mit eigener
   **Meisterschaft** 🏅 (Stufe 1–99: schneller und öfter doppelte Ausbeute).
 - Sammeln: Holzfällen (20 Baumarten), Bergbau, Angeln, Landwirtschaft (Echtzeit-Beete, Mutationen), Jagen,
-  Archäologie.
-- Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes.
-- Kampf: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte gegen 21 Monster in Dungeons mit Phasen-Bossen.
+  Archäologie, **Diebeskunst**, **Kartografie** (Regionen, Expeditionen, Schatzkarten).
+- Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes, Brauen,
+  **Juwelierkunst**, **Baukunst** (9 Inselbauten mit Dauer-Boni), Glaube und **Beschwörung** (11 Vertraute).
+- **Kampf 2.0**: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte und **Kopfgeldjagd** gegen über 30 Monster –
+  24 Element-Zauber, Element-Pfeile und -Stäbe, 13 Gebete, Ausrüstungs-Sets, Boss-Unikate, Loadouts, Auto-Trank,
+  optionale Spezialangriffe und Ausweichen.
 - 3D-Low-Poly-Insel (React Three Fiber) mit antippbaren Stationen, Pfaden, Strand, Fluss und Tag/Nacht.
   Sie wächst mit dem Fortschritt bis zum Teilchenbeschleuniger-Ring.
 - Forschung mit Tech-Baum, Periodensystem-Codex (118 Elemente) und Helfern.

@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.55.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.56.0**.
 
 ## 1. Der große Kreislauf
 
@@ -290,6 +290,9 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
+- [ ] Masterplan 3.0 nachjustieren: Langzeit-Bot um die sechs neuen Skills erweitern (XP-Kurven, Gold aus
+      Diebeskunst, Kopfgeld-Punkte pro Stunde), Monster-Talismane gegen Inventarplatz abwägen.
+- [ ] Riss: Vertraute sichtbar als Begleiter im Lauf (bisher nur Werte-Bonus).
 - [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
 
 **Qualität**
