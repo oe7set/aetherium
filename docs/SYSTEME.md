@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.42.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.43.0**.
 
 ## 1. Der große Kreislauf
 
@@ -53,6 +53,15 @@
 das Ritual macht „Göttlicher Funke" (+1 Intelligenz). Brauen macht aus Äpfeln, Weizen, Kartoffeln und Kräutern
 Getränke: Kampfproviant (`heal`), Buffs, Handelsware und – über den Inselhafen – Getreide fürs Dorf. Stationen
 Schrein/Brauerei auf der Insel; Zähler `ritesPerformed`/`drinksBrewed` für Aufträge und Ruhmesleiter.
+
+**Kampfstile & Ausrüstung** (`engine/combat.ts`, `data/spells.ts`): 11 Plätze (neu: Umhang, Hände, Füße). Stil-Boni
+über `combat.accuracy.<stil>`/`combat.damage.<stil>` (in `playerStats` per `modFor`), dazu `combat.ammoSave`,
+`combat.runeSave`, `combat.energy`. Magie: Zauber in `combatSettings.spell` (Funke, Frostlanze mit Einfrieren,
+Feuerball + Kohle, Lebensraub + Ektoplasma, Kettenblitz + Manakristall, Leerenstoß + Leerensplitter); `castSpell`
+fällt ohne Zutaten auf den Funken zurück. Aktiv (optional): `combat.energy` 0–100 lädt pro Angriff, `specialAttack`
+(Store `special`) feuert Zerschmetterer/Doppelschuss/Arkanausbruch – +50 % XP, +25 % Gold beim Kill, Zähler
+`specialsUsed` (Erfolg). Nie automatisch, damit Aktivspiel minimal mehr bringt. `equipBest` füllt die Rüstungsplätze.
+Ausrüstungsansicht `ui/inventory/GearPanel` (Figur, Werte, Filter, ▲/▼-Vergleich).
 
 **Periodensystem** (`ELEMENT_GROUPS` in `data/science.ts`, `elementGroupProgress` in `engine/science.ts`): 10 chemische
 Gruppen; jede vollständige Gruppe gibt einen passenden Bonus (Alkalimetalle → Verkaufspreis, Erdalkali → Bergbau,
@@ -215,6 +224,8 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Endgame: Inselschmuck als Kosmetik (3D-Deko auf der Insel); Endlos-Riss-Rangliste über Export-Codes.
 - [ ] Riss: eigener 7. Biom (braucht ein neues Kampfgebiet in `data/combat.ts`), neue Gegner-Verhalten
       (z. B. Schild, Heiler).
+- [ ] Kampf: Gebiets-/Monster-Schwächen auf einzelne Zauber (z. B. Feuer gegen Eis), Spezialangriffe der Monster
+      zum Ausweichen (aktives Gegenstück zur Spezialleiste).
 
 **Qualität**
 

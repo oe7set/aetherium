@@ -17,6 +17,9 @@ const LABELS: Record<string, string> = {
   'combat.defence': 'Verteidigung',
   'combat.hp': 'Lebenspunkte',
   'combat.loot': 'Beute',
+  'combat.ammoSave': 'Munition sparen',
+  'combat.runeSave': 'Runen sparen',
+  'combat.energy': 'Spezial-Aufladung',
   wisdom: 'Weisheit',
 };
 
@@ -25,7 +28,10 @@ export function describeMods(mods: ModifierSet): string {
   const parts = Object.entries(mods)
     .filter(([, v]) => v)
     .map(([key, v]) => {
-      const [base = key, skill] = key.includes('.') && !LABELS[key] ? key.split('.') : [key];
+      // 'xp.mining' → XP (Bergbau); 'combat.damage.magic' → Schaden (Magie).
+      const cut = key.lastIndexOf('.');
+      const [base, skill] =
+        cut > 0 && !LABELS[key] ? [key.slice(0, cut), key.slice(cut + 1)] : [key, undefined];
       const label = LABELS[base] ?? base;
       const skillName = skill ? (SKILL_MAP.get(skill)?.name ?? skill) : '';
       const value = key === 'offlineHours' ? `+${v} h` : `+${Math.round((v ?? 0) * 1000) / 10} %`;

@@ -12,6 +12,7 @@ import {
   TECH_MAP,
   TOOL_MAP,
 } from '../data';
+import { SPELL_MAP } from '../data/spells';
 import { COLLECTION_MAP } from '../data/collections';
 import { FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
@@ -259,10 +260,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     rift: hydrateRift(data.rift, base.rift),
     hero: hydrateHero(data.hero, base.hero),
     progress: hydrateProgress(data.progress, base.progress),
-    combatSettings: {
-      ...defaultCombatSettings(),
-      ...(isRecord(data.combatSettings) ? (data.combatSettings as Partial<CombatSettings>) : {}),
-    },
+    combatSettings: hydrateCombatSettings(data.combatSettings),
     achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
     buffs: Array.isArray(data.buffs)
       ? data.buffs.filter(
@@ -610,6 +608,15 @@ function hydratePlots(v: unknown, fallback: GameState['plots']): GameState['plot
   });
 }
 
+function hydrateCombatSettings(v: unknown): CombatSettings {
+  const merged: CombatSettings = {
+    ...defaultCombatSettings(),
+    ...(isRecord(v) ? (v as Partial<CombatSettings>) : {}),
+  };
+  if (typeof merged.spell !== 'string' || !SPELL_MAP.has(merged.spell)) merged.spell = 'spark';
+  return merged;
+}
+
 function hydrateCombat(v: unknown): CombatState | null {
   if (
     !isRecord(v) ||
@@ -630,6 +637,7 @@ function hydrateCombat(v: unknown): CombatState | null {
     respawn: n(v.respawn),
     playerTimer: n(v.playerTimer),
     monsterTimer: n(v.monsterTimer),
+    energy: Math.min(100, n(v.energy)),
   };
 }
 

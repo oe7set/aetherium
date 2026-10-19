@@ -1,6 +1,7 @@
 import { getItem, getSkill, SKILL_MAP } from '../../data';
+import { describeMods } from '../modText';
 
-/** Shows gear stats. Equipping arrives with combat (Phase 4). */
+/** Shows gear stats and bonuses in words. */
 export function EquipInfo({ itemId }: { itemId: string }) {
   const eq = getItem(itemId).equip;
   if (!eq) return null;
@@ -9,8 +10,7 @@ export function EquipInfo({ itemId }: { itemId: string }) {
   if (eq.strength) parts.push(`💪 Stärke +${eq.strength}`);
   if (eq.defence) parts.push(`🛡️ Verteidigung +${eq.defence}`);
   if (eq.speed) parts.push(`⏱️ ${eq.speed.toLocaleString('de-DE')} s`);
-  for (const [k, v] of Object.entries(eq.mods ?? {}))
-    parts.push(`${k} +${Math.round((v ?? 0) * 100)} %`);
+  if (eq.mods && Object.keys(eq.mods).length) parts.push(`✨ ${describeMods(eq.mods)}`);
   const req =
     eq.req && SKILL_MAP.has(eq.req.skill)
       ? `${getSkill(eq.req.skill).name} ${eq.req.level}`

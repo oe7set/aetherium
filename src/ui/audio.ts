@@ -116,6 +116,9 @@ export function playEventSounds(events: GameEvent[]): void {
       case 'hit':
         kinds.add(e.target === 'monster' ? 'hit' : 'hurt');
         break;
+      case 'special':
+        kinds.add('rare');
+        break;
       case 'gold':
       case 'taskCompleted':
         kinds.add('coin');

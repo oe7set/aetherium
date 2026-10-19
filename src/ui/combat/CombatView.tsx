@@ -1,6 +1,16 @@
 import { useState } from 'react';
-import { AREAS, DUNGEONS, getItem, getMonster, type MonsterDef } from '../../data';
 import {
+  AREAS,
+  DUNGEONS,
+  getItem,
+  getMonster,
+  SPECIAL_COST,
+  SPECIALS,
+  SPELLS,
+  type MonsterDef,
+} from '../../data';
+import {
+  castSpell,
   combatLevel,
   estimateKillTime,
   formatDuration,
@@ -10,12 +20,108 @@ import {
   playerHitChance,
   playerStats,
   monsterHitChance,
+  skillLevel,
 } from '../../engine';
 import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 
 const STYLE_LABEL = { melee: '⚔️ Nahkampf', ranged: '🏹 Fernkampf', magic: '🪄 Magie' } as const;
+
+/** Spell book for the magic style: pick what the staff casts; locked/empty spells are greyed. */
+function SpellPicker() {
+  const chosen = useGame((s) => s.game.combatSettings.spell);
+  const magic = useGame((s) => skillLevel(s.game, 'magic'));
+  const casting = useGame((s) => castSpell(s.game)?.id ?? '');
+  const runes = useGame((s) => s.game.inventory.rune_basic ?? 0);
+  const reagentKey = useGame((s) =>
+    SPELLS.map((sp) => (sp.catalyst ? (s.game.inventory[sp.catalyst.item] ?? 0) : 0)).join(','),
+  );
+  const setCombatSetting = useGame((s) => s.setCombatSetting);
+  const { int } = useFmt();
+  const reagents = reagentKey.split(',').map(Number);
+  return (
+    <div className="spell-book">
+      <small className="muted">
+        📖 Zauberbuch · 🔣 {int(runes)} Runen
+        {casting && casting !== chosen && ' · Zutaten fehlen, es wird ein Funke gewirkt'}
+      </small>
+      <div className="spell-list">
+        {SPELLS.map((sp, i) => {
+          const locked = magic < sp.level;
+          const have = reagents[i] ?? 0;
+          return (
+            <button
+              key={sp.id}
+              className={`spell ${chosen === sp.id ? 'active' : ''} ${locked ? 'locked' : ''}`}
+              disabled={locked}
+              onClick={() => setCombatSetting('spell', sp.id)}
+              title={sp.desc}
+            >
+              <span className="spell-icon">{locked ? '🔒' : sp.icon}</span>
+              <strong>{sp.name}</strong>
+              <small>
+                {locked
+                  ? `Magie ${sp.level}`
+                  : `🔣${sp.runes}${sp.catalyst ? ` + ${getItem(sp.catalyst.item).icon}${sp.catalyst.qty} (${int(have)})` : ''}`}
+              </small>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Optional active play: the bar fills while fighting, a tap fires a style special. */
+function SpecialBar() {
+  const energy = useGame((s) => Math.floor(s.game.combat?.energy ?? 0));
+  const alive = useGame((s) => (s.game.combat?.monsterHp ?? 0) > 0);
+  const style = useGame((s) => playerStats(s.game).style);
+  const special = useGame((s) => s.special);
+  const sp = SPECIALS[style];
+  const ready = energy >= SPECIAL_COST;
+  return (
+    <div className={`special-bar ${ready ? 'ready' : ''}`}>
+      <ProgressBar
+        fraction={energy / SPECIAL_COST}
+        color={ready ? 'var(--gold)' : 'var(--purple)'}
+        height={8}
+        label="Spezialenergie"
+      />
+      <button
+        className={`btn ${ready ? 'btn-gold' : ''}`}
+        disabled={!ready || !alive}
+        onClick={special}
+        title={`${sp.desc} Besiegst du so ein Monster, gibt es +25 % Gold. Lädt sich beim Kämpfen auf.`}
+      >
+        {sp.icon} {ready ? `${sp.name}!` : `${energy} %`}
+      </button>
+    </div>
+  );
+}
+
+function AmmoLine() {
+  const ammo = useGame((s) => s.game.equipment.ammo);
+  const count = useGame((s) => (ammo ? (s.game.inventory[ammo] ?? 0) : 0));
+  const setUi = useGame((s) => s.setUi);
+  const { int } = useFmt();
+  return (
+    <div className="combat-row small">
+      <span className={count > 0 ? '' : 'warn'}>
+        {ammo
+          ? `➶ ${getItem(ammo).name} ×${int(count)}`
+          : '➶ Keine Munition angelegt – ohne Pfeile kein Schuss!'}
+      </span>
+      <button
+        className="btn small"
+        onClick={() => setUi({ tab: 'inventory', inventorySegment: 'gear' })}
+      >
+        Ausrüstung
+      </button>
+    </div>
+  );
+}
 
 function PlayerPanel() {
   const hp = useGame((s) => Math.ceil(s.game.hp));
@@ -48,6 +154,8 @@ function PlayerPanel() {
         <span>🛡️ {def}</span>
         <span>⏱️ {Number(speed).toLocaleString('de-DE')} s</span>
       </div>
+      {style === 'magic' && <SpellPicker />}
+      {style === 'ranged' && <AmmoLine />}
       <div className="combat-row small">
         <span>
           🍖{' '}
@@ -107,6 +215,7 @@ function CurrentFight() {
         </button>
       </div>
       <ProgressBar fraction={Math.max(0, combat.monsterHp) / m.hp} color="#e5534b" height={10} />
+      <SpecialBar />
       <small className="muted">
         {combat.monsterHp > 0
           ? `${Math.ceil(combat.monsterHp)}/${m.hp} LP`

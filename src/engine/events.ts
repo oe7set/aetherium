@@ -1,4 +1,4 @@
-import type { SkillId } from '../data/types';
+import type { CombatStyle, SkillId } from '../data/types';
 
 export type StopReason =
   'noInputs' | 'inventoryFull' | 'noFire' | 'levelTooLow' | 'locked' | 'manual';
@@ -32,7 +32,8 @@ export type GameEvent =
   | { type: 'combatStarted'; monster: string }
   | { type: 'monsterSpawned'; monster: string }
   | { type: 'combatStopped'; monster: string; reason: CombatStopReason }
-  | { type: 'hit'; target: 'monster' | 'player'; damage: number }
+  | { type: 'hit'; target: 'monster' | 'player'; damage: number; special?: boolean }
+  | { type: 'special'; style: CombatStyle }
   | { type: 'monsterKilled'; monster: string }
   | { type: 'bossPhase'; monster: string; phase: number }
   | { type: 'dungeonCompleted'; dungeon: string }

@@ -66,6 +66,8 @@ export interface CombatState {
   respawn: number;
   playerTimer: number;
   monsterTimer: number;
+  /** Special attack charge 0–100; fills on attacks, fired by hand. */
+  energy: number;
 }
 
 export interface CombatSettings {
@@ -75,6 +77,8 @@ export interface CombatSettings {
   autoEat: number;
   /** Preferred food; null = best available. */
   food: string | null;
+  /** Chosen combat spell (magic style); falls back to the spark without reagents. */
+  spell: string;
 }
 
 export interface PlotState {
@@ -431,7 +435,7 @@ export function defaultSettings(): Settings {
 }
 
 export function defaultCombatSettings(): CombatSettings {
-  return { training: 'style', autoEat: 0.5, food: null };
+  return { training: 'style', autoEat: 0.5, food: null, spell: 'spark' };
 }
 
 export function newGame(now: number = Date.now()): GameState {

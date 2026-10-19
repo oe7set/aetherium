@@ -359,6 +359,17 @@ const STAT_SERIES: StatSeries[] = [
     reward: (i) => ({ 'combat.damage': 0.01 * (i + 1) }),
   },
   {
+    key: 'specialsUsed',
+    icon: '💥',
+    desc: (n) => `Setze ${n} Spezialangriffe ein.`,
+    steps: [
+      [1, 'Volle Leiste'],
+      [50, 'Knopfdrücker mit Stil'],
+      [500, 'Combo-König'],
+    ],
+    reward: () => ({ 'combat.energy': 0.05 }),
+  },
+  {
     key: 'bossKills',
     icon: '👹',
     desc: (n) => `Besiege ${n} Bosse.`,

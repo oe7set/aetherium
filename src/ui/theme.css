@@ -758,6 +758,7 @@ body.reduce-motion *::after {
   --panel: rgba(26, 31, 56, 0.96);
   --panel-2: rgba(38, 45, 78, 0.96);
 }
+.perf-eco .special-bar.ready .btn,
 .perf-eco .rift-portal,
 .perf-eco .rift-portal span,
 .perf-eco .hero-portrait::after,

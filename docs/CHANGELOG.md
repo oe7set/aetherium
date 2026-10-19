@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.43.0] – Ausrüstung & Kampfstile
+
+- Ausrüstung neu: Figur mit 11 Plätzen – neu sind **Umhang, Hände und Füße**. Werte-Übersicht (Max. Treffer, Treffwert, Tempo, Abwehr, LP, Summe aller Boni in Worten), Filter (Waffen/Rüstung/Schmuck/Munition) und ▲/▼-Vergleich mit dem angelegten Teil. Knopf „Beste Rüstung anlegen".
+- Neue Items: Panzerhandschuhe und -stiefel aus jedem Metall; Lederhandschuhe/-stiefel und Waldläuferstiefel für Bogenschützen; Seidenkapuze, Seidenhose und Zauberhandschuhe für Magier; Drachenleder-Armschienen und -Beinlinge; Umhänge aus Bärenfell, Tigerfell, Greifen- und Phönixfedern; Schützenring, Berserkerring und Arkanamulett.
+- Stil-Boni: Ausrüstung kann gezielt Fernkampf, Magie oder Nahkampf stärken, Pfeile oder Runen sparen und die Spezialleiste schneller laden.
+- Magie: Zauberbuch im Kampf – Funke, Frostlanze (friert ein), Feuerball (+ Kohle), Lebensraub (heilt, + Ektoplasma), Kettenblitz (+ Manakristall), Leerenstoß (+ Leerensplitter). Ohne Zutaten wird automatisch ein Funke gewirkt.
+- Fernkampf: Munitionsanzeige im Kampf, Ausrüstung mit Pfeil-Sparen.
+- Optional aktiv: Eine Spezialleiste lädt sich beim Kämpfen auf. Voll antippen für Zerschmetterer (Nahkampf), Doppelschuss (Fernkampf) oder Arkanausbruch (Magie) – mehr Schaden, +50 % XP und +25 % Gold, wenn der Treffer tötet. Läuft nie automatisch, wer selbst spielt, bekommt etwas mehr. Neuer Erfolg „Volle Leiste".
+
 ## [1.42.0] – Erz- und Barren-Symbole
 
 - Neue Symbole für Erze und Barren: Erze sind Gesteinsbrocken mit farbigen Adern (Kupfer, Zinn, Eisen, Kohle, Silber, Gold, Mithril, Adamant, Runit, Uran, Platin), Barren sind glänzende Barren in ihrer Metallfarbe (Bronze, Eisen, Stahl, Mithril, Adamant, Runit, Silber, Gold) – statt lauter gleicher 🧱. Zu sehen im Inventar, in Item-Karten, Aktionskarten, beim Krämer und auf dem Markt.

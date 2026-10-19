@@ -1,5 +1,15 @@
 import { DUNGEON_MAP, getItem, getMonster, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
+import {
+  SPECIAL_COST,
+  SPECIAL_GAIN_HIT,
+  SPECIAL_GAIN_MISS,
+  SPECIAL_KILL_GOLD,
+  SPECIAL_XP,
+  SPELL_MAP,
+  SPELLS,
+  type SpellDef,
+} from '../data/spells';
 import type { CombatStyle, EquipDef, EquipSlot } from '../data/types';
 import {
   EPS,
@@ -13,7 +23,7 @@ import {
 } from './actions';
 import type { CombatStopReason, Emit } from './events';
 import { itemCount, removeItem, addItem, freeSlots } from './inventory';
-import { invalidateMods, mod, registerModifierSource } from './modifiers';
+import { invalidateMods, mod, modFor, registerModifierSource } from './modifiers';
 import { randInt, type Rng } from './rng';
 import { addResearch } from './science';
 import { earnGold } from './shop';
@@ -68,19 +78,47 @@ export interface PlayerCombatStats {
   maxHp: number;
 }
 
+// --- Spells -------------------------------------------------------------------------------------
+
+function hasReagents(s: GameState, sp: SpellDef): boolean {
+  return (
+    itemCount(s, RUNE_ITEM) >= sp.runes &&
+    (!sp.catalyst || itemCount(s, sp.catalyst.item) >= sp.catalyst.qty)
+  );
+}
+
+export function spellUnlocked(s: GameState, sp: SpellDef): boolean {
+  return skillLevel(s, 'magic') >= sp.level;
+}
+
+/** The spell that will actually be cast: the chosen one, else the spark when its reagents run out. */
+export function castSpell(s: GameState): SpellDef | null {
+  const chosen = SPELL_MAP.get(s.combatSettings.spell);
+  if (chosen && spellUnlocked(s, chosen) && hasReagents(s, chosen)) return chosen;
+  const spark = SPELLS[0]!;
+  return hasReagents(s, spark) ? spark : null;
+}
+
 export function playerStats(s: GameState): PlayerCombatStats {
   const style = combatStyle(s);
   const level = skillLevel(s, style);
   const atk = gearSum(s, 'attack');
   const str = gearSum(s, 'strength');
   const def = gearSum(s, 'defence');
+  const spell = style === 'magic' ? castSpell(s) : null;
   return {
     style,
     level,
-    accuracy: (level + 8) * (atk + 64) * (1 + mod(s, 'combat.accuracy')),
+    accuracy:
+      (level + 8) * (atk + 64) * (1 + modFor(s, 'combat.accuracy', style)) * (spell?.accuracy ?? 1),
     maxHit: Math.max(
       1,
-      Math.floor(0.5 + (((level + 8) * (str + 64)) / 640) * (1 + mod(s, 'combat.damage'))),
+      Math.floor(
+        0.5 +
+          (((level + 8) * (str + 64)) / 640) *
+            (1 + modFor(s, 'combat.damage', style)) *
+            (spell?.damage ?? 1),
+      ),
     ),
     speed: weaponDef(s).speed ?? 2.4,
     defenceRating: (skillLevel(s, 'defence') + 8) * (def + 64) * (1 + mod(s, 'combat.defence')),
@@ -169,6 +207,44 @@ export function unequip(s: GameState, slot: EquipSlot): EquipResult {
   return { ok: true };
 }
 
+/** Armour slots that „Bestes anlegen" fills; weapons, jewellery and ammo stay a personal choice. */
+export const ARMOUR_SLOTS: EquipSlot[] = [
+  'head',
+  'cape',
+  'body',
+  'hands',
+  'legs',
+  'feet',
+  'shield',
+];
+
+/** Rough armour value: flat stats plus 100 per +100 % of modifiers. */
+export function gearScore(eq: EquipDef): number {
+  const mods = Object.values(eq.mods ?? {}).reduce<number>((a, v) => a + (v ?? 0), 0);
+  return (eq.attack ?? 0) + (eq.strength ?? 0) + (eq.defence ?? 0) + mods * 100;
+}
+
+/** Puts on the best wearable armour per slot; returns how many pieces changed. */
+export function equipBest(s: GameState): number {
+  let changed = 0;
+  for (const slot of ARMOUR_SLOTS) {
+    const current = s.equipment[slot];
+    let best = current;
+    let bestScore = current ? gearScore(getItem(current).equip ?? { slot }) : -1;
+    for (const id of Object.keys(s.inventory)) {
+      const eq = getItem(id).equip;
+      if (!eq || eq.slot !== slot || itemCount(s, id) <= 0 || !canWear(s, id)) continue;
+      const score = gearScore(eq);
+      if (score > bestScore) {
+        best = id;
+        bestScore = score;
+      }
+    }
+    if (best && best !== current && equipItem(s, best).ok) changed++;
+  }
+  return changed;
+}
+
 // --- Food ---------------------------------------------------------------------------------------
 
 export const FOODS = ITEMS.filter((i) => (i.heal ?? 0) > 0).sort(
@@ -246,6 +322,7 @@ export function startCombat(
     respawn: 0,
     playerTimer: 0,
     monsterTimer: 0,
+    energy: 0,
   };
   spawn(s, c);
   s.combat = c;
@@ -270,14 +347,14 @@ function missingAmmo(s: GameState): 'noAmmo' | 'noRunes' | null {
     const ammo = s.equipment.ammo;
     return ammo && itemCount(s, ammo) > 0 ? null : 'noAmmo';
   }
-  if (style === 'magic') return itemCount(s, RUNE_ITEM) > 0 ? null : 'noRunes';
+  if (style === 'magic') return castSpell(s) ? null : 'noRunes';
   return null;
 }
 
-function grantCombatXp(s: GameState, damage: number, emit: Emit): void {
+function grantCombatXp(s: GameState, damage: number, emit: Emit, factor = 1): void {
   const style = combatStyle(s);
   const target = s.combatSettings.training === 'defence' ? 'defence' : style;
-  addXp(s, target, damage * 4 * xpMultiplierFor(s, target), emit);
+  addXp(s, target, damage * 4 * factor * xpMultiplierFor(s, target), emit);
   addXp(s, 'hitpoints', damage * 1.33 * xpMultiplierFor(s, 'hitpoints'), emit);
 }
 
@@ -288,14 +365,21 @@ export function onMonsterKilled(fn: KillHook): void {
   killHooks.push(fn);
 }
 
-function killMonster(s: GameState, c: CombatState, m: MonsterDef, rng: Rng, emit: Emit): void {
+function killMonster(
+  s: GameState,
+  c: CombatState,
+  m: MonsterDef,
+  rng: Rng,
+  emit: Emit,
+  goldMult = 1,
+): void {
   addResearch(s, m.level * 0.4);
   addStat(s, 'monstersKilled');
   addStat(s, `kills.${m.id}`);
   if (m.boss) addStat(s, 'bossKills');
   emit({ type: 'monsterKilled', monster: m.id });
   for (const hook of killHooks) hook(s, m.id, rng, emit);
-  earnGold(s, randInt(rng, m.gold[0], m.gold[1]), emit);
+  earnGold(s, Math.round(randInt(rng, m.gold[0], m.gold[1]) * goldMult), emit);
   const lootBonus = mod(s, 'combat.loot');
   for (const { entry, qty } of rollDrops(rng, m.loot, mod(s, 'rare') + lootBonus)) {
     gainItem(s, entry.item, qty, emit, entry.rare);
@@ -315,21 +399,46 @@ function killMonster(s: GameState, c: CombatState, m: MonsterDef, rng: Rng, emit
   c.respawn = RESPAWN_SECONDS;
 }
 
-function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {
-  const m = getMonster(c.monster);
-  const st = playerStats(s);
-  c.playerTimer += st.speed;
-  if (st.style === 'ranged' && s.equipment.ammo) removeItem(s, s.equipment.ammo, 1);
-  if (st.style === 'magic') removeItem(s, RUNE_ITEM, 1);
-  if (rng() >= playerHitChance(s, m, c.phase)) {
-    emit({ type: 'hit', target: 'monster', damage: 0 });
-    return;
+/** Spends one shot's worth of ammo or reagents (with the gear's chance to keep them). */
+function payShot(s: GameState, rng: Rng, style: CombatStyle): SpellDef | null {
+  if (style === 'ranged' && s.equipment.ammo) {
+    const save = mod(s, 'combat.ammoSave');
+    if (save <= 0 || rng() >= save) removeItem(s, s.equipment.ammo, 1);
   }
-  const damage = Math.min(c.monsterHp, randInt(rng, 1, st.maxHit));
+  if (style !== 'magic') return null;
+  const spell = castSpell(s);
+  if (!spell) return null;
+  const save = mod(s, 'combat.runeSave');
+  if (save <= 0 || rng() >= save) {
+    removeItem(s, RUNE_ITEM, spell.runes);
+    if (spell.catalyst) removeItem(s, spell.catalyst.item, spell.catalyst.qty);
+  }
+  return spell;
+}
+
+function gainEnergy(s: GameState, c: CombatState, amount: number): void {
+  c.energy = Math.min(SPECIAL_COST, c.energy + amount * (1 + mod(s, 'combat.energy')));
+}
+
+/** Applies a landed hit: damage, XP, side effects, boss phases and the kill. */
+function landHit(
+  s: GameState,
+  c: CombatState,
+  m: MonsterDef,
+  raw: number,
+  rng: Rng,
+  emit: Emit,
+  opts: { spell?: SpellDef | null; special?: boolean; heal?: number } = {},
+): void {
+  const damage = Math.max(1, Math.min(c.monsterHp, raw));
   c.monsterHp -= damage;
   addStat(s, 'damageDealt', damage);
-  emit({ type: 'hit', target: 'monster', damage });
-  grantCombatXp(s, damage, emit);
+  emit({ type: 'hit', target: 'monster', damage, special: opts.special });
+  grantCombatXp(s, damage, emit, (opts.spell?.xp ?? 1) * (opts.special ? SPECIAL_XP : 1));
+  const heal = damage * ((opts.spell?.drain ?? 0) + (opts.heal ?? 0));
+  if (heal > 0) s.hp = Math.min(maxHp(s), s.hp + heal);
+  const freeze = opts.spell?.freeze;
+  if (freeze && rng() < freeze.chance) c.monsterTimer += freeze.seconds;
   if (m.phases) {
     const frac = c.monsterHp / m.hp;
     let phase = 0;
@@ -341,7 +450,55 @@ function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void 
       emit({ type: 'bossPhase', monster: m.id, phase });
     }
   }
-  if (c.monsterHp <= 0) killMonster(s, c, m, rng, emit);
+  if (c.monsterHp <= 0) killMonster(s, c, m, rng, emit, opts.special ? 1 + SPECIAL_KILL_GOLD : 1);
+}
+
+function playerAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {
+  const m = getMonster(c.monster);
+  const st = playerStats(s);
+  c.playerTimer += st.speed;
+  const spell = payShot(s, rng, st.style);
+  if (rng() >= playerHitChance(s, m, c.phase)) {
+    gainEnergy(s, c, SPECIAL_GAIN_MISS);
+    emit({ type: 'hit', target: 'monster', damage: 0 });
+    return;
+  }
+  gainEnergy(s, c, SPECIAL_GAIN_HIT);
+  landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { spell });
+}
+
+export type SpecialResult = 'ok' | 'noCombat' | 'notReady' | 'noAmmo';
+
+/**
+ * The optional active part of combat: a full energy bar can be spent on a style-specific special
+ * attack. Purely a bonus on top of the idle fight – it never fires on its own.
+ */
+export function specialAttack(s: GameState, rng: Rng, emit: Emit): SpecialResult {
+  const c = s.combat;
+  if (!c || c.monsterHp <= 0) return 'noCombat';
+  if (c.energy < SPECIAL_COST) return 'notReady';
+  if (missingAmmo(s)) return 'noAmmo';
+  c.energy -= SPECIAL_COST;
+  const m = getMonster(c.monster);
+  const st = playerStats(s);
+  addStat(s, 'specialsUsed');
+  emit({ type: 'special', style: st.style });
+  if (st.style === 'melee') {
+    landHit(s, c, m, Math.round(st.maxHit * (1.5 + rng() * 0.5)), rng, emit, { special: true });
+  } else if (st.style === 'ranged') {
+    const chance = Math.min(1, playerHitChance(s, m, c.phase) * 1.4);
+    for (let shot = 0; shot < 2 && c.monsterHp > 0; shot++) {
+      if (shot > 0 && missingAmmo(s)) break;
+      payShot(s, rng, 'ranged');
+      if (rng() < chance)
+        landHit(s, c, m, randInt(rng, 1, st.maxHit), rng, emit, { special: true });
+      else emit({ type: 'hit', target: 'monster', damage: 0 });
+    }
+  } else {
+    const spell = payShot(s, rng, 'magic');
+    landHit(s, c, m, Math.round(st.maxHit * 1.6), rng, emit, { spell, special: true, heal: 0.3 });
+  }
+  return 'ok';
 }
 
 function monsterAttack(s: GameState, c: CombatState, rng: Rng, emit: Emit): void {

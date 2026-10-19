@@ -40,6 +40,8 @@ import {
   eat,
   equipItem,
   startCombat,
+  equipBest,
+  specialAttack,
   stopCombat,
   unequip as unequipSlot,
   type CombatSettings,
@@ -176,7 +178,10 @@ export interface GameStore {
   flee: () => void;
   equip: (item: string) => void;
   unequip: (slot: EquipSlot) => void;
+  equipBest: () => void;
   eatNow: () => void;
+  /** Fires the charged special attack (optional active play). */
+  special: () => void;
   research: (tech: string) => void;
   plant: (plot: number, seed: string) => void;
   harvestPlot: (plot: number) => void;
@@ -474,9 +479,25 @@ export const useGame = create<GameStore>()((set, get) => {
       });
       if (!res.ok) get().pushFeed(`❌ ${t(`equipFail.${res.reason}` as MessageKey)}`, 'warn');
     },
+    equipBest: () => {
+      let n = 0;
+      mutate((s) => {
+        n = equipBest(s);
+      });
+      get().pushFeed(
+        n > 0
+          ? `🛡️ ${n} Ausrüstungsteil${n === 1 ? '' : 'e'} angelegt.`
+          : '🛡️ Du trägst schon das Beste.',
+        'info',
+      );
+    },
     eatNow: () =>
       mutate((s, emit) => {
         eat(s, emit);
+      }),
+    special: () =>
+      mutate((s, emit) => {
+        specialAttack(s, defaultRng, emit);
       }),
     research: (tech) =>
       mutate((s, emit) => {
