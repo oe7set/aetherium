@@ -7,11 +7,11 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.75)
+## Was dich erwartet (v1.76)
 
 **🏝️ Die Insel**
 
-- 29 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 400 Aktionen – jede mit eigener
+- 33 Skills im Old-School-Stil (Level 99 bzw. 120 mit Prestige) und über 400 Aktionen – jede mit eigener
   **Meisterschaft** 🏅 (Stufe 1–99: schneller und öfter doppelte Ausbeute).
 - Sammeln: Holzfällen (20 Baumarten), Bergbau, Angeln, Landwirtschaft (Echtzeit-Beete, Mutationen), Jagen,
   Archäologie, **Diebeskunst**, **Kartografie** (Regionen, Expeditionen, Schatzkarten), **Viehzucht** (7 Tiere,
@@ -19,6 +19,10 @@ greift ineinander.
 - Handwerk: Feuermachen, Kochen, Schmieden, Handwerk, Alchemie, Verzauberung, Arkanes, Brauen,
   **Juwelierkunst**, **Baukunst** (10 Inselbauten mit Dauer-Boni), Glaube, **Beschwörung** (11 Vertraute) und
   **Bogenbau** (Langbögen, Armbrüste, Edelsteinbolzen, Köcher).
+- **Seefahrt** (7 Schiffe, Fahrten zu fernen Inseln, Handel), **Sternkunde** (Nachtbonus, 9 Sternbilder),
+  **Gewandtheit** (Parcours, Läufer-Set, alles schneller) und **Erfinden** (Zerlegen, 11 Erfindungen).
+- **Schmiede-Verstärkung** +1 bis +10 je Ausrüstungsplatz mit Schutzrunen und zufälligen Prägungen.
+- **Weltbosse** alle 4 Stunden: Insel, Dorf und Held kämpfen gemeinsam, legendäre Beute.
 - **Zunftaufträge** über mehrere Skills mit Ruf und Rängen; jede Skill-Ansicht zeigt ihre **Verbindungen**.
 - **Kampf 2.0**: Nahkampf, Fernkampf, Magie, Verteidigung, Lebenspunkte und **Kopfgeldjagd** gegen über 30 Monster –
   24 Element-Zauber, Element-Pfeile und -Stäbe, 13 Gebete, Ausrüstungs-Sets, Boss-Unikate, Loadouts, Auto-Trank,

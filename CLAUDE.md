@@ -4,9 +4,9 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.75.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.76.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss), Masterplan 3.0 (`docs/PLAN-3.md`) und 4.0 (`docs/PLAN-4.md`: Bogenbau, Viehzucht, Rissläufer/Relikte,
-Flüche/Schreine/Tagesriss, Zunftaufträge) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
+Flüche/Schreine/Tagesriss, Zunftaufträge) und 5.0 (`docs/PLAN-5.md`) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
 eintragen, Erledigtes streichen, Neues Offenes ergänzen).
@@ -42,7 +42,10 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   (`ActionDef.requiresBuilding` → Stall), Rissläufer/Relikte `data/riftwalker.ts` (`runPerks`), Flüche/Schreine
   `data/riftCurses.ts` (+ `chooseShrine` in `rift/sim.ts`), Tagesriss `engine/daily.ts`, Zünfte `engine/guilds.ts`,
   Verbindungen `skillLinks` in `ui/recipes.ts`.
-  Neue Skill-Stationen als generische Werkstätten in `scene/Workshops.tsx`. Aktueller Plan: `docs/PLAN-5.md` (Seefahrt, Sternkunde, Gewandtheit, Erfinden, Aufwertung, Weltbosse). Rezept-Navigation
+  Neue Skill-Stationen als generische Werkstätten in `scene/Workshops.tsx`. Masterplan 5.0: Seefahrt `engine/sailing.ts` (Schiffe = Werkzeuge), Sternkunde `engine/astronomy.ts`
+  (Tag/Nacht `engine/time.ts`, `simNow`), Gewandtheit `engine/agility.ts` (`ActionDef.fall`), Erfinden
+  `engine/invention.ts`, Verstärkung/Prägungen `engine/forge.ts` (pro Slot, `forgeMult` in `gearSum`),
+  Weltbosse `engine/worldboss.ts`. Rezept-Navigation
   (welche Aktion macht/braucht ein Item) = `ui/recipes.ts`, Sprung über `jumpToAction`.
 - Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,
   Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung

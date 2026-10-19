@@ -183,7 +183,25 @@ describe('Langzeit-Bot: neue Skills, je 6 Stunden', () => {
       s.inventory = { wheat: 3000, potato: 1500, herb_mint: 800, apple: 1500 };
       s.buildings = { ...s.buildings, barn: 1 };
     });
+    // Masterplan 5.0: sailing with bread, stargazing, agility laps, junk for invention.
+    run('sailing', () => {
+      s.inventory = { bread: 2000 };
+    });
+    run('astronomy', () => {
+      s.inventory = {};
+    });
+    run('agility', () => {
+      s.inventory = { cooked_shark: 500 };
+      s.hp = 99;
+    });
+    run('invention', () => {
+      s.inventory = { old_boot: 3000, burnt_food: 3000, pottery_shard: 3000, nails: 6000 };
+    });
     console.table(rows);
+    expect(rows.sailing!.level).toBeGreaterThan(20);
+    expect(rows.astronomy!.level).toBeGreaterThan(25);
+    expect(rows.agility!.level).toBeGreaterThan(25);
+    expect(rows.invention!.level).toBeGreaterThan(15);
     expect(rows.fletching!.level).toBeGreaterThan(25);
     expect(rows.husbandry!.level).toBeGreaterThan(25);
     expect(rows.thieving!.level).toBeGreaterThan(20);

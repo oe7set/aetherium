@@ -5,6 +5,8 @@ import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 
+const dps = (n: number) => n.toLocaleString('de-DE', { maximumFractionDigits: 1 });
+
 /** Weltboss: the current fight with its damage sources, the strike button and the last results. */
 export function WorldBossView() {
   // Rounded so the view does not re-render on every tick.
@@ -50,13 +52,13 @@ export function WorldBossView() {
             </p>
             <div className="stat-chips">
               <span>
-                🏝️ Insel {int(f.dmg.island)} ({f.rates.island.toFixed(1)}/s)
+                🏝️ Insel {int(f.dmg.island)} ({dps(f.rates.island)}/s)
               </span>
               <span>
-                🏘️ Dorf {int(f.dmg.village)} ({f.rates.village.toFixed(1)}/s)
+                🏘️ Dorf {int(f.dmg.village)} ({dps(f.rates.village)}/s)
               </span>
               <span>
-                🦸 Held {int(f.dmg.hero)} ({f.rates.hero.toFixed(1)}/s)
+                🦸 Held {int(f.dmg.hero)} ({dps(f.rates.hero)}/s)
               </span>
               <span>💥 Schläge {int(f.dmg.strike)}</span>
             </div>

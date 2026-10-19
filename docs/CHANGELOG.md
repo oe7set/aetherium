@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.76.0] – Feinschliff & Abschluss Masterplan 5.0
+
+Abschluss des **Masterplans 5.0** (Phase 37).
+
+- Der Langzeit-Bot spielt jetzt auch Seefahrt, Sternkunde, Gewandtheit und Erfinden (je 6 Stunden: Stufe 52, 64, 53, 43) – alle im Bereich der bestehenden Skills. Werte in `docs/BALANCING.md`.
+- Weltboss-Ansicht zeigt Schadensraten mit deutschem Komma.
+- README, Systemkarte und Plan aktualisiert.
+
 ## [1.75.0] – Sonderaufträge & Zauberbolzen
 
 - **Zunft-Sonderaufträge** ⚡ (Phase 36): Ab Rang 5 bei einer Zunft kommen eilige Sonderaufträge – doppelte Mengen, nur zwei Stunden Zeit, dafür 2,5-faches Gold, dreifacher Ruf und ein seltenes Extra (Prägestein, Schutzrune, uralte Teile oder Schatztruhen).

@@ -124,6 +124,15 @@ Langzeit-Bot „neue Skills, je 6 Stunden" (`tests/longterm.test.ts`, ab Stufe 1
 | Kopfgeldjagd           | 25             | ~12 000 | Kampfstufe 30, Bronzeschwert                                          |
 | Bogenbau (1.66)        | 44             | –       | Leder, Holz, Barren, Federn gestellt; Bögen/Bolzen unverkauft         |
 | Viehzucht (1.66)       | 49             | –       | Feldfrüchte gestellt, Stall Stufe 1; Produkte unverkauft              |
+| Seefahrt (1.76)        | 52             | –       | Brot gestellt, Floß/Startschiff; Fracht unverkauft                    |
+| Sternkunde (1.76)      | 64             | –       | ohne Zutaten, inkl. Nachtbonus (etwa ein Drittel der Zeit)            |
+| Gewandtheit (1.76)     | 53             | –       | mit Stürzen; der Skill gibt dafür globales Tempo                      |
+| Erfinden (1.76)        | 43             | –       | nur Schrott-Zerlegen; Erfindungen geben große XP-Batzen               |
+
+Masterplan 5.0 (1.67–1.76): Weltboss-HP = 30 000 × (1 + Kampfstufe/50) × (1 + 0,25 je Sieg); typische
+Schadensraten zur Kampfstufe 40: Insel ~4/s, Dorf ~3/s, Held ~5/s (zusammen ~45 000/h) plus Schläge – ein
+aktiver Spieler schafft den Boss in 30–45 Minuten, ein passiver meist knapp oder gar nicht. Verstärkung:
++5 %/Stufe auf Ausrüstungswerte, Kosten verdoppeln sich, ab +6 Risiko – bewusst ein Gold-Abfluss im Endgame.
 
 Masterplan 4.0 (1.61–1.66): Bogenbau und Viehzucht liegen im Bot zwischen Kartografie und Diebeskunst – sie
 kosten Rohstoffe aus anderen Skills und sollen sich deshalb nicht langsamer anfühlen. Zunftaufträge zahlen das
