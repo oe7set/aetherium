@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.46.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.47.0**.
 
 ## 1. Der große Kreislauf
 
@@ -65,6 +65,10 @@ Ausrüstungsansicht `ui/inventory/GearPanel` (Figur, Werte, Filter, ▲/▼-Verg
 Zauber haben Elemente (`MONSTER_ELEMENTS`: anfällig ×1,35, resistent ×0,6, `spellAffinity`). Monster ab Stufe 10
 (Bosse öfter, `heavyEvery`) holen jeden n-ten Schlag aus (`windup`): kommt 60 % später, trifft ×1,6 – Idle bleibt
 im Schnitt gleich; `dodge` (💨 in Kampfansicht und Kampfleiste) vermeidet ihn und gibt +25 Spezialenergie.
+
+**Endlos-Rangliste** (`engine/rivals.ts`, Karte im Riss-Start): ohne Server – `recordCode` packt Heldenname,
+Endlos-Bestzeit, Siege, Gesamt- und Kampflevel in einen Code `AE1-…` mit Prüfsumme (gegen Tippfehler, nicht gegen
+Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`, kein Spielstand).
 
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
@@ -234,7 +238,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 
 **Gameplay & Inhalt**
 
-- [ ] Endgame: Endlos-Riss-Rangliste über Export-Codes; mehr Inselschmuck (z. B. für Dorf-Meilensteine).
+- [ ] Endgame: mehr Inselschmuck (z. B. für Dorf-Meilensteine).
 
 **Qualität**
 
@@ -242,7 +246,7 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
       500+ Inhaltsnamen und die Sprüche in `flavor.ts` – erst UI-Texte nach `i18n/de.ts` ziehen, dann `en.ts`.
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
-- [ ] PWA-Offline-Test auf echtem Gerät; Desktop-Layout für Dorf-Markt, Berichte und Reich prüfen.
+- [ ] PWA-Offline-Test auf echtem Gerät.
 - [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente), Prestige, 7+ Tage; Spieler ohne Truppen werden oft
       geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
 

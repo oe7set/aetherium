@@ -15,6 +15,11 @@ import {
   biomeUnlocked,
   echoEssence,
   endlessUnlocked,
+  myRecord,
+  parseRecordCode,
+  rankRivals,
+  recordCode,
+  type RivalRecord,
   heroUnlocked,
   heroUnlockText,
   riftHeal,
@@ -315,6 +320,118 @@ function StartView() {
         Steuerung: Finger irgendwo auf den Bildschirm legen und ziehen · WASD/Pfeiltasten · P =
         Pause
       </p>
+      {endlessOpen && <Leaderboard />}
+    </div>
+  );
+}
+
+const RIVALS_KEY = 'aetherium.rivals';
+
+function loadRivals(): string[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(RIVALS_KEY) ?? '[]') as unknown;
+    return Array.isArray(raw) ? raw.filter((c): c is string => typeof c === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveRivals(codes: string[]): void {
+  try {
+    localStorage.setItem(RIVALS_KEY, JSON.stringify(codes));
+  } catch {
+    // Private mode: the list just lives for this session.
+  }
+}
+
+/** Endless-rift ranking via shareable record codes – no server, friends swap codes. */
+function Leaderboard() {
+  const game = useGame((s) => s.game);
+  const [codes, setCodes] = useState<string[]>(loadRivals);
+  const [input, setInput] = useState('');
+  const [msg, setMsg] = useState('');
+  const mine = myRecord(game);
+  const myCode = recordCode(mine);
+  const rivals = codes
+    .map((c) => ({ code: c, rec: parseRecordCode(c) }))
+    .filter((r): r is { code: string; rec: RivalRecord } => r.rec !== null);
+  const ranked = rankRivals([mine, ...rivals.map((r) => r.rec)]);
+  const add = () => {
+    const rec = parseRecordCode(input);
+    if (!rec) return setMsg('❌ Ungültiger Code – bitte vollständig einfügen.');
+    // Same name = newer code replaces the old entry.
+    const next = [
+      ...codes.filter((c) => parseRecordCode(c)?.name !== rec.name),
+      input.trim(),
+    ].slice(-30);
+    setCodes(next);
+    saveRivals(next);
+    setInput('');
+    setMsg(`✅ ${rec.name} ist in der Rangliste.`);
+  };
+  const remove = (code: string) => {
+    const next = codes.filter((c) => c !== code);
+    setCodes(next);
+    saveRivals(next);
+  };
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(myCode);
+      setMsg('📋 Dein Rekord-Code ist kopiert – schick ihn deinen Freunden!');
+    } catch {
+      setMsg('Kopieren ging nicht – markiere den Code und kopiere ihn von Hand.');
+    }
+  };
+  return (
+    <div className="leaderboard">
+      <h3 className="rift-heading">🏆 Endlos-Rangliste</h3>
+      <ol className="leader-list">
+        {ranked.map((r, i) => {
+          const me = r === mine;
+          const entry = rivals.find((x) => x.rec === r);
+          return (
+            <li key={me ? 'me' : entry?.code} className={me ? 'me' : ''}>
+              <span className="leader-rank">{['🥇', '🥈', '🥉'][i] ?? `${i + 1}.`}</span>
+              <span className="leader-name">
+                {r.name}
+                {me && <small className="muted"> (du)</small>}
+                <small className="muted">
+                  {' '}
+                  · {r.wins} Siege · Gesamtlevel {r.total}
+                </small>
+              </span>
+              <b>♾️ {fmt(r.endless)}</b>
+              {entry && (
+                <button
+                  className="btn small"
+                  onClick={() => remove(entry.code)}
+                  aria-label="Entfernen"
+                >
+                  ✕
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+      <div className="leader-code">
+        <input className="input" readOnly value={myCode} onFocus={(e) => e.target.select()} />
+        <button className="btn small" onClick={copy}>
+          📋 Kopieren
+        </button>
+      </div>
+      <div className="leader-code">
+        <input
+          className="input"
+          placeholder="Code eines Freundes einfügen …"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button className="btn small btn-primary" disabled={!input.trim()} onClick={add}>
+          Hinzufügen
+        </button>
+      </div>
+      {msg && <small>{msg}</small>}
     </div>
   );
 }

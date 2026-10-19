@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.47.0] – Endlos-Rangliste
+
+- **Endlos-Rangliste** 🏆 im Riss-Start (nach dem ersten Sieg über den Prüfer): Dein Rekord-Code fasst Bestzeit im Endlos-Riss, Riss-Siege und Gesamtlevel zusammen. Kopieren, an Freunde schicken, deren Codes einfügen – schon gibt es eine Rangliste mit 🥇🥈🥉. Neue Codes derselben Person ersetzen die alten.
+- Dorf-Markt, Berichte und Reich am Desktop geprüft.
+
 ## [1.46.0] – Inselschmuck
 
 - **Inselschmuck** 🎨: 9 Deko-Teile für die 3D-Insel, die man überall im Spiel freischaltet – Laternenweg (Rituale), Kürbisbeet (Ernten), Heldenstatue (Erfolge), Springbrunnen (Gesamtlevel 300), Siegesbanner (Bosse), schwebender Ätherkristall (Riss-Siege), Schneemann (Yeti besiegt), Leuchtturm mit drehendem Lichtkegel (Gesamtlevel 800) und ein Regenbogen am Horizont (Wiedergeburt).

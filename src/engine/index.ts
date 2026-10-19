@@ -30,3 +30,4 @@ export * from './village';
 export * from './villageWorld';
 export * from './weekly';
 export * from './xp';
+export * from './rivals';

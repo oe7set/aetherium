@@ -2323,3 +2323,48 @@ button.chip {
   padding: 6px 10px;
   animation: special-pulse 0.9s ease-in-out infinite;
 }
+
+/* --- Endless rift leaderboard ------------------------------------------------------------------ */
+
+.leaderboard {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 209, 102, 0.45);
+  background: var(--panel);
+}
+.leader-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.leader-list li {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto auto;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.leader-list li.me {
+  border: 1px solid var(--gold);
+  background: rgba(255, 209, 102, 0.1);
+}
+.leader-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.leader-code {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+}
+.leader-code .input {
+  min-width: 0;
+  font-size: 0.75rem;
+}
