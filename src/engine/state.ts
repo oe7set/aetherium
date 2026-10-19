@@ -76,6 +76,14 @@ export interface CombatState {
   dodged: boolean;
 }
 
+export interface SlayerState {
+  task: { monster: string; left: number; total: number } | null;
+  points: number;
+  streak: number;
+  done: number;
+  blocked: string[];
+}
+
 export interface PrayerState {
   points: number;
   active: string[];
@@ -422,6 +430,8 @@ export interface GameState {
   prayer: PrayerState;
   /** Saved equipment sets („Loadouts"), switched with one tap. */
   loadouts: Loadout[];
+  /** Kopfgeldjagd: current contract, points, streak, blocked monsters. */
+  slayer: SlayerState;
   /** Research points (currency for the tech tree). */
   research: number;
   techs: string[];
@@ -500,6 +510,7 @@ export function newGame(now: number = Date.now()): GameState {
     combatSettings: defaultCombatSettings(),
     prayer: { points: 12, active: [] },
     loadouts: defaultLoadouts(),
+    slayer: { task: null, points: 0, streak: 0, done: 0, blocked: [] },
     research: 0,
     techs: [],
     codex: [],
@@ -614,6 +625,11 @@ export function cloneState(s: GameState): GameState {
     combatSettings: { ...s.combatSettings },
     prayer: { ...s.prayer, active: [...s.prayer.active] },
     loadouts: s.loadouts.map((l) => ({ ...l, gear: { ...l.gear } })),
+    slayer: {
+      ...s.slayer,
+      task: s.slayer.task ? { ...s.slayer.task } : null,
+      blocked: [...s.slayer.blocked],
+    },
     techs: [...s.techs],
     codex: [...s.codex],
     plots: s.plots.map((p) => ({ ...p })),

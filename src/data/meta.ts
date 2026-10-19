@@ -818,4 +818,11 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
     base: 30,
     icon: '💎',
   },
+  {
+    id: 'slayer',
+    label: 'Erfülle {n} Kopfgeld-Aufträge',
+    stat: 'slayerTasks',
+    base: 2,
+    icon: '🎯',
+  },
 ];

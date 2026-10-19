@@ -620,8 +620,8 @@ export const useGame = create<GameStore>()((set, get) => {
         get().setUi({ tab: 'menu', menuSection: 'research' });
         return;
       }
-      if (skill === 'farming') {
-        get().openSkill('farming');
+      if (skill === 'farming' || skill === 'slayer') {
+        get().openSkill(skill);
         return;
       }
       // Double tap on the same station: open the skill to pick what to do. A single tap starts

@@ -31,6 +31,7 @@ const STATIONS: Station[] = [
   { skill: 'faith', label: 'Schrein', icon: '🛕', className: 'st-faith' },
   { skill: 'brewing', label: 'Brauerei', icon: '🍺', className: 'st-brew' },
   { skill: 'jewelcrafting', label: 'Juwelier', icon: '💎', className: 'st-jewel' },
+  { skill: 'slayer', label: 'Kopfgeld', icon: '🎯', className: 'st-slayer' },
 ];
 
 function skyFor(phase: number): { sky: string; night: number } {

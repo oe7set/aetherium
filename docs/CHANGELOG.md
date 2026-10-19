@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.51.0] – Kopfgeldjagd
+
+- Neuer Skill **Kopfgeldjagd** 🎯 (Phase 14): Hol dir am Kopfgeldbrett neben der Arena einen Auftrag („Besiege 23 Wölfe"), jeder Kill am Ziel gibt Kopfgeld-XP. Erfüllte Aufträge bringen Punkte und Gold, jeder 10. Auftrag in Serie das Fünffache.
+- **Kopfgeld-Laden**: Auftrag tauschen, Monster sperren, Kopfgeld-Beutel (Runen, Pfeile, Weihtrunk, Geoden) und eigene Ausrüstung – Kopfgeldhelm, -ring und -umhang wirken stark gegen dein aktuelles Ziel.
+- **Kopfgeldturm** 🏯: neue Monster nur mit Kopfgeld-Stufe – Heulende Banshee, Wasserspeier, Basilisk, Höhlenkrake und Abgrunddämon – mit eigenen Seltenheiten wie Granithammer, Basiliskenauge, Dreizack der Krake und der legendären Abgrundpeitsche.
+- „Was jetzt?" erinnert an fehlende Aufträge; Kopfgeld zählt für Aufträge und Ruhmesleiter.
+
 ## [1.50.0] – Juwelierkunst & Sets
 
 - Neuer Skill **Juwelierkunst** 💎 (Phase 13): Flusskiesel sieben, Geoden knacken (Geoden findest du jetzt beim Bergbau), Steine veredeln. Sechs neue Edelsteine – Quarz, Opal, Jade, Topas, Onyx und Ätherstein – und 16 Ringe und Amulette: für Nahkampf, Fernkampf, Magie, Leben, Gold, XP, Bergbau, Kochen/Brauen, Landwirtschaft/Jagd/Angeln. Eigene Werkstatt auf der Insel.

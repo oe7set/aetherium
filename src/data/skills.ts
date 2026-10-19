@@ -155,6 +155,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Wichtiger als man denkt. Jedes Level = 1 maximaler Lebenspunkt.',
   },
   {
+    id: 'slayer',
+    name: 'Kopfgeldjagd',
+    icon: '🎯',
+    color: '#e5534b',
+    group: 'combat',
+    desc: 'Nimm Kopfgeld-Aufträge an, jage das Ziel und kassiere Punkte für besondere Ausrüstung. Höhere Stufen öffnen den Kopfgeldturm.',
+  },
+  {
     id: 'faith',
     name: 'Glaube',
     icon: '🙏',

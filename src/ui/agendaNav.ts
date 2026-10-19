@@ -35,6 +35,9 @@ export function goToAgenda(target: AgendaTarget): void {
     case 'skills':
       store.setUi({ tab: 'skills', skillDetail: false });
       break;
+    case 'skill':
+      store.openSkill(target.skill);
+      break;
     case 'inventory':
       store.setUi({ tab: 'inventory', inventorySegment: target.section });
       break;

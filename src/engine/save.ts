@@ -30,6 +30,7 @@ import {
   SAVE_VERSION,
   type CombatSettings,
   type Loadout,
+  type SlayerState,
   type PrayerState,
   type Village,
   type VillageState,
@@ -267,6 +268,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     combatSettings: hydrateCombatSettings(data.combatSettings),
     prayer: hydratePrayer(data.prayer, base.prayer),
     loadouts: hydrateLoadouts(data.loadouts),
+    slayer: hydrateSlayer(data.slayer, base.slayer),
     achievements: stringArray(data.achievements).filter((id) => ACHIEVEMENT_MAP.has(id)),
     buffs: Array.isArray(data.buffs)
       ? data.buffs.filter(
@@ -631,6 +633,23 @@ function hydratePrayer(v: unknown, fallback: PrayerState): PrayerState {
   const points =
     typeof v.points === 'number' && Number.isFinite(v.points) ? Math.max(0, v.points) : 0;
   return { points, active: stringArray(v.active).filter((id) => PRAYER_MAP.has(id)) };
+}
+
+function hydrateSlayer(v: unknown, fallback: SlayerState): SlayerState {
+  if (!isRecord(v)) return fallback;
+  const n = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? Math.max(0, x) : 0);
+  const t = v.task;
+  const task =
+    isRecord(t) && typeof t.monster === 'string' && MONSTER_MAP.has(t.monster) && n(t.left) > 0
+      ? { monster: t.monster, left: Math.floor(n(t.left)), total: Math.floor(n(t.total)) }
+      : null;
+  return {
+    task,
+    points: n(v.points),
+    streak: n(v.streak),
+    done: n(v.done),
+    blocked: stringArray(v.blocked).filter((id) => MONSTER_MAP.has(id)),
+  };
 }
 
 function hydrateLoadouts(v: unknown): Loadout[] {

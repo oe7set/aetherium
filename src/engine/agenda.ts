@@ -29,6 +29,7 @@ export type AgendaTarget =
   | { area: 'daily' }
   | { area: 'chronicle' }
   | { area: 'skills' }
+  | { area: 'skill'; skill: string }
   | { area: 'inventory'; section: 'items' | 'album' | 'tools' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' }
@@ -264,6 +265,20 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: `×${upgrade.speed} Tempo – du kannst es dir leisten`,
       kind: 'todo',
       target: { area: 'inventory', section: 'tools' },
+    });
+  // Kopfgeldjagd: a fighter without a contract is leaving slayer XP on the table.
+  if (
+    !s.slayer.task &&
+    (s.combat || s.stats.monstersKilled || 0) &&
+    skillLevel(s, 'hitpoints') >= 12
+  )
+    add({
+      id: 'slayer',
+      icon: '🎯',
+      title: 'Kopfgeld-Auftrag holen',
+      detail: `${s.slayer.points} Kopfgeldpunkte · Serie ${s.slayer.streak}`,
+      kind: 'todo',
+      target: { area: 'skill', skill: 'slayer' },
     });
   if (freeSlots(s) <= 0)
     add({

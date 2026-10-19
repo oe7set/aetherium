@@ -129,6 +129,8 @@ function resetRun(s: GameState): void {
     helpers: keepHelpers ? s.helpers.map((h) => ({ ...h, actionId: null, progress: 0 })) : [],
     combatSettings: s.combatSettings,
     loadouts: s.loadouts,
+    // Contracts and points belong to the hunter, not the run.
+    slayer: s.slayer,
     pets: s.pets,
     catState: s.catState,
     quests: s.quests,

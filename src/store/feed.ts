@@ -268,6 +268,19 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           });
         }
         break;
+      case 'slayerTask':
+        out.feed.push({
+          kind: 'info',
+          text: `🎯 Neuer Kopfgeld-Auftrag: ${e.count}× ${getMonster(e.monster).icon} ${getMonster(e.monster).name}`,
+        });
+        break;
+      case 'slayerTaskDone':
+        out.feed.push({
+          kind: 'rare',
+          text: `🎯 Kopfgeld kassiert: +${e.points} Punkte (Serie ${e.streak})${e.points > 20 ? ' – Serienbonus!' : ''}`,
+        });
+        out.popups.push({ kind: 'rare', text: `🎯 +${e.points}` });
+        break;
       case 'prayerEmpty':
         out.feed.push({
           kind: 'warn',

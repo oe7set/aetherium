@@ -79,3 +79,33 @@ export function JewelBench({ onTap }: { onTap: TapHandler }) {
     </Workshop>
   );
 }
+
+/** Kopfgeldjagd: a notice board with wanted posters next to the arena. */
+export function BountyBoard({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('slayer')!;
+  const posters = ['#f1e3c0', '#e8d4a8', '#f4e9cf'];
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} rotation={[0, -0.5, 0]} onClick={onTap}>
+      {[-0.55, 0.55].map((x) => (
+        <mesh key={x} position={[x, 0.7, 0]}>
+          <boxGeometry args={[0.1, 1.4, 0.1]} />
+          <meshStandardMaterial color="#5b4030" />
+        </mesh>
+      ))}
+      <mesh position={[0, 1.05, 0]} castShadow>
+        <boxGeometry args={[1.3, 0.8, 0.08]} />
+        <meshStandardMaterial color="#7a5636" flatShading />
+      </mesh>
+      {posters.map((c, i) => (
+        <mesh key={c} position={[-0.38 + i * 0.38, 1.05 + (i % 2) * 0.06, 0.05]}>
+          <boxGeometry args={[0.3, 0.4, 0.01]} />
+          <meshStandardMaterial color={c} />
+        </mesh>
+      ))}
+      <mesh position={[0, 1.55, 0]}>
+        <boxGeometry args={[1.5, 0.1, 0.25]} />
+        <meshStandardMaterial color="#8a2b25" />
+      </mesh>
+    </group>
+  );
+}

@@ -32,3 +32,4 @@ export * from './weekly';
 export * from './xp';
 export * from './rivals';
 export * from './prayer';
+export * from './slayer';

@@ -2217,6 +2217,14 @@ button.chip {
   left: 66%;
   top: 46%;
 }
+.st-slayer {
+  left: 90%;
+  top: 76%;
+}
+.character.st-slayer {
+  left: 86%;
+  top: 74%;
+}
 .character.st-jewel {
   left: 62%;
   top: 48%;
@@ -2480,4 +2488,38 @@ button.chip {
 }
 .gear-set .set-on {
   color: #7be495;
+}
+
+/* --- Kopfgeldjagd ------------------------------------------------------------------------------ */
+
+.slayer-task {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(229, 83, 75, 0.6);
+  background: rgba(229, 83, 75, 0.1);
+}
+.slayer-icon {
+  font-size: 2rem;
+}
+.slayer-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.slayer-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.slayer-stats > span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
 }

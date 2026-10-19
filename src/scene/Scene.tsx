@@ -34,7 +34,7 @@ import {
 } from './Science';
 import { Forest, WorkTree } from './Trees';
 import { IslandDecor } from './Decor';
-import { JewelBench } from './Workshops';
+import { BountyBoard, JewelBench } from './Workshops';
 
 function usePageVisible(): boolean {
   const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden');
@@ -175,6 +175,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Shrine onTap={tap('faith')} />
       <Brewery onTap={tap('brewing')} />
       <JewelBench onTap={tap('jewelcrafting')} />
+      <BountyBoard onTap={tap('slayer')} />
       <IslandDecor />
       <Helpers />
       <Character skill={activeSkill} />

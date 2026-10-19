@@ -196,9 +196,14 @@ export function monsterAccuracy(m: MonsterDef): number {
 }
 
 /** Player hit chance against a monster, including weakness bonus and boss evasion. */
+/** Kopfgeld gear: bonus only against the current contract target. */
+export function slayerBonus(s: GameState, monster: string): number {
+  return s.slayer.task?.monster === monster ? mod(s, 'combat.slayer') : 0;
+}
+
 export function playerHitChance(s: GameState, m: MonsterDef, phase = 0): number {
   const st = playerStats(s);
-  const acc = st.accuracy * (m.weakness === st.style ? 1.25 : 1);
+  const acc = st.accuracy * (m.weakness === st.style ? 1.25 : 1) * (1 + slayerBonus(s, m.id));
   const evade = m.phases?.[phase]?.evade ?? 0;
   return hitChance(acc, monsterDefenceRating(m)) * (1 - evade);
 }
@@ -401,6 +406,9 @@ export function startCombat(
   emit: Emit,
 ): boolean {
   if (kind === 'monster' && !MONSTER_MAP.has(target)) return false;
+  // Kopfgeldturm monsters need the slayer level.
+  if (kind === 'monster' && skillLevel(s, 'slayer') < (getMonster(target).slayer ?? 0))
+    return false;
   if (kind === 'dungeon' && !DUNGEON_MAP.has(target)) return false;
   stopAction(s, emit);
   const c: CombatState = {
@@ -530,7 +538,8 @@ function landHit(
   } = {},
 ): void {
   const el = opts.spell?.element ?? opts.element;
-  const damage = Math.max(1, Math.min(c.monsterHp, Math.round(raw * elementMult(s, el, m.id))));
+  const mult = elementMult(s, el, m.id) * (1 + slayerBonus(s, m.id));
+  const damage = Math.max(1, Math.min(c.monsterHp, Math.round(raw * mult)));
   c.monsterHp -= damage;
   addStat(s, 'damageDealt', damage);
   emit({ type: 'hit', target: 'monster', damage, special: opts.special });

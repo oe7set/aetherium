@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.50.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.51.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,13 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Kopfgeldjagd** (Phase 14, `data/slayer.ts`, `engine/slayer.ts`, `ui/combat/SlayerView.tsx`): Auftrag (12–35 Kills)
+aus `slayerCandidates` (passend zur Kampfstufe, keine Bosse, ohne Sperren); Kill-Hook gibt Kopfgeld-XP (1,2 × LP),
+Abschluss Punkte (×5 jeden 10. Auftrag in Serie) und Gold. Laden: tauschen, sperren, Beutel, Helm/Ring/Umhang mit
+`combat.slayer` (wirkt nur gegen das Ziel, `slayerBonus` in Trefferchance und Schaden). Kopfgeldturm-Monster
+(`MonsterDef.slayer`) mit eigenen Unikaten; `startCombat` prüft die Stufe. „Was jetzt?" (`area: 'skill'`),
+Aufträge, Ruhmesleiter; Kopfgeldbrett neben der Arena.
 
 **Juwelierkunst** (Phase 13, `data/jewelcrafting.ts`): Kiesel sieben (Quarz + Funde), Geoden knacken (Geoden fallen
 beim Bergbau über `gems()`), Steine veredeln (Topas, Onyx, Ätherstein ← Äther vom Arkanen), 16 Ringe/Amulette aus

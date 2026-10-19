@@ -14,6 +14,7 @@ import { useGame } from '../../store/gameStore';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
+import { SlayerView } from '../combat/SlayerView';
 import { FarmingView } from '../science/FarmingView';
 import { ActionCard } from './ActionCard';
 
@@ -81,6 +82,7 @@ function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
 }
 
 export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
+  if (skillId === 'slayer') return <SlayerView onBack={onBack} />;
   if (getSkill(skillId).group === 'combat') return <CombatView onBack={onBack} />;
   return <SkillGate skillId={skillId} onBack={onBack} />;
 }
