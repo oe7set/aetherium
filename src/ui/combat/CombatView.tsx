@@ -19,6 +19,10 @@ import {
   applyLoadout,
   castSpell,
   elementAffinity,
+  equipStyle,
+  styleReadiness,
+  suppliedRune,
+  type ReadyCheck,
   maxPrayer,
   protectsFrom,
   saveLoadout,
@@ -306,6 +310,114 @@ function PotionPicker() {
   );
 }
 
+const STYLE_TABS: { style: 'melee' | 'ranged' | 'magic'; icon: string; name: string }[] = [
+  { style: 'melee', icon: '⚔️', name: 'Nahkampf' },
+  { style: 'ranged', icon: '🏹', name: 'Fernkampf' },
+  { style: 'magic', icon: '🪄', name: 'Magie' },
+];
+
+/** Kampf-Assistent: per style a checklist of what is missing, with one-tap fixes. */
+function StyleAssistant({ focus }: { focus?: 'melee' | 'ranged' | 'magic' }) {
+  const current = useGame((s) => playerStats(s.game).style);
+  const [open, setOpen] = useState<'melee' | 'ranged' | 'magic' | null>(focus ?? null);
+  // Primitive key: readiness of all three styles.
+  const key = useGame((s) =>
+    STYLE_TABS.map((t) =>
+      styleReadiness(s.game, t.style)
+        .map((c) => (c.ok ? '1' : '0'))
+        .join(''),
+    ).join('|'),
+  );
+  const act = useGame((s) => s.combatAct);
+  const setUi = useGame((s) => s.setUi);
+  const jump = useGame((s) => s.jumpToAction);
+  const tab = open ?? current;
+  const checks = styleReadiness(useGame.getState().game, tab);
+  const states = key.split('|');
+  const fix = (c: ReadyCheck) => {
+    if (!c.fix) return;
+    if (c.fix.kind === 'equip') act((s) => void equipStyle(s, tab));
+    else if (c.fix.kind === 'shop') setUi({ tab: 'inventory', inventorySegment: 'shop' });
+    else jump(c.fix.action);
+  };
+  return (
+    <div className="style-assistant">
+      <div className="style-tabs">
+        {STYLE_TABS.map((t, i) => {
+          const ready = !states[i]?.includes('0');
+          return (
+            <button
+              key={t.style}
+              className={`chip-btn ${tab === t.style ? 'active' : ''}`}
+              onClick={() => setOpen(t.style)}
+            >
+              {t.icon} {t.name} {ready ? '✅' : '⚠️'}
+              {current === t.style && <small> (aktiv)</small>}
+            </button>
+          );
+        })}
+      </div>
+      <ul className="ready-list">
+        {checks.map((c) => (
+          <li key={c.label} className={c.ok ? 'ok' : 'missing'}>
+            <span>{c.ok ? '✅' : '❌'}</span>
+            <span>{c.label}</span>
+            {c.fix && (
+              <button className="btn small" onClick={() => fix(c)}>
+                {c.fix.kind === 'equip'
+                  ? 'Anlegen'
+                  : c.fix.kind === 'shop'
+                    ? '🏪 Krämer'
+                    : '↪ Herstellen'}
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <small className="muted">
+        Der Stil richtet sich nach der Waffe in der Hand: Schwert = Nahkampf, Bogen = Fernkampf,
+        Stab = Magie.
+      </small>
+      {tab === 'magic' && <RuneGuide />}
+    </div>
+  );
+}
+
+/** Runenkunde: how runes work, where they come from. */
+function RuneGuide() {
+  const free = useGame((s) => suppliedRune(s.game) ?? '');
+  return (
+    <details className="rune-guide">
+      <summary>📖 Runenkunde – wie funktionieren Runen?</summary>
+      <ul>
+        <li>
+          Jeder Zauber kostet <b>1 Grundrune 🔣</b>. Arkanzauber brauchen nur Grundrunen – mehr
+          davon, je stärker.
+        </li>
+        <li>
+          Elementzauber brauchen zusätzlich <b>Element-Runen</b>: 🔥 Feuer, ❄️ Frost, ⚡ Sturm, 🌑
+          Schatten, 🌀 Leere. Starke Zauber verlangen außerdem einen Katalysator (Kohle, Ektoplasma,
+          Manakristall …).
+        </li>
+        <li>
+          <b>Herkunft:</b> Grund-, Feuer- und Frostrunen beim Krämer; alle Runen über Verzauberung
+          (Runenessenz aus dem Arkanen + Zutat); Kopfgeld-Beutel und Diebstahl bei Zauberern.
+        </li>
+        <li>
+          <b>Element-Stäbe</b> (Verzauberung) liefern ihre Rune <b>unbegrenzt</b> und verstärken ihr
+          Element.
+          {free && ` Dein Stab liefert gerade: ${getItem(free).icon} ${getItem(free).name}.`}
+        </li>
+        <li>
+          Fehlen Runen für den gewählten Zauber, wird automatisch ein Funke gewirkt. Ohne jede
+          Grundrune endet der Kampf.
+        </li>
+        <li>Anfällige Gegner (grün markiert) nehmen +35 % Schaden, resistente nur 60 %.</li>
+      </ul>
+    </details>
+  );
+}
+
 function PlayerPanel() {
   const hp = useGame((s) => Math.ceil(s.game.hp));
   const max = useGame((s) => maxHp(s.game));
@@ -505,7 +617,7 @@ function MonsterCard({ m }: { m: MonsterDef }) {
   );
 }
 
-export function CombatView({ onBack }: { onBack?: () => void }) {
+export function CombatView({ onBack, skillId }: { onBack?: () => void; skillId?: string }) {
   const level = useGame((s) => combatLevel(s.game));
   const fight = useGame((s) => s.fight);
   const activeDungeon = useGame((s) =>
@@ -523,6 +635,11 @@ export function CombatView({ onBack }: { onBack?: () => void }) {
         </button>
       )}
       <h2>⚔️ Kampf</h2>
+      <StyleAssistant
+        focus={
+          skillId === 'ranged' || skillId === 'magic' || skillId === 'melee' ? skillId : undefined
+        }
+      />
       <PlayerPanel />
       <LoadoutBar />
       <PrayerPanel />

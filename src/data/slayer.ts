@@ -126,7 +126,7 @@ export const SLAYER_ITEMS: ItemDef[] = [
     category: 'gear',
     sellPrice: 6000,
     rarity: 'epic',
-    desc: 'Ein Stab aus der Tiefe: +20 % Schaden mit Frostzaubern.',
+    desc: 'Ein Stab aus der Tiefe: unbegrenzt Frostrunen, +20 % Schaden mit Frostzaubern.',
     equip: {
       slot: 'weapon',
       style: 'magic',
@@ -134,6 +134,7 @@ export const SLAYER_ITEMS: ItemDef[] = [
       attack: 70,
       strength: 52,
       mods: { 'combat.element.frost': 0.2 },
+      runeSupply: 'rune_frost',
       req: { skill: 'magic', level: 70 },
     },
   },

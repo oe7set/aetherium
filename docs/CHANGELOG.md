@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.59.0] – Kampf-Assistent & Runenkunde
+
+Start des **Masterplans 4.0** (`docs/PLAN-4.md`): Klarheit, Tiefe, Vernetzung.
+
+- **Kampf-Assistent** (Phase 20): Oben in der Kampfansicht steht für Nahkampf, Fernkampf und Magie, ob alles bereit ist – und wenn nicht, warum („Kein Bogen", „Keine Pfeile", „Keine Runen"). Jede Lücke hat einen Knopf: anlegen, beim Krämer kaufen oder direkt zum Rezept springen.
+- **Stil ausrüsten**: Ein Tipp legt den besten Bogen samt Pfeilen bzw. den besten Stab aus dem Inventar an.
+- **Runenkunde**: erklärt Grundrunen, Element-Runen, Katalysatoren, woher man sie bekommt und was passiert, wenn sie fehlen.
+- **Element-Stäbe liefern ihre Rune unbegrenzt** (Feuerstab = keine Feuerrunen nötig), ebenso der Dreizack der Krake für Frost.
+- Skill-Liste: Fernkampf, Magie und Verteidigung sagen jetzt, was man zum Trainieren braucht; ein Tipp öffnet den passenden Assistenten-Reiter.
+
 ## [1.58.0] – Balance-Bot für neue Skills
 
 - Langzeit-Bot spielt jetzt auch die neuen Skills (je 6 Stunden Diebeskunst, Juwelierkunst, Kartografie, Kopfgeldjagd) und prüft, dass alles vorankommt. Ergebnisse in `docs/BALANCING.md`.

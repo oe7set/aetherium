@@ -2577,3 +2577,47 @@ button.chip {
 .set-on {
   color: #7be495;
 }
+
+/* --- Kampf-Assistent --------------------------------------------------------------------------- */
+
+.style-assistant {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.style-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ready-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.ready-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+}
+.ready-list li.missing {
+  color: #ffb3b3;
+}
+.rune-guide summary {
+  cursor: pointer;
+}
+.rune-guide ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 0.8125rem;
+}

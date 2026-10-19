@@ -1,4 +1,4 @@
-import { DUNGEON_MAP, getItem, getMonster, ITEMS, MONSTER_MAP } from '../data';
+import { DUNGEON_MAP, getItem, getMonster, ITEM_MAP, ITEMS, MONSTER_MAP } from '../data';
 import type { MonsterDef } from '../data/combat';
 import { SET_OF, type GearSetDef } from '../data/sets';
 import { CRIT_MULT } from '../data/thieving';
@@ -109,8 +109,15 @@ export interface PlayerCombatStats {
 
 // --- Spells -------------------------------------------------------------------------------------
 
+/** Rune the wielded element staff provides for free (none otherwise). */
+export function suppliedRune(s: GameState): string | undefined {
+  const w = s.equipment.weapon;
+  return w ? getItem(w).equip?.runeSupply : undefined;
+}
+
 function hasReagents(s: GameState, sp: SpellDef): boolean {
-  return sp.cost.every((c) => itemCount(s, c.item) >= c.qty);
+  const free = suppliedRune(s);
+  return sp.cost.every((c) => c.item === free || itemCount(s, c.item) >= c.qty);
 }
 
 export function spellUnlocked(s: GameState, sp: SpellDef): boolean {
@@ -305,6 +312,139 @@ export function equipBest(s: GameState): number {
       }
     }
     if (best && best !== current && equipItem(s, best).ok) changed++;
+  }
+  return changed;
+}
+
+// --- Kampf-Assistent ------------------------------------------------------------------------------
+
+export type ReadyFix =
+  { kind: 'equip' } | { kind: 'shop'; item: string } | { kind: 'craft'; action: string };
+
+export interface ReadyCheck {
+  ok: boolean;
+  label: string;
+  /** What helps right now (equip from the bag, buy, or the recipe that makes it). */
+  fix?: ReadyFix;
+}
+
+/** Best wearable weapon of a style in the bag (or worn), by attack + strength. */
+function bestWeapon(s: GameState, style: CombatStyle): string | null {
+  let best: string | null = null;
+  let score = -1;
+  const ids = new Set([...Object.keys(s.inventory), s.equipment.weapon ?? '']);
+  for (const id of ids) {
+    const eq = id ? ITEM_MAP.get(id)?.equip : undefined;
+    if (!eq || eq.slot !== 'weapon' || eq.style !== style || !canWear(s, id)) continue;
+    const v = (eq.attack ?? 0) + (eq.strength ?? 0);
+    if (v > score) {
+      score = v;
+      best = id;
+    }
+  }
+  return best;
+}
+
+function bestAmmo(s: GameState): string | null {
+  let best: string | null = null;
+  let score = -1;
+  for (const [id, qty] of Object.entries(s.inventory)) {
+    const eq = ITEM_MAP.get(id)?.equip;
+    if (!eq || eq.slot !== 'ammo' || qty <= 0 || !canWear(s, id)) continue;
+    if ((eq.strength ?? 0) > score) {
+      score = eq.strength ?? 0;
+      best = id;
+    }
+  }
+  return best;
+}
+
+/** Why a style does (not) work yet – the checklist the combat view shows. */
+export function styleReadiness(s: GameState, style: CombatStyle): ReadyCheck[] {
+  const worn = combatStyle(s) === style && !!s.equipment.weapon;
+  const weapon = bestWeapon(s, style);
+  const out: ReadyCheck[] = [];
+  if (style === 'melee') {
+    out.push({
+      ok: worn || !s.equipment.weapon,
+      label: weapon
+        ? worn
+          ? 'Nahkampfwaffe angelegt'
+          : 'Nahkampfwaffe im Inventar – anlegen'
+        : 'Ohne Waffe geht es mit den Fäusten – ein Schwert hilft (Schmieden)',
+      fix: worn
+        ? undefined
+        : weapon
+          ? { kind: 'equip' }
+          : { kind: 'craft', action: 'smith_bronze_sword' },
+    });
+    return out;
+  }
+  if (style === 'ranged') {
+    out.push({
+      ok: worn,
+      label: worn
+        ? 'Bogen angelegt'
+        : weapon
+          ? 'Bogen im Inventar – anlegen'
+          : 'Kein Bogen: Handwerk → Bögen',
+      fix: worn
+        ? undefined
+        : weapon
+          ? { kind: 'equip' }
+          : { kind: 'craft', action: 'craft_bow_oak' },
+    });
+    const ammo = s.equipment.ammo;
+    const count = ammo ? itemCount(s, ammo) : 0;
+    const spare = bestAmmo(s);
+    out.push({
+      ok: count > 0,
+      label:
+        count > 0
+          ? `Pfeile bereit (${count})`
+          : spare
+            ? 'Pfeile im Inventar – anlegen'
+            : 'Keine Pfeile: beim Krämer kaufen oder Handwerk → Pfeile',
+      fix:
+        count > 0 ? undefined : spare ? { kind: 'equip' } : { kind: 'shop', item: 'arrow_bronze' },
+    });
+    return out;
+  }
+  out.push({
+    ok: worn,
+    label: worn
+      ? 'Zauberstab angelegt'
+      : weapon
+        ? 'Stab im Inventar – anlegen'
+        : 'Kein Stab: Handwerk → Stäbe',
+    fix: worn
+      ? undefined
+      : weapon
+        ? { kind: 'equip' }
+        : { kind: 'craft', action: 'craft_staff_basic' },
+  });
+  const spell = castSpell(s);
+  const chosen = SPELL_MAP.get(s.combatSettings.spell);
+  out.push({
+    ok: !!spell,
+    label: spell
+      ? spell.id === chosen?.id
+        ? `Runen reichen für ${spell.name}`
+        : `Für ${chosen?.name ?? 'den Zauber'} fehlen Runen – es wird ${spell.name} gewirkt`
+      : 'Keine Runen: Grundrunen beim Krämer oder Verzauberung → Runen binden',
+    fix: spell ? undefined : { kind: 'shop', item: 'rune_basic' },
+  });
+  return out;
+}
+
+/** One tap: puts on the best weapon (and ammo) of a style from the bag. */
+export function equipStyle(s: GameState, style: CombatStyle): boolean {
+  const weapon = bestWeapon(s, style);
+  let changed = false;
+  if (weapon && s.equipment.weapon !== weapon && equipItem(s, weapon).ok) changed = true;
+  if (style === 'ranged') {
+    const ammo = s.equipment.ammo && itemCount(s, s.equipment.ammo) > 0 ? null : bestAmmo(s);
+    if (ammo && equipItem(s, ammo).ok) changed = true;
   }
   return changed;
 }
@@ -514,7 +654,8 @@ function payShot(s: GameState, rng: Rng, style: CombatStyle): SpellDef | null {
   if (!spell) return null;
   const save = mod(s, 'combat.runeSave');
   if (save <= 0 || rng() >= save) {
-    for (const c of spell.cost) removeItem(s, c.item, c.qty);
+    const free = suppliedRune(s);
+    for (const c of spell.cost) if (c.item !== free) removeItem(s, c.item, c.qty);
   }
   return spell;
 }

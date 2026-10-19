@@ -112,7 +112,7 @@ function groupByCategory(actions: ActionDef[]): [string, ActionDef[]][] {
 
 export function SkillView({ skillId, onBack }: { skillId: string; onBack?: () => void }) {
   if (skillId === 'slayer') return <SlayerView onBack={onBack} />;
-  if (getSkill(skillId).group === 'combat') return <CombatView onBack={onBack} />;
+  if (getSkill(skillId).group === 'combat') return <CombatView onBack={onBack} skillId={skillId} />;
   return <SkillGate skillId={skillId} onBack={onBack} />;
 }
 

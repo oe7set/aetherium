@@ -282,7 +282,7 @@ export const RUNE_ITEMS: ItemDef[] = [
     category: 'gear',
     rarity: st.element === 'void' ? 'epic' : 'rare',
     sellPrice: st.price,
-    desc: `Stab mit ${ELEMENT_NAME[st.element]}-Kern: +${Math.round(st.bonus * 100)} % Schaden mit ${ELEMENT_NAME[st.element]}zaubern.`,
+    desc: `Stab mit ${ELEMENT_NAME[st.element]}-Kern: unbegrenzt ${ELEMENT_NAME[st.element]}runen und +${Math.round(st.bonus * 100)} % Schaden mit ${ELEMENT_NAME[st.element]}zaubern.`,
     equip: {
       slot: 'weapon',
       style: 'magic',
@@ -290,6 +290,7 @@ export const RUNE_ITEMS: ItemDef[] = [
       attack: st.attack,
       strength: st.magic,
       mods: { [`combat.element.${st.element}`]: st.bonus },
+      runeSupply: st.rune,
       req: { skill: 'magic', level: Math.max(1, st.level - 5) },
     },
   })),

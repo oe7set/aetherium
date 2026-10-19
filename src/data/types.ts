@@ -108,6 +108,8 @@ export interface EquipDef {
   mods?: ModifierSet;
   /** Element of enchanted ammo (uses the spell weaknesses/resistances). */
   element?: SpellElement;
+  /** Element staffs: this rune never runs out while the staff is wielded. */
+  runeSupply?: string;
 }
 
 export interface AchievementCondition {
