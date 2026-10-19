@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.67.0] – Schneller offline
+
+Start des **Masterplans 5.0** (`docs/PLAN-5.md`): Seefahrt, Sternkunde, Gewandtheit, Erfinden, Item-Aufwertung, Weltbosse.
+
+- **Schnellerer Offline-Fortschritt** (Phase 28): 24 Stunden Abwesenheit rechnen jetzt in ~2 statt ~3,5 Sekunden. Das Dorf merkt sich seine Getreidebilanz pro Schritt, Raubziele werden nur noch aufgefüllt, wenn ihnen etwas fehlt, und Meisterschaftsstufen kommen aus einer Tabelle.
+
 ## [1.66.0] – Feinschliff & Abschluss Masterplan 4.0
 
 Abschluss des **Masterplans 4.0** (Phase 27).

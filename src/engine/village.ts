@@ -1026,6 +1026,13 @@ function invade(s: GameState, rng: Rng, emit: Emit): void {
 
 // --- Time -----------------------------------------------------------------------------------------
 
+/**
+ * Net crop per village from its last tick. `next()` runs every engine step (offline ~70 000 times a day),
+ * so it reuses the rate the tick just computed instead of summing fields, buildings and troops again.
+ * Stale for at most one step after a change – the tick itself always uses fresh rates and handles hunger.
+ */
+const NET_CROP = new WeakMap<Village, number>();
+
 function villageNext(s: GameState, v: Village): number {
   let next = Infinity;
   const f = v.queue.field[0];
@@ -1036,7 +1043,7 @@ function villageNext(s: GameState, v: Village): number {
   if (tr) next = Math.min(next, tr.each - tr.progress);
   if (v.research) next = Math.min(next, v.research.remaining);
   if (v.celebration) next = Math.min(next, v.celebration.remaining);
-  const net = netCrop(s, v);
+  const net = NET_CROP.get(v) ?? netCrop(s, v);
   if (net < 0 && v.res.crop > 0) next = Math.min(next, (v.res.crop / -net) * 3600);
   return next;
 }
@@ -1044,6 +1051,7 @@ function villageNext(s: GameState, v: Village): number {
 function tickVillage(s: GameState, v: Village, dt: number, emit: Emit): void {
   const prod = production(s, v);
   const use = upkeep(s, v);
+  NET_CROP.set(v, prod.crop - use);
   for (const r of V_RESOURCES) {
     const gain = ((r === 'crop' ? prod.crop - use : prod[r]) * dt) / 3600;
     v.res[r] = Math.min(capFor(v, r), v.res[r] + gain);
@@ -1145,11 +1153,19 @@ registerTimeEffect('village', {
     vs.cp += cp;
     vs.cpTotal += cp;
     // Targets recover: defenders regrow 25 %/h, stock refills 50 %/h.
+    // Most targets are full most of the time – skip them cheaply (this runs every engine step).
+    const regrow = (0.25 * dt) / 3600;
+    const refill = (0.5 * dt) / 3600 / 4;
     for (const t of vs.targets) {
       if (t.owner !== null) continue;
-      t.defense = Math.min(t.maxDefense, t.defense + (t.maxDefense * 0.25 * dt) / 3600);
-      for (const r of V_RESOURCES)
-        t.stock[r] = Math.min(t.stockMax / 2, t.stock[r] + (t.stockMax * 0.5 * dt) / 3600 / 4);
+      if (t.defense < t.maxDefense)
+        t.defense = Math.min(t.maxDefense, t.defense + t.maxDefense * regrow);
+      const cap = t.stockMax / 2;
+      const st = t.stock;
+      if (st.wood < cap) st.wood = Math.min(cap, st.wood + t.stockMax * refill);
+      if (st.clay < cap) st.clay = Math.min(cap, st.clay + t.stockMax * refill);
+      if (st.iron < cap) st.iron = Math.min(cap, st.iron + t.stockMax * refill);
+      if (st.crop < cap) st.crop = Math.min(cap, st.crop + t.stockMax * refill);
     }
     // Movements.
     if (vs.movements.length) {
