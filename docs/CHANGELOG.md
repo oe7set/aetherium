@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.36.0] – Tippen wie gewohnt
+
+- Insel: Ein Tipp auf eine Station (Wald, Mine, Kochstelle …) legt sofort los – mit der Aktion, die du dort zuletzt gemacht hast, sonst mit der besten machbaren. Doppeltipp öffnet die Auswahl aller Aktionen des Skills. Die Schnellkarte ist dafür weg.
+- „Weiter mit"-Leiste auf der Welt-Seite entfernt.
+
 ## [1.35.0] – Doppeltipp & Ruhmesleiter
 
 - Insel: Doppeltipp auf eine Station (Wald, Mine, Angelplatz …) öffnet direkt den Skill mit allen Aktionen zur Auswahl (welches Holz, welches Erz …). Einfacher Tipp zeigt weiter die Schnellkarte.

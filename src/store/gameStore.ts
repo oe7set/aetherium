@@ -1,6 +1,6 @@
 import Decimal from 'break_eternity.js';
 import { create } from 'zustand';
-import { getAction, getItem, getTool, HELPER_MAP, type EquipSlot } from '../data';
+import { ACTION_MAP, getAction, getItem, getTool, HELPER_MAP, type EquipSlot } from '../data';
 
 const getHelperName = (type: string) => HELPER_MAP.get(type)?.name ?? type;
 import { BALANCE } from '../data/balance';
@@ -14,6 +14,8 @@ import {
   SLOT_LINES,
 } from '../data/flavor';
 import {
+  bestAvailableAction,
+  canPerform,
   advance,
   acceptQuest,
   claimTask,
@@ -95,6 +97,7 @@ import { playEventSounds, SOUNDS } from '../ui/audio';
 import { duckMusic } from '../ui/music';
 import { notifyInBackground } from '../ui/notify';
 import { translateEvents, type FeedEntry, type FeedKind, type Popup } from './feed';
+import { lastActionFor, rememberAction } from './lastActions';
 import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
 export type TabId = 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
@@ -131,8 +134,6 @@ export interface UiState {
   heroSegment: 'hero' | 'adventures' | 'start' | 'talents' | 'codex';
   /** Quick navigation overlay. */
   quickNav: boolean;
-  /** Island station tapped: its action card (skill id). */
-  stationCard: string | null;
   questSegment: QuestSegment;
   /** "Was jetzt?" overlay. */
   agenda: boolean;
@@ -218,7 +219,7 @@ export interface GameStore {
   village: (
     fn: (s: GameState, emit: (e: GameEvent) => void, rng: Rng) => VResult | void,
   ) => boolean;
-  /** World tap on a station: opens its action card (combat, research, farming open their panel). */
+  /** World tap on a station: repeat its last action (double tap: open the skill). */
   tapStation: (skill: string) => void;
   dismissOffline: () => void;
   dismissLevelUp: () => void;
@@ -238,7 +239,7 @@ export interface GameStore {
 
 let nextId = 1;
 /** Island double tap detection (see tapStation). */
-const lastStationTap = { skill: '', at: 0, timer: 0 };
+const lastStationTap = { skill: '', at: 0 };
 
 function initialGame(): { game: GameState; summary: ProgressSummary | null } {
   const now = Date.now();
@@ -343,7 +344,6 @@ export const useGame = create<GameStore>()((set, get) => {
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,
-      stationCard: null,
       questSegment: 'tasks',
       agenda: false,
     },
@@ -376,7 +376,9 @@ export const useGame = create<GameStore>()((set, get) => {
       mutate((s, emit) => {
         startAction(s, actionId, emit);
       });
-      set({ ui: { ...get().ui, selectedSkill: getAction(actionId).skill } });
+      const skill = getAction(actionId).skill;
+      if (get().game.active?.actionId === actionId) rememberAction(skill, actionId);
+      set({ ui: { ...get().ui, selectedSkill: skill } });
     },
     stop: () => mutate((s, emit) => stopAction(s, emit)),
     click: () =>
@@ -574,19 +576,22 @@ export const useGame = create<GameStore>()((set, get) => {
         get().openSkill('farming');
         return;
       }
-      // Double tap on the same station: straight into the skill with all its actions. The card
-      // waits a moment so it cannot cover the station before the second tap lands.
+      // Double tap on the same station: open the skill to pick what to do. A single tap starts
+      // right away – the last action of that skill, else the best one available.
       const now = Date.now();
-      window.clearTimeout(lastStationTap.timer);
       if (lastStationTap.skill === skill && now - lastStationTap.at < 400) {
         lastStationTap.at = 0;
-        get().setUi({ stationCard: null });
         get().openSkill(skill);
         return;
       }
       lastStationTap.skill = skill;
       lastStationTap.at = now;
-      lastStationTap.timer = window.setTimeout(() => get().setUi({ stationCard: skill }), 260);
+      const game = get().game;
+      const lastId = lastActionFor(skill);
+      const last = lastId && ACTION_MAP.has(lastId) ? getAction(lastId) : undefined;
+      const pick = last && canPerform(game, last).ok ? last : bestAvailableAction(game, skill);
+      if (pick) get().start(pick.id);
+      else get().openSkill(skill);
     },
     riftPrepare: (hero, biome, endless = false) => {
       let cfg: RunConfig | null = null;

@@ -1,39 +1,6 @@
-import { useEffect, useState } from 'react';
-import { ACTION_MAP, getAction, getSkill } from '../data';
-import { canPerform, dailyAvailable, weekKey } from '../engine';
+import { dailyAvailable, weekKey } from '../engine';
 import { useGame } from '../store/gameStore';
 import { duration } from './village/vui';
-
-const RECENT_KEY = 'aetherium.recent';
-const RECENT_MAX = 4;
-
-function loadRecent(): string[] {
-  try {
-    const list = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]') as unknown;
-    return Array.isArray(list) ? list.filter((id): id is string => typeof id === 'string') : [];
-  } catch {
-    return [];
-  }
-}
-
-/** Remembers the last started actions (per device) for one-tap restarts on the island. */
-function useRecentActions(): string[] {
-  const active = useGame((s) => s.game.active?.actionId ?? null);
-  const [recent, setRecent] = useState(loadRecent);
-  useEffect(() => {
-    if (!active) return;
-    setRecent((prev) => {
-      const next = [active, ...prev.filter((id) => id !== active)].slice(0, RECENT_MAX + 1);
-      try {
-        localStorage.setItem(RECENT_KEY, JSON.stringify(next));
-      } catch {
-        // storage blocked – the list just lives for this session
-      }
-      return next;
-    });
-  }, [active]);
-  return recent.filter((id) => id !== active && ACTION_MAP.has(id)).slice(0, RECENT_MAX);
-}
 
 /** One status line per system, as a primitive string so the HUD re-renders once a second at most. */
 function useStatus(): string {
@@ -56,12 +23,10 @@ function useStatus(): string {
   });
 }
 
-/** Island screen: system status at a glance plus quick restarts – the empty sky gets a job. */
+/** Island screen: system status at a glance – the empty sky gets a job. */
 export function WorldHud() {
   const status = useStatus();
-  const recent = useRecentActions();
   const setUi = useGame((s) => s.setUi);
-  const start = useGame((s) => s.start);
   const setDailyOpen = useGame((s) => s.setDailyOpen);
   const game = useGame.getState().game;
   const [build, hero, essence, weekly, daily] = status.split('|') as [
@@ -110,26 +75,6 @@ export function WorldHud() {
           </button>
         )}
       </div>
-      {recent.length > 0 && (
-        <div className="world-hud-row recent">
-          <small>Weiter mit</small>
-          {recent.map((id) => {
-            const a = getAction(id);
-            const ok = canPerform(game, a).ok;
-            return (
-              <button
-                key={id}
-                className="hud-pill action"
-                disabled={!ok}
-                onClick={() => start(id)}
-                title={`${getSkill(a.skill).name}: ${a.name}`}
-              >
-                {a.icon} {a.name}
-              </button>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }

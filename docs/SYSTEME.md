@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.35.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.36.0**.
 
 ## 1. Der große Kreislauf
 
@@ -156,10 +156,9 @@ Haustiere ↔ Held, Expansion)
   Inhalt – Dorf-Felder/Gebäude (mit „Genug Rohstoffe in …" über `affordIn`), Inventar-Items (Verwendet für /
   Entsteht durch, Benutzen, **Alle benutzen** = `consumeAll` mit zusammengefassten Meldungen, Kampfproviant,
   Verkaufen). Antippbare Ziele tragen `data-touch-keep`, damit ein Tipp die Karte wechselt statt schließt.
-- Insel-Stationen antippen öffnet die **Stationskarte** (`ui/StationCard.tsx`, `ui.stationCard`): die besten machbaren
-  Aktionen zum Starten/Stoppen, die nächste Freischaltung und der Weg in den Skill (Kampf/Forschung/Beete wie bisher).
-  **Doppeltipp** auf eine Station öffnet direkt den Skill mit allen Aktionen (`tapStation`; die Karte erscheint erst
-  nach ~0,26 s, damit sie die Station für den zweiten Tipp nicht verdeckt).
+- Insel-Stationen: **ein Tipp** startet sofort die zuletzt gemachte Aktion dieses Skills (pro Gerät gemerkt in
+  `store/lastActions.ts`, `aetherium.lastActions`), sonst die beste machbare; **Doppeltipp** öffnet den Skill mit
+  allen Aktionen zur Auswahl (`tapStation`). Kampf/Forschung/Beete öffnen direkt ihr Fenster.
 - Ruhmesleiter scrollt beim Öffnen zur aktuellen Stufe (erste offene Belohnung, sonst die nächste Stufe; `.current`).
 - Komfort: „Bestes Feld ausbauen" (`bestFieldToUpgrade`: niedrigste Stufe, bei Gleichstand der schwächste
   Rohstoff, Getreide netto), „Plunder verkaufen" im Inventar (`sellStacks`, eine Meldung).
@@ -177,8 +176,7 @@ Haustiere ↔ Held, Expansion)
 **Atmosphäre**
 
 - Insel-HUD (`ui/WorldHud.tsx`): oben auf der Welt-Seite Status von Dorf (Baumeister frei / Restzeit), Held, Riss
-  (Essenz, Wochenboss offen) und Tagesbonus, darunter „Weiter mit" – die letzten gestarteten Aktionen (pro Gerät in
-  `localStorage` `aetherium.recent`) zum Neustarten mit einem Tipp.
+  (Essenz, Wochenboss offen) und Tagesbonus.
 - Belebte Szene (`scene/Life.tsx`): Himmelskuppel mit Verlauf, Sonne und Mond (`SkyDome`, teilt die Horizontfarbe
   `HORIZON` mit dem Meer), Inseln am Horizont, Vogelschwarm (tagsüber), Segelboot, springende Fische.
   Eigene Shader brauchen `#include <colorspace_fragment>`, sonst sind die Farben zu dunkel.
