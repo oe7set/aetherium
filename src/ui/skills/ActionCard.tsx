@@ -1,10 +1,13 @@
 import { getItem, ITEM_MAP, type ActionDef } from '../../data';
 import { ISLAND_BUILDING_MAP } from '../../data/construction';
+import { SHIP_NAMES } from '../../data/sailing';
 import { BALANCE } from '../../data/balance';
 import {
   actionDuration,
   actionXp,
   buildingMissing,
+  shipNeeded,
+  shipTier,
   burnChance,
   craftableTimes,
   formatDuration,
@@ -102,6 +105,7 @@ export function ActionCard({ def }: { def: ActionDef }) {
   const isActive = useGame((s) => s.game.active?.actionId === def.id);
   const fireLit = useGame((s) => s.game.fire > 0);
   const noBuilding = useGame((s) => buildingMissing(s.game, def));
+  const shipMissing = useGame((s) => shipTier(s.game) < shipNeeded(def.id));
   const nerd = useGame((s) => s.game.settings.nerdMode);
   const haveKey = useGame((s) => def.inputs.map((i) => s.game.inventory[i.item] ?? 0).join(','));
   const derived = useGame((s) => {
@@ -171,6 +175,11 @@ export function ActionCard({ def }: { def: ActionDef }) {
           )}
           {def.fuelSeconds && (
             <span>🪵 {t('action.fuel', { seconds: formatDuration(def.fuelSeconds) })}</span>
+          )}
+          {shipMissing && (
+            <span className="warn">
+              🔒 Braucht {SHIP_NAMES[shipNeeded(def.id)]} oder größer (Werft)
+            </span>
           )}
           {noBuilding && def.requiresBuilding && (
             <span className="warn">

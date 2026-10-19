@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.68.0] – Seefahrt
+
+- **Neuer Skill Seefahrt** ⚓ (Phase 29): Taue drehen, Segel nähen, in der Werft **sieben Schiffe** bauen – vom Floß über Kogge und Fregatte bis zum Ätherschiff. Jedes größere Schiff fährt schneller und erreicht fernere Inseln.
+- **Acht Fahrtziele** mit eigenen Waren: Perlenbucht, Gewürzinseln, Feuerinsel (Obsidian, Glutkorallen), Nebelinsel, Drachenriff (Krakenzähne!), Sternenatoll (Sternenstaub) und der Ätherstrom.
+- **Handelsfahrten** verkaufen Bretter, Gewürze, Perlen und Obsidian in Übersee: Gold plus Rohstoffe fürs Dorf.
+- Verbindungen: Wolle (Viehzucht) wird zu Tauen und Segeln, Bretter/Barren (Baukunst/Schmieden) zu Schiffen, Kartografie verkürzt jede Fahrt, Gewürze ergeben das neue Gericht **Gewürzfisch**.
+- Hafen mit schaukelndem Boot am Ostufer der Insel.
+
 ## [1.67.0] – Schneller offline
 
 Start des **Masterplans 5.0** (`docs/PLAN-5.md`): Seefahrt, Sternkunde, Gewandtheit, Erfinden, Item-Aufwertung, Weltbosse.

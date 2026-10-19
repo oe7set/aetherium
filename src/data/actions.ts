@@ -8,6 +8,7 @@ import { CONSTRUCTION_ACTIONS } from './construction';
 import { CARTO_ACTIONS } from './cartography';
 import { FLETCH_ACTIONS } from './fletching';
 import { HUSBANDRY_ACTIONS } from './husbandry';
+import { SAILING_ACTIONS } from './sailing';
 import { MAGIC_ACTIONS } from './magic';
 import { EXPANSION_ACTIONS } from './expansion';
 import { FISH_COOKING_ACTIONS, FISHING_ACTIONS } from './fishing';
@@ -529,5 +530,6 @@ export const ACTIONS: ActionDef[] = [
   ...CARTO_ACTIONS,
   ...FLETCH_ACTIONS,
   ...HUSBANDRY_ACTIONS,
+  ...SAILING_ACTIONS,
   ...MAGIC_ACTIONS,
 ];

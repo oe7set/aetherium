@@ -95,6 +95,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'thefts', per: 1 / 30, label: 'Diebstähle', icon: '🗝️' },
   { stat: 'buildingsBuilt', per: 2, label: 'Inselbauten', icon: '🔨' },
   { stat: 'mapsDrawn', per: 1 / 20, label: 'Gezeichnete Karten', icon: '🧭' },
+  { stat: 'voyagesMade', per: 1 / 15, label: 'Seefahrten', icon: '⚓' },
   { stat: 'guildOrders', per: 1 / 3, label: 'Zunftaufträge', icon: '📜' },
   { stat: 'riftRelics', per: 1, label: 'Gefundene Relikte', icon: '🏺' },
   { stat: 'animalsTended', per: 1 / 30, label: 'Versorgte Tiere', icon: '🐄' },

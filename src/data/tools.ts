@@ -1,3 +1,4 @@
+import { SHIP_TOOLS } from './sailing';
 import type { ShopOffer, ToolDef } from './types';
 
 const AXES: ToolDef[] = [
@@ -387,7 +388,7 @@ const DIG_TOOLS: ToolDef[] = [
   },
 ];
 
-export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES, ...RODS, ...DIG_TOOLS];
+export const TOOLS: ToolDef[] = [...AXES, ...PICKAXES, ...RODS, ...DIG_TOOLS, ...SHIP_TOOLS];
 
 /** The tool every new game starts with, per skill. */
 export const STARTER_TOOLS: Record<string, string> = {
@@ -395,6 +396,7 @@ export const STARTER_TOOLS: Record<string, string> = {
   mining: 'pick_stone',
   fishing: 'rod_stick',
   archaeology: 'arch_trowel',
+  sailing: 'ship_raft',
 };
 
 /** What the general store (Krämer) sells. Phase 3 replaces this with a dynamic market. */

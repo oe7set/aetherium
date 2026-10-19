@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.67.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.68.0**.
 
 ## 1. Der große Kreislauf
 
@@ -83,6 +83,14 @@ Knochen, Basiliskenschuppen, Seelensplittern); Hilfszauber `castUtility` (Schwä
 Fluch −25 % Gegner-Schaden, Blutpakt 35 % Heilung, Seelenschild blockt 3 Treffer; Abklingzeiten in
 `CombatState.cooldowns`, Wirkung in `playerHitChance`/`monsterAttack`). Magie-Werkstatt: Magie-Aktionen
 (`ActionDef.alchemy` → Gold über Completion-Hook, verzauberter Schmuck), in der Kampfansicht bei „Magie".
+
+**Seefahrt** (Phase 29, `data/sailing.ts`, `engine/sailing.ts`): Schiffe sind die Werkzeuge des Skills (`SHIP_TOOLS`,
+Floß als Start, Bausätze aus der Werft mit `consume: tool`, auch im Werkzeugladen). Takelage: Taue (Wolle,
+Treibholz), Segel (Wolle + Taue). 8 Fahrten zu fernen Inseln (Brot als Proviant) mit eigenen Waren: Perlen,
+Gewürze, Obsidian, Nebelessenz, Drachenschuppen, **Sternenstaub** (→ Sternkunde), Äther. Mindest-Schiff je Fahrt
+über `VOYAGE_SHIP` + Availability-Check (`shipTier`/`shipNeeded`, Hinweis in der Aktionskarte). 4 Handelsfahrten
+zahlen Gold und Dorf-Rohstoffe (Completion-Hook). Passiv: +0,1 % Gold je Stufe; Kartografie verkürzt Fahrten
+(`speed.sailing` +0,3 % je Kartografie-Stufe). Neues Gericht Gewürzfisch. Hafen am Ostufer, Zähler `voyagesMade`.
 
 **Zunftaufträge & Verbindungen** (Phase 26, `data/guilds.ts`, `engine/guilds.ts`, `ui/quests/GuildBoard.tsx`,
 `ui/recipes.ts` `skillLinks`): 4 Zünfte (Schmiede, Küche, Arkan, Entdecker) bestellen Produkte ihrer Skills

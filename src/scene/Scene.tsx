@@ -42,6 +42,7 @@ import {
   MapTent,
   FletcherHut,
   Pasture,
+  Dock,
   MarketStalls,
   SummonCircle,
 } from './Workshops';
@@ -216,6 +217,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <MapTent onTap={tap('cartography')} />
       <FletcherHut onTap={tap('fletching')} />
       <Pasture onTap={tap('husbandry')} />
+      <Dock onTap={tap('sailing')} />
       <IslandBuildings />
       <IslandDecor />
       <Helpers />

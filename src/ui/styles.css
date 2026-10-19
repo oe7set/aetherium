@@ -2249,6 +2249,14 @@ button.chip {
   left: 40%;
   top: 42%;
 }
+.st-sail {
+  left: 90%;
+  top: 30%;
+}
+.character.st-sail {
+  left: 86%;
+  top: 32%;
+}
 .st-herd {
   left: 46%;
   top: 84%;

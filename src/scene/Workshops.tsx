@@ -378,3 +378,46 @@ export function Pasture({ onTap }: { onTap: TapHandler }) {
     </group>
   );
 }
+
+/** Seefahrt: a wooden pier with a moored boat that rocks harder while you sail. */
+export function Dock({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('sailing')!;
+  const boat = useRef<THREE.Group>(null);
+  const active = useActive('sailing');
+  useFrame(({ clock }) => {
+    if (!boat.current) return;
+    const t = clock.elapsedTime;
+    const amp = active.current ? 0.12 : 0.05;
+    boat.current.rotation.z = Math.sin(t * 1.6) * amp;
+    boat.current.position.y = 0.12 + Math.sin(t * 2.1) * amp * 0.4;
+  });
+  const angle = Math.atan2(st.pos[1], st.pos[0]);
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} rotation={[0, -angle, 0]} onClick={onTap}>
+      <mesh position={[0.6, 0.12, 0]}>
+        <boxGeometry args={[1.8, 0.08, 0.5]} />
+        <meshStandardMaterial color="#8b6b4a" />
+      </mesh>
+      {[0, 0.6, 1.2].map((x) => (
+        <mesh key={x} position={[x, 0, 0.28]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.4, 6]} />
+          <meshStandardMaterial color="#5b4030" />
+        </mesh>
+      ))}
+      <group ref={boat} position={[1.1, 0.12, -0.6]}>
+        <mesh>
+          <boxGeometry args={[0.9, 0.18, 0.36]} />
+          <meshStandardMaterial color="#a0522d" flatShading />
+        </mesh>
+        <mesh position={[0, 0.45, 0]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.8, 6]} />
+          <meshStandardMaterial color="#5b4030" />
+        </mesh>
+        <mesh position={[0.15, 0.5, 0]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[0.3, 0.55]} />
+          <meshStandardMaterial color="#f4f1ea" side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+    </group>
+  );
+}

@@ -195,6 +195,15 @@ export const SKILLS: SkillDef[] = [
     desc: 'Sehnen drehen, Langbögen und Armbrüste bauen, Bolzen mit Edelsteinspitzen veredeln, Köcher nähen. Armbrüste verschießen nur Bolzen. Jede Stufe: etwas mehr Treffsicherheit im Fernkampf und Munition sparen.',
   },
   {
+    id: 'sailing',
+    name: 'Seefahrt',
+    icon: '⚓',
+    color: '#3fa7d6',
+    group: 'gathering',
+    usesTools: true,
+    desc: 'Taue drehen, Segel nähen, Schiffe bauen – und zu fernen Inseln segeln: Perlen, Gewürze, Obsidian, Drachenschuppen, Sternenstaub. Größere Schiffe fahren schneller und weiter; Handelsfahrten bringen Gold und Dorf-Rohstoffe. Kartografie verkürzt jede Fahrt.',
+  },
+  {
     id: 'riftwalker',
     name: 'Rissläufer',
     icon: '🌀',

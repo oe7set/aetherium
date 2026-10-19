@@ -41,3 +41,4 @@ export * from './construction';
 import './cartography';
 import './fletching';
 import './husbandry';
+export * from './sailing';
