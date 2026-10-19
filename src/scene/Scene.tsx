@@ -34,7 +34,14 @@ import {
 } from './Science';
 import { Forest, WorkTree } from './Trees';
 import { IslandDecor } from './Decor';
-import { BountyBoard, JewelBench, MarketStalls, SummonCircle } from './Workshops';
+import {
+  BountyBoard,
+  BuildSite,
+  IslandBuildings,
+  JewelBench,
+  MarketStalls,
+  SummonCircle,
+} from './Workshops';
 
 function usePageVisible(): boolean {
   const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden');
@@ -76,7 +83,11 @@ function CameraRig() {
 /** Projects station anchors to screen space and positions the DOM labels (see labels.ts). */
 function LabelProjector() {
   const v = useMemo(() => new THREE.Vector3(), []);
+  // Reused per frame: screen boxes of the labels already placed (overlap avoidance).
+  const placed = useMemo(() => [] as { x: number; y: number; w: number; h: number }[], []);
+  const order = useMemo(() => [] as { el: HTMLElement; x: number; y: number; z: number }[], []);
   useFrame(({ camera, size }) => {
+    order.length = 0;
     for (const st of STATIONS) {
       const el = labelElements.get(st.skill);
       if (!el) continue;
@@ -86,7 +97,27 @@ function LabelProjector() {
       // Keep labels on screen: a station at the edge must not lose half its name.
       const half = el.offsetWidth / 2 + 4;
       const x = Math.min(size.width - half, Math.max(half, ((v.x + 1) / 2) * size.width));
-      el.style.transform = `translate(-50%, -50%) translate(${x}px, ${((1 - v.y) / 2) * size.height}px)`;
+      order.push({ el, x, y: ((1 - v.y) / 2) * size.height, z: v.z });
+    }
+    // Nearer labels first; a farther one may move up a little (it sits higher on screen anyway),
+    // and if it still collides it fades out – the nearer station keeps its name.
+    order.sort((a, b) => a.z - b.z);
+    placed.length = 0;
+    for (const o of order) {
+      if (o.el.style.opacity === '0') continue;
+      const w = o.el.offsetWidth;
+      const h = o.el.offsetHeight || 20;
+      const free = (y: number) =>
+        !placed.some(
+          (p) => Math.abs(p.x - o.x) < (p.w + w) / 2 + 2 && Math.abs(p.y - y) < (p.h + h) / 2,
+        );
+      const y = [o.y, o.y - h * 0.6, o.y - h * 1.2].find(free);
+      if (y === undefined) {
+        o.el.style.opacity = '0';
+        continue;
+      }
+      placed.push({ x: o.x, y, w, h });
+      o.el.style.transform = `translate(-50%, -50%) translate(${o.x}px, ${y}px)`;
     }
   });
   return null;
@@ -178,6 +209,8 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <BountyBoard onTap={tap('slayer')} />
       <SummonCircle onTap={tap('summoning')} />
       <MarketStalls onTap={tap('thieving')} />
+      <BuildSite onTap={tap('construction')} />
+      <IslandBuildings />
       <IslandDecor />
       <Helpers />
       <Character skill={activeSkill} />

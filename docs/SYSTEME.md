@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.53.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.54.0**.
 
 ## 1. Der große Kreislauf
 
@@ -73,6 +73,13 @@ Schummeln); Codes von Freunden liegen nur lokal (localStorage `aetherium.rivals`
 **Inselschmuck** (`DECORS` in `data/progress.ts`, `decorShown`/`toggleDecor` in `engine/progress.ts`, 3D in
 `scene/Decor.tsx`, Auswahl über 🎨 im `WorldHud`): 9 Deko-Teile mit Bedingungen wie bei den Porträtrahmen
 (Statistik/Gesamtlevel/Erfolge). Freigeschaltetes erscheint automatisch, `progress.decorHidden` merkt Ausgeblendetes.
+
+**Baukunst** (Phase 17, `data/construction.ts`, `engine/construction.ts`): Bretter (Holz), Steinblöcke (Granit),
+Nägel (Schmieden), Möbel (Verkauf + Baustoff). 9 Inselbauten × 3 Stufen in `s.buildings` (bleiben über Prestige):
+Werkstatt, Sägewerk, Gebetsaltar (`prayer.max` → `maxPrayer`), Rüstkammer, Trophäenhalle, Observatorium,
+Gewächshaus, Vertrautenhort, Handelskontor (`village.prod`). Bauen ist sofort (`buildIsland`, XP-Batzen),
+Modifier-Quelle `buildings`, 3D `IslandBuildings` wächst mit der Stufe, „Was jetzt?" meldet baubare Gebäude.
+Stationsnamen weichen sich aus (`LabelProjector`: nähere zuerst, fernere rücken hoch oder blenden aus).
 
 **Diebeskunst** (Phase 16, `data/thieving.ts`, `engine/thieving.ts`): Aktionen mit `steal` (Fehlschlag-Chance je
 Stufenabstand, `stealth`-Mod senkt sie). Neuer Engine-Hook `registerActionGate` in `completeAction` (läuft nach dem

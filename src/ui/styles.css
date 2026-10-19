@@ -2241,6 +2241,14 @@ button.chip {
   left: 58%;
   top: 34%;
 }
+.st-build {
+  left: 36%;
+  top: 40%;
+}
+.character.st-build {
+  left: 40%;
+  top: 42%;
+}
 .character.st-jewel {
   left: 62%;
   top: 48%;
@@ -2538,4 +2546,26 @@ button.chip {
   border-radius: 999px;
   background: var(--panel);
   border: 1px solid var(--line);
+}
+.building-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.building-row.built {
+  border-color: rgba(123, 228, 149, 0.5);
+}
+.building-row .shop-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.set-on {
+  color: #7be495;
 }

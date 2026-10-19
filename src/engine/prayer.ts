@@ -8,14 +8,15 @@ import {
 } from '../data/prayers';
 import { registerCompletionHook, registerTimeEffect } from './actions';
 import type { Emit } from './events';
-import { invalidateMods, registerModifierSource } from './modifiers';
+import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import { skillLevel } from './skills';
 import type { GameState } from './state';
 
 /** Gebete: faith in combat. Points drain per minute while fighting, refill at rest and by rites. */
 
 export function maxPrayer(s: GameState): number {
-  return maxPrayerPoints(skillLevel(s, 'faith'));
+  // The Gebetsaltar (Baukunst) adds flat points.
+  return maxPrayerPoints(skillLevel(s, 'faith')) + mod(s, 'prayer.max');
 }
 
 export function activePrayers(s: GameState): PrayerDef[] {

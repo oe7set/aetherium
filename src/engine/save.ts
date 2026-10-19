@@ -15,6 +15,7 @@ import {
 import { SPELL_MAP } from '../data/spells';
 import { PRAYER_MAP } from '../data/prayers';
 import { FAMILIAR_MAP } from '../data/summoning';
+import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
@@ -270,6 +271,14 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     prayer: hydratePrayer(data.prayer, base.prayer),
     loadouts: hydrateLoadouts(data.loadouts),
     slayer: hydrateSlayer(data.slayer, base.slayer),
+    buildings: Object.fromEntries(
+      Object.entries(isRecord(data.buildings) ? data.buildings : {}).flatMap(([id, lvl]) => {
+        const def = ISLAND_BUILDING_MAP.get(id);
+        return def && typeof lvl === 'number' && lvl > 0
+          ? [[id, Math.min(def.levels.length, Math.floor(lvl))]]
+          : [];
+      }),
+    ),
     familiar:
       isRecord(data.familiar) &&
       typeof data.familiar.id === 'string' &&

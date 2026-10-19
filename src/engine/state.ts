@@ -432,6 +432,8 @@ export interface GameState {
   loadouts: Loadout[];
   /** Kopfgeldjagd: current contract, points, streak, blocked monsters. */
   slayer: SlayerState;
+  /** Baukunst: island building id → level (0 = not built). */
+  buildings: Record<string, number>;
   /** Beschwörung: the familiar at your side and its remaining seconds. */
   familiar: { id: string; remaining: number } | null;
   /** Research points (currency for the tech tree). */
@@ -514,6 +516,7 @@ export function newGame(now: number = Date.now()): GameState {
     loadouts: defaultLoadouts(),
     slayer: { task: null, points: 0, streak: 0, done: 0, blocked: [] },
     familiar: null,
+    buildings: {},
     research: 0,
     techs: [],
     codex: [],
@@ -629,6 +632,7 @@ export function cloneState(s: GameState): GameState {
     prayer: { ...s.prayer, active: [...s.prayer.active] },
     loadouts: s.loadouts.map((l) => ({ ...l, gear: { ...l.gear } })),
     familiar: s.familiar ? { ...s.familiar } : null,
+    buildings: { ...s.buildings },
     slayer: {
       ...s.slayer,
       task: s.slayer.task ? { ...s.slayer.task } : null,

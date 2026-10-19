@@ -24,6 +24,7 @@ const LABELS: Record<string, string> = {
   'combat.slayer': 'gegen Kopfgeld-Ziele',
   'combat.regen': 'Heilung',
   stealth: 'seltener erwischt',
+  'prayer.max': 'Gebetspunkte',
   'village.defense': 'Dorfabwehr',
   'village.prod': 'Dorfproduktion',
   wisdom: 'Weisheit',
@@ -40,7 +41,12 @@ export function describeMods(mods: ModifierSet): string {
         cut > 0 && !LABELS[key] ? [key.slice(0, cut), key.slice(cut + 1)] : [key, undefined];
       const label = LABELS[base] ?? base;
       const skillName = skill ? (SKILL_MAP.get(skill)?.name ?? skill) : '';
-      const value = key === 'offlineHours' ? `+${v} h` : `+${Math.round((v ?? 0) * 1000) / 10} %`;
+      const value =
+        key === 'offlineHours'
+          ? `+${v} h`
+          : key === 'prayer.max'
+            ? `+${v}`
+            : `+${Math.round((v ?? 0) * 1000) / 10} %`;
       return `${value} ${label}${skillName ? ` (${skillName})` : ''}`;
     });
   return parts.length ? parts.join(', ') : '–';

@@ -132,6 +132,8 @@ function resetRun(s: GameState): void {
     // Contracts and points belong to the hunter, not the run.
     slayer: s.slayer,
     familiar: s.familiar,
+    // Island buildings stand through every reset (like the village).
+    buildings: s.buildings,
     pets: s.pets,
     catState: s.catState,
     quests: s.quests,

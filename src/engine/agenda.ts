@@ -20,6 +20,8 @@ import {
   invasionTarget,
 } from './village';
 import { V_BUILDINGS } from '../data/village';
+import { ISLAND_BUILDINGS } from '../data/construction';
+import { canBuildIsland } from './construction';
 
 /**
  * "Was jetzt?": everything across island, village, hero, rift and rewards that is waiting for the
@@ -265,6 +267,17 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: `×${upgrade.speed} Tempo – du kannst es dir leisten`,
       kind: 'todo',
       target: { area: 'inventory', section: 'tools' },
+    });
+  // Baukunst: an island building is ready to go up.
+  const buildable = ISLAND_BUILDINGS.find((b) => canBuildIsland(s, b.id) === 'ok');
+  if (buildable)
+    add({
+      id: 'island-build',
+      icon: buildable.icon,
+      title: `${buildable.name} bauen`,
+      detail: 'Alle Baustoffe da – dauerhafter Inselbonus',
+      kind: 'todo',
+      target: { area: 'skill', skill: 'construction' },
     });
   // Kopfgeldjagd: a fighter without a contract is leaving slayer XP on the table.
   if (

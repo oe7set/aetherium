@@ -833,4 +833,11 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
     icon: '🐾',
   },
   { id: 'thefts', label: 'Stiehl {n}-mal erfolgreich', stat: 'thefts', base: 40, icon: '🗝️' },
+  {
+    id: 'furniture',
+    label: 'Zimmere oder säge {n}-mal',
+    stat: 'constructionActions',
+    base: 40,
+    icon: '🔨',
+  },
 ];

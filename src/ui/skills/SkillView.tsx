@@ -20,6 +20,7 @@ import { SlayerView } from '../combat/SlayerView';
 import { FAMILIAR_MAP } from '../../data/summoning';
 import { FarmingView } from '../science/FarmingView';
 import { ActionCard } from './ActionCard';
+import { BuildingsPanel } from './BuildingsPanel';
 
 /** Meisterschafts-Pool: average mastery of the skill's actions unlocks skill-wide bonuses. */
 function MasteryPool({ skillId }: { skillId: string }) {
@@ -219,6 +220,7 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
             : t('action.allUnlocked')}
         </span>
       </div>
+      {skillId === 'construction' && <BuildingsPanel />}
       <MasteryPool skillId={skillId} />
       {groupByCategory(actions).map(([category, list]) => (
         <section key={category || 'all'}>

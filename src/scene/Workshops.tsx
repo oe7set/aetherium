@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { useGame } from '../store/gameStore';
 import { getAction } from '../data';
 import { stationFor } from './layout';
+import { ISLAND_BUILDINGS } from '../data/construction';
 
 type TapHandler = (e: ThreeEvent<MouseEvent>) => void;
 
@@ -179,6 +180,89 @@ export function MarketStalls({ onTap }: { onTap: TapHandler }) {
           </mesh>
         </group>
       ))}
+    </group>
+  );
+}
+
+/** Baukunst: a scaffold with a little crane – the building site. */
+export function BuildSite({ onTap }: { onTap: TapHandler }) {
+  const st = stationFor('construction')!;
+  const arm = useRef<THREE.Group>(null);
+  const active = useActive('construction');
+  useFrame((_, dt) => {
+    if (arm.current) arm.current.rotation.y += dt * (active.current ? 1.2 : 0.2);
+  });
+  return (
+    <group position={[st.pos[0], 0, st.pos[1]]} onClick={onTap}>
+      <mesh position={[0, 0.1, 0]}>
+        <boxGeometry args={[1.6, 0.2, 1.2]} />
+        <meshStandardMaterial color="#a89a82" flatShading />
+      </mesh>
+      {[
+        [-0.6, -0.4],
+        [0.6, -0.4],
+        [-0.6, 0.4],
+        [0.6, 0.4],
+      ].map(([x, z]) => (
+        <mesh key={`${x}${z}`} position={[x!, 0.7, z!]}>
+          <boxGeometry args={[0.08, 1.2, 0.08]} />
+          <meshStandardMaterial color="#c8a25a" />
+        </mesh>
+      ))}
+      <mesh position={[0, 1.3, 0]}>
+        <boxGeometry args={[1.3, 0.06, 0.9]} />
+        <meshStandardMaterial color="#c8a25a" />
+      </mesh>
+      <mesh position={[0, 0.45, 0]}>
+        <boxGeometry args={[0.9, 0.5, 0.6]} />
+        <meshStandardMaterial color="#b8b2a4" flatShading />
+      </mesh>
+      <group ref={arm} position={[0.6, 1.3, 0.4]}>
+        <mesh position={[0, 0.5, 0]}>
+          <boxGeometry args={[0.08, 1.0, 0.08]} />
+          <meshStandardMaterial color="#f2c94c" />
+        </mesh>
+        <mesh position={[-0.4, 1.0, 0]}>
+          <boxGeometry args={[0.9, 0.06, 0.06]} />
+          <meshStandardMaterial color="#f2c94c" />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+/** Island buildings (Baukunst): grow with each level. */
+export function IslandBuildings() {
+  const key = useGame((s) =>
+    ISLAND_BUILDINGS.map((b) => `${b.id}:${s.game.buildings[b.id] ?? 0}`).join(','),
+  );
+  return (
+    <group>
+      {key.split(',').map((entry) => {
+        const [id = '', lvl = '0'] = entry.split(':');
+        const level = Number(lvl);
+        const b = ISLAND_BUILDINGS.find((x) => x.id === id);
+        if (!b || level <= 0) return null;
+        const k = 0.75 + level * 0.2;
+        return (
+          <group key={id} position={[b.pos[0], 0, b.pos[1]]} scale={[k, k, k]}>
+            <mesh position={[0, 0.5, 0]} castShadow>
+              <boxGeometry args={[1.2, 1, 1]} />
+              <meshStandardMaterial color="#d8c8a8" flatShading />
+            </mesh>
+            <mesh position={[0, 1.3, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+              <coneGeometry args={[1.0, 0.7, 4]} />
+              <meshStandardMaterial color={b.roof} flatShading />
+            </mesh>
+            {level >= 3 && (
+              <mesh position={[0, 1.85, 0]}>
+                <octahedronGeometry args={[0.15, 0]} />
+                <meshStandardMaterial color="#ffd166" emissive="#ffb000" emissiveIntensity={1.2} />
+              </mesh>
+            )}
+          </group>
+        );
+      })}
     </group>
   );
 }

@@ -36,6 +36,7 @@ import {
 } from '../data/flavor';
 import { SPECIALS } from '../data/spells';
 import { FAMILIAR_MAP } from '../data/summoning';
+import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
 import { HERO_ITEMS, TIER_NAMES } from '../data/hero';
@@ -303,6 +304,15 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
       case 'caught':
         out.popups.push({ kind: 'bad', text: `🚨 Erwischt! −${e.damage} LP` });
         break;
+      case 'islandBuilt': {
+        const b = ISLAND_BUILDING_MAP.get(e.building);
+        if (b)
+          out.feed.push({
+            kind: 'rare',
+            text: `🔨 ${b.icon} ${b.name} ${e.level === 1 ? 'errichtet' : `auf Stufe ${e.level} ausgebaut`}!`,
+          });
+        break;
+      }
       case 'prayerEmpty':
         out.feed.push({
           kind: 'warn',

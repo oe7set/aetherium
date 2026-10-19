@@ -215,6 +215,7 @@ const SKILL_STATS: Record<string, string> = {
   jewelcrafting: 'jewelsCrafted',
   summoning: 'pouchesMade',
   thieving: 'thefts',
+  construction: 'constructionActions',
 };
 
 /**

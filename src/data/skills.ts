@@ -179,6 +179,14 @@ export const SKILLS: SkillDef[] = [
     desc: 'Kiesel sieben, Geoden knacken, Steine veredeln – und daraus Ringe und Amulette für jeden Kampfstil und viele Skills schmieden.',
   },
   {
+    id: 'construction',
+    name: 'Baukunst',
+    icon: '🔨',
+    color: '#c8834a',
+    group: 'processing',
+    desc: 'Bretter sägen, Steine hauen, Möbel zimmern – und neun Inselbauten errichten, die dauerhaft Boni geben und auch nach jeder Wiedergeburt stehen bleiben.',
+  },
+  {
     id: 'thieving',
     name: 'Diebeskunst',
     icon: '🗝️',

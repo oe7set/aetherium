@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.54.0] – Baukunst
+
+- Neuer Skill **Baukunst** 🔨 (Phase 17): Bretter sägen (Eiche, Ahorn, Eibe, Zauberholz), Steinblöcke hauen, Nägel schmieden und Möbel zimmern – Stuhl, Tisch, Regal, Schrank, Granitbüste, Thron.
+- **9 Inselbauten** mit je 3 Stufen und dauerhaften Boni, die auch nach jeder Wiedergeburt stehen bleiben: Werkstatt, Sägewerk, Gebetsaltar (mehr Gebetspunkte), Rüstkammer, Trophäenhalle, Observatorium, Gewächshaus, Vertrautenhort und Handelskontor (Gold + Dorfproduktion). Sie erscheinen auf der Insel und wachsen mit jeder Stufe.
+- „Was jetzt?" meldet, wenn ein Inselbau möglich ist.
+- Stationsnamen auf der Insel überlappen nicht mehr.
+
 ## [1.53.0] – Diebeskunst
 
 - Neuer Skill **Diebeskunst** 🗝️ (Phase 16): Bauern, Wachen, Gelehrte, Ritter und Zauberer bestehlen, Marktstände plündern, Truhen und Schatzkammern knacken – bis zum Drachenhort. Jeder Versuch kann scheitern: Wer erwischt wird, verliert ein paar Lebenspunkte und ist kurz betäubt. Die Aktionskarte zeigt die Erwischt-Chance und die Goldausbeute.

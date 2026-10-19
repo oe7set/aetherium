@@ -93,6 +93,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'slayerTasks', per: 1, label: 'Kopfgeld-Aufträge', icon: '🎯' },
   { stat: 'pouchesMade', per: 1 / 10, label: 'Beschwörungsbeutel', icon: '🐾' },
   { stat: 'thefts', per: 1 / 30, label: 'Diebstähle', icon: '🗝️' },
+  { stat: 'buildingsBuilt', per: 2, label: 'Inselbauten', icon: '🔨' },
 ];
 
 // --- Chronik ---------------------------------------------------------------------------------------
