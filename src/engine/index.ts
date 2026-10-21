@@ -52,3 +52,4 @@ export * from './projects';
 export * from './empire';
 export * from './time';
 export * from './islandEvents';
+export * from './villageSupply';

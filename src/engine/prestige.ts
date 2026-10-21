@@ -155,6 +155,7 @@ function resetRun(s: GameState): void {
     forge: s.forge,
     worldBoss: s.worldBoss,
     islandEvent: s.islandEvent,
+    villageSupply: s.villageSupply,
     // Claimed milestone rewards are paid once per save – the lasting boni follow the levels.
     milestones: s.milestones,
     // Monuments stand forever.

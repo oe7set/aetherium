@@ -6,6 +6,7 @@ import { claimableMilestones } from './milestones';
 import { canFinishStage } from './projects';
 import { empireRankReached } from './empire';
 import { activeIslandEvent } from './islandEvents';
+import { supplyReady } from './villageSupply';
 import { EMPIRE_RANKS } from '../data/empire';
 import { PROJECTS } from '../data/projects';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
@@ -118,6 +119,16 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  const supply = supplyReady(s);
+  if (supply >= 25)
+    add({
+      id: 'village-supply',
+      icon: '🚚',
+      title: 'Lieferung aus dem Dorf',
+      detail: `${supply} Waren warten auf die Insel`,
+      kind: 'reward',
+      target: { area: 'village', section: 'center' },
     });
   const isle = activeIslandEvent(s);
   if (isle?.trader && s.islandEvent.deals.some((d) => !d.bought && s.gold.gte(d.price)))

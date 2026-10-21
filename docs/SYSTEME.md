@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.82.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.83.0**.
 
 ## 1. Der große Kreislauf
 
@@ -113,6 +113,13 @@ dort in `EMPIRE_SOURCES` + `empireValues` eintragen.
 Meteorschauer, Fischschwarm, Goldader, Sturm, Erntefest. Boni über Modifier-Quelle `islandEvent`, Funde per
 Completion-Hook bei den passenden Skills. Zeiteffekt `islandEvent` (läuft offline mit), `s.islandEvent`.
 Anzeige als leuchtende Pille in der Insel-Leiste, „Was jetzt?" meldet laufende Ereignisse.
+
+**Dorf ↔ Insel** (Phase 45, `data/villageGoods.ts`, `engine/villageSupply.ts`, `ui/village/VillageSupply.tsx`):
+Gebäudestufen bei ½, ¾ und Höchststufe brauchen zusätzlich Inselwaren (`buildingGoods`, je Gebäudeart Stein/Holz/
+Metall/Wissen; Prüfung in `canUpgradeBuilding` → `goods`, Abbruch erstattet). Umgekehrt füllen Mühle, Bäckerei,
+Schmiede, Sägewerk, Ziegelei, Eisengießerei aller Dörfer ein Lager (`s.villageSupply`, max. 24 h, Zeiteffekt
+`villageSupply`), das auf dem Dorfplatz ins Insel-Inventar geholt wird. Die Karte zeigt auch die Insel-Boni der
+Dorfgebäude; „Was jetzt?" meldet ≥25 wartende Waren.
 
 **Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
 Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,

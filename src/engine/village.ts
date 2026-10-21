@@ -35,7 +35,8 @@ import {
 } from '../data/village';
 import { gainItem, registerTimeEffect } from './actions';
 import type { Emit } from './events';
-import { itemCount, removeItem } from './inventory';
+import { addItem, hasItems, itemCount, removeItem } from './inventory';
+import { buildingGoods } from '../data/villageGoods';
 import { invalidateMods, mod, registerModifierSource } from './modifiers';
 import type { Rng } from './rng';
 import { earnGold } from './shop';
@@ -322,6 +323,7 @@ export function canUpgradeBuilding(s: GameState, v: Village, id: string): VResul
   if (next > def.maxLevel) return fail('max');
   if (v.queue.center.length >= QUEUE_SIZE) return fail('queue');
   if (!canPay(v, buildingCost(id, next))) return fail('resources');
+  if (!hasItems(s, buildingGoods(id, def.maxLevel, next))) return fail('goods');
   if (netCrop(s, v) - def.pop * PROD_SPEED < 0) return fail('crop');
   return OK;
 }
@@ -333,6 +335,8 @@ export function upgradeBuilding(s: GameState, villageId: number, id: string): VR
   if (!check.ok) return check;
   const level = plannedLevel(v, 'center', id) + 1;
   pay(v, buildingCost(id, level));
+  for (const g of buildingGoods(id, V_BUILDING_MAP.get(id)!.maxLevel, level))
+    removeItem(s, g.item, g.qty);
   const time = buildingTime(v, id, level);
   v.queue.center.push({ key: id, level, remaining: time, total: time });
   return OK;
@@ -349,6 +353,13 @@ export function cancelQueue(s: GameState, villageId: number, lane: 'field' | 'ce
       ? fieldCost(v, Number(item.key), item.level)
       : buildingCost(item.key, item.level);
   add(v, cost);
+  if (lane === 'center')
+    for (const g of buildingGoods(
+      item.key,
+      V_BUILDING_MAP.get(item.key)?.maxLevel ?? 0,
+      item.level,
+    ))
+      addItem(s, g.item, g.qty);
   return OK;
 }
 

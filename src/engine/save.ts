@@ -288,6 +288,11 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     }),
     worldBoss: hydrateWorldBoss(data.worldBoss, base.worldBoss),
     islandEvent: hydrateIslandEvent(data.islandEvent, base.islandEvent),
+    villageSupply: Object.fromEntries(
+      Object.entries(numberRecord(data.villageSupply)).filter(
+        ([id, n]) => ITEM_MAP.has(id) && n > 0,
+      ),
+    ),
     inventions: Object.fromEntries(
       Object.entries(numberRecord(data.inventions))
         .filter(([id]) => INVENTION_MAP.has(id))

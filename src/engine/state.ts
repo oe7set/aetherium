@@ -490,6 +490,8 @@ export interface GameState {
   worldBoss: WorldBossState;
   /** Insel-Ereignis (Phase 44): the running one or the countdown to the next. */
   islandEvent: IslandEventState;
+  /** Dorflieferung (Phase 45): goods the village workshops made for the island, not yet collected. */
+  villageSupply: Record<string, number>;
   /** Claimed skill milestones, e.g. "mining:25". */
   milestones: string[];
   /** Großprojekte: finished stages and goods delivered towards the current one. */
@@ -669,6 +671,7 @@ export function newGame(now: number = Date.now()): GameState {
     forge: { levels: {}, affixes: {} },
     worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
     islandEvent: { id: null, lastId: null, left: 0, next: 1200, deals: [] },
+    villageSupply: {},
     milestones: [],
     projects: {},
     empireRank: 0,
@@ -812,6 +815,7 @@ export function cloneState(s: GameState): GameState {
         { stage: v.stage, delivered: { ...v.delivered } },
       ]),
     ),
+    villageSupply: { ...s.villageSupply },
     islandEvent: { ...s.islandEvent, deals: s.islandEvent.deals.map((d) => ({ ...d })) },
     worldBoss: {
       ...s.worldBoss,

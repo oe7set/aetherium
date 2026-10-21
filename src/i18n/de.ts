@@ -20,6 +20,7 @@ export const de = {
   'villageFail.queue': 'Die Bauschleife ist voll.',
   'villageFail.resources': 'Nicht genug Rohstoffe.',
   'villageFail.crop': 'Zu wenig Getreide für mehr Einwohner – baue zuerst Getreidefarmen aus.',
+  'villageFail.goods': 'Es fehlen noch Waren von der Insel.',
   'villageFail.requires': 'Voraussetzungen fehlen noch.',
   'villageFail.gold': 'Nicht genug Gold.',
   'villageFail.research': 'Diese Einheit muss erst in der Akademie erforscht werden.',

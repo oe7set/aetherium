@@ -21,6 +21,7 @@ import {
   upgradeBuilding,
   V_BUILDING_MAP,
   type Village,
+  itemCount,
 } from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
@@ -29,6 +30,9 @@ import type { VillageSegment } from './VillagePanel';
 import { TouchCard } from '../TouchCard';
 import { AffordHint, CostView } from './CostView';
 import { duration } from './vui';
+import { VillageSupply } from './VillageSupply';
+import { RecipeLink } from '../menu/RecipeLink';
+import { buildingGoods } from '../../data/villageGoods';
 
 /**
  * Free spots on the village square (away from building lots and the two roads), in a fixed
@@ -133,6 +137,7 @@ export function CenterView({
           onSegment={onSegment}
         />
       )}
+      <VillageSupply />
       {
         <p className="muted small center">
           Tippe auf ein Gebäude. 🏗️ = Bauplatz bereit, grün = jetzt ausbaubar, gedämpft =
@@ -241,6 +246,16 @@ function BuildingDetail({
             <span className="muted small">⏱ {duration(buildingTime(v, def.id, next))}</span>
           </div>
           <AffordHint cost={buildingCost(def.id, next)} village={v} />
+          {buildingGoods(def.id, def.maxLevel, next).length > 0 && (
+            <div className="v-goods small">
+              🏝️ Inselwaren:{' '}
+              {buildingGoods(def.id, def.maxLevel, next).map((g) => (
+                <span key={g.item} className={itemCount(game, g.item) >= g.qty ? 'ok' : 'missing'}>
+                  <RecipeLink item={g.item} /> {itemCount(game, g.item)}/{g.qty}
+                </span>
+              ))}
+            </div>
+          )}
           <button
             className="btn btn-primary"
             disabled={!check.ok}

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.83.0] – Dorf ↔ Insel
+
+### Neu: Dorf ↔ Insel 🚚
+
+- **Inselwaren fürs Dorf**: Gebäudestufen bei der Hälfte, drei Vierteln und der Höchststufe brauchen zusätzlich
+  Waren von der Insel – Steinblöcke, Bretter, Nägel, Barren, Möbel oder Pergament, je nach Gebäudeart. Die
+  Gebäudekarte zeigt, was fehlt, und springt per Antippen zum Rezept. Abbrechen erstattet die Waren.
+- **Dorflieferung**: Mühle, Bäckerei, Schmiede, Sägewerk, Ziegelei und Eisengießerei aller Dörfer schicken
+  Mehl, Brot, Nägel, Bretter, Steinblöcke und Eisenbarren auf die Insel (Lager für 24 Stunden, auch offline).
+  Abholen auf dem Dorfplatz; „Was jetzt?" meldet volle Lieferungen.
+- Die Karte zeigt außerdem alle Insel-Boni, die deine Dorfgebäude geben.
+
 ## [1.82.0] – Insel-Ereignisse
 
 ### Neu: Insel-Ereignisse 🎪
