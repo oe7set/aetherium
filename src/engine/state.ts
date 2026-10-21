@@ -488,6 +488,8 @@ export interface GameState {
   };
   /** Weltbosse (Phase 34). */
   worldBoss: WorldBossState;
+  /** Claimed skill milestones, e.g. "mining:25". */
+  milestones: string[];
 }
 
 export interface WorldBossFight {
@@ -648,6 +650,7 @@ export function newGame(now: number = Date.now()): GameState {
     inventions: {},
     forge: { levels: {}, affixes: {} },
     worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
+    milestones: [],
   };
 }
 
@@ -781,6 +784,7 @@ export function cloneState(s: GameState): GameState {
     stars: { ranks: { ...s.stars.ranks }, active: [...s.stars.active] },
     inventions: { ...s.inventions },
     forge: { levels: { ...s.forge.levels }, affixes: { ...s.forge.affixes } },
+    milestones: [...s.milestones],
     worldBoss: {
       ...s.worldBoss,
       fight: s.worldBoss.fight

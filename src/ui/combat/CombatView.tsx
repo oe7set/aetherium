@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { MilestonePanel } from '../skills/MilestonePanel';
 import {
   actionsForSkill,
+  getSkill,
   AREAS,
   DUNGEONS,
   getItem,
@@ -724,6 +726,12 @@ export function CombatView({ onBack, skillId }: { onBack?: () => void; skillId?:
         </button>
       )}
       <h2>⚔️ Kampf</h2>
+      {skillId && (
+        <details className="forge-details">
+          <summary>🎖️ Meilensteine: {getSkill(skillId).name}</summary>
+          <MilestonePanel skillId={skillId} />
+        </details>
+      )}
       <StyleAssistant
         focus={
           skillId === 'ranged' || skillId === 'magic' || skillId === 'melee' ? skillId : undefined

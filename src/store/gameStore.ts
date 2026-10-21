@@ -1,6 +1,14 @@
 import Decimal from 'break_eternity.js';
 import { create } from 'zustand';
-import { ACTION_MAP, getAction, getItem, getTool, HELPER_MAP, type EquipSlot } from '../data';
+import {
+  ACTION_MAP,
+  getAction,
+  getItem,
+  getSkill,
+  getTool,
+  HELPER_MAP,
+  type EquipSlot,
+} from '../data';
 
 const getHelperName = (type: string) => HELPER_MAP.get(type)?.name ?? type;
 import { BALANCE } from '../data/balance';
@@ -88,6 +96,7 @@ import {
   prepareDungeon,
   prepareWeekly,
   prepareDaily,
+  claimMilestone,
   finishDaily,
   type DailyReward,
   finishWeekly,
@@ -220,6 +229,7 @@ export interface GameStore {
   riftFinish: (result: RunResult) => RiftReward | null;
   riftTalent: (id: string) => void;
   claimDaily: () => void;
+  claimMilestone: (skill: string, level: number) => void;
   claimPass: (tier: number) => void;
   /** Claims every waiting Ruhmesleiter tier, finished task and Sammelbuch set in one reveal. */
   claimAllRewards: () => void;
@@ -674,6 +684,14 @@ export const useGame = create<GameStore>()((set, get) => {
       });
       if (lines) showReward(`Tag ${day} der Serie!`, '🎁', lines);
       set({ dailyOpen: false });
+    },
+    claimMilestone: (skill, level) => {
+      let lines: RewardLine[] | null = null;
+      mutate((s, emit) => {
+        lines = claimMilestone(s, skill, level, defaultRng, emit);
+      });
+      if (lines)
+        showReward(`${getSkill(skill).name}: Stufe ${level}`, level >= 99 ? '🧥' : '🎖️', lines);
     },
     claimPass: (tier) => {
       let lines: RewardLine[] | null = null;

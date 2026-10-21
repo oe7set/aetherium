@@ -1,4 +1,5 @@
 import { BIOMES } from '../../data/rift';
+import { MilestonePanel } from '../skills/MilestonePanel';
 import {
   RELIC_MAP,
   RELIC_SETS,
@@ -105,6 +106,10 @@ export function RiftwalkerSkillView({ onBack }: { onBack?: () => void }) {
       >
         Zum Ätherriss
       </button>
+      <details className="forge-details">
+        <summary>🎖️ Meilensteine</summary>
+        <MilestonePanel skillId="riftwalker" />
+      </details>
       <RelicsView />
     </div>
   );

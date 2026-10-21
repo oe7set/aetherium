@@ -22,6 +22,7 @@ import { AGILITY_ITEMS } from './agility';
 import { INVENTION_ITEMS } from './invention';
 import { FORGE_ITEMS } from './forge';
 import { WORLD_BOSS_ITEMS } from './worldboss';
+import { SKILL_CAPES } from './milestones';
 import { MAGIC_ITEMS } from './magic';
 import { EXPANSION_ITEMS } from './expansion';
 
@@ -513,5 +514,6 @@ export const ITEMS: ItemDef[] = [
   ...INVENTION_ITEMS,
   ...FORGE_ITEMS,
   ...WORLD_BOSS_ITEMS,
+  ...SKILL_CAPES,
   ...MAGIC_ITEMS,
 ];

@@ -2,9 +2,10 @@ import { collectionsClaimable } from './collections';
 import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
 import { canDeliver } from './guilds';
+import { claimableMilestones } from './milestones';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
-import { SKILLS, TOOL_MAP, toolsForSkill } from '../data';
+import { SKILL_MAP, SKILLS, TOOL_MAP, toolsForSkill } from '../data';
 import { skillLevel } from './skills';
 import { currentChronicle, dailyAvailable, passClaimable } from './progress';
 import { canStartRun } from './rift';
@@ -107,6 +108,17 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  const ms = claimableMilestones(s);
+  if (ms.length)
+    add({
+      id: 'milestones',
+      icon: '🎖️',
+      title:
+        ms.length === 1 ? 'Skill-Meilenstein abholen' : `${ms.length} Skill-Meilensteine abholen`,
+      detail: `${SKILL_MAP.get(ms[0]!.skill)?.name ?? ''} Stufe ${ms[0]!.level}${ms.length > 1 ? ' und mehr' : ''}`,
+      kind: 'reward',
+      target: { area: 'skill', skill: ms[0]!.skill },
     });
   const ready = s.guilds.orders.filter((o) => canDeliver(s, o)).length;
   if (ready)

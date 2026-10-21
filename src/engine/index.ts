@@ -47,4 +47,5 @@ export * from './agility';
 export * from './invention';
 export * from './forge';
 export * from './worldboss';
+export * from './milestones';
 export * from './time';

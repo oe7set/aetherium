@@ -1,6 +1,13 @@
 import { ACTIONS, COMING_SOON_SKILLS, getAction, SKILLS, TECH_MAP } from '../../data';
 import { TOTAL_LEVELS } from '../../data/achievements';
-import { levelCap, levelProgress, skillLevel, skillUnlocked, totalLevel } from '../../engine';
+import {
+  claimableMilestones,
+  levelCap,
+  levelProgress,
+  skillLevel,
+  skillUnlocked,
+  totalLevel,
+} from '../../engine';
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
@@ -62,6 +69,7 @@ function SkillRow({ id, fav, onFav }: { id: string; fav: boolean; onFav: (id: st
       ? getAction(s.game.active.actionId).name
       : null,
   );
+  const milestone = useGame((s) => claimableMilestones(s.game).some((m) => m.skill === id));
   const hint = skillHint(id, p.level, unlocked, running ?? (isActive ? 'Im Kampf' : null));
   return (
     <button
@@ -75,6 +83,7 @@ function SkillRow({ id, fav, onFav }: { id: string; fav: boolean; onFav: (id: st
           {skill.name}
           {isActive && <span className="badge-running">●</span>}
           {unlocked && hasNewUnlock(id, p.level) && <span className="badge-new">neu</span>}
+          {milestone && <span className="badge-new gold">🎖️</span>}
         </span>
         <small className={`skill-hint ${running || isActive ? 'run' : ''}`}>{hint}</small>
         <ProgressBar fraction={p.fraction} color={skill.color} height={4} />

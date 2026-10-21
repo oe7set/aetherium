@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.78.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.79.0**.
 
 ## 1. Der große Kreislauf
 
@@ -92,6 +92,13 @@ Gewitter- und Seelenbolzen (stärker, Element + Boni).
 **Riss-Ausbau** (Phase 35): Rekord-Codes (`engine/rivals.ts`) tragen jetzt die Tagesriss-Bestzeit (alte 6er-Codes
 bleiben gültig), `rankDaily` sortiert nur Zeiten von heute; Tagesriss-Karte zeigt die Rangliste. 5 Relikt-Sets
 (`RELIC_SETS`, `completedRelicSets` → `runPerks`). 11 Schrein-Arten (neu: Schatzschrein, Sog des Äthers, Blutopfer).
+
+**Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
+Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,
+Kampf-artige Skills eigene Werte über `OWN_STAT`), dazu eine Einmal-Belohnung zum Abholen (`claimMilestone`,
+`s.milestones`, bleibt über Prestige, über `applyReward`). Stufe 99: **Meisterumhang** (`cape_<skill>`, legendär).
+UI: Skill-Ansicht → „Meilensteine & mehr", Kampf/Kopfgeld/Rissläufer als aufklappbarer Bereich, 🎖️-Abzeichen in der
+Liste, „Was jetzt?" meldet Abholbares.
 
 **Weltbosse** (Phase 34, `data/worldboss.ts`, `engine/worldboss.ts`, `ui/rift/WorldBossView.tsx`): Zeiteffekt
 `worldBoss` – alle 4 h (ab Kampfstufe 10) erscheint einer von 4 Bossen für 60 Minuten, auch offline. Schadensquellen

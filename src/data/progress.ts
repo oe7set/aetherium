@@ -95,6 +95,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'thefts', per: 1 / 30, label: 'Diebstähle', icon: '🗝️' },
   { stat: 'buildingsBuilt', per: 2, label: 'Inselbauten', icon: '🔨' },
   { stat: 'mapsDrawn', per: 1 / 20, label: 'Gezeichnete Karten', icon: '🧭' },
+  { stat: 'milestonesClaimed', per: 1 / 2, label: 'Skill-Meilensteine', icon: '🎖️' },
   { stat: 'worldBossKills', per: 2, label: 'Weltbosse', icon: '👹' },
   { stat: 'forgeSuccesses', per: 1 / 2, label: 'Verstärkungen', icon: '🔨' },
   { stat: 'inventionsBuilt', per: 1, label: 'Erfindungen', icon: '⚙️' },

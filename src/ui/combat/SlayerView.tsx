@@ -1,4 +1,5 @@
 import { getItem, getMonster, MONSTERS } from '../../data';
+import { MilestonePanel } from '../skills/MilestonePanel';
 import {
   SLAYER_BLOCK_MAX,
   SLAYER_SHOP,
@@ -55,6 +56,10 @@ export function SlayerView({ onBack }: { onBack?: () => void }) {
         🎯 Kopfgeldjagd <small className="muted">Stufe {p.level}</small>
       </h2>
       <ProgressBar fraction={p.fraction} color="#e5534b" height={8} label="Kopfgeld-XP" />
+      <details className="forge-details">
+        <summary>🎖️ Meilensteine</summary>
+        <MilestonePanel skillId="slayer" />
+      </details>
       <p className="skill-desc">
         Jeder Kill an deinem Ziel gibt Kopfgeld-XP. Erfüllte Aufträge bringen Punkte, Gold und alle{' '}
         {SLAYER_STREAK_EVERY} Aufträge in Folge das {SLAYER_STREAK_MULT}-fache.

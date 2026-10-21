@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
 import {
+  claimableMilestones,
   dismissFamiliar,
   faithBonus,
   formatDuration,
@@ -20,6 +21,7 @@ import { SlayerView } from '../combat/SlayerView';
 import { SkillLinks } from './SkillLinks';
 import { markSkillSeen } from './skillPrefs';
 import { StarsPanel } from './StarsPanel';
+import { MilestonePanel } from './MilestonePanel';
 import { InventionPanel } from './InventionPanel';
 import { RiftwalkerSkillView } from '../rift/RelicsView';
 import { FAMILIAR_MAP } from '../../data/summoning';
@@ -189,6 +191,9 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
   // Opening a skill clears its „new" badge in the list.
   useEffect(() => markSkillSeen(skillId, p.level), [skillId, p.level]);
   const [tab, setTab] = useState<'actions' | 'more'>('actions');
+  const claimable = useGame(
+    (s) => claimableMilestones(s.game).filter((m) => m.skill === skillId).length,
+  );
 
   return (
     <div className="skill-view">
@@ -244,11 +249,12 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
           className={`segment ${tab === 'more' ? 'active' : ''}`}
           onClick={() => setTab('more')}
         >
-          🏅 Meisterschaft & Verbindungen
+          🎖️ Meilensteine & mehr{claimable > 0 ? ` (${claimable})` : ''}
         </button>
       </div>
       {tab === 'more' && (
         <>
+          <MilestonePanel skillId={skillId} />
           <SkillLinks skillId={skillId} />
           <MasteryPool skillId={skillId} />
         </>

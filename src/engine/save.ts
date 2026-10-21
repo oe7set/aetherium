@@ -277,6 +277,10 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     guilds: hydrateGuilds(data.guilds, base.guilds),
     stars: hydrateStars(data.stars),
     forge: hydrateForge(data.forge),
+    milestones: stringArray(data.milestones).filter((k) => {
+      const [skill, lvl] = k.split(':');
+      return !!skill && SKILL_MAP.has(skill) && Number(lvl) > 0;
+    }),
     worldBoss: hydrateWorldBoss(data.worldBoss, base.worldBoss),
     inventions: Object.fromEntries(
       Object.entries(numberRecord(data.inventions))

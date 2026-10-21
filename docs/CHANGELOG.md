@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.79.0] – Skill-Meilensteine & Meisterumhänge
+
+- **Skill-Meilensteine** 🎖️ (Phase 41): Jeder der 33 Skills belohnt Stufe 10, 25, 50, 75 und 99 – mit einem **Dauerbonus**, der sofort wirkt (mehr XP, schneller, öfter doppelte Ausbeute; Kampf-Skills bekommen Schaden, Treffsicherheit, Leben …), und einer **Belohnung zum Abholen** (Gold, Münzbeutel, Schatztruhen, Prägesteine, Essenz).
+- **Meisterumhänge** 🧥: Wer einen Skill auf 99 bringt, bekommt dessen legendären Umhang mit eigenem Bonus – 33 Langzeitziele.
+- Zu finden in jeder Skill-Ansicht unter „Meilensteine & mehr" (bei Kampf, Kopfgeld und Rissläufer als aufklappbarer Bereich); 🎖️ in der Skill-Liste und „Was jetzt?" zeigen, wo etwas zum Abholen wartet.
+
 ## [1.78.0] – Übersichtliche Skills & ruhige Insel
 
 - **Skill-Liste aufgeräumt** (Phase 39): ★ Favoriten stehen oben, Gruppen lassen sich einklappen (mit Stufen-Summe), und ein **„neu"**-Abzeichen zeigt, wo seit deinem letzten Besuch neue Aktionen freigeschaltet wurden.

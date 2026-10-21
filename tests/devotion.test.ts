@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { milestoneMods } from '../src/data/milestones';
 import { ELEMENTS, getAction, getItem } from '../src/data';
 import { ELEMENT_GROUPS } from '../src/data/science';
 import {
@@ -36,7 +37,12 @@ describe('Glaube', () => {
     setLevel(s, 'faith', 51);
     invalidateMods(s);
     expect(faithBonus(s).defence).toBeCloseTo(0.2, 5);
-    expect(mod(s, 'combat.defence')).toBeCloseTo(before.def + 0.2, 5);
+    // Faith milestones (10, 50) add their own defence on top.
+    const milestones = [10, 50].reduce(
+      (sum, m) => sum + (milestoneMods('faith', m)['combat.defence'] ?? 0),
+      0,
+    );
+    expect(mod(s, 'combat.defence')).toBeCloseTo(before.def + 0.2 + milestones, 5);
     expect(mod(s, 'rift.hp')).toBeCloseTo(before.hp + 0.15, 5);
     expect(mod(s, 'village.defense')).toBeCloseTo(before.village + 0.1, 5);
   });

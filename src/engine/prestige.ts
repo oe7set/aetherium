@@ -154,6 +154,8 @@ function resetRun(s: GameState): void {
     // Slot reinforcement belongs to the player like the gear.
     forge: s.forge,
     worldBoss: s.worldBoss,
+    // Claimed milestone rewards are paid once per save – the lasting boni follow the levels.
+    milestones: s.milestones,
   };
   Object.assign(s, fresh, kept);
 
