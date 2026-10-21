@@ -2928,3 +2928,41 @@ button.group-toggle {
   content: '✔ ';
   color: #5be38a;
 }
+
+/* Reichsrang (Phase 43) */
+.empire-rank {
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.empire-rank.ready {
+  border-color: rgba(255, 209, 102, 0.9);
+  box-shadow: 0 0 12px rgba(255, 209, 102, 0.35);
+}
+.empire-rank-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.empire-rank-head > div {
+  display: flex;
+  flex-direction: column;
+}
+.empire-rank-head strong {
+  font-size: 1.15rem;
+}
+.empire-rank-icon {
+  font-size: 2.2rem;
+}
+.empire-sources {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px 10px;
+  font-size: 0.82rem;
+}

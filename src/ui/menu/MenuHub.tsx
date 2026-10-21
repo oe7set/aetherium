@@ -13,6 +13,7 @@ import {
 } from '../../engine';
 import { useGame, type MenuSection, type QuestSegment } from '../../store/gameStore';
 import { AgendaList } from '../Agenda';
+import { EmpireRankCard } from './EmpireRankCard';
 import { useFmt } from '../hooks';
 
 interface Tile {
@@ -147,6 +148,7 @@ export function MenuHub() {
   ];
   return (
     <div className="menu-hub">
+      <EmpireRankCard />
       <h4 className="group-title">📌 Als Nächstes</h4>
       <AgendaList limit={3} />
       {groups.map((g) => (

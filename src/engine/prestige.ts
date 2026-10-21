@@ -158,6 +158,7 @@ function resetRun(s: GameState): void {
     milestones: s.milestones,
     // Monuments stand forever.
     projects: s.projects,
+    empireRank: s.empireRank,
   };
   Object.assign(s, fresh, kept);
 

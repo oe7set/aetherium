@@ -15,6 +15,7 @@ import {
 } from '../../engine';
 import { useGame, type MenuSection, type TabId } from '../../store/gameStore';
 import { AgendaList } from '../Agenda';
+import { EmpireRankCard } from './EmpireRankCard';
 import { useFmt } from '../hooks';
 import { ProgressBar } from '../ProgressBar';
 
@@ -91,6 +92,8 @@ export function EmpirePanel() {
           <small className="muted">Alle Bereiche deines Reichs auf einen Blick</small>
         </div>
       </div>
+
+      <EmpireRankCard details />
 
       <section className="empire-next">
         <h4 className="group-title">📌 Als Nächstes</h4>

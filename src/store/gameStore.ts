@@ -1,4 +1,5 @@
 import Decimal from 'break_eternity.js';
+import { EMPIRE_RANKS } from '../data/empire';
 import { create } from 'zustand';
 import {
   ACTION_MAP,
@@ -97,6 +98,7 @@ import {
   prepareWeekly,
   prepareDaily,
   claimMilestone,
+  claimEmpireRank,
   finishDaily,
   type DailyReward,
   finishWeekly,
@@ -231,6 +233,7 @@ export interface GameStore {
   riftTalent: (id: string) => void;
   claimDaily: () => void;
   claimMilestone: (skill: string, level: number) => void;
+  claimEmpireRank: () => void;
   claimPass: (tier: number) => void;
   /** Claims every waiting Ruhmesleiter tier, finished task and Sammelbuch set in one reveal. */
   claimAllRewards: () => void;
@@ -693,6 +696,15 @@ export const useGame = create<GameStore>()((set, get) => {
       });
       if (lines)
         showReward(`${getSkill(skill).name}: Stufe ${level}`, level >= 99 ? '🧥' : '🎖️', lines);
+    },
+    claimEmpireRank: () => {
+      let lines: RewardLine[] | null = null;
+      let name = '';
+      mutate((s, emit) => {
+        lines = claimEmpireRank(s, defaultRng, emit);
+        name = EMPIRE_RANKS[s.empireRank]?.name ?? '';
+      });
+      if (lines) showReward(`Neuer Reichsrang: ${name}`, '👑', lines);
     },
     claimPass: (tier) => {
       let lines: RewardLine[] | null = null;

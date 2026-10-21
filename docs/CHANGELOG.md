@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.81.0] – Reichsränge
+
+### Neu: Reichsränge 👑
+
+- Ein **Reichswert** fasst alles zusammen: Gesamtlevel, Einwohner, Held, Riss-Siege, Relikte, Großprojekte,
+  Meilensteine, Weltbosse, Erfolge, Inselbauten, Sternbilder, Erfindungen und Zunft-Ränge.
+- **12 Ränge** von „Gestrandete·r" bis „Ätherkaiser·in" – jeder Aufstieg ist eine Zeremonie mit Belohnung und gibt
+  dauerhaft +1 % XP, Gold und Dorfproduktion.
+- Rang-Karte oben im Mehr-Hub, im Reichsbuch mit Aufschlüsselung, woher die Punkte kommen.
+- „Was jetzt?" meldet einen neuen Rang, die Ruhmesleiter zählt Reichsränge mit. Ränge bleiben über jede Wiedergeburt.
+
 ## [1.80.0] – Großprojekte
 
 - **Großprojekte** 🏗️ (Phase 42): Fünf Wunder für deine Insel – **Leuchtturm**, **Ätherbrücke**, **Himmelsobservatorium**, **Großer Basar** und als Krönung der **Ätherium-Turm**, der erst nach allen anderen gebaut werden kann.

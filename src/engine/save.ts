@@ -279,6 +279,8 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     stars: hydrateStars(data.stars),
     forge: hydrateForge(data.forge),
     projects: hydrateProjects(data.projects),
+    empireRank:
+      typeof data.empireRank === 'number' && data.empireRank >= 0 ? Math.floor(data.empireRank) : 0,
     milestones: stringArray(data.milestones).filter((k) => {
       const [skill, lvl] = k.split(':');
       return !!skill && SKILL_MAP.has(skill) && Number(lvl) > 0;

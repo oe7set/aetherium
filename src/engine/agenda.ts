@@ -4,6 +4,8 @@ import { freeSlots } from './inventory';
 import { canDeliver } from './guilds';
 import { claimableMilestones } from './milestones';
 import { canFinishStage } from './projects';
+import { empireRankReached } from './empire';
+import { EMPIRE_RANKS } from '../data/empire';
 import { PROJECTS } from '../data/projects';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
@@ -41,7 +43,7 @@ export type AgendaTarget =
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' | 'boss' }
   | {
       area: 'menu';
-      section: 'pass' | 'research' | 'quests' | 'projects';
+      section: 'home' | 'pass' | 'research' | 'quests' | 'projects';
       sub?: 'tasks' | 'guilds' | 'quests';
     };
 
@@ -114,6 +116,15 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  if (empireRankReached(s) > s.empireRank)
+    add({
+      id: 'empire-rank',
+      icon: '👑',
+      title: 'Neuer Reichsrang erreicht!',
+      detail: `Aufsteigen zu „${EMPIRE_RANKS[s.empireRank + 1]?.name ?? ''}"`,
+      kind: 'reward',
+      target: { area: 'menu', section: 'home' },
     });
   const proj = PROJECTS.find((p) => canFinishStage(s, p.id));
   if (proj)

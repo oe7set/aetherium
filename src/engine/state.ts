@@ -492,6 +492,8 @@ export interface GameState {
   milestones: string[];
   /** Großprojekte: finished stages and goods delivered towards the current one. */
   projects: Record<string, { stage: number; delivered: Record<string, number> }>;
+  /** Reichsrang already celebrated (index into EMPIRE_RANKS). */
+  empireRank: number;
 }
 
 export interface WorldBossFight {
@@ -654,6 +656,7 @@ export function newGame(now: number = Date.now()): GameState {
     worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
     milestones: [],
     projects: {},
+    empireRank: 0,
   };
 }
 

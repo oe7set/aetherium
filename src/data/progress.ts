@@ -98,6 +98,7 @@ export const PASS_SOURCES: { stat: string; per: number; label: string; icon: str
   { stat: 'projectStages', per: 2, label: 'Großprojekt-Abschnitte', icon: '🏗️' },
   { stat: 'milestonesClaimed', per: 1 / 2, label: 'Skill-Meilensteine', icon: '🎖️' },
   { stat: 'worldBossKills', per: 2, label: 'Weltbosse', icon: '👹' },
+  { stat: 'empireRanks', per: 10, label: 'Reichsränge', icon: '👑' },
   { stat: 'forgeSuccesses', per: 1 / 2, label: 'Verstärkungen', icon: '🔨' },
   { stat: 'inventionsBuilt', per: 1, label: 'Erfindungen', icon: '⚙️' },
   { stat: 'lapsRun', per: 1 / 30, label: 'Parcours-Runden', icon: '🏃' },

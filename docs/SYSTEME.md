@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.80.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.81.0**.
 
 ## 1. Der große Kreislauf
 
@@ -99,6 +99,14 @@ bleiben gültig), `rankDaily` sortiert nur Zeiten von heute; Tagesriss-Karte zei
 `s.projects`, bleibt über Prestige). Fertige Abschnitte: Dauerbonus (Modifier-Quelle `projects`), Baukunst-XP,
 3D-Modell wächst (`Monuments` in `scene/Workshops.tsx`). Mehr → Großprojekte, „Was jetzt?" meldet fertigstellbare
 Abschnitte; Waren springen per `RecipeLink` zum Rezept.
+
+**Reichsränge** (Phase 43, `data/empire.ts`, `engine/empire.ts`, `ui/menu/EmpireRankCard.tsx`): Ein Reichswert über
+alle Systeme (`EMPIRE_SOURCES`: Gesamtlevel, Einwohner, Held, Riss-Siege, Relikte, Großprojekte, Meilensteine,
+Weltbosse, Erfolge, Inselbauten, Sternbilder, Erfindungen, Zunft-Ränge). 12 Ränge (Gestrandete·r → Ätherkaiser·in),
+Aufstieg per Zeremonie (`claimEmpireRank`, Belohnung über `applyReward`), je Rang +1 % XP/Gold/Dorfproduktion
+(Modifier-Quelle `empire`). `s.empireRank` bleibt über Prestige. Karte oben im Mehr-Hub und im Reichsbuch (mit
+Aufschlüsselung), „Was jetzt?" meldet neue Ränge, Ruhmesleiter zählt `empireRanks`. Neue Systeme mit Fortschritt
+dort in `EMPIRE_SOURCES` + `empireValues` eintragen.
 
 **Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
 Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,
