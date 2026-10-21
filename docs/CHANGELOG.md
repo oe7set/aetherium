@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.87.0] – Feinschliff & Doku
+
+### Feinschliff & Doku – Masterplan 6.0 abgeschlossen ✅
+
+- Großprojekte warnen, wenn dein Dorf auf dieselben Waren wartet, bevor „Alles liefern" sie abgibt.
+- README, CLAUDE.md, Systemkarte und offene Punkte auf den Stand von Masterplan 6.0 gebracht.
+
 ## [1.86.0] – Balance: Wochen-Bot
 
 ### Balance: Wochen-Bot ⚖️

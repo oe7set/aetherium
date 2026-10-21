@@ -1,6 +1,8 @@
 import { PROJECTS } from '../../data/projects';
+import { getItem } from '../../data';
 import {
   deliverProject,
+  goodsWanted,
   projectDelivered,
   projectDone,
   projectStage,
@@ -20,6 +22,7 @@ export function ProjectsPanel() {
   const act = useGame((s) => s.combatAct);
   const { int } = useFmt();
   const game = useGame.getState().game;
+  const villageNeeds = goodsWanted(game)?.missing.map((g) => g.item) ?? [];
   return (
     <div className="projects">
       <p className="small muted">
@@ -87,6 +90,16 @@ export function ProjectsPanel() {
                   })}
                 </ul>
                 <small className="muted">Nach Fertigstellung: {describeMods(stage.mods)}</small>
+                {villageNeeds.some((i) => stage.cost.some((c) => c.item === i)) && (
+                  <small className="warn">
+                    ⚠️ Dein Dorf wartet auch auf{' '}
+                    {villageNeeds
+                      .filter((i) => stage.cost.some((c) => c.item === i))
+                      .map((i) => getItem(i).name)
+                      .join(', ')}{' '}
+                    – „Alles liefern" gibt alles Vorhandene ab.
+                  </small>
+                )}
                 <button
                   className="btn btn-primary"
                   disabled={stage.cost.every(

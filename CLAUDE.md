@@ -4,9 +4,10 @@ Browser-Incremental-RPG (Deutsch, mobile first). Vorgabe: `docs/SPEC.md`, Plan &
 
 ## Aktueller Stand
 
-Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.86.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
+Phasen 1–7 (`docs/PLAN.md`) und 8–10 aus dem Masterplan 2.0 (`docs/PLAN-2.md`) fertig (v1.87.0, Phase 9 = Dorf + Held, plus Motivations-Schicht,
 Sammelbuch, Wochenboss), Masterplan 3.0 (`docs/PLAN-3.md`) und 4.0 (`docs/PLAN-4.md`: Bogenbau, Viehzucht, Rissläufer/Relikte,
-Flüche/Schreine/Tagesriss, Zunftaufträge) und 5.0 (`docs/PLAN-5.md`) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
+Flüche/Schreine/Tagesriss, Zunftaufträge) und 5.0 (`docs/PLAN-5.md`) und 6.0 (`docs/PLAN-6.md`: Menü-Hub, Meilensteine, Großprojekte, Reichsränge,
+Insel-Ereignisse, Dorf ↔ Insel, Einstiegs-/Wochen-Bot) fertig. Als Nächstes: offene Punkte in `docs/SYSTEME.md`. Siehe `docs/CHANGELOG.md`.
 
 **Systemkarte & offene Punkte: `docs/SYSTEME.md` – bei jeder Änderung mitpflegen** (neue Systeme/Verbindungen
 eintragen, Erledigtes streichen, Neues Offenes ergänzen).
@@ -45,7 +46,10 @@ Vor jedem Commit: lint, format:check, typecheck, test, build müssen grün sein 
   Neue Skill-Stationen als generische Werkstätten in `scene/Workshops.tsx`. Masterplan 5.0: Seefahrt `engine/sailing.ts` (Schiffe = Werkzeuge), Sternkunde `engine/astronomy.ts`
   (Tag/Nacht `engine/time.ts`, `simNow`), Gewandtheit `engine/agility.ts` (`ActionDef.fall`), Erfinden
   `engine/invention.ts`, Verstärkung/Prägungen `engine/forge.ts` (pro Slot, `forgeMult` in `gearSum`),
-  Weltbosse `engine/worldboss.ts`. Rezept-Navigation
+  Weltbosse `engine/worldboss.ts`. Masterplan 6.0: Meilensteine `engine/milestones.ts`, Großprojekte
+  `engine/projects.ts`, Reichsränge `engine/empire.ts` (neue Systeme in `EMPIRE_SOURCES` eintragen),
+  Insel-Ereignisse `engine/islandEvents.ts`, Dorf ↔ Insel `data/villageGoods.ts` + `engine/villageSupply.ts`.
+  Balance-Bots: `tests/onboarding.test.ts` (2 h), `tests/week.test.ts` (7 Tage), Züge in `tests/bot.ts`. Rezept-Navigation
   (welche Aktion macht/braucht ein Item) = `ui/recipes.ts`, Sprung über `jumpToAction`.
 - Dorf (Travian-artig) = `engine/village.ts` (Produktion, Lager, Bauschleifen, Truppen, Raubzüge, Oasen,
   Invasionen, Kulturpunkte, Expansion; ein Zeiteffekt `village` treibt alles, auch offline), Weltgenerierung

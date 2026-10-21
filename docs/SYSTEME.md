@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.86.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.87.0**.
 
 ## 1. Der große Kreislauf
 
@@ -455,8 +455,11 @@ Priorität grob von oben nach unten. Erledigte Punkte wandern ins CHANGELOG und 
 - [ ] Riss-Rendering auf echtem Mittelklasse-Handy messen (Simulation ist geprüft: 675 Gegner ≈ 0,5 ms/Schritt
       am Desktop dank Spatial Hash in `rift/sim.ts`; Limit aktuell 360 Gegner).
 - [ ] PWA-Offline-Test auf echtem Gerät.
-- [ ] Langzeit-Bot erweitern: Riss-Läufe (Essenz/Talente/Relikte/Flüche), Zunftaufträge, Prestige, 7+ Tage, Juwelierkunst mit Bergbau-Geoden; Spieler ohne Truppen werden oft
-      geplündert – beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
+- [ ] Wochen-Bot (`tests/week.test.ts`) erweitern: Kampf (→ Weltbosse), Riss-Läufe (Essenz/Talente/Relikte/
+      Flüche), Zunftaufträge, Prestige, Expansion (zweites Dorf); Spieler ohne Truppen werden oft geplündert –
+      beobachten, ob ein Hinweis auf die Kaserne früher nötig ist.
+- [ ] Großprojekte: Lieferung pro Ware wählbar machen (heute „Alles Vorhandene"); die Karte warnt bereits, wenn
+      das Dorf dieselben Waren braucht.
 
 **Bekannte Schwächen**
 

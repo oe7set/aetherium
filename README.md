@@ -7,7 +7,7 @@ greift ineinander.
 
 **Jetzt spielen:** https://oe7set.github.io/aetherium/ (installierbar als App, läuft offline)
 
-## Was dich erwartet (v1.86)
+## Was dich erwartet (v1.87)
 
 **🏝️ Die Insel**
 
@@ -41,6 +41,8 @@ greift ineinander.
 - Kulturpunkte und bis zu 5 Dörfer.
 - Weltkarte als Raster mit Lagern, Oasen, Ruinen, freien Tälern und Abenteuern, auch im Vollbild.
 - Das Dorf stärkt die Insel (Tempo, XP, Gold), die Insel versorgt das Dorf über den Hafen.
+- **Dorf ↔ Insel**: hohe Gebäudestufen brauchen Inselwaren (Steinblöcke, Bretter, Barren, Möbel); Mühle,
+  Schmiede, Sägewerk & Co. schicken Mehl, Nägel, Bretter und Barren zurück auf die Insel.
 
 **🦸 Der Held, einer für alles**
 
@@ -59,6 +61,12 @@ greift ineinander.
 
 **🎁 Belohnungen und Motivation**
 
+- **Reichsränge** 👑: ein Reichswert über alle Systeme, 12 Ränge von Gestrandete·r bis Ätherkaiser·in – mit
+  Zeremonie, Belohnung, Dauerbonus und Ring in der Kopfleiste.
+- **Großprojekte** 🏗️: Leuchtturm, Ätherbrücke, Himmelsobservatorium, Großer Basar und das Weltwunder
+  Ätherium-Turm – in Bauabschnitten mit Waren aus vielen Skills, sichtbar auf der Insel.
+- **Skill-Meilensteine** 🎖️ auf 10/25/50/75/99 mit Dauerbonus, Belohnung und **Meisterumhang** für jeden Skill.
+- **Insel-Ereignisse** 🎪: Wanderhändler, Meteorschauer, Fischschwarm, Goldader, Sturm und Erntefest.
 - Tägliche Belohnung mit 7-Tage-Serie.
 - Ruhmesleiter mit 50 Stufen, Chronik als Zielkette durch alle Systeme.
 - **Sammelbuch** mit 14 Sets und Dauer-Boni, über 300 Erfolge, Aufträge, Haustiere.
@@ -77,7 +85,8 @@ greift ineinander.
 - Offline-Fortschritt (24 h und mehr), Autosave, Export/Import.
 - Akku-Modus mit Eco-Leistungsprofil (das Handy bleibt kühl) und 2D-Ansicht ohne 3D.
 - **„Was jetzt?" 📌**: alles, was gerade auf dich wartet – über alle Systeme, mit Direktsprung.
-- Schnellzugriff 🧭 zu jedem Bereich, Zurück-Taste schließt Fenster.
+- Schnellzugriff 🧭 zu jedem Bereich, Zurück-Taste schließt Fenster; **Mehr** als übersichtlicher Kachel-Hub,
+  Skills mit Favoriten ⭐ und einklappbaren Gruppen.
 - **Barrierefreiheit**: Textgröße, Bewegung reduzieren, hoher Kontrast.
 
 ## Steuerung

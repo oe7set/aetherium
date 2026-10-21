@@ -1,5 +1,7 @@
 # Masterplan 6.0 – Rund, logisch, lohnend
 
+**Status: fertig (1.77–1.86).** Ergebnisse je Phase im CHANGELOG, Balance-Befunde in `docs/BALANCING.md`.
+
 Wunsch: Das Spiel soll runder, logischer aufgebaut, spaßiger und belohnender werden – mit echten Zielen, die sich
 lohnen, mehr Balance und Systemen, die stärker ineinandergreifen. Jede Phase = eigenes Release mit Tests und Doku.
 
