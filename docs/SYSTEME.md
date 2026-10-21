@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.77.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.78.0**.
 
 ## 1. Der große Kreislauf
 
@@ -327,6 +327,11 @@ Haustiere ↔ Held, Expansion)
 - Neue State-Felder dort bewusst einordnen!
 
 ## 4. Bedienung (Handy)
+
+**Skill-Liste & Insel (1.78):** Favoriten (★, oben), einklappbare Gruppen mit Stufen-Summe, Abzeichen „neu" für
+seit dem letzten Öffnen freigeschaltete Aktionen (alles Browser-Speicher in `ui/skills/skillPrefs.ts`). Skill-Ansicht
+mit Reitern „Aktionen" und „Meisterschaft & Verbindungen". Insel-Beschriftung: volle Namen nur für die aktive
+Station, die Arena und die sechs höchsten Skills, sonst nur das Symbol (`SceneLabels` in `ui/World.tsx`).
 
 **Menüaufbau (1.77):** „Mehr" öffnet einen Hub (`ui/menu/MenuHub.tsx`, `menuSection: 'home'`): oben „Als Nächstes"
 (Agenda), darunter Kacheln in Gruppen Fortschritt / Aufgaben / Wissen & Wiedergeburt / System mit Kennzahl und

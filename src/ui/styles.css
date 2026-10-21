@@ -2835,3 +2835,40 @@ button.chip {
   margin-top: -4px;
   font-size: 0.9rem;
 }
+
+/* Skill-Liste (Phase 39) */
+.skill-fav {
+  font-size: 1.1rem;
+  padding: 4px 6px;
+  opacity: 0.45;
+  cursor: pointer;
+}
+.skill-fav.on {
+  opacity: 1;
+  color: #ffd166;
+}
+.badge-new {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #ffd166;
+  color: #1a1426;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+button.group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.scene-label.mini {
+  padding: 1px 4px;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+}

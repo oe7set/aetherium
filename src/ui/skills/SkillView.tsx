@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { actionsForSkill, getSkill, getTech, getTool, type ActionDef } from '../../data';
 import {
   dismissFamiliar,
@@ -18,6 +18,7 @@ import { ProgressBar } from '../ProgressBar';
 import { CombatView } from '../combat/CombatView';
 import { SlayerView } from '../combat/SlayerView';
 import { SkillLinks } from './SkillLinks';
+import { markSkillSeen } from './skillPrefs';
 import { StarsPanel } from './StarsPanel';
 import { InventionPanel } from './InventionPanel';
 import { RiftwalkerSkillView } from '../rift/RelicsView';
@@ -185,6 +186,9 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
     });
     return () => window.cancelAnimationFrame(id);
   }, [focus, skillId, setUi]);
+  // Opening a skill clears its „new" badge in the list.
+  useEffect(() => markSkillSeen(skillId, p.level), [skillId, p.level]);
+  const [tab, setTab] = useState<'actions' | 'more'>('actions');
 
   return (
     <div className="skill-view">
@@ -225,27 +229,50 @@ function SkillDetailInner({ skillId, onBack }: { skillId: string; onBack?: () =>
             : t('action.allUnlocked')}
         </span>
       </div>
-      <SkillLinks skillId={skillId} />
-      {skillId === 'construction' && <BuildingsPanel />}
-      {skillId === 'astronomy' && <StarsPanel />}
-      {skillId === 'invention' && <InventionPanel />}
-      <MasteryPool skillId={skillId} />
-      {groupByCategory(actions).map(([category, list]) => (
-        <section key={category || 'all'}>
-          {category && <h4 className="group-title">{category}</h4>}
-          <div className="action-list">
-            {/* Unlocked actions plus the next two locked ones: a visible goal without clutter. */}
-            {list
-              .filter(
-                (a, i) =>
-                  a.levelReq <= p.level || list.findIndex((x) => x.levelReq > p.level) + 2 > i,
-              )
-              .map((a) => (
-                <ActionCard key={a.id} def={a} />
-              ))}
-          </div>
-        </section>
-      ))}
+      <div className="segments" role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === 'actions'}
+          className={`segment ${tab === 'actions' ? 'active' : ''}`}
+          onClick={() => setTab('actions')}
+        >
+          ⚒️ Aktionen
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === 'more'}
+          className={`segment ${tab === 'more' ? 'active' : ''}`}
+          onClick={() => setTab('more')}
+        >
+          🏅 Meisterschaft & Verbindungen
+        </button>
+      </div>
+      {tab === 'more' && (
+        <>
+          <SkillLinks skillId={skillId} />
+          <MasteryPool skillId={skillId} />
+        </>
+      )}
+      {tab === 'actions' && skillId === 'construction' && <BuildingsPanel />}
+      {tab === 'actions' && skillId === 'astronomy' && <StarsPanel />}
+      {tab === 'actions' && skillId === 'invention' && <InventionPanel />}
+      {tab === 'actions' &&
+        groupByCategory(actions).map(([category, list]) => (
+          <section key={category || 'all'}>
+            {category && <h4 className="group-title">{category}</h4>}
+            <div className="action-list">
+              {/* Unlocked actions plus the next two locked ones: a visible goal without clutter. */}
+              {list
+                .filter(
+                  (a, i) =>
+                    a.levelReq <= p.level || list.findIndex((x) => x.levelReq > p.level) + 2 > i,
+                )
+                .map((a) => (
+                  <ActionCard key={a.id} def={a} />
+                ))}
+            </div>
+          </section>
+        ))}
     </div>
   );
 }

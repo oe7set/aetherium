@@ -1,5 +1,6 @@
 import { Component, lazy, Suspense, useMemo, type ReactNode } from 'react';
-import { getAction } from '../data';
+import { getAction, SKILL_MAP } from '../data';
+import { skillLevel } from '../engine';
 import { registerLabel } from '../scene/labels';
 import { STATIONS } from '../scene/layout';
 import { detectQuality, hasWebGL, resolveQuality } from '../scene/quality';
@@ -25,21 +26,38 @@ class SceneBoundary extends Component<
   }
 }
 
+/** Full names for the active station and the six most trained skills; the rest show only their icon. */
+const NAMED = 6;
+
 function SceneLabels() {
   const active = useGame((s) =>
     s.game.combat ? 'combat' : s.game.active ? getAction(s.game.active.actionId).skill : null,
   );
+  // Top skills by level (stable string so the labels only re-render when the ranking changes).
+  const top = useGame((s) =>
+    STATIONS.map((st) => st.skill)
+      .filter((id) => id !== 'combat')
+      .sort((a, b) => skillLevel(s.game, b) - skillLevel(s.game, a))
+      .slice(0, NAMED)
+      .join(','),
+  );
+  const named = new Set(top.split(','));
   return (
     <div className="scene-labels" aria-hidden>
-      {STATIONS.map((st) => (
-        <span
-          key={st.skill}
-          ref={(el) => registerLabel(st.skill, el)}
-          className={`scene-label ${active === st.skill ? 'active' : ''}`}
-        >
-          {st.label}
-        </span>
-      ))}
+      {STATIONS.map((st) => {
+        const full = st.skill === active || named.has(st.skill) || st.skill === 'combat';
+        const icon = st.skill === 'combat' ? '⚔️' : (SKILL_MAP.get(st.skill)?.icon ?? '•');
+        return (
+          <span
+            key={st.skill}
+            ref={(el) => registerLabel(st.skill, el)}
+            className={`scene-label ${active === st.skill ? 'active' : ''} ${full ? '' : 'mini'}`}
+            title={st.label}
+          >
+            {full ? st.label : icon}
+          </span>
+        );
+      })}
     </div>
   );
 }

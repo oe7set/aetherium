@@ -4,6 +4,9 @@ import { levelCap, levelProgress, skillLevel, skillUnlocked, totalLevel } from '
 import { t, type MessageKey } from '../../i18n';
 import { useGame } from '../../store/gameStore';
 import { ProgressBar } from '../ProgressBar';
+import { useState } from 'react';
+
+import { FAV_KEY, FOLD_KEY, readJson, SEEN_KEY, writeJson } from './skillPrefs';
 
 const GROUPS = ['gathering', 'processing', 'science', 'combat'] as const;
 
@@ -17,6 +20,7 @@ for (const a of ACTIONS) {
 for (const list of BY_SKILL.values()) list.sort((a, b) => a.levelReq - b.levelReq);
 
 /** One short line under the skill name: what runs, why it is locked, or what comes next. */
+
 function skillHint(id: string, level: number, unlocked: boolean, running: string | null): string {
   if (!unlocked) {
     const tech = SKILLS.find((s) => s.id === id)?.unlockTech;
@@ -33,7 +37,13 @@ function skillHint(id: string, level: number, unlocked: boolean, running: string
   return next ? `Nächstes: ${next.name} (Lv ${next.levelReq})` : '✔ Alles freigeschaltet';
 }
 
-function SkillRow({ id }: { id: string }) {
+/** An action unlocked since the skill was last opened. */
+function hasNewUnlock(id: string, level: number): boolean {
+  const seen = readJson<Record<string, number>>(SEEN_KEY, {})[id] ?? 1;
+  return (BY_SKILL.get(id) ?? []).some((a) => a.levelReq > seen && a.levelReq <= level);
+}
+
+function SkillRow({ id, fav, onFav }: { id: string; fav: boolean; onFav: (id: string) => void }) {
   const xp = useGame((s) => s.game.skills[id]?.xp ?? 0);
   const isActive = useGame((s) =>
     s.game.active
@@ -64,11 +74,24 @@ function SkillRow({ id }: { id: string }) {
         <span className="skill-name">
           {skill.name}
           {isActive && <span className="badge-running">●</span>}
+          {unlocked && hasNewUnlock(id, p.level) && <span className="badge-new">neu</span>}
         </span>
         <small className={`skill-hint ${running || isActive ? 'run' : ''}`}>{hint}</small>
         <ProgressBar fraction={p.fraction} color={skill.color} height={4} />
       </span>
       <span className="skill-level">{p.level}</span>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-label={fav ? 'Aus Favoriten entfernen' : 'Als Favorit markieren'}
+        className={`skill-fav ${fav ? 'on' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onFav(id);
+        }}
+      >
+        {fav ? '★' : '☆'}
+      </span>
     </button>
   );
 }
@@ -106,17 +129,51 @@ function SkillSummary() {
 const BALANCE_MASTER = 99;
 
 export function SkillList() {
+  const [favs, setFavs] = useState<string[]>(() => readJson<string[]>(FAV_KEY, []));
+  const [folded, setFolded] = useState<string[]>(() => readJson<string[]>(FOLD_KEY, []));
+  const levels = useGame((s) => SKILLS.map((k) => skillLevel(s.game, k.id)).join(','));
+  const lv = levels.split(',').map(Number);
+  const toggleFav = (id: string) => {
+    const next = favs.includes(id) ? favs.filter((x) => x !== id) : [...favs, id];
+    setFavs(next);
+    writeJson(FAV_KEY, next);
+  };
+  const toggleGroup = (g: string) => {
+    const next = folded.includes(g) ? folded.filter((x) => x !== g) : [...folded, g];
+    setFolded(next);
+    writeJson(FOLD_KEY, next);
+  };
+  const favSkills = SKILLS.filter((s) => favs.includes(s.id));
   return (
     <div className="skill-list">
       <SkillSummary />
-      {GROUPS.map((g) => (
-        <div key={g}>
-          <h4 className="group-title">{t(`skills.group.${g}` as MessageKey)}</h4>
-          {SKILLS.filter((s) => s.group === g).map((s) => (
-            <SkillRow key={s.id} id={s.id} />
+      {favSkills.length > 0 && (
+        <div>
+          <h4 className="group-title">⭐ Favoriten</h4>
+          {favSkills.map((s) => (
+            <SkillRow key={s.id} id={s.id} fav onFav={toggleFav} />
           ))}
         </div>
-      ))}
+      )}
+      {GROUPS.map((g) => {
+        const skills = SKILLS.filter((s) => s.group === g);
+        const sum = skills.reduce((a, s) => a + (lv[SKILLS.indexOf(s)] ?? 1), 0);
+        const closed = folded.includes(g);
+        return (
+          <div key={g}>
+            <button className="group-title group-toggle" onClick={() => toggleGroup(g)}>
+              <span>{closed ? '▸' : '▾'}</span> {t(`skills.group.${g}` as MessageKey)}{' '}
+              <small className="muted">
+                {skills.length} Skills · Σ {sum}
+              </small>
+            </button>
+            {!closed &&
+              skills.map((s) => (
+                <SkillRow key={s.id} id={s.id} fav={favs.includes(s.id)} onFav={toggleFav} />
+              ))}
+          </div>
+        );
+      })}
       {COMING_SOON_SKILLS.length > 0 && <h4 className="group-title">{t('skills.comingSoon')}</h4>}
       <div className="coming-soon">
         {COMING_SOON_SKILLS.map((s) => (

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.78.0] – Übersichtliche Skills & ruhige Insel
+
+- **Skill-Liste aufgeräumt** (Phase 39): ★ Favoriten stehen oben, Gruppen lassen sich einklappen (mit Stufen-Summe), und ein **„neu"**-Abzeichen zeigt, wo seit deinem letzten Besuch neue Aktionen freigeschaltet wurden.
+- **Skill-Ansicht mit Reitern**: „Aktionen" und „Meisterschaft & Verbindungen" – weniger Scrollen bis zur ersten Aktion.
+- **Ruhige Insel** (Phase 40): Volle Namen tragen nur noch die aktive Station, die Arena und deine sechs stärksten Skills; alle anderen Stationen zeigen nur ihr Symbol. Kein Namens-Wirrwarr mehr.
+
 ## [1.77.0] – Neues Menü
 
 Start des **Masterplans 6.0** (`docs/PLAN-6.md`): rund, logisch, lohnend.
