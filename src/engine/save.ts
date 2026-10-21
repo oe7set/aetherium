@@ -133,6 +133,12 @@ export const MIGRATIONS: Record<number, Migration> = {
   },
   // 12 → 13: Wochenboss (hydrate fills the defaults).
   12: (data) => data,
+  // 13 → 14: five Chronik steps inserted at index 13 (Masterplan 6.0) – keep later players in place.
+  13: (data) => {
+    const progress = isRecord(data.progress) ? data.progress : null;
+    if (!progress || typeof progress.chronicle !== 'number' || progress.chronicle < 13) return data;
+    return { ...data, progress: { ...progress, chronicle: progress.chronicle + 5 } };
+  },
 };
 
 export const EXPORT_PREFIX = 'AETH1:';

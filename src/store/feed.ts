@@ -42,6 +42,7 @@ import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
 import { INVENTION_MAP } from '../data/invention';
 import { WORLD_BOSS_MAP } from '../data/worldboss';
 import { ISLAND_EVENT_MAP } from '../data/islandEvents';
+import { MILESTONE_LEVELS } from '../data/milestones';
 import { PROJECT_MAP } from '../data/projects';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
@@ -104,6 +105,11 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
           kind: 'level',
           text: `${skill.icon} ${flavor(rng, LEVEL_UP_LINES, { skill: skill.name, level: e.level })}`,
         });
+        if ((MILESTONE_LEVELS as readonly number[]).includes(e.level))
+          out.popups.push({
+            kind: 'rare',
+            text: `🎖️ Meilenstein: ${skill.name} ${e.level} – Belohnung wartet!`,
+          });
         break;
       }
       case 'rareDrop': {

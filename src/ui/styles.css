@@ -3042,3 +3042,27 @@ button.group-toggle {
 .v-goods .ok {
   color: var(--green, #6fe39a);
 }
+
+/* Reichsrang-Ring in der Kopfleiste (Phase 49) */
+.chip.chip-ring {
+  padding: 2px;
+  border: none;
+  background: conic-gradient(var(--gold) calc(var(--ring, 0) * 360deg), var(--line) 0);
+}
+.chip-ring-icon {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--panel);
+  font-size: 1rem;
+}
+.chip-ring.ready {
+  animation: ring-glow 1.6s ease-in-out infinite;
+}
+@keyframes ring-glow {
+  50% {
+    box-shadow: 0 0 12px rgba(255, 209, 102, 0.8);
+  }
+}

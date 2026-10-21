@@ -551,6 +551,227 @@ const STAT_SERIES: StatSeries[] = [
     ],
     reward: () => ({ xp: 0.1 }),
   },
+  // Masterplan 3.0–6.0: every new system gets its own series.
+  {
+    key: 'slayerTasks',
+    icon: '🎯',
+    desc: (n) => `Erledige ${n} Kopfgeld-Aufträge.`,
+    steps: [
+      [10, 'Kopfgeldjäger·in'],
+      [100, 'Steckbrief-Sammler·in'],
+      [500, 'Der Schrecken der Wildnis'],
+    ],
+    reward: (i) => ({ 'combat.loot': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'thefts',
+    icon: '🗝️',
+    desc: (n) => `Gelingen ${n} Diebstähle.`,
+    steps: [
+      [100, 'Langfinger'],
+      [1000, 'Meisterdieb·in'],
+      [10000, 'Robin, aber ohne Hood'],
+    ],
+    reward: (i) => ({ gold: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'buildingsBuilt',
+    icon: '🔨',
+    desc: (n) => `Baue ${n} Inselbau-Stufen.`,
+    steps: [
+      [3, 'Bauherr·in'],
+      [10, 'Inselarchitekt·in'],
+      [25, 'Stadtplaner·in ohne Stadt'],
+    ],
+    reward: (i) => ({ 'xp.construction': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'mapsDrawn',
+    icon: '🧭',
+    desc: (n) => `Zeichne ${n} Karten.`,
+    steps: [
+      [50, 'Kartenzeichner·in'],
+      [500, 'Hier sind Drachen'],
+      [5000, 'Die Welt ist eine Scheibe (bewiesen)'],
+    ],
+    reward: (i) => ({ 'xp.cartography': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'bowsFletched',
+    icon: '🪶',
+    desc: (n) => `Fertige ${n} Bogenbau-Werke.`,
+    steps: [
+      [100, 'Pfeilschnitzer·in'],
+      [1000, 'Sehnenspanner·in'],
+      [10000, 'Köcher ohne Boden'],
+    ],
+    reward: (i) => ({ 'combat.damage.ranged': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'animalsTended',
+    icon: '🐄',
+    desc: (n) => `Versorge ${n} Tiere.`,
+    steps: [
+      [100, 'Stallbursche'],
+      [1000, 'Kuhflüsterer·in'],
+      [10000, 'Old McDonald'],
+    ],
+    reward: (i) => ({ 'xp.husbandry': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'voyagesMade',
+    icon: '⚓',
+    desc: (n) => `Unternimm ${n} Seefahrten.`,
+    steps: [
+      [25, 'Matrose'],
+      [250, 'Kapitän·in'],
+      [2500, 'Fliegende·r Holländer·in'],
+    ],
+    reward: (i) => ({ 'speed.sailing': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'nightObservations',
+    icon: '🌙',
+    desc: (n) => `Beobachte ${n}-mal den Nachthimmel.`,
+    steps: [
+      [50, 'Nachteule'],
+      [500, 'Sternengucker·in'],
+      [5000, 'Schläft nie'],
+    ],
+    reward: (i) => ({ 'xp.astronomy': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'lapsRun',
+    icon: '🏃',
+    desc: (n) => `Laufe ${n} Parcours-Runden.`,
+    steps: [
+      [100, 'Läufer·in'],
+      [1000, 'Dachkletterer·in'],
+      [10000, 'Parkour!'],
+    ],
+    reward: (i) => ({ 'speed.agility': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'inventionsBuilt',
+    icon: '⚙️',
+    desc: (n) => `Baue ${n} Erfindungs-Stufen.`,
+    steps: [
+      [1, 'Tüftler·in'],
+      [10, 'Erfinder·in'],
+      [30, 'Patentamt hasst dich'],
+    ],
+    reward: (i) => ({ research: 0.02 * (i + 1) }),
+  },
+  {
+    key: 'forgeSuccesses',
+    icon: '✨',
+    desc: (n) => `Verstärke ${n}-mal erfolgreich.`,
+    steps: [
+      [5, 'Funkenschläger·in'],
+      [30, 'Glühendes Händchen'],
+      [100, '+10 oder nichts'],
+    ],
+    reward: (i) => ({ 'combat.damage': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'worldBossKills',
+    icon: '👹',
+    desc: (n) => `Besiege ${n} Weltbosse.`,
+    steps: [
+      [1, 'Riesentöter·in'],
+      [10, 'Kolosskiller·in'],
+      [50, 'Die Welt sagt danke'],
+    ],
+    reward: (i) => ({ 'combat.hp': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'projectStages',
+    icon: '🏗️',
+    desc: (n) => `Vollende ${n} Großprojekt-Abschnitte.`,
+    steps: [
+      [1, 'Grundsteinleger·in'],
+      [8, 'Baumeister·in der Wunder'],
+      [16, 'Alle Wunder der Insel'],
+    ],
+    reward: (i) => ({ gold: 0.02 * (i + 1) }),
+  },
+  {
+    key: 'milestonesClaimed',
+    icon: '🎖️',
+    desc: (n) => `Hole ${n} Skill-Meilensteine ab.`,
+    steps: [
+      [10, 'Meilenstein-Sammler·in'],
+      [50, 'Auf allen Wegen'],
+      [150, 'Kein Stein bleibt liegen'],
+    ],
+    reward: (i) => ({ xp: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'empireRanks',
+    icon: '👑',
+    desc: (n) => `Steige ${n} Reichsränge auf.`,
+    steps: [
+      [1, 'Aufsteiger·in'],
+      [5, 'Adel verpflichtet'],
+      [11, 'Kaiserlich'],
+    ],
+    reward: (i) => ({ 'village.prod': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'islandEvents',
+    icon: '🎪',
+    desc: (n) => `Erlebe ${n} Insel-Ereignisse.`,
+    steps: [
+      [5, 'Schaulustige·r'],
+      [50, 'Immer dabei'],
+      [250, 'Hier ist ja immer was los'],
+    ],
+    reward: (i) => ({ gold: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'traderDeals',
+    icon: '🧳',
+    desc: (n) => `Kaufe ${n}-mal beim Wanderhändler.`,
+    steps: [
+      [1, 'Kundschaft'],
+      [25, 'Stammkund·in'],
+      [100, 'Er kennt deinen Namen'],
+    ],
+    reward: (i) => ({ gold: 0.01 * (i + 1) }),
+  },
+  {
+    key: 'villageSupplyGoods',
+    icon: '🚚',
+    desc: (n) => `Hole ${n} Waren aus dem Dorf auf die Insel.`,
+    steps: [
+      [100, 'Lieferdienst'],
+      [2000, 'Karawanenführer·in'],
+      [20000, 'Logistik-Genie'],
+    ],
+    reward: (i) => ({ 'village.prod': 0.01 * (i + 1) }),
+  },
+  {
+    key: 'riftRelics',
+    icon: '🏺',
+    desc: (n) => `Finde ${n} Relikte.`,
+    steps: [
+      [1, 'Grabräuber·in'],
+      [10, 'Reliktjäger·in'],
+      [30, 'Museumsreif'],
+    ],
+    reward: (i) => ({ 'rift.luck': 0.02 * (i + 1) }),
+  },
+  {
+    key: 'guildOrders',
+    icon: '📜',
+    desc: (n) => `Erfülle ${n} Zunftaufträge.`,
+    steps: [
+      [10, 'Zunftmitglied'],
+      [100, 'Zunftmeister·in'],
+      [500, 'Ehrenbürger·in aller Zünfte'],
+    ],
+    reward: (i) => ({ gold: 0.01 * (i + 1) }),
+  },
 ];
 
 function statAchievements(): AchievementDef[] {

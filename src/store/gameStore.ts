@@ -704,7 +704,10 @@ export const useGame = create<GameStore>()((set, get) => {
         lines = claimEmpireRank(s, defaultRng, emit);
         name = EMPIRE_RANKS[s.empireRank]?.name ?? '';
       });
-      if (lines) showReward(`Neuer Reichsrang: ${name}`, '👑', lines);
+      if (lines) {
+        if (get().game.settings.sound) SOUNDS.fanfare();
+        showReward(`Neuer Reichsrang: ${name}`, '👑', lines);
+      }
     },
     claimPass: (tier) => {
       let lines: RewardLine[] | null = null;

@@ -1,5 +1,14 @@
 import { BALANCE } from '../data/balance';
-import { affordableTechs, formatDuration, formatNumber, maxHp, totalLevel } from '../engine';
+import {
+  affordableTechs,
+  empireRankReached,
+  empireScore,
+  formatDuration,
+  formatNumber,
+  maxHp,
+  totalLevel,
+} from '../engine';
+import { EMPIRE_RANKS } from '../data/empire';
 import { t } from '../i18n';
 import { useGame } from '../store/gameStore';
 import { useAgendaSummary } from './agendaNav';
@@ -66,6 +75,7 @@ export function Header() {
               🦉 <b>{wisdom}</b>
             </span>
           )}
+          <EmpireChip />
           <button
             className="chip"
             title={`${t('header.totalLevel')} – zu den Skills`}
@@ -103,5 +113,30 @@ export function Header() {
         {todo.count > 0 && <b>{todo.count}</b>}
       </button>
     </header>
+  );
+}
+
+/** Reichsrang as a ring: fills towards the next rank, glows when a rank waits to be claimed. */
+function EmpireChip() {
+  const key = useGame((s) => {
+    const g = s.game;
+    const score = empireScore(g);
+    const next = EMPIRE_RANKS[g.empireRank + 1];
+    const from = EMPIRE_RANKS[g.empireRank]?.score ?? 0;
+    const frac = next ? Math.min(1, (score - from) / (next.score - from)) : 1;
+    return `${g.empireRank}|${Math.floor(frac * 40) / 40}|${empireRankReached(g) > g.empireRank ? 1 : 0}`;
+  });
+  const setUi = useGame((s) => s.setUi);
+  const [rank, frac, ready] = key.split('|');
+  const def = EMPIRE_RANKS[Number(rank)];
+  return (
+    <button
+      className={`chip chip-ring ${ready === '1' ? 'ready' : ''}`}
+      style={{ ['--ring' as string]: frac }}
+      title={`Reichsrang: ${def?.name ?? ''}`}
+      onClick={() => setUi({ tab: 'menu', menuSection: 'home' })}
+    >
+      <span className="chip-ring-icon">{def?.icon}</span>
+    </button>
   );
 }

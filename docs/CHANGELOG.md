@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.85.0] – Erfolge, Chronik & Belohnungsgefühl
+
+### Erfolge, Chronik & Belohnungsgefühl 🏆
+
+- **60 neue Erfolge** in 20 Reihen für alle neuen Systeme: Kopfgeld, Diebeskunst, Inselbauten, Karten, Bogenbau,
+  Viehzucht, Seefahrt, Nachthimmel, Parcours, Erfindungen, Verstärkung, Weltbosse, Großprojekte, Meilensteine,
+  Reichsränge, Insel-Ereignisse, Wanderhändler, Dorflieferungen, Relikte, Zunftaufträge – jeder mit Dauerbonus.
+- **Chronik**: fünf neue Kapitel mitten in der Reise (Meilenstein, Insel-Ereignis, Dorflieferung, zwei
+  Reichsränge, erster Großprojekt-Abschnitt) und drei neue Endziele (Weltboss, Herzog·in, Ätherium-Turm).
+  Bestehende Spielstände rücken automatisch mit (Spielstand-Version 14).
+- **Reichsrang-Ring** in der Kopfleiste: füllt sich bis zum nächsten Rang und leuchtet, wenn ein Aufstieg wartet.
+- **Fanfare** für Großprojekte, besiegte Weltbosse und Reichsränge; eigener Klang für Insel-Ereignisse und
+  erscheinende Weltbosse; Verstärken klingt nach Erfolg oder Pech.
+- **Meilenstein-Hinweis** beim Level-up auf 10/25/50/75/99.
+
 ## [1.84.0] – Balance: Einstieg & Wirtschaft
 
 ### Balance: Einstieg & Wirtschaft ⚖️

@@ -84,6 +84,11 @@ export const SOUNDS = {
     noise(0.15, 0.04, 0.03);
   },
   build: () => [392, 523].forEach((f, i) => tone(f, i * 0.07, 0.15, 'triangle', 0.05)),
+  fanfare: () => {
+    [392, 523, 659, 784].forEach((f, i) => tone(f, i * 0.11, 0.3, 'triangle', 0.06));
+    [1047, 1319].forEach((f, i) => tone(f, 0.5 + i * 0.02, 0.6, 'sine', 0.05));
+  },
+  event: () => [659, 880, 659, 1047].forEach((f, i) => tone(f, i * 0.09, 0.18, 'sine', 0.045)),
   prestige: () =>
     [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.12, 0.6, 'sine', 0.06)),
 };
@@ -143,6 +148,19 @@ export function playEventSounds(events: GameEvent[]): void {
         break;
       case 'heroAdventure':
         kinds.add(e.success ? 'rare' : 'bad');
+        break;
+      case 'projectStage':
+        kinds.add('fanfare');
+        break;
+      case 'worldBoss':
+        if (e.event === 'killed') kinds.add('fanfare');
+        else if (e.event === 'spawn') kinds.add('event');
+        break;
+      case 'islandEvent':
+        if (e.phase === 'start') kinds.add('event');
+        break;
+      case 'forged':
+        kinds.add(e.result === 'ok' ? 'rare' : 'bad');
         break;
       case 'villageFounded':
       case 'villageResearched':

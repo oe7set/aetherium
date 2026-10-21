@@ -775,7 +775,8 @@ body.reduce-motion *::after {
 .perf-eco .rarity-legendary,
 .perf-eco .rarity-peer_reviewed,
 .perf-eco .rarity-peer_reviewed::before,
-.perf-eco .vp-bar span {
+.perf-eco .vp-bar span,
+.perf-eco .chip-ring.ready {
   animation: none !important;
 }
 

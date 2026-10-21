@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.84.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.85.0**.
 
 ## 1. Der große Kreislauf
 
@@ -121,6 +121,10 @@ Schmiede, Sägewerk, Ziegelei, Eisengießerei aller Dörfer ein Lager (`s.villag
 `villageSupply`), das auf dem Dorfplatz ins Insel-Inventar geholt wird. Die Karte zeigt auch die Insel-Boni der
 Dorfgebäude; „Was jetzt?" meldet ≥25 wartende Waren und Gebäude, die nur auf Inselwaren warten (`goodsWanted`,
 `makerOf` → Sprung zum Skill).
+
+**Belohnungsgefühl** (Phase 48–49): Erfolgsreihen für alle Systeme aus Masterplan 3–6 (`STAT_SERIES` in
+`data/achievements.ts`), Chronik-Block bei Index 13 (Migration 13 → 14 verschiebt ältere Spielstände), Reichsrang-
+Ring `EmpireChip` in `ui/Header.tsx`, Sounds `fanfare`/`event` in `ui/audio.ts`, Meilenstein-Popup im Feed.
 
 **Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
 Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,

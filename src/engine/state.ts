@@ -572,7 +572,7 @@ export interface GuildState {
   refill: number;
 }
 
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 
 export function defaultSettings(): Settings {
   return {
