@@ -29,6 +29,9 @@ export function goToAgenda(target: AgendaTarget): void {
     case 'daily':
       store.setDailyOpen(true);
       break;
+    case 'world':
+      store.setUi({ tab: 'world' });
+      break;
     case 'chronicle':
       store.claimChronicle();
       break;

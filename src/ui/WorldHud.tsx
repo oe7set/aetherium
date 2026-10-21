@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { DECORS } from '../data/progress';
+import { ISLAND_EVENT_MAP } from '../data/islandEvents';
+import { IslandEventPanel } from './IslandEventPanel';
 import { dailyAvailable, decorShown, decorUnlocked, toggleDecor, weekKey } from '../engine';
 import { useGame } from '../store/gameStore';
 import { duration } from './village/vui';
@@ -58,6 +60,11 @@ export function WorldHud() {
   const setUi = useGame((s) => s.setUi);
   const setDailyOpen = useGame((s) => s.setDailyOpen);
   const [decor, setDecor] = useState(false);
+  const [eventOpen, setEventOpen] = useState(false);
+  const islandEvent = useGame((s) => {
+    const ev = s.game.islandEvent;
+    return ev.id ? `${ev.id}|${Math.ceil(ev.left / 60)}` : '';
+  });
   const decorCount = useGame((s) => DECORS.filter((d) => decorUnlocked(s.game, d)).length);
   const worldBoss = useGame((s) => {
     const f = s.game.worldBoss.fight;
@@ -119,6 +126,17 @@ export function WorldHud() {
             👹 <small>Weltboss</small> {worldBoss} %
           </button>
         )}
+        {islandEvent && (
+          <button
+            className={`hud-pill glow ${eventOpen ? 'active' : ''}`}
+            onClick={() => setEventOpen(!eventOpen)}
+            aria-expanded={eventOpen}
+          >
+            {ISLAND_EVENT_MAP.get(islandEvent.split('|')[0]!)?.icon}{' '}
+            <small>{ISLAND_EVENT_MAP.get(islandEvent.split('|')[0]!)?.name}</small>{' '}
+            {islandEvent.split('|')[1]} min
+          </button>
+        )}
         {daily && (
           <button className="hud-pill glow gift" onClick={() => setDailyOpen(true)}>
             🎁 Tagesbonus
@@ -126,6 +144,7 @@ export function WorldHud() {
         )}
       </div>
       {decor && <DecorPanel />}
+      {eventOpen && islandEvent && <IslandEventPanel />}
     </div>
   );
 }

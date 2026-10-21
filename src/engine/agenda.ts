@@ -5,6 +5,7 @@ import { canDeliver } from './guilds';
 import { claimableMilestones } from './milestones';
 import { canFinishStage } from './projects';
 import { empireRankReached } from './empire';
+import { activeIslandEvent } from './islandEvents';
 import { EMPIRE_RANKS } from '../data/empire';
 import { PROJECTS } from '../data/projects';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
@@ -35,6 +36,7 @@ import { canBuildIsland } from './construction';
  */
 export type AgendaTarget =
   | { area: 'daily' }
+  | { area: 'world' }
   | { area: 'chronicle' }
   | { area: 'skills' }
   | { area: 'skill'; skill: string }
@@ -116,6 +118,25 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  const isle = activeIslandEvent(s);
+  if (isle?.trader && s.islandEvent.deals.some((d) => !d.bought && s.gold.gte(d.price)))
+    add({
+      id: 'island-trader',
+      icon: isle.icon,
+      title: 'Der Wanderhändler ist da!',
+      detail: `Seltene Waren – noch ${Math.ceil(s.islandEvent.left / 60)} min`,
+      kind: 'todo',
+      target: { area: 'world' },
+    });
+  else if (isle && isle.skills[0])
+    add({
+      id: 'island-event',
+      icon: isle.icon,
+      title: `${isle.name} auf der Insel!`,
+      detail: `Boni für ${isle.skills.length} Skills – noch ${Math.ceil(s.islandEvent.left / 60)} min`,
+      kind: 'todo',
+      target: { area: 'skill', skill: isle.skills[0] },
     });
   if (empireRankReached(s) > s.empireRank)
     add({

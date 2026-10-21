@@ -158,7 +158,9 @@ describe('Langzeit-Bot: neue Skills, je 6 Stunden', () => {
     run('thieving', () => {});
     run('jewelcrafting', () => {});
     s.gold = s.gold.add(100000);
-    run('cartography', () => {});
+    run('cartography', () => {
+      s.inventory = {};
+    });
     run('slayer', () => {
       s.inventory.cooked_shark = 2000;
       for (const sk of ['melee', 'defence', 'hitpoints']) s.skills[sk] = { xp: e.xpForLevel(30) };

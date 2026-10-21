@@ -2966,3 +2966,48 @@ button.group-toggle {
   gap: 2px 10px;
   font-size: 0.82rem;
 }
+
+/* Insel-Ereignisse (Phase 44) */
+.island-event {
+  pointer-events: auto;
+  margin-top: 6px;
+  padding: 10px;
+  width: min(520px, 100%);
+  box-sizing: border-box;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(14, 18, 36, 0.97);
+}
+.island-event-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.island-event-head > div {
+  display: flex;
+  flex-direction: column;
+}
+.island-event-icon {
+  font-size: 2rem;
+}
+.trader-deals {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.trader-deals li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trader-deals li span {
+  flex: 1;
+}
+.trader-deals li.bought {
+  opacity: 0.55;
+}

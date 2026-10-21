@@ -48,6 +48,7 @@ export type GameEvent =
   | { type: 'fell'; actionId: string; damage: number }
   | { type: 'invented'; invention: string; level: number }
   | { type: 'forged'; slot: string; level: number; result: string }
+  | { type: 'islandEvent'; event: string; phase: 'start' | 'end' }
   | { type: 'worldBoss'; boss: string; event: 'spawn' | 'phase' | 'killed' | 'escaped' }
   | { type: 'projectStage'; project: string; stage: number }
   | { type: 'familiarSummoned'; familiar: string }

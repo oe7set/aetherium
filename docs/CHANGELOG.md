@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.82.0] – Insel-Ereignisse
+
+### Neu: Insel-Ereignisse 🎪
+
+- Alle 45–90 Minuten passiert etwas auf der Insel (das erste nach 20 Minuten) – auch offline:
+  - 🧳 **Wanderhändler**: drei seltene Angebote (Prägesteine, Schutzrunen, Krakenzahn, Sternenstaub …) gegen Gold
+  - ☄️ **Meteorschauer**: mehr XP für Bergbau und Sternkunde, Meteoriten beim Arbeiten
+  - 🐟 **Fischschwarm**: schneller fischen, Perlen beim Fischen und Segeln
+  - 💰 **Goldader**: +25 % Gold, doppelte Erze, Golderz beim Bergbau
+  - ⛈️ **Sturm**: doppeltes Holz, XP für Seefahrt und Gewandtheit, Treibgut
+  - 🌾 **Erntefest**: Landwirtschaft, Kochen und Brauen schneller, Dorf produziert mehr, Honig
+- Leuchtende Anzeige in der Insel-Leiste mit Restzeit, Antippen zeigt Boni und Händler-Angebote.
+- „Was jetzt?" meldet laufende Ereignisse, die Ruhmesleiter zählt sie mit.
+
 ## [1.81.0] – Reichsränge
 
 ### Neu: Reichsränge 👑

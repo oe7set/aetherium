@@ -41,6 +41,7 @@ import { RELIC_MAP } from '../data/riftwalker';
 import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
 import { INVENTION_MAP } from '../data/invention';
 import { WORLD_BOSS_MAP } from '../data/worldboss';
+import { ISLAND_EVENT_MAP } from '../data/islandEvents';
 import { PROJECT_MAP } from '../data/projects';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
@@ -314,6 +315,16 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
         const text = `${p?.icon ?? '🏗️'} ${p?.name ?? 'Großprojekt'}: ${done ? 'vollendet!' : `Bauabschnitt „${p?.stages[e.stage - 1]?.name ?? ''}" fertig!`}`;
         out.feed.push({ kind: 'rare', text });
         out.popups.push({ kind: 'rare', text });
+        break;
+      }
+      case 'islandEvent': {
+        const ev = ISLAND_EVENT_MAP.get(e.event);
+        const name = `${ev?.icon ?? '✨'} ${ev?.name ?? 'Ereignis'}`;
+        if (e.phase === 'start') {
+          const text = `${name} auf der Insel! ${ev?.desc ?? ''}`;
+          out.feed.push({ kind: 'rare', text });
+          out.popups.push({ kind: 'rare', text: `${name} hat begonnen!` });
+        } else out.feed.push({ kind: 'info', text: `${name} ist vorbei.` });
         break;
       }
       case 'worldBoss': {

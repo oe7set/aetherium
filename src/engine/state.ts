@@ -488,6 +488,8 @@ export interface GameState {
   };
   /** Weltbosse (Phase 34). */
   worldBoss: WorldBossState;
+  /** Insel-Ereignis (Phase 44): the running one or the countdown to the next. */
+  islandEvent: IslandEventState;
   /** Claimed skill milestones, e.g. "mining:25". */
   milestones: string[];
   /** Großprojekte: finished stages and goods delivered towards the current one. */
@@ -507,6 +509,18 @@ export interface WorldBossFight {
   rates: { island: number; village: number; hero: number };
   recalc: number;
   strikeCd: number;
+}
+
+export interface IslandEventState {
+  id: string | null;
+  /** Previous event (never twice in a row). */
+  lastId: string | null;
+  /** Seconds the running event still lasts. */
+  left: number;
+  /** Seconds until the next event (while none runs). */
+  next: number;
+  /** Wanderhändler's offers of this visit. */
+  deals: { item: string; qty: number; price: number; bought: boolean }[];
 }
 
 export interface WorldBossState {
@@ -654,6 +668,7 @@ export function newGame(now: number = Date.now()): GameState {
     inventions: {},
     forge: { levels: {}, affixes: {} },
     worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
+    islandEvent: { id: null, lastId: null, left: 0, next: 1200, deals: [] },
     milestones: [],
     projects: {},
     empireRank: 0,
@@ -797,6 +812,7 @@ export function cloneState(s: GameState): GameState {
         { stage: v.stage, delivered: { ...v.delivered } },
       ]),
     ),
+    islandEvent: { ...s.islandEvent, deals: s.islandEvent.deals.map((d) => ({ ...d })) },
     worldBoss: {
       ...s.worldBoss,
       fight: s.worldBoss.fight

@@ -25,6 +25,7 @@ import { INVENTION_MAP, INVENTION_MAX } from '../data/invention';
 import { AFFIX_MAP, FORGE_MAX, FORGE_SLOTS } from '../data/forge';
 import { WORLD_BOSS_MAP } from '../data/worldboss';
 import { PROJECT_MAP } from '../data/projects';
+import { ISLAND_EVENT_MAP } from '../data/islandEvents';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -286,6 +287,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
       return !!skill && SKILL_MAP.has(skill) && Number(lvl) > 0;
     }),
     worldBoss: hydrateWorldBoss(data.worldBoss, base.worldBoss),
+    islandEvent: hydrateIslandEvent(data.islandEvent, base.islandEvent),
     inventions: Object.fromEntries(
       Object.entries(numberRecord(data.inventions))
         .filter(([id]) => INVENTION_MAP.has(id))
@@ -902,6 +904,33 @@ function hydrateForge(v: unknown): GameState['forge'] {
       )
         affixes[slot] = { key: a.key, value: a.value };
   return { levels, affixes };
+}
+
+function hydrateIslandEvent(
+  v: unknown,
+  fallback: GameState['islandEvent'],
+): GameState['islandEvent'] {
+  if (!v || typeof v !== 'object') return fallback;
+  const o = v as Record<string, unknown>;
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const id = typeof o.id === 'string' && ISLAND_EVENT_MAP.has(o.id) ? o.id : null;
+  const deals = Array.isArray(o.deals)
+    ? o.deals.flatMap((d) => {
+        if (!d || typeof d !== 'object') return [];
+        const r = d as Record<string, unknown>;
+        if (typeof r.item !== 'string' || !ITEM_MAP.has(r.item)) return [];
+        return [
+          { item: r.item, qty: num(r.qty, 1), price: num(r.price, 0), bought: r.bought === true },
+        ];
+      })
+    : [];
+  return {
+    id,
+    lastId: typeof o.lastId === 'string' ? o.lastId : null,
+    left: id ? num(o.left, 0) : 0,
+    next: num(o.next, fallback.next),
+    deals: id ? deals : [],
+  };
 }
 
 function hydrateWorldBoss(v: unknown, fallback: GameState['worldBoss']): GameState['worldBoss'] {

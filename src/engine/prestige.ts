@@ -154,6 +154,7 @@ function resetRun(s: GameState): void {
     // Slot reinforcement belongs to the player like the gear.
     forge: s.forge,
     worldBoss: s.worldBoss,
+    islandEvent: s.islandEvent,
     // Claimed milestone rewards are paid once per save – the lasting boni follow the levels.
     milestones: s.milestones,
     // Monuments stand forever.
