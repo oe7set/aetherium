@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.83.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.84.0**.
 
 ## 1. Der große Kreislauf
 
@@ -119,7 +119,8 @@ Gebäudestufen bei ½, ¾ und Höchststufe brauchen zusätzlich Inselwaren (`bui
 Metall/Wissen; Prüfung in `canUpgradeBuilding` → `goods`, Abbruch erstattet). Umgekehrt füllen Mühle, Bäckerei,
 Schmiede, Sägewerk, Ziegelei, Eisengießerei aller Dörfer ein Lager (`s.villageSupply`, max. 24 h, Zeiteffekt
 `villageSupply`), das auf dem Dorfplatz ins Insel-Inventar geholt wird. Die Karte zeigt auch die Insel-Boni der
-Dorfgebäude; „Was jetzt?" meldet ≥25 wartende Waren.
+Dorfgebäude; „Was jetzt?" meldet ≥25 wartende Waren und Gebäude, die nur auf Inselwaren warten (`goodsWanted`,
+`makerOf` → Sprung zum Skill).
 
 **Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
 Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,

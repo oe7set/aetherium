@@ -1,8 +1,17 @@
-import { SUPPLY_CAP_HOURS, VILLAGE_SUPPLY } from '../data/villageGoods';
+import { ACTIONS } from '../data';
+import type { ItemStack } from '../data/types';
+import { buildingGoods, SUPPLY_CAP_HOURS, VILLAGE_SUPPLY } from '../data/villageGoods';
+import { itemCount } from './inventory';
 import { gainItem, registerTimeEffect } from './actions';
 import type { Emit } from './events';
 import { addStat, type GameState } from './state';
-import { buildingLevel } from './village';
+import {
+  activeVillage,
+  buildingLevel,
+  canUpgradeBuilding,
+  plannedLevel,
+  V_BUILDING_MAP,
+} from './village';
 
 /** Dorflieferung: the village workshops fill a store of island goods; the player collects it. */
 
@@ -33,6 +42,26 @@ export function collectVillageSupply(s: GameState, emit: Emit): { item: string; 
     addStat(s, 'villageSupplyGoods', qty);
   }
   return got;
+}
+
+/** The first building of the active village that only waits for island goods, with what is missing. */
+export function goodsWanted(s: GameState): { building: string; missing: ItemStack[] } | null {
+  const v = activeVillage(s);
+  for (const def of V_BUILDING_MAP.values()) {
+    const check = canUpgradeBuilding(s, v, def.id);
+    if (check.ok || check.reason !== 'goods') continue;
+    const next = plannedLevel(v, 'center', def.id) + 1;
+    const missing = buildingGoods(def.id, def.maxLevel, next)
+      .map((g) => ({ item: g.item, qty: g.qty - itemCount(s, g.item) }))
+      .filter((g) => g.qty > 0);
+    return { building: def.id, missing };
+  }
+  return null;
+}
+
+/** An action that makes the item (first match). */
+export function makerOf(item: string) {
+  return ACTIONS.find((a) => a.outputs.some((o) => o.item === item));
 }
 
 registerTimeEffect('villageSupply', {

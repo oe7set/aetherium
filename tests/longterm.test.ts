@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { actionsForSkill, toolsForSkill } from '../src/data';
+import { ACTIONS, actionsForSkill, toolsForSkill } from '../src/data';
 import * as e from '../src/engine';
 import { gameWith } from './helpers';
 
@@ -10,10 +10,37 @@ import { gameWith } from './helpers';
  */
 const noop = () => {};
 
+/** Works towards an item: its maker if the inputs are there, else the first missing input (depth 4). */
+function workTowards(s: e.GameState, item: string, depth = 0): boolean {
+  const maker = ACTIONS.filter(
+    (a) => a.outputs.some((o) => o.item === item) && a.levelReq <= e.skillLevel(s, a.skill),
+  ).pop();
+  if (!maker || depth > 4) return false;
+  if (e.canPerform(s, maker).ok) return e.startAction(s, maker.id, noop).ok;
+  const missing = e.firstMissing(s, maker.inputs);
+  return missing ? workTowards(s, missing, depth + 1) : false;
+}
+
+/** Island goods the village asks for (and what they are made of) stay in the bag. */
+const KEEP = new Set([
+  'stone_granite',
+  'log_oak',
+  'log_maple',
+  'ore_copper',
+  'ore_tin',
+  'ore_iron',
+  'coal',
+]);
+
 function islandTurn(s: e.GameState, hour: number): void {
   const skill = ['woodcutting', 'mining', 'fishing'][Math.floor(hour / 6) % 3]!;
+  const wanted = e.goodsWanted(s);
+  for (const g of wanted?.missing ?? []) KEEP.add(g.item);
   // Sell the bag, buy the best affordable tool, start the best action.
-  for (const [item, qty] of Object.entries(s.inventory)) e.sellItem(s, item, qty, noop);
+  for (const [item, qty] of Object.entries(s.inventory))
+    if (!KEEP.has(item)) e.sellItem(s, item, qty, noop);
+  // Every other check-in the village's wishes come first.
+  if (wanted && hour % 1 === 0 && wanted.missing.some((g) => workTowards(s, g.item))) return;
   for (const t of toolsForSkill(skill)) if (!s.ownedTools.includes(t.id)) e.buyTool(s, t.id);
   const level = e.skillLevel(s, skill);
   const candidates = actionsForSkill(skill)

@@ -139,3 +139,27 @@ kosten Rohstoffe aus anderen Skills und sollen sich deshalb nicht langsamer anf�
 Dreifache des Verkaufswerts (+10 % je Rang) und halbe Rezept-XP: lohnender als Verkaufen, aber kein XP-Ersatz.
 Flüche geben +15–30 % Essenz je Fluch; Rissläufer-Meilensteine sind bewusst flach (+0,2 % Schaden je Stufe), die
 großen Sprünge kommen über Relikte und Meilenstein-Perks.
+
+## Einstieg & Wirtschaft (Phase 46–47, v1.84)
+
+**Einstiegs-Bot** (`tests/onboarding.test.ts`): neuer Spielstand, 2 h, alle 5 min ein Blick – rotiert Holzfällen,
+Feuermachen, Fischen, Kochen, Bergbau, Schmieden, holt fehlende Zutaten selbst (wie der Rezept-Sprung), kauft
+Werkzeuge, baut Felder und claimt Chronik/Meilensteine/Reichsränge.
+
+| Minute | Skills ≥ 10 (von 6) | Gold verdient | Werkzeuge | Reichsrang |
+| ------ | ------------------- | ------------- | --------- | ---------- |
+| 15     | 3                   | ~3 k          | 9         | 0          |
+| 60     | 5                   | ~18 k         | 13        | 1          |
+| 120    | 6                   | ~60 k         | 17        | 2          |
+
+Befund: Schmieden blieb ohne Zinn auf Stufe 1 – Bronze braucht zwei Erze. Das Spiel löst das über den Rezept-Sprung
+und „Was jetzt?"; der Bot macht es jetzt genauso.
+
+**Dorf ↔ Insel im 3-Tage-Bot**: Mit Inselwaren-Pflicht ab Stufe 10 blieb das Hauptgebäude bei 9 stehen, solange der
+Bot alles verkaufte. Holt er die Waren (Steinblöcke über Granit → Baukunst 10, Bretter, Nägel), erreicht er nach 3
+Tagen Hauptgebäude 14, 567 statt 497 Einwohner und Gesamtlevel 368 statt 336 – die Verzahnung zahlt sich aus.
+„Was jetzt?" meldet daher „… wartet auf Inselwaren" mit Sprung zum passenden Skill.
+
+**Gold**: Nach 3 Tagen ~3 Mio. Gold beim Bot, der nur Werkzeuge kauft. Echte Senken danach: Werkzeugstufen
+(1,5 Mio. / 25 Mio.), Verstärkung (250 · 2^Stufe Gold je Versuch, ab +6 mit Runenbarren), Sofortbau im Dorf,
+Inventarplätze, Wanderhändler (Preise liegen 2–4× über dem Verkaufswert – kein Weiterverkaufs-Trick).

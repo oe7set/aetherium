@@ -6,12 +6,12 @@ import { claimableMilestones } from './milestones';
 import { canFinishStage } from './projects';
 import { empireRankReached } from './empire';
 import { activeIslandEvent } from './islandEvents';
-import { supplyReady } from './villageSupply';
+import { goodsWanted, makerOf, supplyReady } from './villageSupply';
 import { EMPIRE_RANKS } from '../data/empire';
 import { PROJECTS } from '../data/projects';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
-import { SKILL_MAP, SKILLS, TOOL_MAP, toolsForSkill } from '../data';
+import { getItem, SKILL_MAP, SKILLS, TOOL_MAP, toolsForSkill } from '../data';
 import { skillLevel } from './skills';
 import { currentChronicle, dailyAvailable, passClaimable } from './progress';
 import { canStartRun } from './rift';
@@ -26,6 +26,7 @@ import {
   invasionDefense,
   invasionStrength,
   invasionTarget,
+  V_BUILDING_MAP,
 } from './village';
 import { V_BUILDINGS } from '../data/village';
 import { ISLAND_BUILDINGS } from '../data/construction';
@@ -129,6 +130,18 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: `${supply} Waren warten auf die Insel`,
       kind: 'reward',
       target: { area: 'village', section: 'center' },
+    });
+  const wanted = goodsWanted(s);
+  const firstGood = wanted?.missing[0];
+  const maker = firstGood && makerOf(firstGood.item);
+  if (wanted && firstGood && maker)
+    add({
+      id: 'village-goods',
+      icon: V_BUILDING_MAP.get(wanted.building)?.icon ?? '🏘️',
+      title: `${V_BUILDING_MAP.get(wanted.building)?.name ?? 'Dorf'} wartet auf Inselwaren`,
+      detail: wanted.missing.map((g) => `${g.qty}× ${getItem(g.item).name}`).join(', '),
+      kind: 'todo',
+      target: { area: 'skill', skill: maker.skill },
     });
   const isle = activeIslandEvent(s);
   if (isle?.trader && s.islandEvent.deals.some((d) => !d.bought && s.gold.gte(d.price)))

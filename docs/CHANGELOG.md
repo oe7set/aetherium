@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.84.0] – Balance: Einstieg & Wirtschaft
+
+### Balance: Einstieg & Wirtschaft ⚖️
+
+- Neuer **Einstiegs-Bot** spielt die ersten zwei Stunden eines frischen Spielstands und sichert das Tempo ab
+  (Skills auf 10, erste Werkzeuge, Reichsränge, stetiger Fortschritt jede Viertelstunde).
+- **„Was jetzt?" zeigt, wenn ein Dorfgebäude auf Inselwaren wartet** – mit den fehlenden Waren und Sprung zum
+  Skill, der sie herstellt.
+- Langzeit-Bot holt jetzt Inselwaren fürs Dorf: Hauptgebäude 14 statt 9 nach drei Tagen, mehr Einwohner.
+- Gold-Quellen und -Senken geprüft, Ergebnisse in `docs/BALANCING.md`.
+
 ## [1.83.0] – Dorf ↔ Insel
 
 ### Neu: Dorf ↔ Insel 🚚
