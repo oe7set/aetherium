@@ -490,6 +490,8 @@ export interface GameState {
   worldBoss: WorldBossState;
   /** Claimed skill milestones, e.g. "mining:25". */
   milestones: string[];
+  /** Großprojekte: finished stages and goods delivered towards the current one. */
+  projects: Record<string, { stage: number; delivered: Record<string, number> }>;
 }
 
 export interface WorldBossFight {
@@ -651,6 +653,7 @@ export function newGame(now: number = Date.now()): GameState {
     forge: { levels: {}, affixes: {} },
     worldBoss: { next: 1800, fight: null, kills: 0, bestTime: 0, history: [], last: null },
     milestones: [],
+    projects: {},
   };
 }
 
@@ -785,6 +788,12 @@ export function cloneState(s: GameState): GameState {
     inventions: { ...s.inventions },
     forge: { levels: { ...s.forge.levels }, affixes: { ...s.forge.affixes } },
     milestones: [...s.milestones],
+    projects: Object.fromEntries(
+      Object.entries(s.projects).map(([k, v]) => [
+        k,
+        { stage: v.stage, delivered: { ...v.delivered } },
+      ]),
+    ),
     worldBoss: {
       ...s.worldBoss,
       fight: s.worldBoss.fight

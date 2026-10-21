@@ -1,7 +1,10 @@
 import { ACHIEVEMENTS } from '../../data';
+import { PROJECTS } from '../../data/projects';
 import {
   affordableTechs,
   canDeliver,
+  canFinishStage,
+  projectDone,
   passClaimable,
   QUEST_MAP,
   questProgress,
@@ -39,10 +42,19 @@ export function MenuHub() {
   const orders = game.guilds.orders.filter((o) => canDeliver(game, o)).length;
   const techs = affordableTechs(game).length;
   const wisdom = wisdomGain(game);
+  const projects = PROJECTS.filter((p) => projectDone(game, p.id)).length;
+  const projectReady = PROJECTS.some((p) => canFinishStage(game, p.id));
   const groups: { title: string; tiles: Tile[] }[] = [
     {
       title: 'Fortschritt',
       tiles: [
+        {
+          section: 'projects',
+          icon: '🏗️',
+          label: 'Großprojekte',
+          info: `${projects}/${PROJECTS.length} vollendet${projectReady ? ' · lieferbar!' : ''}`,
+          hot: projectReady,
+        },
         {
           section: 'pass',
           icon: '🏅',

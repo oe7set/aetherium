@@ -48,4 +48,5 @@ export * from './invention';
 export * from './forge';
 export * from './worldboss';
 export * from './milestones';
+export * from './projects';
 export * from './time';

@@ -49,6 +49,7 @@ export type GameEvent =
   | { type: 'invented'; invention: string; level: number }
   | { type: 'forged'; slot: string; level: number; result: string }
   | { type: 'worldBoss'; boss: string; event: 'spawn' | 'phase' | 'killed' | 'escaped' }
+  | { type: 'projectStage'; project: string; stage: number }
   | { type: 'familiarSummoned'; familiar: string }
   | { type: 'familiarLeft'; familiar: string }
   | { type: 'slayerTask'; monster: string; count: number }

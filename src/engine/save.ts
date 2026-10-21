@@ -24,6 +24,7 @@ import { CONSTELLATION_MAP, CONSTELLATION_MAX_RANK } from '../data/astronomy';
 import { INVENTION_MAP, INVENTION_MAX } from '../data/invention';
 import { AFFIX_MAP, FORGE_MAX, FORGE_SLOTS } from '../data/forge';
 import { WORLD_BOSS_MAP } from '../data/worldboss';
+import { PROJECT_MAP } from '../data/projects';
 import { DECOR_MAP, FRAME_MAP } from '../data/progress';
 import { PETS, QUESTS } from '../data/meta';
 import { LAWS } from '../data/prestige';
@@ -277,6 +278,7 @@ export function hydrate(data: Record<string, unknown>, now: number = Date.now())
     guilds: hydrateGuilds(data.guilds, base.guilds),
     stars: hydrateStars(data.stars),
     forge: hydrateForge(data.forge),
+    projects: hydrateProjects(data.projects),
     milestones: stringArray(data.milestones).filter((k) => {
       const [skill, lvl] = k.split(':');
       return !!skill && SKILL_MAP.has(skill) && Number(lvl) > 0;
@@ -937,4 +939,19 @@ function hydrateWorldBoss(v: unknown, fallback: GameState['worldBoss']): GameSta
     history: history.slice(0, 5),
     last: null,
   };
+}
+
+function hydrateProjects(v: unknown): GameState['projects'] {
+  if (!isRecord(v)) return {};
+  const out: GameState['projects'] = {};
+  for (const [id, p] of Object.entries(v)) {
+    const def = PROJECT_MAP.get(id);
+    if (!def || !isRecord(p)) continue;
+    const stage = Math.max(0, Math.min(def.stages.length, Math.floor(Number(p.stage) || 0)));
+    const delivered = Object.fromEntries(
+      Object.entries(numberRecord(p.delivered)).filter(([item]) => ITEM_MAP.has(item)),
+    );
+    out[id] = { stage, delivered };
+  }
+  return out;
 }

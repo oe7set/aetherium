@@ -156,6 +156,8 @@ function resetRun(s: GameState): void {
     worldBoss: s.worldBoss,
     // Claimed milestone rewards are paid once per save – the lasting boni follow the levels.
     milestones: s.milestones,
+    // Monuments stand forever.
+    projects: s.projects,
   };
   Object.assign(s, fresh, kept);
 

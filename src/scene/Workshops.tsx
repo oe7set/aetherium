@@ -5,6 +5,7 @@ import { useGame } from '../store/gameStore';
 import { getAction } from '../data';
 import { stationFor } from './layout';
 import { ISLAND_BUILDINGS } from '../data/construction';
+import { PROJECTS } from '../data/projects';
 
 type TapHandler = (e: ThreeEvent<MouseEvent>) => void;
 
@@ -518,5 +519,104 @@ export function InventorShop({ onTap }: { onTap: TapHandler }) {
         <meshStandardMaterial color="#6b6f8a" />
       </mesh>
     </Workshop>
+  );
+}
+
+/** Großprojekte: each monument grows with its finished stages (a scaffold until the first one). */
+export function Monuments() {
+  const key = useGame((s) =>
+    PROJECTS.map((p) => `${p.id}:${s.game.projects[p.id]?.stage ?? 0}`).join(','),
+  );
+  const glow = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (glow.current) glow.current.rotation.y = clock.elapsedTime * 0.6;
+  });
+  return (
+    <group>
+      {key.split(',').map((entry) => {
+        const [id = '', st = '0'] = entry.split(':');
+        const stage = Number(st);
+        const p = PROJECTS.find((x) => x.id === id);
+        if (!p || stage <= 0) return null;
+        const done = stage >= p.stages.length;
+        const f = stage / p.stages.length;
+        return (
+          <group key={id} position={[p.pos[0], 0, p.pos[1]]}>
+            {id === 'lighthouse' && (
+              <>
+                <mesh position={[0, 1.2 * f, 0]} castShadow>
+                  <cylinderGeometry args={[0.35, 0.5, 2.4 * f, 10]} />
+                  <meshStandardMaterial color="#f4f1ea" flatShading />
+                </mesh>
+                {done && (
+                  <mesh position={[0, 2.6, 0]}>
+                    <sphereGeometry args={[0.25, 10, 8]} />
+                    <meshStandardMaterial
+                      color="#ffd166"
+                      emissive="#ffb000"
+                      emissiveIntensity={2}
+                    />
+                  </mesh>
+                )}
+              </>
+            )}
+            {id === 'aether_bridge' && (
+              <mesh position={[0, 0.25, 0]} rotation={[0, 0.5, 0]}>
+                <boxGeometry args={[2.6 * f, 0.12, 0.6]} />
+                <meshStandardMaterial
+                  color={done ? '#9b6bff' : '#8b6b4a'}
+                  emissive={done ? '#6b3bff' : '#000000'}
+                  emissiveIntensity={done ? 0.8 : 0}
+                />
+              </mesh>
+            )}
+            {id === 'sky_observatory' && (
+              <>
+                <mesh position={[0, 0.4, 0]} castShadow>
+                  <cylinderGeometry args={[0.7, 0.8, 0.8, 12]} />
+                  <meshStandardMaterial color="#c8c8d8" flatShading />
+                </mesh>
+                {stage >= 1 && (
+                  <mesh position={[0, 0.8, 0]}>
+                    <sphereGeometry args={[0.7, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
+                    <meshStandardMaterial color="#6b6f8a" flatShading />
+                  </mesh>
+                )}
+              </>
+            )}
+            {id === 'grand_bazaar' && (
+              <>
+                {Array.from({ length: stage + 1 }, (_, i) => (
+                  <mesh key={i} position={[(i - stage / 2) * 0.6, 0.4, 0]} castShadow>
+                    <boxGeometry args={[0.5, 0.8, 0.5]} />
+                    <meshStandardMaterial
+                      color={['#e5534b', '#ffd166', '#3fa7d6', '#5be38a'][i % 4]}
+                    />
+                  </mesh>
+                ))}
+              </>
+            )}
+            {id === 'aetherium_tower' && (
+              <>
+                <mesh position={[0, 1.6 * f, 0]} castShadow>
+                  <cylinderGeometry args={[0.25, 0.6, 3.2 * f, 6]} />
+                  <meshStandardMaterial color="#b38cff" flatShading />
+                </mesh>
+                {done && (
+                  <mesh ref={glow} position={[0, 3.6, 0]}>
+                    <octahedronGeometry args={[0.35, 0]} />
+                    <meshStandardMaterial
+                      color="#7cf3ff"
+                      emissive="#3fd0ff"
+                      emissiveIntensity={2}
+                    />
+                  </mesh>
+                )}
+              </>
+            )}
+          </group>
+        );
+      })}
+    </group>
   );
 }

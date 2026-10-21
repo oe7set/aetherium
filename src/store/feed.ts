@@ -41,6 +41,7 @@ import { RELIC_MAP } from '../data/riftwalker';
 import { GUILD_MAP, GUILD_RANKS } from '../data/guilds';
 import { INVENTION_MAP } from '../data/invention';
 import { WORLD_BOSS_MAP } from '../data/worldboss';
+import { PROJECT_MAP } from '../data/projects';
 import { ISLAND_BUILDING_MAP } from '../data/construction';
 import { COLLECTION_MAP } from '../data/collections';
 import { TROOPS } from '../data/village';
@@ -305,6 +306,14 @@ export function translateEvents(events: GameEvent[], rng: Rng, format: NumberFor
             kind: 'warn',
             text: `🐾 ${f.icon} ${f.name} ist in die Geisterwelt zurückgekehrt.`,
           });
+        break;
+      }
+      case 'projectStage': {
+        const p = PROJECT_MAP.get(e.project);
+        const done = p && e.stage >= p.stages.length;
+        const text = `${p?.icon ?? '🏗️'} ${p?.name ?? 'Großprojekt'}: ${done ? 'vollendet!' : `Bauabschnitt „${p?.stages[e.stage - 1]?.name ?? ''}" fertig!`}`;
+        out.feed.push({ kind: 'rare', text });
+        out.popups.push({ kind: 'rare', text });
         break;
       }
       case 'worldBoss': {

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.80.0] – Großprojekte
+
+- **Großprojekte** 🏗️ (Phase 42): Fünf Wunder für deine Insel – **Leuchtturm**, **Ätherbrücke**, **Himmelsobservatorium**, **Großer Basar** und als Krönung der **Ätherium-Turm**, der erst nach allen anderen gebaut werden kann.
+- Jeder Bauabschnitt braucht Waren aus vielen Skills (Steinblöcke und Bretter, Taue und Barren, Sternenstaub und Perlen, Drachenschuppen und Sternenmetall …). Du lieferst nach und nach, was du hast; jeder fertige Abschnitt bringt einen **Dauerbonus**, Baukunst-XP und lässt das Bauwerk auf der Insel wachsen.
+- Zu finden unter Mehr → Großprojekte; „Was jetzt?" meldet, wenn ein Abschnitt fertiggestellt werden kann, und jede Ware springt per Antippen zu ihrem Rezept.
+
 ## [1.79.0] – Skill-Meilensteine & Meisterumhänge
 
 - **Skill-Meilensteine** 🎖️ (Phase 41): Jeder der 33 Skills belohnt Stufe 10, 25, 50, 75 und 99 – mit einem **Dauerbonus**, der sofort wirkt (mehr XP, schneller, öfter doppelte Ausbeute; Kampf-Skills bekommen Schaden, Treffsicherheit, Leben …), und einer **Belohnung zum Abholen** (Gold, Münzbeutel, Schatztruhen, Prägesteine, Essenz).

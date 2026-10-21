@@ -3,6 +3,8 @@ import { canStartAdventure } from './hero';
 import { freeSlots } from './inventory';
 import { canDeliver } from './guilds';
 import { claimableMilestones } from './milestones';
+import { canFinishStage } from './projects';
+import { PROJECTS } from '../data/projects';
 import { QUEST_MAP, questProgress, questStatus, taskProgress, weekKey, dayKey } from './meta';
 import { QUESTS } from '../data/meta';
 import { SKILL_MAP, SKILLS, TOOL_MAP, toolsForSkill } from '../data';
@@ -37,7 +39,11 @@ export type AgendaTarget =
   | { area: 'inventory'; section: 'items' | 'album' | 'tools' }
   | { area: 'village'; section: 'fields' | 'center' | 'reports' | 'military' }
   | { area: 'hero'; section: 'hero' | 'adventures' | 'start' | 'boss' }
-  | { area: 'menu'; section: 'pass' | 'research' | 'quests'; sub?: 'tasks' | 'guilds' | 'quests' };
+  | {
+      area: 'menu';
+      section: 'pass' | 'research' | 'quests' | 'projects';
+      sub?: 'tasks' | 'guilds' | 'quests';
+    };
 
 export interface AgendaItem {
   id: string;
@@ -108,6 +114,16 @@ export function agenda(s: GameState, now: number): AgendaItem[] {
       detail: 'Alle Ziele erfüllt',
       kind: 'reward',
       target: { area: 'menu', section: 'quests', sub: 'quests' },
+    });
+  const proj = PROJECTS.find((p) => canFinishStage(s, p.id));
+  if (proj)
+    add({
+      id: 'project',
+      icon: proj.icon,
+      title: `${proj.name}: Bauabschnitt fertigstellen`,
+      detail: 'Alle Waren sind im Inventar',
+      kind: 'reward',
+      target: { area: 'menu', section: 'projects' },
     });
   const ms = claimableMilestones(s);
   if (ms.length)

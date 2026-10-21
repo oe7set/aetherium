@@ -120,6 +120,7 @@ import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 export type TabId = 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
 export type MenuSection =
   | 'home'
+  | 'projects'
   | 'empire'
   | 'pass'
   | 'research'

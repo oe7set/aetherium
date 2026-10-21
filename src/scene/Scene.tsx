@@ -38,6 +38,7 @@ import {
   BountyBoard,
   BuildSite,
   IslandBuildings,
+  Monuments,
   JewelBench,
   MapTent,
   FletcherHut,
@@ -225,6 +226,7 @@ export default function WorldScene({ quality }: { quality: QualityProfile }) {
       <Course onTap={tap('agility')} />
       <InventorShop onTap={tap('invention')} />
       <IslandBuildings />
+      <Monuments />
       <IslandDecor />
       <Helpers />
       <Character skill={activeSkill} />

@@ -153,6 +153,7 @@ export const de = {
   'menu.prestige': 'Prestige',
   'menu.empire': 'Reichsbuch',
   'menu.home': 'Übersicht',
+  'menu.projects': 'Großprojekte',
   'menu.numberFormat': 'Zahlenformat',
   'menu.format.short': 'Kurz (1,5 Mio.)',
   'menu.format.scientific': 'Wissenschaftlich (1,5e6)',

@@ -12,11 +12,13 @@ import { SavePanel } from './SavePanel';
 import { SettingsPanel } from './SettingsPanel';
 import { StatsPanel } from './StatsPanel';
 import { MenuHub } from './MenuHub';
+import { ProjectsPanel } from './ProjectsPanel';
 
 type Section = MenuSection;
 
 const MENU_ICONS: Record<Section, string> = {
   home: '☰',
+  projects: '🏗️',
   empire: '📚',
   pass: '🏅',
   research: '🔬',
@@ -56,6 +58,7 @@ export function MenuPanel() {
         </strong>
       </div>
       {section === 'settings' && <SettingsPanel />}
+      {section === 'projects' && <ProjectsPanel />}
       {section === 'empire' && <EmpirePanel />}
       {section === 'pass' && <PassPanel />}
       {section === 'research' && <ResearchPanel />}

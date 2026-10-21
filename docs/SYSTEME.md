@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.79.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.80.0**.
 
 ## 1. Der große Kreislauf
 
@@ -92,6 +92,13 @@ Gewitter- und Seelenbolzen (stärker, Element + Boni).
 **Riss-Ausbau** (Phase 35): Rekord-Codes (`engine/rivals.ts`) tragen jetzt die Tagesriss-Bestzeit (alte 6er-Codes
 bleiben gültig), `rankDaily` sortiert nur Zeiten von heute; Tagesriss-Karte zeigt die Rangliste. 5 Relikt-Sets
 (`RELIC_SETS`, `completedRelicSets` → `runPerks`). 11 Schrein-Arten (neu: Schatzschrein, Sog des Äthers, Blutopfer).
+
+**Großprojekte** (Phase 42, `data/projects.ts`, `engine/projects.ts`, `ui/menu/ProjectsPanel.tsx`): 5 Monumente
+(Leuchtturm, Ätherbrücke, Himmelsobservatorium, Großer Basar, Ätherium-Turm – letzterer erst nach allen anderen) mit
+3–4 Bauabschnitten; jeder verlangt Waren aus mehreren Skills, Teil-Lieferungen zählen (`deliverProject`,
+`s.projects`, bleibt über Prestige). Fertige Abschnitte: Dauerbonus (Modifier-Quelle `projects`), Baukunst-XP,
+3D-Modell wächst (`Monuments` in `scene/Workshops.tsx`). Mehr → Großprojekte, „Was jetzt?" meldet fertigstellbare
+Abschnitte; Waren springen per `RecipeLink` zum Rezept.
 
 **Skill-Meilensteine** (Phase 41, `data/milestones.ts`, `engine/milestones.ts`): Stufe 10/25/50/75/99 jedes Skills –
 Dauerbonus folgt der Stufe automatisch (Modifier-Quelle `milestones`; Sammel-/Handwerksskills XP → Tempo → doppelt,
