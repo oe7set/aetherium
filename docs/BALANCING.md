@@ -163,3 +163,28 @@ Tagen Hauptgebäude 14, 567 statt 497 Einwohner und Gesamtlevel 368 statt 336 �
 **Gold**: Nach 3 Tagen ~3 Mio. Gold beim Bot, der nur Werkzeuge kauft. Echte Senken danach: Werkzeugstufen
 (1,5 Mio. / 25 Mio.), Verstärkung (250 · 2^Stufe Gold je Versuch, ab +6 mit Runenbarren), Sofortbau im Dorf,
 Inventarplätze, Wanderhändler (Preise liegen 2–4× über dem Verkaufswert – kein Weiterverkaufs-Trick).
+
+## Wochen-Bot (Phase 50, v1.86)
+
+`tests/week.test.ts`: 7 Tage, stündlicher Blick. Spielt reihum den niedrigsten von 20 Skills, holt Inselwaren fürs
+Dorf, liefert an Großprojekte nur, wenn ein Abschnitt fertig wird, claimt Meilensteine, Reichsränge und Chronik,
+kauft beim Wanderhändler und holt Dorflieferungen.
+
+| Tag | Gesamtlevel | Einwohner | Held | Reichspunkte | Reichsrang | Meilensteine | Erfolge |
+| --- | ----------- | --------- | ---- | ------------ | ---------- | ------------ | ------- |
+| 1   | 520         | 169       | 18   | 989          | 4          | 26           | 95      |
+| 3   | 692         | 495       | 37   | 1510         | 5          | 36           | 119     |
+| 5   | 795         | 721       | 50   | 1747         | 6          | 38           | 125     |
+| 7   | 842         | 817       | 58   | 1883         | 6          | 40           | 134     |
+
+Gefundene und behobene Engpässe:
+
+- **Lager blockierte das Dorf**: Stufe 10 aller Gebäude verlangte Inselwaren; ohne Lager 10 kosteten höhere Felder
+  mehr, als das Lager fasst → Stillstand bei ~500 Einwohnern. Lager, Kornspeicher und Versteck brauchen Inselwaren
+  jetzt erst ab ¾ der Höchststufe.
+- **Reichsränge 4 → 5 dauerten 4+ Tage**: Schwellen der mittleren Ränge gesenkt (600/900/1200/1600/2200/3000/
+  4000/5200/7000), damit etwa alle 1–2 Tage ein Aufstieg kommt.
+- **Volles Inventar stoppt jedes Handwerk** (beim Bot: Diebesbeute) – „Was jetzt?" meldet das; der Bot räumt
+  jetzt auf wie ein Spieler.
+- **Großprojekte vs. Dorf**: „Alles Vorhandene liefern" kann Waren verbrauchen, die das Dorf braucht – bewusste
+  Entscheidung des Spielers, der Bot liefert nur, wenn ein Abschnitt fertig wird.

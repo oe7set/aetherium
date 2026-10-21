@@ -79,6 +79,9 @@ const TIERS: Record<Kind, ItemStack[][]> = {
   ],
 };
 
+/** Storage buildings skip the first goods tier. */
+const STORAGE = new Set(['warehouse', 'granary', 'cranny']);
+
 /** Levels (relative to the max level) that ask for island goods: half, three quarters, max. */
 export function goodsLevels(maxLevel: number): number[] {
   return [Math.ceil(maxLevel * 0.5), Math.ceil(maxLevel * 0.75), maxLevel];
@@ -89,6 +92,8 @@ export function buildingGoods(id: string, maxLevel: number, level: number): Item
   const kind = KIND[id];
   if (!kind) return [];
   const tier = goodsLevels(maxLevel).indexOf(level);
+  // Storage must never block the village (fields cost more than a small warehouse holds).
+  if (tier === 0 && STORAGE.has(id)) return [];
   return tier < 0 ? [] : TIERS[kind][tier]!;
 }
 

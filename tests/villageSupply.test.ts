@@ -21,10 +21,12 @@ describe('Dorf ↔ Insel', () => {
     const s = gameWith();
     const v = activeVillage(s);
     expect(goodsLevels(20)).toEqual([10, 15, 20]);
-    expect(buildingGoods('warehouse', 20, 9)).toEqual([]);
-    const goods = buildingGoods('warehouse', 20, 10);
+    expect(buildingGoods('main', 20, 9)).toEqual([]);
+    // Storage skips the first tier so it can never lock the fields.
+    expect(buildingGoods('warehouse', 20, 10)).toEqual([]);
+    const goods = buildingGoods('warehouse', 20, 15);
     expect(goods.length).toBeGreaterThan(0);
-    v.buildings.warehouse = 9;
+    v.buildings.warehouse = 14;
     v.res = { wood: 1e6, clay: 1e6, iron: 1e6, crop: 1e6 };
     expect(canUpgradeBuilding(s, v, 'warehouse')).toEqual({ ok: false, reason: 'goods' });
     for (const g of goods) s.inventory[g.item] = g.qty;

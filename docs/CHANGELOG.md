@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.86.0] – Balance: Wochen-Bot
+
+### Balance: Wochen-Bot ⚖️
+
+- Neuer **7-Tage-Bot** über alle Systeme (20 Skills, Dorf, Held, Großprojekte, Reichsränge, Meilensteine,
+  Insel-Ereignisse, Dorflieferung) sichert ab, dass jeder Tag Fortschritt bringt.
+- **Lager, Kornspeicher und Versteck** brauchen Inselwaren erst ab ¾ der Höchststufe – vorher konnte ein fehlendes
+  Lager das ganze Dorf blockieren (Felder teurer als die Lagerkapazität).
+- **Reichsränge** in der Mitte näher zusammen: etwa alle 1–2 Tage ein Aufstieg statt Durststrecken von 4+ Tagen.
+- Details und Tabelle in `docs/BALANCING.md`.
+
 ## [1.85.0] – Erfolge, Chronik & Belohnungsgefühl
 
 ### Erfolge, Chronik & Belohnungsgefühl 🏆
