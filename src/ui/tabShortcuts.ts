@@ -14,10 +14,11 @@ export const TAB_HOME: Record<TabId, Partial<UiState>> = {
   inventory: { inventorySegment: 'items' },
   village: { villageSegment: 'fields' },
   rift: { heroSegment: 'hero' },
-  menu: { menuSection: 'empire' },
+  menu: { menuSection: 'home' },
 };
 
 const MENU: [UiState['menuSection'], string][] = [
+  ['home', '☰'],
   ['empire', '📚'],
   ['pass', '🏅'],
   ['research', '🔬'],

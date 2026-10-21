@@ -110,6 +110,7 @@ import { clearStorage, loadFromStorage, saveToStorage } from './persistence';
 
 export type TabId = 'world' | 'skills' | 'inventory' | 'village' | 'rift' | 'menu';
 export type MenuSection =
+  | 'home'
   | 'empire'
   | 'pass'
   | 'research'
@@ -363,7 +364,7 @@ export const useGame = create<GameStore>()((set, get) => {
       skillDetail: false,
       inventorySegment: 'items',
       selectedItem: null,
-      menuSection: 'empire',
+      menuSection: 'home',
       villageSegment: 'fields',
       heroSegment: 'hero',
       quickNav: false,

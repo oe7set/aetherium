@@ -54,6 +54,23 @@ import './rift.css';
 
 type Segment = 'hero' | 'adventures' | 'start' | 'boss' | 'talents' | 'relics' | 'codex';
 
+const HERO_SEGMENTS: Segment[] = ['hero', 'adventures', 'boss'];
+
+/** Two levels: the hero's world (hero, adventures, world boss) and the rift (runs, talents, relics, codex). */
+const SUB: Record<'hero' | 'rift', [Segment, string][]> = {
+  hero: [
+    ['hero', '🦸 Held'],
+    ['adventures', '❗ Abenteuer'],
+    ['boss', '👹 Weltboss'],
+  ],
+  rift: [
+    ['start', '🌀 Laufen'],
+    ['talents', '✨ Talente'],
+    ['relics', '🏺 Relikte'],
+    ['codex', '📖 Kodex'],
+  ],
+};
+
 export function RiftPanel() {
   // Re-render on meta changes only (a primitive signature keeps the selector stable).
   useGame((s) =>
@@ -74,20 +91,29 @@ export function RiftPanel() {
   const seg = useGame((s) => s.ui.heroSegment);
   const setUi = useGame((s) => s.setUi);
   const setSeg = (heroSegment: Segment) => setUi({ heroSegment });
+  const group = HERO_SEGMENTS.includes(seg) ? 'hero' : 'rift';
   return (
     <div className="panel rift-panel">
-      <div className="segments" role="tablist">
+      <div className="segments area-switch" role="tablist">
         {(
           [
-            ['hero', '🦸 Held'],
-            ['adventures', '❗ Abenteuer'],
-            ['start', '🌀 Riss'],
-            ['boss', '👹 Weltboss'],
-            ['talents', '✨ Talente'],
-            ['relics', '🏺 Relikte'],
-            ['codex', '📖 Kodex'],
-          ] as [Segment, string][]
-        ).map(([k, label]) => (
+            ['hero', '🦸 Held & Welt'],
+            ['rift', '🌀 Ätherriss'],
+          ] as const
+        ).map(([g, label]) => (
+          <button
+            key={g}
+            role="tab"
+            aria-selected={group === g}
+            className={`segment ${group === g ? 'active' : ''}`}
+            onClick={() => setSeg(g === 'hero' ? 'hero' : 'start')}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="segments sub-segments" role="tablist">
+        {SUB[group].map(([k, label]) => (
           <button
             key={k}
             role="tab"

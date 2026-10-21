@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.77.0] – Neues Menü
+
+Start des **Masterplans 6.0** (`docs/PLAN-6.md`): rund, logisch, lohnend.
+
+- **Neues Mehr-Menü** (Phase 38): Statt zehn Reitern eine Übersicht – oben „Als Nächstes", darunter Kacheln in klaren Gruppen: Fortschritt (Ruhmesleiter, Erfolge, Reichsbuch, Statistik), Aufgaben (Quests, Zünfte, Tagesaufträge, Haustiere), Wissen & Wiedergeburt, System. Jede Kachel zeigt, was dort wartet (goldener Rand), jede Unterseite hat „← Übersicht".
+- **Held-Tab in zwei Ebenen**: „Held & Welt" (Held, Abenteuer, Weltboss) und „Ätherriss" (Laufen, Talente, Relikte, Kodex).
+- **Insel-Leiste in Klartext**: „Dorf bauen!", „Held zu Hause", „Essenz · Boss offen", „Schmuck 0/9" und – wenn einer da ist – der Weltboss mit seinen Lebenspunkten.
+
 ## [1.76.0] – Feinschliff & Abschluss Masterplan 5.0
 
 Abschluss des **Masterplans 5.0** (Phase 37).

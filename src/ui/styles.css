@@ -2785,3 +2785,53 @@ button.chip {
   border-color: rgba(255, 209, 102, 0.8);
   background: linear-gradient(160deg, rgba(255, 209, 102, 0.12), transparent);
 }
+
+/* Mehr-Hub (Phase 38) */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.hub-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hub-tile .hub-icon {
+  font-size: 1.5rem;
+}
+.hub-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hub-tile small {
+  opacity: 0.75;
+  font-size: 0.78rem;
+}
+.hub-tile.hot {
+  border-color: rgba(255, 209, 102, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.35) inset;
+}
+.menu-crumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.area-switch .segment {
+  flex: 1;
+  font-weight: 700;
+}
+.sub-segments {
+  margin-top: -4px;
+  font-size: 0.9rem;
+}

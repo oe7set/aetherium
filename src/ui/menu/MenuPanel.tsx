@@ -11,10 +11,12 @@ import { PrestigePanel } from './PrestigePanel';
 import { SavePanel } from './SavePanel';
 import { SettingsPanel } from './SettingsPanel';
 import { StatsPanel } from './StatsPanel';
+import { MenuHub } from './MenuHub';
 
 type Section = MenuSection;
 
 const MENU_ICONS: Record<Section, string> = {
+  home: '☰',
   empire: '📚',
   pass: '🏅',
   research: '🔬',
@@ -31,50 +33,27 @@ const MENU_ICONS: Record<Section, string> = {
 export function MenuPanel() {
   const section = useGame((s) => s.ui.menuSection);
   const setUi = useGame((s) => s.setUi);
-  const setSection = (menuSection: Section) => setUi({ menuSection });
-  const sections: Section[] = import.meta.env.DEV
-    ? [
-        'empire',
-        'pass',
-        'research',
-        'quests',
-        'prestige',
-        'achievements',
-        'stats',
-        'log',
-        'settings',
-        'save',
-        'debug',
-      ]
-    : [
-        'empire',
-        'pass',
-        'research',
-        'quests',
-        'prestige',
-        'achievements',
-        'stats',
-        'log',
-        'settings',
-        'save',
-      ];
+  if (section === 'home')
+    return (
+      <div className="panel">
+        <MenuHub />
+      </div>
+    );
   return (
     <div className="panel">
-      <div className="segments" role="tablist">
-        {sections.map((s) => (
-          <button
-            key={s}
-            role="tab"
-            aria-selected={section === s}
-            className={`segment ${section === s ? 'active' : ''}`}
-            onClick={(e) => {
-              setSection(s);
-              e.currentTarget.closest('.sheet-body, .center-panel')?.scrollTo({ top: 0 });
-            }}
-          >
-            {MENU_ICONS[s]} {t(`menu.${s}`)}
-          </button>
-        ))}
+      <div className="menu-crumb">
+        <button
+          className="btn btn-ghost"
+          onClick={(e) => {
+            setUi({ menuSection: 'home' });
+            e.currentTarget.closest('.sheet-body, .center-panel')?.scrollTo({ top: 0 });
+          }}
+        >
+          ← Übersicht
+        </button>
+        <strong>
+          {MENU_ICONS[section]} {t(`menu.${section}`)}
+        </strong>
       </div>
       {section === 'settings' && <SettingsPanel />}
       {section === 'empire' && <EmpirePanel />}

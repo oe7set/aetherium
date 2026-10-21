@@ -59,6 +59,10 @@ export function WorldHud() {
   const setDailyOpen = useGame((s) => s.setDailyOpen);
   const [decor, setDecor] = useState(false);
   const decorCount = useGame((s) => DECORS.filter((d) => decorUnlocked(s.game, d)).length);
+  const worldBoss = useGame((s) => {
+    const f = s.game.worldBoss.fight;
+    return f ? Math.ceil((f.hp / f.maxHp) * 100) : null;
+  });
   const game = useGame.getState().game;
   const [build, hero, essence, weekly, daily] = status.split('|') as [
     string,
@@ -83,7 +87,7 @@ export function WorldHud() {
           className={`hud-pill ${build === 'free' ? 'glow' : ''}`}
           onClick={() => setUi({ tab: 'village', villageSegment: 'fields' })}
         >
-          🏘️ {build === 'free' ? 'Bauen!' : duration(Number(build.slice(1)))}
+          🏘️ <small>Dorf</small> {build === 'free' ? 'bauen!' : duration(Number(build.slice(1)))}
         </button>
         <button
           className={`hud-pill ${hero === 'adventure' ? 'glow' : ''}`}
@@ -91,22 +95,30 @@ export function WorldHud() {
             setUi({ tab: 'rift', heroSegment: hero === 'adventure' ? 'adventures' : 'hero' })
           }
         >
-          {game.hero.avatar} {heroText}
+          {game.hero.avatar} <small>Held</small> {heroText}
         </button>
         <button
           className={`hud-pill ${weekly === 'open' ? 'boss' : ''}`}
           onClick={() => setUi({ tab: 'rift', heroSegment: 'start' })}
         >
-          🌀 {essence}
-          {weekly === 'open' && <small> · Boss</small>}
+          🌀 {essence} <small>Essenz</small>
+          {weekly === 'open' && <small> · Boss offen</small>}
         </button>
         <button
           className={`hud-pill ${decor ? 'active' : ''}`}
           onClick={() => setDecor(!decor)}
           aria-expanded={decor}
         >
-          🎨 {decorCount}/{DECORS.length}
+          🎨 <small>Schmuck</small> {decorCount}/{DECORS.length}
         </button>
+        {worldBoss !== null && (
+          <button
+            className="hud-pill boss"
+            onClick={() => setUi({ tab: 'rift', heroSegment: 'boss' })}
+          >
+            👹 <small>Weltboss</small> {worldBoss} %
+          </button>
+        )}
         {daily && (
           <button className="hud-pill glow gift" onClick={() => setDailyOpen(true)}>
             🎁 Tagesbonus

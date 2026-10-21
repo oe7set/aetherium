@@ -2,7 +2,7 @@
 
 > **Pflege-Regel:** Diese Datei wird bei **jeder** inhaltlichen Änderung mitgepflegt (neues System, neue
 > Verbindung, erledigter oder neuer offener Punkt). Sie ist die Landkarte des Spiels – `CLAUDE.md` erklärt
-> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.76.0**.
+> den Code, `CHANGELOG.md` die Historie, `PLAN-2.md` die ursprüngliche Planung. Stand: **1.77.0**.
 
 ## 1. Der große Kreislauf
 
@@ -327,6 +327,12 @@ Haustiere ↔ Held, Expansion)
 - Neue State-Felder dort bewusst einordnen!
 
 ## 4. Bedienung (Handy)
+
+**Menüaufbau (1.77):** „Mehr" öffnet einen Hub (`ui/menu/MenuHub.tsx`, `menuSection: 'home'`): oben „Als Nächstes"
+(Agenda), darunter Kacheln in Gruppen Fortschritt / Aufgaben / Wissen & Wiedergeburt / System mit Kennzahl und
+Gold-Rand, wenn dort etwas wartet; Unterseiten haben „← Übersicht". Held-Tab in zwei Ebenen: „Held & Welt"
+(Held, Abenteuer, Weltboss) und „Ätherriss" (Laufen, Talente, Relikte, Kodex). Insel-Leiste mit Klartext
+(Dorf, Held, Essenz, Schmuck, Weltboss).
 
 - Tab-Leiste (6 Bereiche) → Fenster in voller Höhe mit Titel und ✕ → Unterreiter (umbrechend, alle sichtbar).
 - Weitere Wege: Schnellzugriff 🧭 (Header, Taste K), antippbare Header-Chips, Chronik-„Los", Meldungs-Hinweis →
